@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HAROSAT – Clientes</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1a4d99;
+    --blue-light: #2563c7;
+    --blue-pale: #e8f0fe;
+    --blue-mid: #c5d8f5;
+    --gold: #f0a500;
+    --white: #ffffff;
+    --gray: #f4f7fc;
+    --text: #1a2340;
+    --muted: #7a8aa8;
+    --danger: #e53e3e;
+    --success: #22863a;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(26,77,153,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--blue);
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(26,77,153,0.25);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .logo span { color: var(--gold); }
+  .header-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .btn-install {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-install:active { background: rgba(255,255,255,0.3); }
+  .btn-add {
+    background: var(--gold);
+    color: var(--blue);
+    border: none;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 300;
+    box-shadow: 0 2px 8px rgba(240,165,0,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-add:active { transform: scale(0.92); }
+
+  /* SUMMARY CARDS */
+  .summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 16px 16px 0;
+  }
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--blue-mid);
+  }
+  .card.cobrada { border-top-color: #22c55e; }
+  .card.pendiente { border-top-color: var(--danger); }
+  .card-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .card-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 14px 16px 8px;
+  }
+  .search-wrap input {
+    width: 100%;
+    border: 1.5px solid var(--blue-mid);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--blue); }
+
+  /* CLIENT LIST */
+  .list { padding: 8px 16px 100px; }
+
+  .client-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border-left: 4px solid var(--blue);
+    transition: transform 0.15s;
+  }
+  .client-card:active { transform: scale(0.99); }
+  .client-card.pendiente-alta { border-left-color: var(--danger); }
+  .client-card.cobrado-total { border-left-color: #22c55e; }
+
+  .client-header {
+    display: flex;
+    align-items: center;
+    padding: 13px 14px 10px;
+    cursor: pointer;
+    gap: 12px;
+  }
+  .avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--blue-pale);
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+  }
+  .client-info { flex: 1; min-width: 0; }
+  .client-name {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .client-addr {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge.ok { background: #dcfce7; color: #166534; }
+  .badge.pend { background: #fee2e2; color: #991b1b; }
+  .badge.parcial { background: #fef9c3; color: #854d0e; }
+
+  /* Expand panel */
+  .client-detail {
+    display: none;
+    padding: 0 14px 14px;
+    border-top: 1px solid var(--blue-pale);
+  }
+  .client-detail.open { display: block; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .detail-item label {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .detail-item .val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .detail-item .val.green { color: var(--success); }
+  .detail-item .val.red { color: var(--danger); }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .btn-edit, .btn-del {
+    flex: 1;
+    padding: 9px;
+    border-radius: 9px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-edit { background: var(--blue-pale); color: var(--blue); }
+  .btn-del { background: #fee2e2; color: var(--danger); }
+  .btn-edit:active, .btn-del:active { opacity: 0.7; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,20,50,0.55);
+    z-index: 200;
+    align-items: flex-end;
+< truncated lines 258-434 >
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Presupuesto (€)</label>
+        <input type="number" id="f-presupuesto" placeholder="0.00" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label>Aceptado (€)</label>
+        <input type="number" id="f-aceptado" placeholder="0.00" step="0.01" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Parte Cobrada (€)</label>
+      <input type="number" id="f-cobrada" placeholder="0.00" step="0.01" min="0" oninput="calcPendiente()">
+    </div>
+    <div class="form-group">
+      <label>Parte Pendiente (€)</label>
+      <input type="number" id="f-pendiente" placeholder="0.00" step="0.01" min="0" readonly style="background:#f8faff;color:var(--muted)">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cobrado Total (€)</label>
+        <input type="number" id="f-cobrado-total" placeholder="0.00" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label>Facturado (€)</label>
+        <input type="number" id="f-facturado" placeholder="0.00" step="0.01" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Trabajo Terminado</label>
+      <div class="toggle-wrap" onclick="toggleWork()">
+        <div class="toggle-track" id="toggle-track">
+          <div class="toggle-thumb" id="toggle-thumb"></div>
+        </div>
+        <span id="toggle-label" style="font-size:14px;font-weight:600;color:var(--muted)">NO</span>
+      </div>
+    </div>
+    <button class="btn-save" onclick="saveClient()">GUARDAR</button>
+    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+const STORE_KEY = 'harosat_clientes_v1';
+let clients = [];
+let editingId = null;
+
+function load() {
+  try { clients = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e) { clients = []; }
+}
+function save() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(clients));
+}
+
+function fmt(n) {
+  const v = parseFloat(n) || 0;
+  return v.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+}
+function initials(name) {
+  return name.trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || '?';
+}
+
+function calcPendiente() {
+  const ac = parseFloat(document.getElementById('f-aceptado').value) || 0;
+  const co = parseFloat(document.getElementById('f-cobrada').value) || 0;
+  document.getElementById('f-pendiente').value = Math.max(0, ac - co).toFixed(2);
+}
+
+document.getElementById('f-aceptado').addEventListener('input', calcPendiente);
+
+function badgeStatus(c) {
+  const pend = parseFloat(c.pendiente) || 0;
+  const acep = parseFloat(c.aceptado) || 0;
+  if (acep > 0 && pend <= 0) return ['ok', 'COBRADO'];
+  if (pend > 0 && parseFloat(c.cobrada) > 0) return ['parcial', 'PARCIAL'];
+  if (pend > 0) return ['pend', 'PENDIENTE'];
+  return ['ok', 'OK'];
+}
+
+function cardClass(c) {
+  const [s] = badgeStatus(c);
+  if (s === 'ok') return 'cobrado-total';
+  if (s === 'pend') return 'pendiente-alta';
+  return '';
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const filtered = clients.filter(c =>
+    c.nombre.toLowerCase().includes(q) || c.direccion.toLowerCase().includes(q)
+  );
+
+  // Summary totals (all clients, not filtered)
+  const totP = clients.reduce((s,c)=>s+(parseFloat(c.presupuesto)||0),0);
+  const totC = clients.reduce((s,c)=>s+(parseFloat(c.cobrada)||0),0);
+  const totPend = clients.reduce((s,c)=>s+(parseFloat(c.pendiente)||0),0);
+  const totFact = clients.reduce((s,c)=>s+(parseFloat(c.facturado)||0),0);
+  document.getElementById('sum-presupuesto').textContent = fmt(totP);
+  document.getElementById('sum-cobrada').textContent = fmt(totC);
+  document.getElementById('sum-pendiente').textContent = fmt(totPend);
+  document.getElementById('sum-facturado').textContent = fmt(totFact);
+
+  const list = document.getElementById('list');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">👷</div>No hay clientes${q?' con ese nombre':' aún'}.<br>Pulsa <b>+</b> para añadir uno.</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(c => {
+    const [bClass, bLabel] = badgeStatus(c);
+    return `
+    <div class="client-card ${cardClass(c)}" id="card-${c.id}">
+      <div class="client-header" onclick="toggle('${c.id}')">
+        <div class="avatar">${initials(c.nombre)}</div>
+        <div class="client-info">
+          <div class="client-name">${c.nombre}</div>
+          <div class="client-addr">${c.direccion || '—'}</div>
+        </div>
+        <span class="badge ${bClass}">${bLabel}</span>
+        <span class="badge ${c.terminado ? 'terminado' : 'en-curso'}" style="margin-left:4px">${c.terminado ? '✅' : '🔧'}</span>
+      </div>
+      <div class="client-detail" id="detail-${c.id}">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Presupuesto</label>
+            <div class="val">${fmt(c.presupuesto)}</div>
+          </div>
+          <div class="detail-item">
+            <label>Aceptado</label>
+            <div class="val">${fmt(c.aceptado)}</div>
+          </div>
+          <div class="detail-item">
+            <label>Parte Cobrada</label>
+            <div class="val green">${fmt(c.cobrada)}</div>
+          </div>
+          <div class="detail-item">
+            <label>Parte Pendiente</label>
+            <div class="val red">${fmt(c.pendiente)}</div>
+          </div>
+          <div class="detail-item">
+            <label>Cobrado Total</label>
+            <div class="val green">${fmt(c.cobrado_total)}</div>
+          </div>
+          <div class="detail-item">
+            <label>Facturado</label>
+            <div class="val" style="color:#b07000">${fmt(c.facturado)}</div>
+          </div>
+          <div class="detail-item" style="grid-column:1/-1">
+            <label>Trabajo Terminado</label>
+            <div class="val" style="color:${c.terminado?'#166534':'#1a4d99'}">${c.terminado ? '✅ SÍ' : '🔧 EN CURSO'}</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-edit" onclick="editClient('${c.id}')">✏️ Editar</button>
+          <button class="btn-del" onclick="deleteClient('${c.id}')">🗑 Eliminar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggle(id) {
+  const d = document.getElementById('detail-'+id);
+  d.classList.toggle('open');
+}
+
+function openModal(resetEdit=true) {
+  if (resetEdit) {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'NUEVO CLIENTE';
+    ['f-nombre','f-dir','f-presupuesto','f-aceptado','f-cobrada','f-pendiente','f-cobrado-total','f-facturado'].forEach(id=>{
+      document.getElementById(id).value='';
+    });
+    setToggle(false);
+  }
+  document.getElementById('modal').classList.add('open');
+  setTimeout(()=>document.getElementById('f-nombre').focus(),300);
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+function closeIfOverlay(e) {
+  if (e.target.id === 'modal') closeModal();
+}
+
+function saveClient() {
+  const nombre = document.getElementById('f-nombre').value.trim();
+  if (!nombre) { alert('Introduce el nombre del cliente.'); return; }
+  const data = {
+    nombre,
+    direccion: document.getElementById('f-dir').value.trim(),
+    presupuesto: parseFloat(document.getElementById('f-presupuesto').value)||0,
+    aceptado: parseFloat(document.getElementById('f-aceptado').value)||0,
+    cobrada: parseFloat(document.getElementById('f-cobrada').value)||0,
+    pendiente: parseFloat(document.getElementById('f-pendiente').value)||0,
+    cobrado_total: parseFloat(document.getElementById('f-cobrado-total').value)||0,
+    facturado: parseFloat(document.getElementById('f-facturado').value)||0,
+    terminado: document.getElementById('toggle-track').classList.contains('on'),
+  };
+  if (editingId) {
+    const idx = clients.findIndex(c=>c.id===editingId);
+    if (idx>-1) clients[idx] = {...clients[idx], ...data};
+  } else {
+    data.id = 'c' + Date.now();
+    clients.unshift(data);
+  }
+  save();
+  closeModal();
+  render();
+}
+
+function editClient(id) {
+  const c = clients.find(x=>x.id===id);
+  if (!c) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'EDITAR CLIENTE';
+  document.getElementById('f-nombre').value = c.nombre;
+  document.getElementById('f-dir').value = c.direccion;
+  document.getElementById('f-presupuesto').value = c.presupuesto||'';
+  document.getElementById('f-aceptado').value = c.aceptado||'';
+  document.getElementById('f-cobrada').value = c.cobrada||'';
+  document.getElementById('f-pendiente').value = c.pendiente||'';
+  document.getElementById('f-cobrado-total').value = c.cobrado_total||'';
+  document.getElementById('f-facturado').value = c.facturado||'';
+  setToggle(!!c.terminado);
+  openModal(false);
+}
+
+function deleteClient(id) {
+  if (!confirm('¿Eliminar este cliente?')) return;
+  clients = clients.filter(c=>c.id!==id);
+  save();
+  render();
+}
+
+function showInstallGuide() {
+  const b = document.getElementById('install-banner');
+  b.style.display = b.style.display === 'none' ? 'block' : 'none';
+}
+
+function setToggle(val) {
+  const track = document.getElementById('toggle-track');
+  const label = document.getElementById('toggle-label');
+  if (val) { track.classList.add('on'); label.textContent = 'SÍ'; label.style.color = '#166534'; }
+  else { track.classList.remove('on'); label.textContent = 'NO'; label.style.color = 'var(--muted)'; }
+}
+function toggleWork() {
+  const track = document.getElementById('toggle-track');
+  setToggle(!track.classList.contains('on'));
+}
+
+load();
+render();
+</script>
+</body>
+</html>
