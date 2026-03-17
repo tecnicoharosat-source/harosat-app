@@ -268,7 +268,7 @@ function toggle(id) { document.getElementById('det-'+id).classList.toggle('open'
 
 función openModal(reset) {
 si (reset !== false) {
-editId = nulo;
+editId = null;
 document.getElementById('modal-title').textContent = 'NUEVO CLIENTE';
 ['f-nombre','f-dir','f-pre','f-ace','f-cob','f-pen','f-ctot','f-fact'].forEach(function(id){ document.getElementById(id).value=''; });
 establecerTog(falso);
@@ -335,7 +335,4 @@ cargarClientes();
 
 </body>
 </html>
-
-
-
 
