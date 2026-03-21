@@ -5,27 +5,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exclusivas Zabaleta · Gestión de Compras</title>
-<link href=" https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap " rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:raíz {
---bg: #f5f3ee; --surface: #ffffff; --borde: #e0dbd0;
---texto: #1a1916; --sub: #6b6760; --acento: #1a4d99;
+:root {
+--bg: #f5f3ee; --surface: #ffffff; --border: #e0dbd0;
+--text: #1a1916; --sub: #6b6760; --accent: #1a4d99;
 --accent-light: #e8eef8; --green: #1a6640; --green-light: #e6f2ec;
---rojo: #991a1a; --luz-roja: #f2e6e6; --ámbar: #7a5200; --luz-ámbar: #fdf3e0;
+--red: #991a1a; --red-light: #f2e6e6; --amber: #7a5200; --amber-light: #fdf3e0;
 --shadow: 0 2px 12px rgba(0,0,0,0.07); --radius: 12px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-encabezado { fondo: var(–accent); color: blanco; relleno: 18px 32px; mostrar: flex; alinear elementos: centro; justificar contenido: espacio entre; sombra de caja: 0 2px 16px rgba(26,77,153,0.18); posición: sticky; arriba: 0; z-index: 100; }
+header { background: var(–accent); color: white; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 16px rgba(26,77,153,0.18); position: sticky; top: 0; z-index: 100; }
 .header-left { display: flex; align-items: center; gap: 14px; }
 .logo-icon { width: 42px; height: 42px; background: rgba(255,255,255,0.18); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-.header-title { font-family: 'DM Serif Display', serif; font-size: 20px; }
+.header-title { font-family: ‘DM Serif Display’, serif; font-size: 20px; }
 .header-sub { font-size: 12px; opacity: 0.75; margin-top: 1px; font-weight: 300; letter-spacing: 0.5px; }
 .header-right { display: flex; align-items: center; gap: 16px; }
 .header-date { font-size: 13px; opacity: 0.8; font-weight: 300; }
 .sync-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; }
-.sync-dot { ancho: 8px; alto: 8px; radio de borde: 50%; fondo: #4ade80; }
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
 .sync-dot.syncing { background: #facc15; animation: pulse 1s infinite; }
 .sync-dot.error { background: #f87171; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
@@ -36,31 +36,31 @@ encabezado { fondo: var(–accent); color: blanco; relleno: 18px 32px; mostrar: 
 .kpi-card { background: var(–surface); border: 1px solid var(–border); border-radius: var(–radius); padding: 18px 20px; box-shadow: var(–shadow); transition: transform 0.15s; }
 .kpi-card:hover { transform: translateY(-2px); }
 .kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(–sub); margin-bottom: 8px; }
-.kpi-value { font-family: 'DM Serif Display', serif; font-size: 26px; }
+.kpi-value { font-family: ‘DM Serif Display’, serif; font-size: 26px; }
 .kpi-value.green { color: var(–green); } .kpi-value.amber { color: var(–amber); } .kpi-value.red { color: var(–red); }
 .kpi-sub { font-size: 11px; color: var(–sub); margin-top: 4px; }
 
 .tabs { display: flex; gap: 4px; background: var(–border); border-radius: 10px; padding: 4px; margin-bottom: 24px; width: fit-content; }
-.tab { padding: 8px 20px; border-radius: 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(–sub); cursor: pointer; transition: all 0.15s; }
+.tab { padding: 8px 20px; border-radius: 8px; border: none; background: transparent; font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 500; color: var(–sub); cursor: pointer; transition: all 0.15s; }
 .tab.active { background: var(–surface); color: var(–accent); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
 
 .panel { display: none; } .panel.active { display: block; }
 
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.section-title { font-family: 'DM Serif Display', serif; font-size: 20px; }
+.section-title { font-family: ‘DM Serif Display’, serif; font-size: 20px; }
 
-.btn-primary { background: var(–accent); color: white; border: none; border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
+.btn-primary { background: var(–accent); color: white; border: none; border-radius: 8px; padding: 9px 18px; font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
 .btn-primary:hover { background: #163f80; }
-.btn-sm { borde: ninguno; radio de borde: 6px; relleno: 5px 12px; familia de fuentes: 'DM Sans', sans-serif; tamaño de fuente: 12px; peso de fuente: 500; cursor: puntero; transición: todos 0.15s; }
+.btn-sm { border: none; border-radius: 6px; padding: 5px 12px; font-family: ‘DM Sans’, sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
 .btn-danger { background: var(–red-light); color: var(–red); } .btn-danger:hover { background: #f0c8c8; }
 .btn-info { background: var(–accent-light); color: var(–accent); } .btn-info:hover { background: #d0dff5; }
-.btn-cancel { background: var(–bg); border: 1px solid var(–border); color: var(–sub); border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
+.btn-cancel { background: var(–bg); border: 1px solid var(–border); color: var(–sub); border-radius: 8px; padding: 9px 18px; font-family: ‘DM Sans’, sans-serif; font-size: 14px; cursor: pointer; }
 
 .table-wrap { background: var(–surface); border: 1px solid var(–border); border-radius: var(–radius); overflow: hidden; box-shadow: var(–shadow); }
-tabla { ancho: 100%; colapso de borde: colapso; tamaño de fuente: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
 thead th { background: #f0eee8; padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.7px; text-transform: uppercase; color: var(–sub); border-bottom: 1px solid var(–border); }
 tbody tr { border-bottom: 1px solid #f0ede6; transition: background 0.1s; } tbody tr:last-child { border-bottom: none; } tbody tr:hover { background: #faf9f6; }
-td { relleno: 12px 16px; alineación vertical: medio; }
+td { padding: 12px 16px; vertical-align: middle; }
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .badge.pagado { background: var(–green-light); color: var(–green); }
 .badge.pendiente { background: var(–amber-light); color: var(–amber); }
@@ -70,49 +70,49 @@ td { relleno: 12px 16px; alineación vertical: medio; }
 .modal-overlay.open { display: flex; }
 .modal { background: var(–surface); border-radius: 16px; padding: 28px; width: 480px; max-width: 95vw; box-shadow: 0 12px 48px rgba(0,0,0,0.18); animation: modalIn 0.2s ease; }
 @keyframes modalIn { from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1} }
-.modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; margin-bottom: 20px; }
+.modal-title { font-family: ‘DM Serif Display’, serif; font-size: 20px; margin-bottom: 20px; }
 .form-grid { display: grid; gap: 14px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .field label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; color: var(–sub); margin-bottom: 5px; text-transform: uppercase; }
-.field input, .field select, .field textarea { width: 100%; border: 1.5px solid var(–border); border-radius: 8px; padding: 9px 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(–bg); color: var(–text); outline: none; transition: border-color 0.15s; }
+.field input, .field select, .field textarea { width: 100%; border: 1.5px solid var(–border); border-radius: 8px; padding: 9px 12px; font-family: ‘DM Sans’, sans-serif; font-size: 14px; background: var(–bg); color: var(–text); outline: none; transition: border-color 0.15s; }
 .field input:focus, .field select:focus, .field textarea:focus { border-color: var(–accent); background: white; }
-.field textarea { redimensionar: vertical; altura mínima: 60px; }
+.field textarea { resize: vertical; min-height: 60px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 
 .toolbar { display: flex; gap: 10px; margin-bottom: 14px; }
-.search-input { flex: 1; border: 1.5px solid var(–border); border-radius: 8px; padding: 9px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: white; outline: none; transition: border-color 0.15s; }
+.search-input { flex: 1; border: 1.5px solid var(–border); border-radius: 8px; padding: 9px 14px; font-family: ‘DM Sans’, sans-serif; font-size: 14px; background: white; outline: none; transition: border-color 0.15s; }
 .search-input:focus { border-color: var(–accent); }
 
 .empty { text-align: center; padding: 52px 20px; color: var(–sub); }
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
 
 .saldo-banner { border-radius: var(–radius); padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
-.saldo-banner.positivo { fondo: var(–luz-verde); borde: 1px sólido #b8ddc8; color: var(–verde); }
+.saldo-banner.positivo { background: var(–green-light); border: 1px solid #b8ddc8; color: var(–green); }
 .saldo-banner.negativo { background: var(–red-light); border: 1px solid #e0b8b8; color: var(–red); }
-.saldo-banner.neutro { fondo: var(–acento-luz); borde: 1px sólido #b8caee; color: var(–acento); }
-.saldo-amount { font-family: 'DM Serif Display', serif; font-size: 22px; }
+.saldo-banner.neutro { background: var(–accent-light); border: 1px solid #b8caee; color: var(–accent); }
+.saldo-amount { font-family: ‘DM Serif Display’, serif; font-size: 22px; }
 
 .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1916; color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 999; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
-.toast.show { opacidad: 1; transformar: translateY(0); }
+.toast.show { opacity: 1; transform: translateY(0); }
 
 @media (max-width: 700px) {
 .kpi-grid { grid-template-columns: repeat(2,1fr); }
 .form-row { grid-template-columns: 1fr; }
-encabezado { relleno: 14px 18px; }
+header { padding: 14px 18px; }
 .container { padding: 18px 14px; }
 .header-date { display: none; }
 }
 </style>
 
 </head>
-<cuerpo>
+<body>
 
-<encabezado>
+<header>
 <div class="header-left">
 <div class="logo-icon">🏪</div>
 <div>
 <div class="header-title">Exclusivas Zabaleta</div>
-<div class="header-sub">Control de Compras y Pagos · HAROSAT Ecotécnico</div>
+<div class="header-sub">Control de Compras y Pagos · HAROSAT Ecotechnical</div>
 </div>
 </div>
 <div class="header-right">
@@ -194,7 +194,7 @@ encabezado { relleno: 14px 18px; }
 </div>
 <div class="field"><label>Descripción del Material</label><textarea id="cDesc" placeholder="Ej. Caldera Wolf FGB-K 24kW + accesorios…"></textarea></div>
 <div class="form-row">
-<div class="field"><label>Importe total (€)</label><input type="number" id="cImporte" min="0" step="0.01" placeholder="0,00"></div>
+<div class="field"><label>Importe Total (€)</label><input type="number" id="cImporte" min="0" step="0.01" placeholder="0,00"></div>
 <div class="field"><label>Ya Pagado (€)</label><input type="number" id="cPagadoInicial" min="0" step="0.01" placeholder="0,00" value="0"></div>
 </div>
 <div class="field"><label>Notas</label><input type="text" id="cNotas" placeholder="Observaciones opcionales…"></div>
@@ -206,7 +206,7 @@ encabezado { relleno: 14px 18px; }
 </div>
 </div>
 
-<!-- PAGO MODAL -->
+<!-- MODAL PAGO -->
 
 <div class="modal-overlay" id="modalPago">
 <div class="modal">
@@ -235,44 +235,44 @@ encabezado { relleno: 14px 18px; }
 <div class="toast" id="toast"></div>
 
 <script>
-const SB_URL = ' https://sobiyfyzalynxcpfoldc.supabase.co ';
-const SB_KEY = 'sb_publishable_Po1BdA40uWcWxrW6gwO_ng_PLaZmxXC';
+const SB_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 const H = { 'Content-Type':'application/json', 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Prefer':'return=representation' };
 
-función asíncrona sbGet(t) { const r=await fetch(`${SB_URL}/rest/v1/${t}?select=*&order=fecha.desc`,{headers:H}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
-función asíncrona sbInsert(t,row) { const r=await fetch(`${SB_URL}/rest/v1/${t}`,{method:'POST',headers:H,body:JSON.stringify(row)}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
-función asíncrona sbUpdate(t,id,row) { const r=await fetch(`${SB_URL}/rest/v1/${t}?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(row)}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
-función asíncrona sbDelete(t,id) { const r=await fetch(`${SB_URL}/rest/v1/${t}?id=eq.${id}`,{method:'DELETE',headers:H}); if(!r.ok)throw new Error(await r.text()); }
+async function sbGet(t) { const r=await fetch(`${SB_URL}/rest/v1/${t}?select=*&order=fecha.desc`,{headers:H}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
+async function sbInsert(t,row) { const r=await fetch(`${SB_URL}/rest/v1/${t}`,{method:'POST',headers:H,body:JSON.stringify(row)}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
+async function sbUpdate(t,id,row) { const r=await fetch(`${SB_URL}/rest/v1/${t}?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(row)}); if(!r.ok)throw new Error(await r.text()); return r.json(); }
+async function sbDelete(t,id) { const r=await fetch(`${SB_URL}/rest/v1/${t}?id=eq.${id}`,{method:'DELETE',headers:H}); if(!r.ok)throw new Error(await r.text()); }
 
 let compras=[], pagos=[], editCompraId=null;
 
-función sincroniza(s) {
+function sync(s) {
 document.getElementById('syncDot').className='sync-dot '+(s==='ok'?'':s);
 document.getElementById('syncLabel').textContent=s==='ok'?'Sincronizado':s==='syncing'?'Guardando…':'Sin conexión';
 }
 function toast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 function fmt(n) { return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 function fmtDate(d) { if(!d)return'—'; const s=d.split('T')[0].split('-'); return `${s[2]}/${s[1]}/${s[0]}`; }
-función hoy() { return new Date().toISOString().split('T')[0]; }
+function today() { return new Date().toISOString().split('T')[0]; }
 
-función calcP(c) {
-const pp=pagos.filter(p=>p.albaran_id=== c.id ).reduce((s,p)=>s+Number(p.importe),0);
-const pt=Número(c.pagado_inicial||0)+pp;
+function calcP(c) {
+const pp=pagos.filter(p=>p.albaran_id===c.id).reduce((s,p)=>s+Number(p.importe),0);
+const pt=Number(c.pagado_inicial||0)+pp;
 return { pagadoTotal:pt, pendiente:Math.max(0,Number(c.importe)-pt) };
 }
 
-función asíncrona loadAll() {
-sincronizar('sincronizando');
-intentar {
+async function loadAll() {
+sync('syncing');
+try {
 [compras,pagos]=await Promise.all([sbGet('zabaleta_compras'),sbGet('zabaleta_pagos')]);
-sincronizar('ok');
-} captura(e) { sincronización('error'); brindis('⚠️ Error de conexión. Revisa las tablas en Supabase.'); compras=[]; pagos=[]; }
-actualizarKPIs(); renderCompras(); renderPagos();
+sync('ok');
+} catch(e) { sync('error'); toast('⚠️ Error de conexión. Revisa las tablas en Supabase.'); compras=[]; pagos=[]; }
+updateKPIs(); renderCompras(); renderPagos();
 }
 
-función actualizarKPIs() {
+function updateKPIs() {
 const tc=compras.reduce((s,c)=>s+Number(c.importe),0);
-const tp=pagos.reduce((s,p)=>s+Número(p.importe),0)+compras.reduce((s,c)=>s+Número(c.pagado_inicial||0),0);
+const tp=pagos.reduce((s,p)=>s+Number(p.importe),0)+compras.reduce((s,c)=>s+Number(c.pagado_inicial||0),0);
 const tpend=compras.reduce((s,c)=>s+calcP(c).pendiente,0);
 const sp=compras.filter(c=>calcP(c).pendiente>0).length;
 document.getElementById('kpiComprado').textContent=fmt(tc);
@@ -283,7 +283,7 @@ document.getElementById('kpiNumCompras').textContent=compras.length+' compras';
 document.getElementById('kpiNumPagos').textContent=pagos.length+' pagos';
 }
 
-función mostrarTab(tab,el) {
+function showTab(tab,el) {
 document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
 document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
 document.getElementById('panel-'+tab).classList.add('active');
@@ -291,7 +291,7 @@ el.classList.add('active');
 if(tab==='resumen') renderResumen();
 }
 
-función renderCompras() {
+function renderCompras() {
 const q=(document.getElementById('searchCompras').value||'').toLowerCase();
 const tb=document.getElementById('tbodyCompras');
 const f=compras.filter(c=>((c.albaran||'')+(c.descripcion||'')+(c.notas||'')).toLowerCase().includes(q));
@@ -299,40 +299,40 @@ if(!f.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="e
 tb.innerHTML=f.map(c=>{
 const {pagadoTotal,pendiente}=calcP(c);
 const e=pendiente<=0?'pagado':pagadoTotal>0?'parcial':'pendiente';
-const bl={pagado:' ✓ Pagado',parcial:'½ Parcial',pendiente:'⏳ Pendiente'}[e];
-devolver `<tr>
+const bl={pagado:'✓ Pagado',parcial:'½ Parcial',pendiente:'⏳ Pendiente'}[e];
+return `<tr>
 <td>${fmtDate(c.fecha)}</td><td><strong>${c.albaran||'—'}</strong></td>
 <td style="max-width:200px">${c.descripcion||''}</td>
 <td><strong>${fmt(c.importe)}</strong></td>
 <td style="color:var(--green)">${fmt(pagadoTotal)}</td>
 <td style="color:${pendiente>0?'var(--red)':'var(--sub)'}">${fmt(pendiente)}</td>
 <td><span class="badge ${e}">${bl}</span></td>
-<td style="display:flex;gap:5px"><button class="btn-sm btn-info" onclick="editCompra('${ c.id }')">✏️</button><button class="btn-sm btn-danger" onclick="deleteCompra('${ c.id }')">🗑️</button></td>
+<td style="display:flex;gap:5px"><button class="btn-sm btn-info" onclick="editCompra('${c.id}')">✏️</button><button class="btn-sm btn-danger" onclick="deleteCompra('${c.id}')">🗑️</button></td>
 </tr>`;
-}).unirse('');
+}).join('');
 }
 
-función renderPagos() {
+function renderPagos() {
 const q=(document.getElementById('searchPagos').value||'').toLowerCase();
 const tb=document.getElementById('tbodyPagos');
 const f=pagos.filter(p=>((p.concepto||'')+(p.forma_pago||'')+(p.notas||'')+(p.fecha||'')).toLowerCase().includes(q));
 if(!f.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-icon">💳</div><p>Sin pagos registrados todavía.</p></div></td></tr>`;return;}
 tb.innerHTML=f.map(p=>{
-const comp=compras.find(c=> c.id ===p.albaran_id);
-devolver `<tr>
+const comp=compras.find(c=>c.id===p.albaran_id);
+return `<tr>
 <td>${fmtDate(p.fecha)}</td><td>${p.concepto||''}</td><td>${p.forma_pago||''}</td>
 <td style="color:var(--green);font-weight:600">${fmt(p.importe)}</td>
 <td>${comp?`<span style="font-size:12px;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:10px">${comp.albaran||comp.id.slice(-6)}</span>`:'—'}</td>
 <td style="color:var(--sub);font-size:12px">${p.notas||'—'}</td>
-<td><button class="btn-sm btn-danger" onclick="deletePago('${ p.id }')">🗑️</button></td>
+<td><button class="btn-sm btn-danger" onclick="deletePago('${p.id}')">🗑️</button></td>
 </tr>`;
-}).unirse('');
+}).join('');
 }
 
-función renderResumen() {
-actualizarKPI();
+function renderResumen() {
+updateKPIs();
 const tc=compras.reduce((s,c)=>s+Number(c.importe),0);
-const tp=pagos.reduce((s,p)=>s+Número(p.importe),0)+compras.reduce((s,c)=>s+Número(c.pagado_inicial||0),0);
+const tp=pagos.reduce((s,p)=>s+Number(p.importe),0)+compras.reduce((s,c)=>s+Number(c.pagado_inicial||0),0);
 const saldo=tc-tp;
 document.getElementById('saldoAmount').textContent=fmt(Math.abs(saldo));
 document.getElementById('saldoBanner').className='saldo-banner '+(saldo<=0?'positivo':saldo<500?'neutro':'negativo');
@@ -344,31 +344,31 @@ const pend=compras.filter(c=>calcP(c).pendiente>0).sort((a,b)=>calcP(b).pendient
 document.getElementById('resumenPendientes').innerHTML=pend.length?pend.map(c=>{const{pendiente}=calcP(c);return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><strong>${c.albaran||'(sin albarán)'}</strong><span style="font-size:12px;color:var(--sub);margin-left:8px">${fmtDate(c.fecha)}</span><div style="font-size:12px;color:var(--sub);margin-top:2px">${(c.descripcion||'').slice(0,50)}</div></div><div style="text-align:right"><div style="color:var(--red);font-weight:600">${fmt(pendiente)} pendiente</div><div style="font-size:11px;color:var(--sub)">de ${fmt(c.importe)}</div></div></div>`;}).join(''):'<div style="color:var(--green);font-size:14px;padding:12px 0">✓ No hay compras con saldo pendiente.</div>';
 }
 
-función openModal(tipo) {
-si(tipo==='compra') {
-editarCompraId=null;
-document.getElementById('cFecha').value=hoy();
+function openModal(tipo) {
+if(tipo==='compra') {
+editCompraId=null;
+document.getElementById('cFecha').value=today();
 ['cAlbaran','cDesc','cNotas'].forEach(id=>document.getElementById(id).value='');
 document.getElementById('cImporte').value='';
 document.getElementById('cPagadoInicial').value='0';
 document.getElementById('modalCompra').classList.add('open');
-} demás {
-document.getElementById('pFecha').value=hoy();
+} else {
+document.getElementById('pFecha').value=today();
 document.getElementById('pImporte').value='';
 document.getElementById('pConcepto').value='';
 document.getElementById('pForma').value='Transferencia';
 document.getElementById('pNotas').value='';
 const sel=document.getElementById('pAlbaran');
 sel.innerHTML='<option value="">— Sin vincular —</option>';
-compras.filter(c=>calcP(c).pendiente>0).forEach(c=>{ sel.innerHTML+=`<option value="${ c.id }">${c.albaran||c.descripcion.slice(0,28)} (${fmt(calcP(c).pendiente)})</option>`; });
+compras.filter(c=>calcP(c).pendiente>0).forEach(c=>{ sel.innerHTML+=`<option value="${c.id}">${c.albaran||c.descripcion.slice(0,28)} (${fmt(calcP(c).pendiente)})</option>`; });
 document.getElementById('modalPago').classList.add('open');
 }
 }
 function closeModal(tipo) { document.getElementById(tipo==='compra'?'modalCompra':'modalPago').classList.remove('open'); }
 
-función editarCompra(id) {
-const c = compras.find(x => x.id === id); if (!c) return;
-editarCompraId=id;
+function editCompra(id) {
+const c=compras.find(x=>x.id===id); if(!c)return;
+editCompraId=id;
 document.getElementById('cFecha').value=(c.fecha||'').split('T')[0];
 document.getElementById('cAlbaran').value=c.albaran||'';
 document.getElementById('cDesc').value=c.descripcion||'';
@@ -378,54 +378,54 @@ document.getElementById('cNotas').value=c.notas||'';
 document.getElementById('modalCompra').classList.add('open');
 }
 
-función asíncrona saveCompra() {
+async function saveCompra() {
 const fecha=document.getElementById('cFecha').value;
-const importar=parseFloat(document.getElementById('cImporte').value);
+const importe=parseFloat(document.getElementById('cImporte').value);
 const desc=document.getElementById('cDesc').value.trim();
-if(!fecha||!desc||isNaN(importe)||importe<=0){alert('Completa fecha, descripción e importación.');return;}
+if(!fecha||!desc||isNaN(importe)||importe<=0){alert('Completa fecha, descripción e importe.');return;}
 const row={fecha,albaran:document.getElementById('cAlbaran').value.trim(),descripcion:desc,importe,pagado_inicial:parseFloat(document.getElementById('cPagadoInicial').value)||0,notas:document.getElementById('cNotas').value.trim()};
-sincronizar('sincronizando');
-intentar {
-if(editCompraId) { const res=await sbUpdate('zabaleta_compras',editCompraId,row); const i=compras.findIndex(c=> c.id ===editCompraId); compras[i]=res[0]||{...row,id:editCompraId}; }
-else { const res=await sbInsert('zabaleta_compras',fila); compras.unshift(res[0]); }
-sincronización('ok'); brindis(' ✓ Compra guardada');
+sync('syncing');
+try {
+if(editCompraId) { const res=await sbUpdate('zabaleta_compras',editCompraId,row); const i=compras.findIndex(c=>c.id===editCompraId); compras[i]=res[0]||{...row,id:editCompraId}; }
+else { const res=await sbInsert('zabaleta_compras',row); compras.unshift(res[0]); }
+sync('ok'); toast('✓ Compra guardada');
 } catch(e){sync('error');toast('⚠️ Error al guardar. ¿Existen las tablas en Supabase?');}
-actualizar KPI(); renderCompras(); closeModal('compra');
+updateKPIs(); renderCompras(); closeModal('compra');
 }
 
-función asíncrona savePago() {
+async function savePago() {
 const fecha=document.getElementById('pFecha').value;
-const importar=parseFloat(document.getElementById('pImporte').value);
+const importe=parseFloat(document.getElementById('pImporte').value);
 const concepto=document.getElementById('pConcepto').value.trim();
-if(!fecha||!concepto||isNaN(importe)||importe<=0){alert('Completa fecha, concepto e importación.');return;}
+if(!fecha||!concepto||isNaN(importe)||importe<=0){alert('Completa fecha, concepto e importe.');return;}
 const row={fecha,importe,concepto,forma_pago:document.getElementById('pForma').value,albaran_id:document.getElementById('pAlbaran').value||null,notas:document.getElementById('pNotas').value.trim()};
-sincronizar('sincronizando');
-intente { const res=await sbInsert('zabaleta_pagos',row); pagos.unshift(res[0]); sincronización('ok'); brindis(' ✓ Pago guardado'); }
+sync('syncing');
+try { const res=await sbInsert('zabaleta_pagos',row); pagos.unshift(res[0]); sync('ok'); toast('✓ Pago guardado'); }
 catch(e){sync('error');toast('⚠️ Error al guardar.');}
-actualizar KPI(); renderPagos(); closeModal('pago');
+updateKPIs(); renderPagos(); closeModal('pago');
 }
 
-función asíncrona deleteCompra(id) {
+async function deleteCompra(id) {
 if(!confirm('¿Eliminar esta compra?'))return;
-sincronizar('sincronizando');
-try{await sbDelete('zabaleta_compras',id);compras=compras.filter(c=> c.id !==id);sync('ok');toast('Compra eliminada');}
+sync('syncing');
+try{await sbDelete('zabaleta_compras',id);compras=compras.filter(c=>c.id!==id);sync('ok');toast('Compra eliminada');}
 catch(e){sync('error');toast('⚠️ Error al eliminar');}
-actualizarKPIs(); renderizarCompras();
+updateKPIs(); renderCompras();
 }
 
-función asíncrona deletePago(id) {
+async function deletePago(id) {
 if(!confirm('¿Eliminar este pago?'))return;
-sincronizar('sincronizando');
-try{await sbDelete('zabaleta_pagos',id);pagos=pagos.filter(p=> p.id !==id);sync('ok');toast('Pago eliminado');}
+sync('syncing');
+try{await sbDelete('zabaleta_pagos',id);pagos=pagos.filter(p=>p.id!==id);sync('ok');toast('Pago eliminado');}
 catch(e){sync('error');toast('⚠️ Error al eliminar');}
-actualizarKPIs(); renderizarPagos();
+updateKPIs(); renderPagos();
 }
 
 document.getElementById('modalCompra').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('compra');});
 document.getElementById('modalPago').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('pago');});
 
 document.getElementById('headerDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-cargarTodo();
+loadAll();
 </script>
 
 </body>
