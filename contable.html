@@ -719,11 +719,16 @@ return r.ok;
 async function syncUp() {
 showSyncStatus('⏫ Sincronizando...');
 try {
-// Borra y recarga las dos tablas
-await supaFetch('conta_ingresos?id=gte.0', 'DELETE');
-await supaFetch('conta_gastos?id=gte.0', 'DELETE');
-if(data.ingresos.length > 0) await supaFetch('conta_ingresos', 'POST', data.ingresos);
-if(data.gastos.length > 0) await supaFetch('conta_gastos', 'POST', data.gastos);
+await supaFetch('conta_ingresos?id=gt.0', 'DELETE');
+await supaFetch('conta_gastos?id=gt.0', 'DELETE');
+if(data.ingresos.length > 0) {
+const rows = data.ingresos.map(x => ({id:x.id,concepto:x.concepto,fecha:x.fecha,tipo:x.tipo,base:x.base,piva:x.pIva,cuotaiva:x.cuotaIva,pret:x.pRet,retencion:x.retencion,total:x.total,notas:x.notas}));
+await supaFetch('conta_ingresos', 'POST', rows);
+}
+if(data.gastos.length > 0) {
+const rows = data.gastos.map(x => ({id:x.id,concepto:x.concepto,fecha:x.fecha,tipo:x.tipo,base:x.base,piva:x.pIva,cuotaiva:x.cuotaIva,pret:x.pRet,retencion:x.retencion,total:x.total,notas:x.notas}));
+await supaFetch('conta_gastos', 'POST', rows);
+}
 showSyncStatus('✅ Sincronizado');
 } catch(e) { showSyncStatus('❌ Error sync'); }
 }
