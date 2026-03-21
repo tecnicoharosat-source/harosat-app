@@ -4,7 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAROSAT · Contabilidad</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HAROSAT · Contabilidad v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -758,6 +761,8 @@ if(el) { el.textContent = msg; setTimeout(()=>el.textContent='☁️ Sync', 3000
 let data = JSON.parse(localStorage.getItem('harosat_conta') || '{"ingresos":[],"gastos":[],"config":{"cuota_reta":300,"irpf_acum_ant":0}}');
 let modalTipo = 'ingreso';
 let currentView = 'dashboard';
+let editingId = null;
+let editingTipo = null;
 
 const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const T_MESES = [[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
@@ -798,6 +803,7 @@ renderAll();
 // =============================================
 function openModal(tipo) {
 modalTipo = tipo;
+editingId = null; editingTipo = null;
 document.getElementById('modal-title').textContent = tipo === 'ingreso' ? '💶 Nuevo ingreso' : '🧾 Nuevo gasto';
 document.getElementById('modal-save-btn').textContent = tipo === 'ingreso' ? 'Guardar ingreso' : 'Guardar gasto';
 const hoy = new Date().toISOString().split('T')[0];
@@ -843,25 +849,48 @@ return;
 const pIva = parseFloat(document.getElementById('f-iva').value) || 0;
 const pRet = parseFloat(document.getElementById('f-ret').value) || 0;
 const op = {
-id: Date.now(),
-concepto,
-fecha,
+id: editingId || Date.now(),
+concepto, fecha,
 tipo: document.getElementById('f-tipo').value,
-base,
-pIva,
+base, pIva,
 cuotaIva: base * pIva / 100,
 pRet,
 retencion: base * pRet / 100,
 total: base + (base * pIva / 100) - (base * pRet / 100),
 notas: document.getElementById('f-notas').value.trim()
 };
+if(editingId) {
+const arr = editingTipo === 'ingreso' ? data.ingresos : data.gastos;
+const idx = arr.findIndex(x => x.id === editingId);
+if(idx >= 0) arr[idx] = op;
+} else {
 if(modalTipo === 'ingreso') data.ingresos.push(op);
 else data.gastos.push(op);
-save();
-closeModal();
-renderAll();
-syncUp();
 }
+editingId = null; editingTipo = null;
+save(); closeModal(); renderAll(); syncUp();
+}
+
+function editOp(tipo, id) {
+const arr = tipo === 'ingreso' ? data.ingresos : data.gastos;
+const op = arr.find(x => x.id === id);
+if(!op) return;
+editingId = id;
+editingTipo = tipo;
+modalTipo = tipo;
+document.getElementById('modal-title').textContent = tipo === 'ingreso' ? '✏️ Editar ingreso' : '✏️ Editar gasto';
+document.getElementById('modal-save-btn').textContent = 'Guardar cambios';
+document.getElementById('f-concepto').value = op.concepto;
+document.getElementById('f-fecha').value = op.fecha;
+document.getElementById('f-tipo').value = op.tipo;
+document.getElementById('f-base').value = op.base;
+document.getElementById('f-iva').value = op.pIva;
+document.getElementById('f-ret').value = op.pRet;
+document.getElementById('f-notas').value = op.notas || '';
+calcModal();
+document.getElementById('modalOp').classList.add('open');
+}
+
 
 function delOp(tipo, id) {
 if(!confirm('¿Eliminar esta operación?')) return;
@@ -1087,7 +1116,7 @@ ${op.notas ? `<div style="font-size:10px;color:var(--muted)">${op.notas}</div>` 
 <td class="num neutral">${fmtE(op.cuotaIva)}</td>
 <td class="num" style="color:var(--muted)">${op.retencion > 0 ? fmtE(op.retencion) : '—'}</td>
 <td class="num">${fmtE(op.total)}</td>
-<td><button class="del-btn" onclick="delOp('${tipo}',${op.id})">✕</button></td>
+<td><button class="del-btn" style="color:var(--muted);" onclick="editOp('${tipo}',${op.id})">✏️</button><button class="del-btn" onclick="delOp('${tipo}',${op.id})">✕</button></td>
 </tr>
 `).join('')}
 </tbody>
