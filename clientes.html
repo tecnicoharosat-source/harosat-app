@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="es">
+<html lang="es" style="background:#060910;">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 <title>HAROSAT · Clientes</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -188,6 +189,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="nav-section">
 <div class="nav-label">Vistas</div>
 <div class="nav-item active" onclick="goTo('clientes')"><span class="nav-icon">👥</span><span>Todos los clientes</span></div>
+<div class="nav-item" onclick="goTo('cobros')"><span class="nav-icon">💳</span><span>Cobros 60/30/10</span></div>
 <div class="nav-item" onclick="goTo('recientes')"><span class="nav-icon">🕐</span><span>Recientes</span></div>
 <div class="nav-item" onclick="goTo('pendientes')"><span class="nav-icon">⏳</span><span>Pendientes cobro</span></div>
 <div class="nav-item" onclick="goTo('terminados')"><span class="nav-icon">✅</span><span>Trabajos terminados</span></div>
@@ -223,6 +225,12 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="card-header"><div class="card-title" id="tabla-title">Clientes</div></div>
 <div id="tabla-clientes" style="padding:0;"></div>
 </div>
+</div>
+
+<!-- COBROS 60/30/10 -->
+<div id="page-cobros" class="page">
+<div class="page-header"><div><div class="page-title">Cobros 60/30/10</div><div class="page-sub">Control de pagos por fases</div></div></div>
+<div class="card"><div id="tabla-cobros" style="padding:0;"></div></div>
 </div>
 
 <!-- RECIENTES -->
@@ -406,7 +414,7 @@ function goTo(page) {
 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 document.getElementById('page-'+page).classList.add('active');
-const pages = ['clientes','recientes','pendientes','terminados'];
+const pages = ['clientes','cobros','recientes','pendientes','terminados'];
 document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');
 renderAll();
 }
@@ -546,10 +554,57 @@ if(recientes.length > 20) recientes.pop();
 function renderAll() {
 renderKPIs();
 renderTabla();
+renderCobros();
 renderRecientes();
 renderPendientes();
 renderTerminados();
 renderSidebarStats();
+}
+
+function renderCobros() {
+const arr = clientes.filter(c => c.presupuesto > 0 && c.aceptado === 'si');
+if(!arr.length) {
+document.getElementById('tabla-cobros').innerHTML = `<div class="empty"><div class="icon">💳</div><p>Sin presupuestos aceptados aún</p></div>`;
+return;
+}
+document.getElementById('tabla-cobros').innerHTML = `<div class="table-wrap"><table>
+<thead><tr>
+<th>Cliente</th><th>Trabajo</th><th class="num">Total</th>
+<th class="num">60%</th><th class="num">30%</th><th class="num">10%</th>
+<th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th>
+</tr></thead>
+<tbody>${arr.map(c => {
+const total = +c.presupuesto || 0;
+const p60 = total * 0.60;
+const p30 = total * 0.30;
+const p10 = total * 0.10;
+const cobrado = +c.cobrado || 0;
+const pendiente = Math.max(0, total - cobrado);
+let estadoBadge, estadoColor;
+if(cobrado >= total) {
+estadoBadge = '✅ Cobrado total'; estadoColor = 'badge-green';
+} else if(cobrado >= p60 + p30) {
+estadoBadge = '🔵 Pdte. final 10%'; estadoColor = 'badge-blue';
+} else if(cobrado >= p60) {
+estadoBadge = '🟡 Pdte. 2º pago'; estadoColor = 'badge-orange';
+} else if(cobrado > 0) {
+estadoBadge = '🟠 Cobro parcial'; estadoColor = 'badge-orange';
+} else {
+estadoBadge = '🔴 Sin cobrar'; estadoColor = 'badge-red';
+}
+return `<tr>
+<td><div style="font-weight:600;color:white;">${c.nombre}</div><div style="font-size:10px;color:var(--muted)">${c.presupuesto_num||''}</div></td>
+<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${c.trabajo||'—'}</td>
+<td class="num" style="font-weight:700;">${fmtE(total)}</td>
+<td class="num" style="color:${cobrado>=p60?'var(--green)':'var(--muted)'}">${fmtE(p60)}</td>
+<td class="num" style="color:${cobrado>=p60+p30?'var(--green)':'var(--muted)'}">${fmtE(p30)}</td>
+<td class="num" style="color:${cobrado>=total?'var(--green)':'var(--muted)'}">${fmtE(p10)}</td>
+<td class="num pos">${cobrado>0?fmtE(cobrado):'—'}</td>
+<td class="num ${pendiente>0?'neg':'pos'}">${pendiente>0?fmtE(pendiente):'✓'}</td>
+<td><span class="badge ${estadoColor}">${estadoBadge}</span></td>
+</tr>`;
+}).join('')}
+</tbody></table></div>`;
 }
 
 function renderKPIs() {
@@ -717,5 +772,3 @@ cargarClientes();
 
 </body>
 </html>
-
-
