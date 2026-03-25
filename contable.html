@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="es">
@@ -1362,7 +1363,7 @@ document.getElementById('yearSelect').value = new Date().getFullYear();
 
 setTrimestreActual();
 initAssesor();
-renderAll();
+syncDown().then(() => renderAll());
 </script>
 
 </body>
