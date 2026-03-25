@@ -5,24 +5,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HAROSAT · Clientes</title>
-<link href=" https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap " rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:raíz {
+:root {
 --bg: #060910;
 --s1: #0d1117;
 --s2: #161b22;
 --s3: #21262d;
---borde: #30363d;
---azul: #1f6feb;
---azul2: #388bfd;
---verde: #3fb950;
---rojo: #f85149;
---naranja: #d29922;
---oro: #e3b341;
---púrpura: #a371f7;
---texto: #e6edf3;
---silenciado: #7d8590;
---luz: #b1bac4;
+--border: #30363d;
+--blue: #1f6feb;
+--blue2: #388bfd;
+--green: #3fb950;
+--red: #f85149;
+--orange: #d29922;
+--gold: #e3b341;
+--purple: #a371f7;
+--text: #e6edf3;
+--muted: #7d8590;
+--light: #b1bac4;
 --r: 10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -31,7 +31,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 
 .topbar{height:52px;background:var(–s1);border-bottom:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;z-index:100;}
 .topbar-left{display:flex;align-items:center;gap:14px;}
-.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;letter-spacing:0.08em;color:white;}
+.logo{font-family:‘Outfit’,sans-serif;font-weight:800;font-size:16px;letter-spacing:0.08em;color:white;}
 .logo span{color:var(–blue2);}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .sync-indicator{display:flex;align-items:center;gap:6px;font-size:11px;color:var(–muted);background:var(–s2);border:1px solid var(–border);padding:5px 12px;border-radius:20px;}
@@ -49,10 +49,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .nav-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0;}
 
 .sidebar-bottom{margin-top:auto;padding:12px;}
-.stat-box{fondo:var(–s2);borde:1px solid var(–border);border-radius:var(–r);padding:12px;}
+.stat-box{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:12px;}
 .stat-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;}
 .stat-row .lbl{color:var(–muted);}
-.stat-row .val{font-weight:700;font-family:'JetBrains Mono',monospace;}
+.stat-row .val{font-weight:700;font-family:‘JetBrains Mono’,monospace;}
 
 .content{flex:1;overflow-y:auto;padding:24px;background:var(–bg);}
 .page{display:none;}
@@ -62,37 +62,37 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .page-sub{font-size:12px;color:var(–muted);margin-top:3px;}
 .page-actions{display:flex;gap:8px;flex-wrap:wrap;}
 
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.12s;white-space:nowrap;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:‘Outfit’,sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.12s;white-space:nowrap;}
 .btn-primary{background:var(–blue);color:white;}
-.btn-primary:hover{fondo:var(–blue2);}
+.btn-primary:hover{background:var(–blue2);}
 .btn-green{background:rgba(63,185,80,0.15);color:var(–green);border:1px solid rgba(63,185,80,0.3);}
 .btn-green:hover{background:rgba(63,185,80,0.25);}
-.btn-ghost{fondo:var(–s2);color:var(–claro);borde:1px solid var(–borde);}
+.btn-ghost{background:var(–s2);color:var(–light);border:1px solid var(–border);}
 .btn-ghost:hover{background:var(–s3);color:white;}
 .btn-danger{background:rgba(248,81,73,0.12);color:var(–red);border:1px solid rgba(248,81,73,0.25);}
 .btn-danger:hover{background:rgba(248,81,73,0.22);}
 .btn-gold{background:rgba(227,179,65,0.12);color:var(–gold);border:1px solid rgba(227,179,65,0.25);}
 .btn-sm{padding:5px 12px;font-size:12px;}
 
-.card{fondo:var(–s1);borde:1px solid var(–border);border-radius:var(–r);overflow:hidden;margin-bottom:16px;}
+.card{background:var(–s1);border:1px solid var(–border);border-radius:var(–r);overflow:hidden;margin-bottom:16px;}
 .card-header{padding:14px 18px;border-bottom:1px solid var(–border);display:flex;justify-content:space-between;align-items:center;}
 .card-title{font-size:13px;font-weight:700;color:white;}
 .card-body{padding:18px;}
 
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
 .kpi{background:var(–s1);border:1px solid var(–border);border-radius:var(–r);padding:16px 18px;position:relative;overflow:hidden;}
-.kpi-accent{posición:absoluta;superior:0;izquierda:0;derecha:0;altura:2px;}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px;}
 .kpi-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;}
-.kpi-val{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;color:white;line-height:1;}
+.kpi-val{font-size:22px;font-weight:800;font-family:‘JetBrains Mono’,monospace;color:white;line-height:1;}
 .kpi-sub{font-size:11px;color:var(–muted);margin-top:5px;}
 
 .table-wrap{overflow-x:auto;}
-tabla{ancho:100%;border-colapso:colapso;tamaño-fuente:12px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
 th{text-align:left;padding:10px 14px;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);border-bottom:1px solid var(–border);white-space:nowrap;}
 td{padding:11px 14px;border-bottom:1px solid rgba(48,54,61,0.5);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,0.02);}
-.num{text-align:right;font-family:'JetBrains Mono',monospace;}
+.num{text-align:right;font-family:‘JetBrains Mono’,monospace;}
 .num.pos{color:var(–green);}
 .num.neg{color:var(–red);}
 .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
@@ -100,13 +100,13 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .badge-red{background:rgba(248,81,73,0.15);color:#ff7b72;}
 .badge-orange{background:rgba(210,153,34,0.15);color:var(–gold);}
 .badge-blue{background:rgba(56,139,253,0.15);color:#79c0ff;}
-.badge-silenciado{fondo:var(–s3);color:var(–silenciado);}
+.badge-muted{background:var(–s3);color:var(–muted);}
 .action-btn{background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:5px;font-size:13px;color:var(–muted);transition:all 0.1s;}
 .action-btn:hover{color:var(–blue2);background:rgba(56,139,253,0.1);}
 .action-btn.del:hover{color:var(–red);background:rgba(248,81,73,0.1);}
 
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:16px;}
-.overlay.open{display:flex;}
+.overlay{visibility:hidden;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;transition:opacity 0.2s;}
+.overlay.open{visibility:visible;opacity:1;}
 .modal{background:var(–s1);border:1px solid var(–border);border-radius:14px;padding:24px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;}
 .modal-title{font-size:17px;font-weight:800;color:white;margin-bottom:20px;}
 
@@ -115,25 +115,25 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .field{display:flex;flex-direction:column;gap:5px;}
 .field.full{grid-column:1/-1;}
 .field label{font-size:11px;font-weight:600;color:var(–muted);letter-spacing:0.06em;}
-.field input,.field select,.field textarea{background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 12px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;transition:border-color 0.15s;}
+.field input,.field select,.field textarea{background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 12px;border-radius:8px;font-family:‘Outfit’,sans-serif;font-size:13px;transition:border-color 0.15s;}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(–blue);}
 .field input::placeholder{color:var(–muted);}
 .form-section{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(–muted);grid-column:1/-1;padding-top:8px;border-top:1px solid var(–border);margin-top:4px;}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
 
 .search-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.search-input{flex:1;min-width:200px;background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 14px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;}
+.search-input{flex:1;min-width:200px;background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 14px;border-radius:8px;font-family:‘Outfit’,sans-serif;font-size:13px;}
 .search-input:focus{outline:none;border-color:var(–blue);}
-.filter-select{background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 12px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;}
+.filter-select{background:var(–s2);border:1px solid var(–border);color:var(–text);padding:9px 12px;border-radius:8px;font-family:‘Outfit’,sans-serif;font-size:12px;cursor:pointer;}
 
 .empty{text-align:center;padding:48px 20px;color:var(–muted);}
-.vacío .icono{font-size:40px;margin-bottom:12px;}
+.empty .icon{font-size:40px;margin-bottom:12px;}
 
 .toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(–s2);border:1px solid var(–border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:320px;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.ok{border-color:rgba(63,185,80,0.4);color:var(–green);}
 .toast.err{border-color:rgba(248,81,73,0.4);color:var(–red);}
-. toast.info {border-color:rgba(56,139,253,0.4);color:var(–blue2);}
+.toast.info{border-color:rgba(56,139,253,0.4);color:var(–blue2);}
 
 .reciente-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(48,54,61,0.4);cursor:pointer;transition:background 0.1s;}
 .reciente-item:hover{background:rgba(255,255,255,0.02);}
@@ -147,7 +147,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 
-::-webkit-scrollbar{ancho:5px;alto:5px;}
+::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(–border);border-radius:3px;}
 
@@ -167,7 +167,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 </style>
 
 </head>
-<cuerpo>
+<body>
 
 <div class="topbar">
 <div class="topbar-left">
@@ -211,13 +211,13 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="kpi-grid" id="kpis"></div>
 <div class="search-bar">
 <input class="search-input" id="buscador" placeholder="🔍 Buscar por nombre, dirección, trabajo..." oninput="renderTabla()">
-<select class="filtro-select" id="filtro-estado" onchange="renderTabla()">
+<select class="filter-select" id="filtro-estado" onchange="renderTabla()">
 <option value="">Todos los estados</option>
 <option value="pendiente">Pendiente cobro</option>
 <option value="parcial">Cobro parcial</option>
-<opción valor="cobrado">Cobrado</option>
+<option value="cobrado">Cobrado</option>
 <option value="terminado">Trabajo terminado</option>
-</seleccionar>
+</select>
 </div>
 <div class="card">
 <div class="card-header"><div class="card-title" id="tabla-title">Clientes</div></div>
@@ -226,7 +226,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 </div>
 
 <!-- RECIENTES -->
-<div id="página-recientes" class="página">
+<div id="page-recientes" class="page">
 <div class="page-header"><div><div class="page-title">Actividad reciente</div><div class="page-sub">Últimas modificaciones</div></div></div>
 <div class="card"><div class="card-header"><div class="card-title">Historial reciente</div></div><div id="lista-recientes" style="padding:0;"></div></div>
 </div>
@@ -271,8 +271,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <input id="f-tel" placeholder="600 000 000">
 </div>
 <div class="field">
-<label>Correo electrónico</label>
-<input id="f-email" placeholder=" cliente@email.com ">
+<label>Email</label>
+<input id="f-email" placeholder="cliente@email.com">
 </div>
 
 ```
@@ -292,7 +292,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 <div class="form-section">Económico</div>
 <div class="field">
-<label>Presupuesto de importación (€)</label>
+<label>Importe presupuesto (€)</label>
 <input type="number" id="f-presup" step="0.01" placeholder="0.00" oninput="calcCliente()">
 </div>
 <div class="field">
@@ -301,7 +301,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <option value="si">Sí</option>
 <option value="no">No</option>
 <option value="pendiente">Pendiente respuesta</option>
-</seleccionar>
+</select>
 </div>
 <div class="field">
 <label>Parte cobrada (€)</label>
@@ -317,14 +317,14 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <option value="no">No facturado</option>
 <option value="parcial">Parcialmente</option>
 <option value="si">Facturado</option>
-</seleccionar>
+</select>
 </div>
 <div class="field">
 <label>Trabajo terminado</label>
 <select id="f-terminado">
 <option value="no">No</option>
 <option value="si">Sí</option>
-</seleccionar>
+</select>
 </div>
 
 <div class="form-section">Notas</div>
@@ -345,80 +345,80 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════
+// ═══════════════════════════════
 // SUPABASE
-// ══════════════════════════════
-const SUPA_URL = ' https://sobiyfyzalynxcpfoldc.supabase.co ';
+// ═══════════════════════════════
+const SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 const H = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 
-función asíncrona sbGet(q='') {
+async function sbGet(q='') {
 const r = await fetch(`${SUPA_URL}/rest/v1/clientes?${q}`, {headers:H});
 if(!r.ok) throw new Error(await r.text());
-devolver r.json();
+return r.json();
 }
-función asíncrona sbInsert(fila) {
+async function sbInsert(row) {
 const r = await fetch(`${SUPA_URL}/rest/v1/clientes`, {method:'POST',headers:H,body:JSON.stringify(row)});
 if(!r.ok) throw new Error(await r.text());
-devolver r.json();
+return r.json();
 }
-función asíncrona sbUpdate(id, fila) {
+async function sbUpdate(id, row) {
 const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'PATCH',headers:H,body:JSON.stringify(row)});
 if(!r.ok) throw new Error(await r.text());
-devolver r.json();
+return r.json();
 }
-función asíncrona sbDelete(id) {
+async function sbDelete(id) {
 const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});
 if(!r.ok) throw new Error(await r.text());
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // ESTADO
-// ══════════════════════════════
+// ═══════════════════════════════
 let clientes = [];
 let recientes = [];
 let editingId = null;
 
-función setSyncStatus(estado, mensaje) {
+function setSyncStatus(state, msg) {
 document.getElementById('sync-dot').className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
 document.getElementById('sync-text').textContent = msg;
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // CARGAR
-// ══════════════════════════════
-función asíncrona cargarClientes() {
-setSyncStatus('sincronizando', 'Cargando...');
-intentar {
+// ═══════════════════════════════
+async function cargarClientes() {
+setSyncStatus('syncing', 'Cargando...');
+try {
 clientes = await sbGet('select=*&order=updated_at.desc');
 setSyncStatus('ok', 'Sincronizado');
 renderAll();
 } catch(e) {
 setSyncStatus('error', 'Sin conexión');
-brindis('Error al cargar datos', 'err');
+toast('Error al cargar datos', 'err');
 }
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // NAVEGACIÓN
-// ══════════════════════════════
-función irA(página) {
+// ═══════════════════════════════
+function goTo(page) {
 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 document.getElementById('page-'+page).classList.add('active');
-const páginas = ['clientes','recientes','pendientes','terminados'];
+const pages = ['clientes','recientes','pendientes','terminados'];
 document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');
 renderAll();
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // MODAL
-// ══════════════════════════════
-función openModal(id) {
+// ═══════════════════════════════
+function openModal(id) {
 editingId = id || null;
-si(id) {
+if(id) {
 const c = clientes.find(x => x.id === id);
-si(!c) regresar;
+if(!c) return;
 document.getElementById('modal-title').textContent = '✏️ Editar cliente';
 document.getElementById('modal-btn').textContent = 'Guardar cambios';
 document.getElementById('f-nombre').value = c.nombre || '';
@@ -429,14 +429,14 @@ document.getElementById('f-email').value = c.email || '';
 document.getElementById('f-trabajo').value = c.trabajo || '';
 document.getElementById('f-presup-num').value = c.presupuesto_num || '';
 document.getElementById('f-fecha').value = c.fecha || '';
-document.getElementById('f-presupuesto').value = c.presupuesto || '';
+document.getElementById('f-presup').value = c.presupuesto || '';
 document.getElementById('f-aceptado').value = c.aceptado || 'pendiente';
 document.getElementById('f-cobrado').value = c.cobrado || '';
-document.getElementById('f-facturado').value = c.facturado || 'No';
-document.getElementById('f-terminado').value = c.terminado || 'No';
+document.getElementById('f-facturado').value = c.facturado || 'no';
+document.getElementById('f-terminado').value = c.terminado || 'no';
 document.getElementById('f-notas').value = c.notas || '';
 calcCliente();
-} demás {
+} else {
 document.getElementById('modal-title').textContent = '👤 Nuevo cliente';
 document.getElementById('modal-btn').textContent = 'Guardar cliente';
 document.getElementById('f-nombre').value = '';
@@ -461,90 +461,90 @@ setTimeout(() => document.getElementById('f-nombre').focus(), 100);
 
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 
-función calcCliente() {
+function calcCliente() {
 const presup = parseFloat(document.getElementById('f-presup').value) || 0;
 const cobrado = parseFloat(document.getElementById('f-cobrado').value) || 0;
 document.getElementById('f-pendiente').value = Math.max(0, presup - cobrado).toFixed(2);
 }
 
-función asíncrona saveCliente() {
+async function saveCliente() {
 const nombre = document.getElementById('f-nombre').value.trim();
-if(!nombre) { tostado('El nombre es obligatorio', 'err'); devolver; }
+if(!nombre) { toast('El nombre es obligatorio', 'err'); return; }
 
 const presup = parseFloat(document.getElementById('f-presup').value) || 0;
 const cobrado = parseFloat(document.getElementById('f-cobrado').value) || 0;
 
-const fila = {
+const row = {
 nombre,
 dni: document.getElementById('f-dni').value.trim(),
-dirección: document.getElementById('f-dir').value.trim(),
-teléfono: document.getElementById('f-tel').value.trim(),
-correo electrónico: document.getElementById('f-email').value.trim(),
+direccion: document.getElementById('f-dir').value.trim(),
+telefono: document.getElementById('f-tel').value.trim(),
+email: document.getElementById('f-email').value.trim(),
 trabajo: document.getElementById('f-trabajo').value.trim(),
 presupuesto_num: document.getElementById('f-presup-num').value.trim(),
 fecha: document.getElementById('f-fecha').value,
-presupuesto: presupuestar,
+presupuesto: presup,
 aceptado: document.getElementById('f-aceptado').value,
 cobrado,
 pendiente: Math.max(0, presup - cobrado),
 facturado: document.getElementById('f-facturado').value,
 terminado: document.getElementById('f-terminado').value,
 notas: document.getElementById('f-notas').value.trim(),
-actualizado_en: new Date().toISOString()
+updated_at: new Date().toISOString()
 };
 
-setSyncStatus('sincronizando', 'Guardando...');
-intentar {
-si(editingId) {
+setSyncStatus('syncing', 'Guardando...');
+try {
+if(editingId) {
 const res = await sbUpdate(editingId, row);
 const idx = clientes.findIndex(x => x.id === editingId);
-if(idx >= 0) clientes[idx] = {...clientes[idx], ...fila, id:editId};
-brindis('Cliente actualizado ✓', 'ok');
-} demás {
-row.id = Fecha.ahora();
+if(idx >= 0) clientes[idx] = {...clientes[idx], ...row, id: editingId};
+toast('Cliente actualizado ✓', 'ok');
+} else {
+row.id = Date.now();
 const res = await sbInsert(row);
 clientes.unshift(Array.isArray(res) ? res[0] : {...row});
-brindis('Cliente guardado ✓', 'ok');
+toast('Cliente guardado ✓', 'ok');
 }
 // Añadir a recientes
 addReciente(row.nombre, editingId ? 'Editado' : 'Nuevo', row.trabajo);
 setSyncStatus('ok', 'Sincronizado');
-cerrarModal();
+closeModal();
 renderAll();
 } catch(e) {
 setSyncStatus('error', 'Error');
-brindis('Error al guardar: '+e.message, 'err');
+toast('Error al guardar: '+e.message, 'err');
 }
 }
 
-función asíncrona deleteCliente(id) {
+async function deleteCliente(id) {
 if(!confirm('¿Eliminar este cliente?')) return;
 setSyncStatus('syncing', 'Eliminando...');
-intentar {
-esperar a que sbDelete(id);
+try {
+await sbDelete(id);
 clientes = clientes.filter(x => x.id !== id);
 setSyncStatus('ok', 'Sincronizado');
 renderAll();
-brindis('Cliente eliminado', 'info');
+toast('Cliente eliminado', 'info');
 } catch(e) {
 setSyncStatus('error', 'Error');
-brindis('Error al eliminar', 'err');
+toast('Error al eliminar', 'err');
 }
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // RECIENTES
-// ══════════════════════════════
-function agregarReciente(nombre, acción, trabajo) {
-recientes.unshift({nombre, acción, trabajo, ts: new Date().toLocaleTimeString('es-ES',{hora:'2-digit',minuto:'2-digit'})});
+// ═══════════════════════════════
+function addReciente(nombre, accion, trabajo) {
+recientes.unshift({nombre, accion, trabajo, ts: new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})});
 if(recientes.length > 20) recientes.pop();
 }
 
-// ══════════════════════════════
-// PRESTAR
-// ══════════════════════════════
-función renderAll() {
-renderizarKPIs();
+// ═══════════════════════════════
+// RENDER
+// ═══════════════════════════════
+function renderAll() {
+renderKPIs();
 renderTabla();
 renderRecientes();
 renderPendientes();
@@ -552,14 +552,14 @@ renderTerminados();
 renderSidebarStats();
 }
 
-función renderKPIs() {
+function renderKPIs() {
 const total = clientes.length;
 const pendientes = clientes.filter(x => x.pendiente > 0).length;
 const totalPendiente = clientes.reduce((a,b) => a + (+b.pendiente||0), 0);
 const terminados = clientes.filter(x => x.terminado === 'si').length;
 document.getElementById('kpis').innerHTML = `
 <div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>
-<div class="kpi-label">Clientes totales</div><div class="kpi-val">${total}</div></div>
+<div class="kpi-label">Total clientes</div><div class="kpi-val">${total}</div></div>
 <div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>
 <div class="kpi-label">Pendiente cobro</div>
 <div class="kpi-val" style="color:${totalPendiente>0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(totalPendiente)}</div>
@@ -569,12 +569,12 @@ document.getElementById('kpis').innerHTML = `
 <div class="kpi-val" style="color:var(--green)">${terminados}</div>
 <div class="kpi-sub">de ${total} totales</div></div>
 <div class="kpi"><div class="kpi-accent" style="background:var(--gold)"></div>
-<div class="kpi-label">Presupuesto</div>
+<div class="kpi-label">Presupuestado</div>
 <div class="kpi-val" style="font-size:18px;">${fmtE(clientes.reduce((a,b)=>a+(+b.presupuesto||0),0))}</div></div>
 `;
 }
 
-función estadoBadge(c) {
+function estadoBadge(c) {
 const p = +c.pendiente || 0;
 if(c.terminado === 'si' && p === 0) return '<span class="badge badge-green">✅ Terminado</span>';
 if(p > 0) return `<span class="badge badge-red">💰 Pendiente ${fmtE(p)}</span>`;
@@ -583,10 +583,10 @@ if(c.aceptado === 'pendiente') return '<span class="badge badge-orange">⏳ En e
 return '<span class="badge badge-blue">🔧 En curso</span>';
 }
 
-función renderTablaClientes(arr, contId) {
-si(!arr.length) {
+function renderTablaClientes(arr, contId) {
+if(!arr.length) {
 document.getElementById(contId).innerHTML = `<div class="empty"><div class="icon">👥</div><p>Sin clientes en esta vista</p></div>`;
-devolver;
+return;
 }
 document.getElementById(contId).innerHTML = `<div class="table-wrap"><table>
 <thead><tr>
@@ -610,35 +610,35 @@ ${c.presupuesto_num?`<div style="font-size:10px;color:var(--muted)">${c.presupue
 <td>${estadoBadge(c)}</td>
 <td>${c.facturado==='si'?'<span class="badge badge-green">Sí</span>':c.facturado==='parcial'?'<span class="badge badge-orange">Parcial</span>':'<span class="badge badge-muted">No</span>'}</td>
 <td style="white-space:nowrap;">
-<button class="action-btn" onclick="openModal(${ c.id })" title="Editar">✏️</button>
-<button class="action-btn del" onclick="deleteCliente(${ c.id })" title="Eliminar">✕</button>
+<button class="action-btn" onclick="openModal(${c.id})" title="Editar">✏️</button>
+<button class="action-btn del" onclick="deleteCliente(${c.id})" title="Eliminar">✕</button>
 </td>
 </tr>`).join('')}
 </tbody></table></div>`;
 }
 
-función renderTabla() {
+function renderTabla() {
 const busq = (document.getElementById('buscador')?.value || '').toLowerCase();
 const filtroEstado = document.getElementById('filtro-estado')?.value || '';
 let arr = clientes.filter(c => {
-coincidencia constante = !busq || [c.nombre,c.direccion,c.trabajo,c.notas,c.presupuesto_num].join(' ').toLowerCase().includes(busq);
+const match = !busq || [c.nombre,c.direccion,c.trabajo,c.notas,c.presupuesto_num].join(' ').toLowerCase().includes(busq);
 let estado = true;
 if(filtroEstado === 'pendiente') estado = (+c.pendiente||0) > 0;
 else if(filtroEstado === 'parcial') estado = (+c.cobrado||0) > 0 && (+c.pendiente||0) > 0;
 else if(filtroEstado === 'cobrado') estado = (+c.pendiente||0) === 0 && (+c.cobrado||0) > 0;
 else if(filtroEstado === 'terminado') estado = c.terminado === 'si';
-devolver coincidencia && estado;
+return match && estado;
 });
 document.getElementById('tabla-title').textContent = `${arr.length} cliente${arr.length!==1?'s':''}`;
 document.getElementById('clientes-sub').textContent = `${clientes.length} registros totales`;
 renderTablaClientes(arr, 'tabla-clientes');
 }
 
-función renderRecientes() {
+function renderRecientes() {
 const el = document.getElementById('lista-recientes');
-si(!recientes.length) {
+if(!recientes.length) {
 el.innerHTML = `<div class="empty"><div class="icon">🕐</div><p>Sin actividad reciente en esta sesión</p></div>`;
-devolver;
+return;
 }
 el.innerHTML = recientes.map(r => `
 <div class="reciente-item">
@@ -651,17 +651,17 @@ el.innerHTML = recientes.map(r => `
 </div>`).join('');
 }
 
-función renderPendientes() {
+function renderPendientes() {
 const arr = clientes.filter(c => (+c.pendiente||0) > 0).sort((a,b) => (+b.pendiente||0)-(+a.pendiente||0));
 renderTablaClientes(arr, 'tabla-pendientes');
 }
 
-función renderTerminados() {
+function renderTerminados() {
 const arr = clientes.filter(c => c.terminado === 'si');
 renderTablaClientes(arr, 'tabla-terminados');
 }
 
-función renderSidebarStats() {
+function renderSidebarStats() {
 const total = clientes.reduce((a,b)=>a+(+b.presupuesto||0),0);
 const cobrado = clientes.reduce((a,b)=>a+(+b.cobrado||0),0);
 const pendiente = clientes.reduce((a,b)=>a+(+b.pendiente||0),0);
@@ -673,13 +673,13 @@ document.getElementById('sidebar-stats').innerHTML = `
 `;
 }
 
-// ══════════════════════════════
+// ═══════════════════════════════
 // EXPORTAR
-// ══════════════════════════════
-función exportarCSV() {
+// ═══════════════════════════════
+function exportarCSV() {
 let csv = 'NOMBRE;DNI;DIRECCIÓN;TELÉFONO;TRABAJO;PRESUPUESTO Nº;FECHA;IMPORTE;COBRADO;PENDIENTE;FACTURADO;TERMINADO;NOTAS\n';
 clientes.forEach(c => {
-csv+= `"${c.nombre||''}";${c.dni||''};${c.direccion||''};${c.telefono||''};"${c.trabajo||''}";${c.presupuesto_num||''};${c.fecha ||''};${c.presupuesto||0};${c.cobrado||0};${c.pendiente||0};${c.facturado||'no'};${c.terminado||'no'};"${c.notas||''}"\n`;
+csv += `"${c.nombre||''}";${c.dni||''};${c.direccion||''};${c.telefono||''};"${c.trabajo||''}";${c.presupuesto_num||''};${c.fecha||''};${c.presupuesto||0};${c.cobrado||0};${c.pendiente||0};${c.facturado||'no'};${c.terminado||'no'};"${c.notas||''}"\n`;
 });
 const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
 const a = document.createElement('a');
@@ -689,22 +689,22 @@ a.click();
 toast('Exportado ✓', 'ok');
 }
 
-// ══════════════════════════════
-// UTILIDADES
-// ══════════════════════════════
+// ═══════════════════════════════
+// UTILS
+// ═══════════════════════════════
 function fmt(n) { return (+n).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-función fmtE(n) { return fmt(n)+' €'; }
+function fmtE(n) { return fmt(n)+' €'; }
 
-función toast(msg, type='ok') {
+function toast(msg, type='ok') {
 const el = document.getElementById('toast');
 el.textContent = msg;
 el.className = `toast show ${type}`;
 setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// ══════════════════════════════
-// INICIALIZAR
-// ══════════════════════════════
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
 document.getElementById('modal-overlay').addEventListener('click', e => {
 if(e.target === document.getElementById('modal-overlay')) closeModal();
 });
@@ -717,3 +717,4 @@ cargarClientes();
 
 </body>
 </html>
+
