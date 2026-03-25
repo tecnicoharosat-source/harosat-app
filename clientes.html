@@ -26,7 +26,7 @@
 --r: 10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;overflow:auto;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
 
 .topbar{height:52px;background:var(–s1);border-bottom:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;z-index:100;}
@@ -709,14 +709,10 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
 if(e.target === document.getElementById('modal-overlay')) closeModal();
 });
 
-// Crear tabla de clientes si no existe
-función asíncrona initDB() {
-// La tabla 'clientes' ya existe en Supabase
-// Verificar que tiene las columnas necesarias
-cargarClientes();
-}
+// Asegurar que el modal empieza cerrado
+document.getElementById('modal-overlay').classList.remove('open');
 
-initDB();
+cargarClientes();
 </script>
 
 </body>
