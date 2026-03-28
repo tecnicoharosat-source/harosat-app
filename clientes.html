@@ -9,22 +9,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
---bg: #060910;
---s1: #0d1117;
---s2: #161b22;
---s3: #21262d;
---border: #30363d;
---blue: #1f6feb;
---blue2: #388bfd;
---green: #3fb950;
---red: #f85149;
---orange: #d29922;
---gold: #e3b341;
---purple: #a371f7;
---text: #e6edf3;
---muted: #7d8590;
---light: #b1bac4;
---r: 10px;
+  --bg: #060910;
+  --s1: #0d1117;
+  --s2: #161b22;
+  --s3: #21262d;
+  --border: #30363d;
+  --blue: #1f6feb;
+  --blue2: #388bfd;
+  --green: #3fb950;
+  --red: #f85149;
+  --orange: #d29922;
+  --gold: #e3b341;
+  --purple: #a371f7;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --light: #b1bac4;
+  --r: 10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:auto;}
@@ -171,183 +171,183 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <body>
 
 <div class="topbar">
-<div class="topbar-left">
-<div class="logo">HARO<span>SAT</span> <span style="font-weight:300;color:var(--muted);font-size:13px;">Clientes</span></div>
-</div>
-<div class="topbar-right">
-<div class="sync-indicator">
-<div class="sync-dot" id="sync-dot"></div>
-<span id="sync-text">Conectando...</span>
-</div>
-<button class="btn btn-primary btn-sm" onclick="openModal()">+ Nuevo cliente</button>
-<button class="btn btn-ghost btn-sm" onclick="exportarCSV()">⬇ Exportar</button>
-</div>
+  <div class="topbar-left">
+    <div class="logo">HARO<span>SAT</span> <span style="font-weight:300;color:var(--muted);font-size:13px;">Clientes</span></div>
+  </div>
+  <div class="topbar-right">
+    <div class="sync-indicator">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-text">Conectando...</span>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nuevo cliente</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportarCSV()">⬇ Exportar</button>
+  </div>
 </div>
 
 <div class="layout">
-<aside class="sidebar">
-<div class="nav-section">
-<div class="nav-label">Vistas</div>
-<div class="nav-item active" onclick="goTo('clientes')"><span class="nav-icon">👥</span><span>Todos los clientes</span></div>
-<div class="nav-item" onclick="goTo('cobros')"><span class="nav-icon">💳</span><span>Cobros 60/30/10</span></div>
-<div class="nav-item" onclick="goTo('recientes')"><span class="nav-icon">🕐</span><span>Recientes</span></div>
-<div class="nav-item" onclick="goTo('pendientes')"><span class="nav-icon">⏳</span><span>Pendientes cobro</span></div>
-<div class="nav-item" onclick="goTo('terminados')"><span class="nav-icon">✅</span><span>Trabajos terminados</span></div>
-</div>
-<div class="sidebar-bottom">
-<div class="stat-box" id="sidebar-stats"></div>
-</div>
-</aside>
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Vistas</div>
+      <div class="nav-item active" onclick="goTo('clientes')"><span class="nav-icon">👥</span><span>Todos los clientes</span></div>
+      <div class="nav-item" onclick="goTo('cobros')"><span class="nav-icon">💳</span><span>Cobros 60/30/10</span></div>
+      <div class="nav-item" onclick="goTo('recientes')"><span class="nav-icon">🕐</span><span>Recientes</span></div>
+      <div class="nav-item" onclick="goTo('pendientes')"><span class="nav-icon">⏳</span><span>Pendientes cobro</span></div>
+      <div class="nav-item" onclick="goTo('terminados')"><span class="nav-icon">✅</span><span>Trabajos terminados</span></div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="stat-box" id="sidebar-stats"></div>
+    </div>
+  </aside>
 
-<main class="content">
+  <main class="content">
 
 ```
 <!-- CLIENTES -->
 <div id="page-clientes" class="page active">
-<div class="page-header">
-<div><div class="page-title">Clientes</div><div class="page-sub" id="clientes-sub">Todos los registros</div></div>
-<div class="page-actions">
-<button class="btn btn-primary" onclick="openModal()">+ Nuevo cliente</button>
-</div>
-</div>
-<div class="kpi-grid" id="kpis"></div>
-<div class="search-bar">
-<input class="search-input" id="buscador" placeholder="🔍 Buscar por nombre, dirección, trabajo..." oninput="renderTabla()">
-<select class="filter-select" id="filtro-estado" onchange="renderTabla()">
-<option value="">Todos los estados</option>
-<option value="pendiente">Pendiente cobro</option>
-<option value="parcial">Cobro parcial</option>
-<option value="cobrado">Cobrado</option>
-<option value="terminado">Trabajo terminado</option>
-</select>
-</div>
-<div class="card">
-<div class="card-header"><div class="card-title" id="tabla-title">Clientes</div></div>
-<div id="tabla-clientes" style="padding:0;"></div>
-</div>
+  <div class="page-header">
+    <div><div class="page-title">Clientes</div><div class="page-sub" id="clientes-sub">Todos los registros</div></div>
+    <div class="page-actions">
+      <button class="btn btn-primary" onclick="openModal()">+ Nuevo cliente</button>
+    </div>
+  </div>
+  <div class="kpi-grid" id="kpis"></div>
+  <div class="search-bar">
+    <input class="search-input" id="buscador" placeholder="🔍  Buscar por nombre, dirección, trabajo..." oninput="renderTabla()">
+    <select class="filter-select" id="filtro-estado" onchange="renderTabla()">
+      <option value="">Todos los estados</option>
+      <option value="pendiente">Pendiente cobro</option>
+      <option value="parcial">Cobro parcial</option>
+      <option value="cobrado">Cobrado</option>
+      <option value="terminado">Trabajo terminado</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title" id="tabla-title">Clientes</div></div>
+    <div id="tabla-clientes" style="padding:0;"></div>
+  </div>
 </div>
 
 <!-- COBROS 60/30/10 -->
 <div id="page-cobros" class="page">
-<div class="page-header"><div><div class="page-title">Cobros 60/30/10</div><div class="page-sub">Control de pagos por fases</div></div></div>
-<div class="card"><div id="tabla-cobros" style="padding:0;"></div></div>
+  <div class="page-header"><div><div class="page-title">Cobros 60/30/10</div><div class="page-sub">Control de pagos por fases</div></div></div>
+  <div class="card"><div id="tabla-cobros" style="padding:0;"></div></div>
 </div>
 
 <!-- RECIENTES -->
 <div id="page-recientes" class="page">
-<div class="page-header"><div><div class="page-title">Actividad reciente</div><div class="page-sub">Últimas modificaciones</div></div></div>
-<div class="card"><div class="card-header"><div class="card-title">Historial reciente</div></div><div id="lista-recientes" style="padding:0;"></div></div>
+  <div class="page-header"><div><div class="page-title">Actividad reciente</div><div class="page-sub">Últimas modificaciones</div></div></div>
+  <div class="card"><div class="card-header"><div class="card-title">Historial reciente</div></div><div id="lista-recientes" style="padding:0;"></div></div>
 </div>
 
 <!-- PENDIENTES -->
 <div id="page-pendientes" class="page">
-<div class="page-header"><div><div class="page-title">Pendientes de cobro</div><div class="page-sub">Clientes con saldo pendiente</div></div></div>
-<div class="card"><div id="tabla-pendientes" style="padding:0;"></div></div>
+  <div class="page-header"><div><div class="page-title">Pendientes de cobro</div><div class="page-sub">Clientes con saldo pendiente</div></div></div>
+  <div class="card"><div id="tabla-pendientes" style="padding:0;"></div></div>
 </div>
 
 <!-- TERMINADOS -->
 <div id="page-terminados" class="page">
-<div class="page-header"><div><div class="page-title">Trabajos terminados</div><div class="page-sub">Historial de trabajos completados</div></div></div>
-<div class="card"><div id="tabla-terminados" style="padding:0;"></div></div>
+  <div class="page-header"><div><div class="page-title">Trabajos terminados</div><div class="page-sub">Historial de trabajos completados</div></div></div>
+  <div class="card"><div id="tabla-terminados" style="padding:0;"></div></div>
 </div>
 ```
 
-</main>
+  </main>
 </div>
 
 <!-- MODAL CLIENTE -->
 
 <div class="overlay" id="modal-overlay">
-<div class="modal">
-<div class="modal-title" id="modal-title">Nuevo cliente</div>
-<div class="form-grid">
-<div class="form-section">Datos del cliente</div>
-<div class="field full">
-<label>Nombre completo *</label>
-<input id="f-nombre" placeholder="Nombre y apellidos">
-</div>
-<div class="field full">
-<label>DNI / NIF</label>
-<input id="f-dni" placeholder="12345678A">
-</div>
-<div class="field full">
-<label>Dirección</label>
-<input id="f-dir" placeholder="C/ Ejemplo 1, 2ºA, Haro">
-</div>
-<div class="field">
-<label>Teléfono</label>
-<input id="f-tel" placeholder="600 000 000">
-</div>
-<div class="field">
-<label>Email</label>
-<input id="f-email" placeholder="cliente@email.com">
-</div>
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Nuevo cliente</div>
+    <div class="form-grid">
+      <div class="form-section">Datos del cliente</div>
+      <div class="field full">
+        <label>Nombre completo *</label>
+        <input id="f-nombre" placeholder="Nombre y apellidos">
+      </div>
+      <div class="field full">
+        <label>DNI / NIF</label>
+        <input id="f-dni" placeholder="12345678A">
+      </div>
+      <div class="field full">
+        <label>Dirección</label>
+        <input id="f-dir" placeholder="C/ Ejemplo 1, 2ºA, Haro">
+      </div>
+      <div class="field">
+        <label>Teléfono</label>
+        <input id="f-tel" placeholder="600 000 000">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="f-email" placeholder="cliente@email.com">
+      </div>
 
 ```
-<div class="form-section">Trabajo</div>
-<div class="field full">
-<label>Descripción del trabajo</label>
-<input id="f-trabajo" placeholder="Ej: Instalación caldera Wolf 24kW + termostato">
-</div>
-<div class="field">
-<label>Nº Presupuesto</label>
-<input id="f-presup-num" placeholder="HS/26/00">
-</div>
-<div class="field">
-<label>Fecha presupuesto</label>
-<input type="date" id="f-fecha">
-</div>
+  <div class="form-section">Trabajo</div>
+  <div class="field full">
+    <label>Descripción del trabajo</label>
+    <input id="f-trabajo" placeholder="Ej: Instalación caldera Wolf 24kW + termostato">
+  </div>
+  <div class="field">
+    <label>Nº Presupuesto</label>
+    <input id="f-presup-num" placeholder="HS/26/00">
+  </div>
+  <div class="field">
+    <label>Fecha presupuesto</label>
+    <input type="date" id="f-fecha">
+  </div>
 
-<div class="form-section">Económico</div>
-<div class="field">
-<label>Importe presupuesto (€)</label>
-<input type="number" id="f-presup" step="0.01" placeholder="0.00" oninput="calcCliente()">
-</div>
-<div class="field">
-<label>Aceptado</label>
-<select id="f-aceptado">
-<option value="si">Sí</option>
-<option value="no">No</option>
-<option value="pendiente">Pendiente respuesta</option>
-</select>
-</div>
-<div class="field">
-<label>Parte cobrada (€)</label>
-<input type="number" id="f-cobrado" step="0.01" placeholder="0.00" oninput="calcCliente()">
-</div>
-<div class="field">
-<label>Parte pendiente (€)</label>
-<input type="number" id="f-pendiente" readonly style="opacity:0.6;">
-</div>
-<div class="field">
-<label>Facturado</label>
-<select id="f-facturado">
-<option value="no">No facturado</option>
-<option value="parcial">Parcialmente</option>
-<option value="si">Facturado</option>
-</select>
-</div>
-<div class="field">
-<label>Trabajo terminado</label>
-<select id="f-terminado">
-<option value="no">No</option>
-<option value="si">Sí</option>
-</select>
-</div>
+  <div class="form-section">Económico</div>
+  <div class="field">
+    <label>Importe presupuesto (€)</label>
+    <input type="number" id="f-presup" step="0.01" placeholder="0.00" oninput="calcCliente()">
+  </div>
+  <div class="field">
+    <label>Aceptado</label>
+    <select id="f-aceptado">
+      <option value="si">Sí</option>
+      <option value="no">No</option>
+      <option value="pendiente">Pendiente respuesta</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Parte cobrada (€)</label>
+    <input type="number" id="f-cobrado" step="0.01" placeholder="0.00" oninput="calcCliente()">
+  </div>
+  <div class="field">
+    <label>Parte pendiente (€)</label>
+    <input type="number" id="f-pendiente" readonly style="opacity:0.6;">
+  </div>
+  <div class="field">
+    <label>Facturado</label>
+    <select id="f-facturado">
+      <option value="no">No facturado</option>
+      <option value="parcial">Parcialmente</option>
+      <option value="si">Facturado</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Trabajo terminado</label>
+    <select id="f-terminado">
+      <option value="no">No</option>
+      <option value="si">Sí</option>
+    </select>
+  </div>
 
-<div class="form-section">Notas</div>
-<div class="field full">
-<label>Observaciones</label>
-<textarea id="f-notas" rows="2" placeholder="Notas internas, materiales, incidencias..."></textarea>
-</div>
+  <div class="form-section">Notas</div>
+  <div class="field full">
+    <label>Observaciones</label>
+    <textarea id="f-notas" rows="2" placeholder="Notas internas, materiales, incidencias..."></textarea>
+  </div>
 </div>
 <div class="form-actions">
-<button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-<button class="btn btn-primary" id="modal-btn" onclick="saveCliente()">Guardar cliente</button>
+  <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+  <button class="btn btn-primary" id="modal-btn" onclick="saveCliente()">Guardar cliente</button>
 </div>
 ```
 
-</div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -361,23 +361,23 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const H = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 
 async function sbGet(q='') {
-const r = await fetch(`${SUPA_URL}/rest/v1/clientes?${q}`, {headers:H});
-if(!r.ok) throw new Error(await r.text());
-return r.json();
+  const r = await fetch(`${SUPA_URL}/rest/v1/clientes?${q}`, {headers:H});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbInsert(row) {
-const r = await fetch(`${SUPA_URL}/rest/v1/clientes`, {method:'POST',headers:H,body:JSON.stringify(row)});
-if(!r.ok) throw new Error(await r.text());
-return r.json();
+  const r = await fetch(`${SUPA_URL}/rest/v1/clientes`, {method:'POST',headers:H,body:JSON.stringify(row)});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbUpdate(id, row) {
-const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'PATCH',headers:H,body:JSON.stringify(row)});
-if(!r.ok) throw new Error(await r.text());
-return r.json();
+  const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'PATCH',headers:H,body:JSON.stringify(row)});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbDelete(id) {
-const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});
-if(!r.ok) throw new Error(await r.text());
+  const r = await fetch(`${SUPA_URL}/rest/v1/clientes?id=eq.${id}`, {method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});
+  if(!r.ok) throw new Error(await r.text());
 }
 
 // ═══════════════════════════════
@@ -388,360 +388,361 @@ let recientes = [];
 let editingId = null;
 
 function setSyncStatus(state, msg) {
-document.getElementById('sync-dot').className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
-document.getElementById('sync-text').textContent = msg;
+  document.getElementById('sync-dot').className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
+  document.getElementById('sync-text').textContent = msg;
 }
 
 // ═══════════════════════════════
 // CARGAR
 // ═══════════════════════════════
 async function cargarClientes() {
-setSyncStatus('syncing', 'Cargando...');
-try {
-clientes = await sbGet('select=*&order=updated_at.desc');
-setSyncStatus('ok', 'Sincronizado');
-renderAll();
-} catch(e) {
-setSyncStatus('error', 'Sin conexión');
-toast('Error al cargar datos', 'err');
-}
+  setSyncStatus('syncing', 'Cargando...');
+  try {
+    clientes = await sbGet('select=*&order=updated_at.desc');
+    setSyncStatus('ok', 'Sincronizado');
+    renderAll();
+  } catch(e) {
+    setSyncStatus('error', 'Sin conexión');
+    toast('Error al cargar datos', 'err');
+  }
 }
 
 // ═══════════════════════════════
 // NAVEGACIÓN
 // ═══════════════════════════════
 function goTo(page) {
-document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-document.getElementById('page-'+page).classList.add('active');
-const pages = ['clientes','cobros','recientes','pendientes','terminados'];
-document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');
-renderAll();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const pages = ['clientes','cobros','recientes','pendientes','terminados'];
+  document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');
+  renderAll();
 }
 
 // ═══════════════════════════════
 // MODAL
 // ═══════════════════════════════
 function openModal(id) {
-editingId = id || null;
-if(id) {
-const c = clientes.find(x => x.id === id);
-if(!c) return;
-document.getElementById('modal-title').textContent = '✏️ Editar cliente';
-document.getElementById('modal-btn').textContent = 'Guardar cambios';
-document.getElementById('f-nombre').value = c.nombre || '';
-document.getElementById('f-dni').value = c.dni || '';
-document.getElementById('f-dir').value = c.direccion || '';
-document.getElementById('f-tel').value = c.telefono || '';
-document.getElementById('f-email').value = c.email || '';
-document.getElementById('f-trabajo').value = c.trabajo || '';
-document.getElementById('f-presup-num').value = c.presupuesto_num || '';
-document.getElementById('f-fecha').value = c.fecha || '';
-document.getElementById('f-presup').value = c.presupuesto || '';
-document.getElementById('f-aceptado').value = c.aceptado || 'pendiente';
-document.getElementById('f-cobrado').value = c.cobrado || '';
-document.getElementById('f-facturado').value = c.facturado || 'no';
-document.getElementById('f-terminado').value = c.terminado || 'no';
-document.getElementById('f-notas').value = c.notas || '';
-calcCliente();
-} else {
-document.getElementById('modal-title').textContent = '👤 Nuevo cliente';
-document.getElementById('modal-btn').textContent = 'Guardar cliente';
-document.getElementById('f-nombre').value = '';
-document.getElementById('f-dni').value = '';
-document.getElementById('f-dir').value = '';
-document.getElementById('f-tel').value = '';
-document.getElementById('f-email').value = '';
-document.getElementById('f-trabajo').value = '';
-document.getElementById('f-presup-num').value = '';
-document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
-document.getElementById('f-presup').value = '';
-document.getElementById('f-aceptado').value = 'si';
-document.getElementById('f-cobrado').value = '';
-document.getElementById('f-pendiente').value = '';
-document.getElementById('f-facturado').value = 'no';
-document.getElementById('f-terminado').value = 'no';
-document.getElementById('f-notas').value = '';
-}
-document.getElementById('modal-overlay').classList.add('open');
-setTimeout(() => document.getElementById('f-nombre').focus(), 100);
+  editingId = id || null;
+  if(id) {
+    const c = clientes.find(x => x.id === id);
+    if(!c) return;
+    document.getElementById('modal-title').textContent = '✏️ Editar cliente';
+    document.getElementById('modal-btn').textContent = 'Guardar cambios';
+    document.getElementById('f-nombre').value = c.nombre || '';
+    document.getElementById('f-dni').value = c.dni || '';
+    document.getElementById('f-dir').value = c.direccion || '';
+    document.getElementById('f-tel').value = c.telefono || '';
+    document.getElementById('f-email').value = c.email || '';
+    document.getElementById('f-trabajo').value = c.trabajo || '';
+    document.getElementById('f-presup-num').value = c.presupuesto_num || '';
+    document.getElementById('f-fecha').value = c.fecha || '';
+    document.getElementById('f-presup').value = c.presupuesto || '';
+    document.getElementById('f-aceptado').value = c.aceptado || 'pendiente';
+    document.getElementById('f-cobrado').value = c.cobrado || '';
+    document.getElementById('f-facturado').value = c.facturado || 'no';
+    document.getElementById('f-terminado').value = c.terminado || 'no';
+    document.getElementById('f-notas').value = c.notas || '';
+    calcCliente();
+  } else {
+    document.getElementById('modal-title').textContent = '👤 Nuevo cliente';
+    document.getElementById('modal-btn').textContent = 'Guardar cliente';
+    document.getElementById('f-nombre').value = '';
+    document.getElementById('f-dni').value = '';
+    document.getElementById('f-dir').value = '';
+    document.getElementById('f-tel').value = '';
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-trabajo').value = '';
+    document.getElementById('f-presup-num').value = '';
+    document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
+    document.getElementById('f-presup').value = '';
+    document.getElementById('f-aceptado').value = 'si';
+    document.getElementById('f-cobrado').value = '';
+    document.getElementById('f-pendiente').value = '';
+    document.getElementById('f-facturado').value = 'no';
+    document.getElementById('f-terminado').value = 'no';
+    document.getElementById('f-notas').value = '';
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-nombre').focus(), 100);
 }
 
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 
 function calcCliente() {
-const presup = parseFloat(document.getElementById('f-presup').value) || 0;
-const cobrado = parseFloat(document.getElementById('f-cobrado').value) || 0;
-document.getElementById('f-pendiente').value = Math.max(0, presup - cobrado).toFixed(2);
+  const presup = parseFloat(document.getElementById('f-presup').value) || 0;
+  const cobrado = parseFloat(document.getElementById('f-cobrado').value) || 0;
+  document.getElementById('f-pendiente').value = Math.max(0, presup - cobrado).toFixed(2);
 }
 
 async function saveCliente() {
-const nombre = document.getElementById('f-nombre').value.trim();
-if(!nombre) { toast('El nombre es obligatorio', 'err'); return; }
+  const nombre = document.getElementById('f-nombre').value.trim();
+  if(!nombre) { toast('El nombre es obligatorio', 'err'); return; }
 
-const presup = parseFloat(document.getElementById('f-presup').value) || 0;
-const cobrado = parseFloat(document.getElementById('f-cobrado').value) || 0;
+  const presup = parseFloat(document.getElementById('f-presup').value.replace(',','.')) || 0;
+  const cobrado = parseFloat(document.getElementById('f-cobrado').value.replace(',','.')) || 0;
+  const pendiente = Math.max(0, presup - cobrado);
 
-const row = {
-nombre,
-dni: document.getElementById('f-dni').value.trim(),
-direccion: document.getElementById('f-dir').value.trim(),
-telefono: document.getElementById('f-tel').value.trim(),
-email: document.getElementById('f-email').value.trim(),
-trabajo: document.getElementById('f-trabajo').value.trim(),
-presupuesto_num: document.getElementById('f-presup-num').value.trim(),
-fecha: document.getElementById('f-fecha').value,
-presupuesto: presup,
-aceptado: document.getElementById('f-aceptado').value,
-cobrado,
-pendiente: Math.max(0, presup - cobrado),
-facturado: document.getElementById('f-facturado').value,
-terminado: document.getElementById('f-terminado').value,
-notas: document.getElementById('f-notas').value.trim(),
-updated_at: new Date().toISOString()
-};
+  const row = {
+    nombre,
+    dni: document.getElementById('f-dni').value.trim(),
+    direccion: document.getElementById('f-dir').value.trim(),
+    telefono: document.getElementById('f-tel').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    trabajo: document.getElementById('f-trabajo').value.trim(),
+    presupuesto_num: document.getElementById('f-presup-num').value.trim(),
+    fecha: document.getElementById('f-fecha').value,
+    presupuesto: presup,
+    aceptado: document.getElementById('f-aceptado').value,
+    cobrado: cobrado,
+    pendiente: pendiente,
+    facturado: document.getElementById('f-facturado').value,
+    terminado: document.getElementById('f-terminado').value,
+    notas: document.getElementById('f-notas').value.trim(),
+    updated_at: new Date().toISOString()
+  };
 
-setSyncStatus('syncing', 'Guardando...');
-try {
-if(editingId) {
-const res = await sbUpdate(editingId, row);
-const idx = clientes.findIndex(x => x.id === editingId);
-if(idx >= 0) clientes[idx] = {...clientes[idx], ...row, id: editingId};
-toast('Cliente actualizado ✓', 'ok');
-} else {
-row.id = Date.now();
-const res = await sbInsert(row);
-clientes.unshift(Array.isArray(res) ? res[0] : {...row});
-toast('Cliente guardado ✓', 'ok');
-}
-// Añadir a recientes
-addReciente(row.nombre, editingId ? 'Editado' : 'Nuevo', row.trabajo);
-setSyncStatus('ok', 'Sincronizado');
-closeModal();
-renderAll();
-} catch(e) {
-setSyncStatus('error', 'Error');
-toast('Error al guardar: '+e.message, 'err');
-}
+  setSyncStatus('syncing', 'Guardando...');
+  try {
+    if(editingId) {
+      const res = await sbUpdate(editingId, row);
+      const idx = clientes.findIndex(x => x.id === editingId);
+      if(idx >= 0) clientes[idx] = {...clientes[idx], ...row, id: editingId};
+      toast('Cliente actualizado ✓', 'ok');
+    } else {
+      row.id = Date.now();
+      const res = await sbInsert(row);
+      clientes.unshift(Array.isArray(res) ? res[0] : {...row});
+      toast('Cliente guardado ✓', 'ok');
+    }
+    // Añadir a recientes
+    addReciente(row.nombre, editingId ? 'Editado' : 'Nuevo', row.trabajo);
+    setSyncStatus('ok', 'Sincronizado');
+    closeModal();
+    renderAll();
+  } catch(e) {
+    setSyncStatus('error', 'Error');
+    toast('Error al guardar: '+e.message, 'err');
+  }
 }
 
 async function deleteCliente(id) {
-if(!confirm('¿Eliminar este cliente?')) return;
-setSyncStatus('syncing', 'Eliminando...');
-try {
-await sbDelete(id);
-clientes = clientes.filter(x => x.id !== id);
-setSyncStatus('ok', 'Sincronizado');
-renderAll();
-toast('Cliente eliminado', 'info');
-} catch(e) {
-setSyncStatus('error', 'Error');
-toast('Error al eliminar', 'err');
-}
+  if(!confirm('¿Eliminar este cliente?')) return;
+  setSyncStatus('syncing', 'Eliminando...');
+  try {
+    await sbDelete(id);
+    clientes = clientes.filter(x => x.id !== id);
+    setSyncStatus('ok', 'Sincronizado');
+    renderAll();
+    toast('Cliente eliminado', 'info');
+  } catch(e) {
+    setSyncStatus('error', 'Error');
+    toast('Error al eliminar', 'err');
+  }
 }
 
 // ═══════════════════════════════
 // RECIENTES
 // ═══════════════════════════════
 function addReciente(nombre, accion, trabajo) {
-recientes.unshift({nombre, accion, trabajo, ts: new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})});
-if(recientes.length > 20) recientes.pop();
+  recientes.unshift({nombre, accion, trabajo, ts: new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})});
+  if(recientes.length > 20) recientes.pop();
 }
 
 // ═══════════════════════════════
 // RENDER
 // ═══════════════════════════════
 function renderAll() {
-renderKPIs();
-renderTabla();
-renderCobros();
-renderRecientes();
-renderPendientes();
-renderTerminados();
-renderSidebarStats();
+  renderKPIs();
+  renderTabla();
+  renderCobros();
+  renderRecientes();
+  renderPendientes();
+  renderTerminados();
+  renderSidebarStats();
 }
 
 function renderCobros() {
-const arr = clientes.filter(c => c.presupuesto > 0 && c.aceptado === 'si');
-if(!arr.length) {
-document.getElementById('tabla-cobros').innerHTML = `<div class="empty"><div class="icon">💳</div><p>Sin presupuestos aceptados aún</p></div>`;
-return;
-}
-document.getElementById('tabla-cobros').innerHTML = `<div class="table-wrap"><table>
-<thead><tr>
-<th>Cliente</th><th>Trabajo</th><th class="num">Total</th>
-<th class="num">60%</th><th class="num">30%</th><th class="num">10%</th>
-<th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th>
-</tr></thead>
-<tbody>${arr.map(c => {
-const total = +c.presupuesto || 0;
-const p60 = total * 0.60;
-const p30 = total * 0.30;
-const p10 = total * 0.10;
-const cobrado = +c.cobrado || 0;
-const pendiente = Math.max(0, total - cobrado);
-let estadoBadge, estadoColor;
-if(cobrado >= total) {
-estadoBadge = '✅ Cobrado total'; estadoColor = 'badge-green';
-} else if(cobrado >= p60 + p30) {
-estadoBadge = '🔵 Pdte. final 10%'; estadoColor = 'badge-blue';
-} else if(cobrado >= p60) {
-estadoBadge = '🟡 Pdte. 2º pago'; estadoColor = 'badge-orange';
-} else if(cobrado > 0) {
-estadoBadge = '🟠 Cobro parcial'; estadoColor = 'badge-orange';
-} else {
-estadoBadge = '🔴 Sin cobrar'; estadoColor = 'badge-red';
-}
-return `<tr>
-<td><div style="font-weight:600;color:white;">${c.nombre}</div><div style="font-size:10px;color:var(--muted)">${c.presupuesto_num||''}</div></td>
-<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${c.trabajo||'—'}</td>
-<td class="num" style="font-weight:700;">${fmtE(total)}</td>
-<td class="num" style="color:${cobrado>=p60?'var(--green)':'var(--muted)'}">${fmtE(p60)}</td>
-<td class="num" style="color:${cobrado>=p60+p30?'var(--green)':'var(--muted)'}">${fmtE(p30)}</td>
-<td class="num" style="color:${cobrado>=total?'var(--green)':'var(--muted)'}">${fmtE(p10)}</td>
-<td class="num pos">${cobrado>0?fmtE(cobrado):'—'}</td>
-<td class="num ${pendiente>0?'neg':'pos'}">${pendiente>0?fmtE(pendiente):'✓'}</td>
-<td><span class="badge ${estadoColor}">${estadoBadge}</span></td>
-</tr>`;
-}).join('')}
-</tbody></table></div>`;
+  const arr = clientes.filter(c => c.presupuesto > 0 && c.aceptado === 'si');
+  if(!arr.length) {
+    document.getElementById('tabla-cobros').innerHTML = `<div class="empty"><div class="icon">💳</div><p>Sin presupuestos aceptados aún</p></div>`;
+    return;
+  }
+  document.getElementById('tabla-cobros').innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Cliente</th><th>Trabajo</th><th class="num">Total</th>
+      <th class="num">60%</th><th class="num">30%</th><th class="num">10%</th>
+      <th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th>
+    </tr></thead>
+    <tbody>${arr.map(c => {
+      const total = +c.presupuesto || 0;
+      const p60 = total * 0.60;
+      const p30 = total * 0.30;
+      const p10 = total * 0.10;
+      const cobrado = +c.cobrado || 0;
+      const pendiente = Math.max(0, total - cobrado);
+      let estadoBadge, estadoColor;
+      if(cobrado >= total) {
+        estadoBadge = '✅ Cobrado total'; estadoColor = 'badge-green';
+      } else if(cobrado >= p60 + p30) {
+        estadoBadge = '🔵 Pdte. final 10%'; estadoColor = 'badge-blue';
+      } else if(cobrado >= p60) {
+        estadoBadge = '🟡 Pdte. 2º pago'; estadoColor = 'badge-orange';
+      } else if(cobrado > 0) {
+        estadoBadge = '🟠 Cobro parcial'; estadoColor = 'badge-orange';
+      } else {
+        estadoBadge = '🔴 Sin cobrar'; estadoColor = 'badge-red';
+      }
+      return `<tr>
+        <td><div style="font-weight:600;color:white;">${c.nombre}</div><div style="font-size:10px;color:var(--muted)">${c.presupuesto_num||''}</div></td>
+        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${c.trabajo||'—'}</td>
+        <td class="num" style="font-weight:700;">${fmtE(total)}</td>
+        <td class="num" style="color:${cobrado>=p60?'var(--green)':'var(--muted)'}">${fmtE(p60)}</td>
+        <td class="num" style="color:${cobrado>=p60+p30?'var(--green)':'var(--muted)'}">${fmtE(p30)}</td>
+        <td class="num" style="color:${cobrado>=total?'var(--green)':'var(--muted)'}">${fmtE(p10)}</td>
+        <td class="num pos">${cobrado>0?fmtE(cobrado):'—'}</td>
+        <td class="num ${pendiente>0?'neg':'pos'}">${pendiente>0?fmtE(pendiente):'✓'}</td>
+        <td><span class="badge ${estadoColor}">${estadoBadge}</span></td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>`;
 }
 
 function renderKPIs() {
-const total = clientes.length;
-const pendientes = clientes.filter(x => x.pendiente > 0).length;
-const totalPendiente = clientes.reduce((a,b) => a + (+b.pendiente||0), 0);
-const terminados = clientes.filter(x => x.terminado === 'si').length;
-document.getElementById('kpis').innerHTML = `
-<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>
-<div class="kpi-label">Total clientes</div><div class="kpi-val">${total}</div></div>
-<div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>
-<div class="kpi-label">Pendiente cobro</div>
-<div class="kpi-val" style="color:${totalPendiente>0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(totalPendiente)}</div>
-<div class="kpi-sub">${pendientes} clientes</div></div>
-<div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div>
-<div class="kpi-label">Trabajos terminados</div>
-<div class="kpi-val" style="color:var(--green)">${terminados}</div>
-<div class="kpi-sub">de ${total} totales</div></div>
-<div class="kpi"><div class="kpi-accent" style="background:var(--gold)"></div>
-<div class="kpi-label">Presupuestado</div>
-<div class="kpi-val" style="font-size:18px;">${fmtE(clientes.reduce((a,b)=>a+(+b.presupuesto||0),0))}</div></div>
-`;
+  const total = clientes.length;
+  const pendientes = clientes.filter(x => x.pendiente > 0).length;
+  const totalPendiente = clientes.reduce((a,b) => a + (+b.pendiente||0), 0);
+  const terminados = clientes.filter(x => x.terminado === 'si').length;
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>
+      <div class="kpi-label">Total clientes</div><div class="kpi-val">${total}</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>
+      <div class="kpi-label">Pendiente cobro</div>
+      <div class="kpi-val" style="color:${totalPendiente>0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(totalPendiente)}</div>
+      <div class="kpi-sub">${pendientes} clientes</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div>
+      <div class="kpi-label">Trabajos terminados</div>
+      <div class="kpi-val" style="color:var(--green)">${terminados}</div>
+      <div class="kpi-sub">de ${total} totales</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--gold)"></div>
+      <div class="kpi-label">Presupuestado</div>
+      <div class="kpi-val" style="font-size:18px;">${fmtE(clientes.reduce((a,b)=>a+(+b.presupuesto||0),0))}</div></div>
+  `;
 }
 
 function estadoBadge(c) {
-const p = +c.pendiente || 0;
-if(c.terminado === 'si' && p === 0) return '<span class="badge badge-green">✅ Terminado</span>';
-if(p > 0) return `<span class="badge badge-red">💰 Pendiente ${fmtE(p)}</span>`;
-if(c.aceptado === 'no') return '<span class="badge badge-muted">❌ No aceptado</span>';
-if(c.aceptado === 'pendiente') return '<span class="badge badge-orange">⏳ En espera</span>';
-return '<span class="badge badge-blue">🔧 En curso</span>';
+  const p = +c.pendiente || 0;
+  if(c.terminado === 'si' && p === 0) return '<span class="badge badge-green">✅ Terminado</span>';
+  if(p > 0) return `<span class="badge badge-red">💰 Pendiente ${fmtE(p)}</span>`;
+  if(c.aceptado === 'no') return '<span class="badge badge-muted">❌ No aceptado</span>';
+  if(c.aceptado === 'pendiente') return '<span class="badge badge-orange">⏳ En espera</span>';
+  return '<span class="badge badge-blue">🔧 En curso</span>';
 }
 
 function renderTablaClientes(arr, contId) {
-if(!arr.length) {
-document.getElementById(contId).innerHTML = `<div class="empty"><div class="icon">👥</div><p>Sin clientes en esta vista</p></div>`;
-return;
-}
-document.getElementById(contId).innerHTML = `<div class="table-wrap"><table>
-<thead><tr>
-<th>Cliente</th><th>Trabajo</th><th>Presup.</th>
-<th class="num">Cobrado</th><th class="num">Pendiente</th>
-<th>Estado</th><th>Facturado</th><th></th>
-</tr></thead>
-<tbody>${arr.map(c => `<tr>
-<td>
-<div style="font-weight:600;color:white;">${c.nombre}</div>
-<div style="font-size:10px;color:var(--muted)">${c.direccion||''}</div>
-${c.telefono?`<div style="font-size:10px;color:var(--muted)">${c.telefono}</div>`:''}
-</td>
-<td>
-<div style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.trabajo||'—'}</div>
-${c.presupuesto_num?`<div style="font-size:10px;color:var(--muted)">${c.presupuesto_num}</div>`:''}
-</td>
-<td class="num">${c.presupuesto?fmtE(+c.presupuesto):'—'}</td>
-<td class="num pos">${c.cobrado?fmtE(+c.cobrado):'—'}</td>
-<td class="num ${(+c.pendiente||0)>0?'neg':''}">${(+c.pendiente||0)>0?fmtE(+c.pendiente):'—'}</td>
-<td>${estadoBadge(c)}</td>
-<td>${c.facturado==='si'?'<span class="badge badge-green">Sí</span>':c.facturado==='parcial'?'<span class="badge badge-orange">Parcial</span>':'<span class="badge badge-muted">No</span>'}</td>
-<td style="white-space:nowrap;">
-<button class="action-btn" onclick="openModal(${c.id})" title="Editar">✏️</button>
-<button class="action-btn del" onclick="deleteCliente(${c.id})" title="Eliminar">✕</button>
-</td>
-</tr>`).join('')}
-</tbody></table></div>`;
+  if(!arr.length) {
+    document.getElementById(contId).innerHTML = `<div class="empty"><div class="icon">👥</div><p>Sin clientes en esta vista</p></div>`;
+    return;
+  }
+  document.getElementById(contId).innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Cliente</th><th>Trabajo</th><th>Presup.</th>
+      <th class="num">Cobrado</th><th class="num">Pendiente</th>
+      <th>Estado</th><th>Facturado</th><th></th>
+    </tr></thead>
+    <tbody>${arr.map(c => `<tr>
+      <td>
+        <div style="font-weight:600;color:white;">${c.nombre}</div>
+        <div style="font-size:10px;color:var(--muted)">${c.direccion||''}</div>
+        ${c.telefono?`<div style="font-size:10px;color:var(--muted)">${c.telefono}</div>`:''}
+      </td>
+      <td>
+        <div style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.trabajo||'—'}</div>
+        ${c.presupuesto_num?`<div style="font-size:10px;color:var(--muted)">${c.presupuesto_num}</div>`:''}
+      </td>
+      <td class="num">${c.presupuesto?fmtE(+c.presupuesto):'—'}</td>
+      <td class="num pos">${c.cobrado?fmtE(+c.cobrado):'—'}</td>
+      <td class="num ${(+c.pendiente||0)>0?'neg':''}">${(+c.pendiente||0)>0?fmtE(+c.pendiente):'—'}</td>
+      <td>${estadoBadge(c)}</td>
+      <td>${c.facturado==='si'?'<span class="badge badge-green">Sí</span>':c.facturado==='parcial'?'<span class="badge badge-orange">Parcial</span>':'<span class="badge badge-muted">No</span>'}</td>
+      <td style="white-space:nowrap;">
+        <button class="action-btn" onclick="openModal(${c.id})" title="Editar">✏️</button>
+        <button class="action-btn del" onclick="deleteCliente(${c.id})" title="Eliminar">✕</button>
+      </td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
 }
 
 function renderTabla() {
-const busq = (document.getElementById('buscador')?.value || '').toLowerCase();
-const filtroEstado = document.getElementById('filtro-estado')?.value || '';
-let arr = clientes.filter(c => {
-const match = !busq || [c.nombre,c.direccion,c.trabajo,c.notas,c.presupuesto_num].join(' ').toLowerCase().includes(busq);
-let estado = true;
-if(filtroEstado === 'pendiente') estado = (+c.pendiente||0) > 0;
-else if(filtroEstado === 'parcial') estado = (+c.cobrado||0) > 0 && (+c.pendiente||0) > 0;
-else if(filtroEstado === 'cobrado') estado = (+c.pendiente||0) === 0 && (+c.cobrado||0) > 0;
-else if(filtroEstado === 'terminado') estado = c.terminado === 'si';
-return match && estado;
-});
-document.getElementById('tabla-title').textContent = `${arr.length} cliente${arr.length!==1?'s':''}`;
-document.getElementById('clientes-sub').textContent = `${clientes.length} registros totales`;
-renderTablaClientes(arr, 'tabla-clientes');
+  const busq = (document.getElementById('buscador')?.value || '').toLowerCase();
+  const filtroEstado = document.getElementById('filtro-estado')?.value || '';
+  let arr = clientes.filter(c => {
+    const match = !busq || [c.nombre,c.direccion,c.trabajo,c.notas,c.presupuesto_num].join(' ').toLowerCase().includes(busq);
+    let estado = true;
+    if(filtroEstado === 'pendiente') estado = (+c.pendiente||0) > 0;
+    else if(filtroEstado === 'parcial') estado = (+c.cobrado||0) > 0 && (+c.pendiente||0) > 0;
+    else if(filtroEstado === 'cobrado') estado = (+c.pendiente||0) === 0 && (+c.cobrado||0) > 0;
+    else if(filtroEstado === 'terminado') estado = c.terminado === 'si';
+    return match && estado;
+  });
+  document.getElementById('tabla-title').textContent = `${arr.length} cliente${arr.length!==1?'s':''}`;
+  document.getElementById('clientes-sub').textContent = `${clientes.length} registros totales`;
+  renderTablaClientes(arr, 'tabla-clientes');
 }
 
 function renderRecientes() {
-const el = document.getElementById('lista-recientes');
-if(!recientes.length) {
-el.innerHTML = `<div class="empty"><div class="icon">🕐</div><p>Sin actividad reciente en esta sesión</p></div>`;
-return;
-}
-el.innerHTML = recientes.map(r => `
-<div class="reciente-item">
-<div class="reciente-avatar">${r.nombre.charAt(0).toUpperCase()}</div>
-<div class="reciente-info">
-<div class="reciente-name">${r.nombre}</div>
-<div class="reciente-sub">${r.trabajo||'Sin descripción'}</div>
-</div>
-<div class="reciente-badge"><span class="badge ${r.accion==='Nuevo'?'badge-green':'badge-blue'}">${r.accion} · ${r.ts}</span></div>
-</div>`).join('');
+  const el = document.getElementById('lista-recientes');
+  if(!recientes.length) {
+    el.innerHTML = `<div class="empty"><div class="icon">🕐</div><p>Sin actividad reciente en esta sesión</p></div>`;
+    return;
+  }
+  el.innerHTML = recientes.map(r => `
+    <div class="reciente-item">
+      <div class="reciente-avatar">${r.nombre.charAt(0).toUpperCase()}</div>
+      <div class="reciente-info">
+        <div class="reciente-name">${r.nombre}</div>
+        <div class="reciente-sub">${r.trabajo||'Sin descripción'}</div>
+      </div>
+      <div class="reciente-badge"><span class="badge ${r.accion==='Nuevo'?'badge-green':'badge-blue'}">${r.accion} · ${r.ts}</span></div>
+    </div>`).join('');
 }
 
 function renderPendientes() {
-const arr = clientes.filter(c => (+c.pendiente||0) > 0).sort((a,b) => (+b.pendiente||0)-(+a.pendiente||0));
-renderTablaClientes(arr, 'tabla-pendientes');
+  const arr = clientes.filter(c => (+c.pendiente||0) > 0).sort((a,b) => (+b.pendiente||0)-(+a.pendiente||0));
+  renderTablaClientes(arr, 'tabla-pendientes');
 }
 
 function renderTerminados() {
-const arr = clientes.filter(c => c.terminado === 'si');
-renderTablaClientes(arr, 'tabla-terminados');
+  const arr = clientes.filter(c => c.terminado === 'si');
+  renderTablaClientes(arr, 'tabla-terminados');
 }
 
 function renderSidebarStats() {
-const total = clientes.reduce((a,b)=>a+(+b.presupuesto||0),0);
-const cobrado = clientes.reduce((a,b)=>a+(+b.cobrado||0),0);
-const pendiente = clientes.reduce((a,b)=>a+(+b.pendiente||0),0);
-document.getElementById('sidebar-stats').innerHTML = `
-<div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Resumen</div>
-<div class="stat-row"><span class="lbl">Clientes</span><span class="val">${clientes.length}</span></div>
-<div class="stat-row"><span class="lbl">Facturado</span><span class="val" style="color:var(--green)">${fmtE(total)}</span></div>
-<div class="stat-row"><span class="lbl">Pendiente</span><span class="val" style="color:var(--red)">${fmtE(pendiente)}</span></div>
-`;
+  const total = clientes.reduce((a,b)=>a+(+b.presupuesto||0),0);
+  const cobrado = clientes.reduce((a,b)=>a+(+b.cobrado||0),0);
+  const pendiente = clientes.reduce((a,b)=>a+(+b.pendiente||0),0);
+  document.getElementById('sidebar-stats').innerHTML = `
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Resumen</div>
+    <div class="stat-row"><span class="lbl">Clientes</span><span class="val">${clientes.length}</span></div>
+    <div class="stat-row"><span class="lbl">Facturado</span><span class="val" style="color:var(--green)">${fmtE(total)}</span></div>
+    <div class="stat-row"><span class="lbl">Pendiente</span><span class="val" style="color:var(--red)">${fmtE(pendiente)}</span></div>
+  `;
 }
 
 // ═══════════════════════════════
 // EXPORTAR
 // ═══════════════════════════════
 function exportarCSV() {
-let csv = 'NOMBRE;DNI;DIRECCIÓN;TELÉFONO;TRABAJO;PRESUPUESTO Nº;FECHA;IMPORTE;COBRADO;PENDIENTE;FACTURADO;TERMINADO;NOTAS\n';
-clientes.forEach(c => {
-csv += `"${c.nombre||''}";${c.dni||''};${c.direccion||''};${c.telefono||''};"${c.trabajo||''}";${c.presupuesto_num||''};${c.fecha||''};${c.presupuesto||0};${c.cobrado||0};${c.pendiente||0};${c.facturado||'no'};${c.terminado||'no'};"${c.notas||''}"\n`;
-});
-const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
-const a = document.createElement('a');
-a.href = URL.createObjectURL(blob);
-a.download = `HAROSAT_Clientes_${new Date().toISOString().split('T')[0]}.csv`;
-a.click();
-toast('Exportado ✓', 'ok');
+  let csv = 'NOMBRE;DNI;DIRECCIÓN;TELÉFONO;TRABAJO;PRESUPUESTO Nº;FECHA;IMPORTE;COBRADO;PENDIENTE;FACTURADO;TERMINADO;NOTAS\n';
+  clientes.forEach(c => {
+    csv += `"${c.nombre||''}";${c.dni||''};${c.direccion||''};${c.telefono||''};"${c.trabajo||''}";${c.presupuesto_num||''};${c.fecha||''};${c.presupuesto||0};${c.cobrado||0};${c.pendiente||0};${c.facturado||'no'};${c.terminado||'no'};"${c.notas||''}"\n`;
+  });
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `HAROSAT_Clientes_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('Exportado ✓', 'ok');
 }
 
 // ═══════════════════════════════
@@ -751,17 +752,17 @@ function fmt(n) { return (+n).toLocaleString('es-ES',{minimumFractionDigits:2,ma
 function fmtE(n) { return fmt(n)+' €'; }
 
 function toast(msg, type='ok') {
-const el = document.getElementById('toast');
-el.textContent = msg;
-el.className = `toast show ${type}`;
-setTimeout(() => el.classList.remove('show'), 3000);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
 
 // ═══════════════════════════════
 // INIT
 // ═══════════════════════════════
 document.getElementById('modal-overlay').addEventListener('click', e => {
-if(e.target === document.getElementById('modal-overlay')) closeModal();
+  if(e.target === document.getElementById('modal-overlay')) closeModal();
 });
 
 // Asegurar que el modal empieza cerrado
