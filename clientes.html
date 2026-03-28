@@ -510,9 +510,9 @@ async function saveCliente() {
       if(idx >= 0) clientes[idx] = {...clientes[idx], ...row, id: editingId};
       toast('Cliente actualizado ✓', 'ok');
     } else {
-      row.id = Date.now();
       const res = await sbInsert(row);
-      clientes.unshift(Array.isArray(res) ? res[0] : {...row});
+      const saved = Array.isArray(res) ? res[0] : row;
+      clientes.unshift(saved);
       toast('Cliente guardado ✓', 'ok');
     }
     // Añadir a recientes
