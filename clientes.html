@@ -479,9 +479,9 @@ async function saveCliente() {
   const nombre = document.getElementById('f-nombre').value.trim();
   if(!nombre) { toast('El nombre es obligatorio', 'err'); return; }
 
-  const presup = parseFloat(document.getElementById('f-presup').value.replace(',','.')) || 0;
-  const cobrado = parseFloat(document.getElementById('f-cobrado').value.replace(',','.')) || 0;
-  const pendiente = Math.max(0, presup - cobrado);
+  const presup = parseFloat(document.getElementById('f-presup').value) || null;
+  const cobrado = parseFloat(document.getElementById('f-cobrado').value) || null;
+  const pendiente = presup ? Math.max(0, presup - (cobrado||0)) : null;
 
   const row = {
     nombre,
