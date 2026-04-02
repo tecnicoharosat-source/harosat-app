@@ -793,19 +793,21 @@ return;
 const imported = [];
 for(let i = 1; i < lines.length; i++) {
 const cols = lines[i].split(';').map(c => c.trim().replace(/^"|"$/g, ''));
-if(cols.length < 7) continue;
+if(cols.length < 4) continue;
 
+// Columnas del Excel: NOMBRE, DIRECCIÓN, POBLACIÓN, FECHA ULT. REV
 const row = {
-nombre: cols[0],
-direccion: cols[1],
-poblacion: cols[2],
-telefono: cols[3],
-modelo: cols[4],
-tipo_contrato: cols[5],
-fecha_revision: cols[6],
-en_garantia: cols[9] === 'SÍ' || cols[9] === 'SI',
-notas: cols[10] || ''
+nombre: cols[0] || '',
+direccion: cols[1] || '',
+poblacion: cols[2] || '',
+telefono: '',
+modelo: '',
+tipo_contrato: 'lv',
+fecha_revision: cols[3] || new Date().toISOString().split('T')[0],
+en_garantia: false,
+notas: ''
 };
+if(!row.nombre || !row.direccion || !row.poblacion) continue;
 imported.push(row);
 }
 
