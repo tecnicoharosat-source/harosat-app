@@ -538,7 +538,7 @@ let editingId = null;
 
 async function loadData() {
 try {
-const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*&order=fecha_revision.desc`, {headers:H});
+const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*&order=numero_cliente.asc.nullsfirst,id.asc`, {headers:H});
 if(!r.ok) throw new Error('Error');
 data = await r.json();
 renderTable();
@@ -588,7 +588,7 @@ const garantiaHTML = item.en_garantia
 
 return `
 <tr>
-<td><strong>#${item.id}</strong></td>
+<td><strong>#${item.numero_cliente || item.id}</strong></td>
 <td><strong>${item.nombre}</strong></td>
 <td>${item.poblacion}</td>
 <td>${item.modelo}</td>
@@ -709,6 +709,9 @@ body:JSON.stringify(payload)
 });
 if(!r.ok) throw new Error('Error');
 } else {
+// Obtener el siguiente número de cliente
+const maxNum = data.length > 0 ? Math.max(...data.map(x => x.numero_cliente || 0)) : 0;
+payload.numero_cliente = maxNum + 1;
 const r = await fetch(`${SUPA_URL}/rest/v1/revisiones`, {
 method:'POST',
 headers:{...H,'Prefer':'return=representation'},
@@ -799,6 +802,7 @@ if(cols.length < 1) continue;
 
 // Columnas del Excel: NOMBRE, DIRECCIÓN, POBLACIÓN, FECHA ULT. REV
 const row = {
+numero_cliente: i, // Número según posición en Excel
 nombre: cols[0] || 'Sin nombre',
 direccion: cols[1] || '',
 poblacion: cols[2] || '',
