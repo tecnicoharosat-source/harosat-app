@@ -2,293 +2,1123 @@
 
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAROSAT - Contabilidad</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT · Contabilidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg: #060910;
+--s1: #0d1117;
+--s2: #161b22;
+--s3: #21262d;
+--border: #30363d;
+--blue: #1f6feb;
+--blue2: #388bfd;
+--green: #3fb950;
+--red: #f85149;
+--orange: #d29922;
+--gold: #e3b341;
+--purple: #a371f7;
+--text: #e6edf3;
+--muted: #7d8590;
+--light: #b1bac4;
+--r: 10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.topbar{
+height:52px;background:var(–s1);border-bottom:1px solid var(–border);
+display:flex;align-items:center;justify-content:space-between;
+padding:0 20px;flex-shrink:0;z-index:100;
+}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.logo{font-family:‘Outfit’,sans-serif;font-weight:800;font-size:16px;letter-spacing:0.08em;color:white;}
+.logo span{color:var(–blue2);}
+.trimestre-badge{
+background:var(–s3);border:1px solid var(–border);
+padding:4px 12px;border-radius:20px;font-size:12px;color:var(–light);
+cursor:pointer;display:flex;align-items:center;gap:6px;
+}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.sync-indicator{
+display:flex;align-items:center;gap:6px;
+font-size:11px;color:var(–muted);
+background:var(–s2);border:1px solid var(–border);
+padding:5px 12px;border-radius:20px;
+}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(–green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.sync-dot.syncing{background:var(–orange);animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}/* no rotation, just flash */}
+.sync-dot.error{background:var(–red);animation:none;}
+
+/* MAIN LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;background:var(–s1);border-right:1px solid var(–border);
+display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;
+}
+.nav-section{padding:16px 10px 4px;}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(–muted);padding:0 8px;margin-bottom:4px;}
+.nav-item{
+display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
+cursor:pointer;font-size:13px;font-weight:500;color:var(–light);
+transition:all 0.12s;margin-bottom:1px;
+}
+.nav-item:hover{background:var(–s3);color:white;}
+.nav-item.active{background:rgba(31,111,235,0.15);color:var(–blue2);border:1px solid rgba(56,139,253,0.2);}
+.nav-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0;}
+.sidebar-bottom{margin-top:auto;padding:12px;}
+.period-box{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:12px;}
+.period-title{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);margin-bottom:8px;}
+.period-select{
+width:100%;background:var(–s3);border:1px solid var(–border);color:var(–text);
+padding:7px 10px;border-radius:6px;font-family:‘Outfit’,sans-serif;font-size:12px;cursor:pointer;
+margin-bottom:6px;
+}
+.period-select:focus{outline:none;border-color:var(–blue);}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:24px;background:var(–bg);}
+
+/* PAGE */
+.page{display:none;}
+.page.active{display:block;}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.page-title{font-size:22px;font-weight:800;color:white;}
+.page-sub{font-size:12px;color:var(–muted);margin-top:3px;}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* BUTTONS */
+.btn{
+display:inline-flex;align-items:center;gap:6px;
+padding:8px 16px;border-radius:8px;font-family:‘Outfit’,sans-serif;
+font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.12s;
+white-space:nowrap;
+}
+.btn-primary{background:var(–blue);color:white;}
+.btn-primary:hover{background:var(–blue2);}
+.btn-green{background:rgba(63,185,80,0.15);color:var(–green);border:1px solid rgba(63,185,80,0.3);}
+.btn-green:hover{background:rgba(63,185,80,0.25);}
+.btn-ghost{background:var(–s2);color:var(–light);border:1px solid var(–border);}
+.btn-ghost:hover{background:var(–s3);color:white;}
+.btn-danger{background:rgba(248,81,73,0.12);color:var(–red);border:1px solid rgba(248,81,73,0.25);}
+.btn-danger:hover{background:rgba(248,81,73,0.22);}
+.btn-gold{background:rgba(227,179,65,0.12);color:var(–gold);border:1px solid rgba(227,179,65,0.25);}
+.btn-gold:hover{background:rgba(227,179,65,0.22);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* CARDS */
+.card{background:var(–s1);border:1px solid var(–border);border-radius:var(–r);overflow:hidden;margin-bottom:16px;}
+.card-header{padding:14px 18px;border-bottom:1px solid var(–border);display:flex;justify-content:space-between;align-items:center;}
+.card-title{font-size:13px;font-weight:700;color:white;}
+.card-body{padding:18px;}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.kpi{
+background:var(–s1);border:1px solid var(–border);border-radius:var(–r);
+padding:16px 18px;position:relative;overflow:hidden;
+}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;}
+.kpi-val{font-size:22px;font-weight:800;font-family:‘JetBrains Mono’,monospace;color:white;line-height:1;}
+.kpi-sub{font-size:11px;color:var(–muted);margin-top:5px;}
+
+/* ALERT */
+.alert{border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;font-size:12px;line-height:1.6;}
+.alert-warn{background:rgba(227,179,65,0.08);border:1px solid rgba(227,179,65,0.25);color:#e3b341;}
+.alert-danger{background:rgba(248,81,73,0.08);border:1px solid rgba(248,81,73,0.25);color:#ff7b72;}
+.alert-info{background:rgba(56,139,253,0.08);border:1px solid rgba(56,139,253,0.25);color:#79c0ff;}
+.alert-ok{background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.25);color:#7ee787;}
+.alert-icon{font-size:16px;flex-shrink:0;}
+.alert-title{font-weight:700;font-size:13px;margin-bottom:2px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{
+text-align:left;padding:10px 14px;font-size:10px;font-weight:600;
+letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);
+border-bottom:1px solid var(–border);white-space:nowrap;
+}
+td{padding:11px 14px;border-bottom:1px solid rgba(48,54,61,0.5);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+tfoot td{padding:12px 14px;font-weight:700;border-top:1px solid var(–border);}
+.num{text-align:right;font-family:‘JetBrains Mono’,monospace;}
+.num.pos{color:var(–green);}
+.num.neg{color:var(–red);}
+.num.neu{color:var(–gold);}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
+.badge-blue{background:rgba(56,139,253,0.15);color:#79c0ff;}
+.badge-green{background:rgba(63,185,80,0.15);color:var(–green);}
+.badge-red{background:rgba(248,81,73,0.15);color:#ff7b72;}
+.badge-gold{background:rgba(227,179,65,0.15);color:var(–gold);}
+.action-btn{
+background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:5px;
+font-size:13px;color:var(–muted);transition:all 0.1s;
+}
+.action-btn:hover.edit{color:var(–blue2);background:rgba(56,139,253,0.1);}
+.action-btn:hover.del{color:var(–red);background:rgba(248,81,73,0.1);}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:11px;font-weight:600;color:var(–muted);letter-spacing:0.06em;}
+.field input,.field select,.field textarea{
+background:var(–s2);border:1px solid var(–border);color:var(–text);
+padding:9px 12px;border-radius:8px;font-family:‘Outfit’,sans-serif;font-size:13px;
+transition:border-color 0.15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(–blue);}
+.field input[readonly]{opacity:0.55;cursor:default;}
+.field input::placeholder{color:var(–muted);}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+
+/* MODAL */
+.overlay{
+display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);
+z-index:500;align-items:center;justify-content:center;padding:16px;
+}
+.overlay.open{display:flex;}
+.modal{
+background:var(–s1);border:1px solid var(–border);border-radius:14px;
+padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+}
+.modal-title{font-size:17px;font-weight:800;color:white;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+
+/* FISCAL */
+.fiscal-row{
+display:flex;justify-content:space-between;align-items:center;
+padding:9px 0;border-bottom:1px solid rgba(48,54,61,0.5);font-size:13px;
+}
+.fiscal-row:last-child{border-bottom:none;}
+.fiscal-row .lbl{color:var(–light);}
+.fiscal-row .val{font-family:‘JetBrains Mono’,monospace;font-weight:600;}
+.fiscal-row.total{border-top:2px solid var(–border);padding-top:12px;margin-top:4px;}
+.fiscal-row.total .lbl{color:white;font-weight:700;}
+.fiscal-row.total .val{font-size:17px;}
+
+/* PROGRESS */
+.prog-wrap{background:var(–s3);border-radius:4px;height:6px;overflow:hidden;margin-top:5px;}
+.prog{height:100%;border-radius:4px;transition:width 0.6s;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* HISTORIAL */
+.historial-item{
+display:flex;align-items:center;gap:12px;padding:10px 14px;
+border-bottom:1px solid rgba(48,54,61,0.4);
+}
+.historial-item:last-child{border-bottom:none;}
+.historial-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(–muted);}
+.empty .icon{font-size:40px;margin-bottom:12px;}
+.empty p{font-size:13px;}
+
+/* TOAST */
+.toast{
+position:fixed;bottom:24px;right:24px;z-index:9999;
+background:var(–s2);border:1px solid var(–border);border-radius:10px;
+padding:12px 18px;font-size:13px;font-weight:500;
+display:flex;align-items:center;gap:8px;
+transform:translateY(80px);opacity:0;transition:all 0.3s;
+max-width:320px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:rgba(63,185,80,0.4);color:var(–green);}
+.toast.err{border-color:rgba(248,81,73,0.4);color:var(–red);}
+.toast.info{border-color:rgba(56,139,253,0.4);color:var(–blue2);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(–border);border-radius:3px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.sidebar{width:56px;}
+.nav-item span:not(.nav-icon),.nav-label,.period-box .period-title,.period-select,.sidebar-bottom .period-box label{display:none;}
+.nav-item{justify-content:center;padding:10px;}
+.kpi-grid{grid-template-columns:1fr 1fr;}
+.g2,.g3{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+.content{padding:14px;}
+.kpi-grid{grid-template-columns:1fr 1fr;}
+.form-grid,.form-grid-3{grid-template-columns:1fr;}
+.topbar{padding:0 12px;}
+}
+</style>
+
 </head>
-<body class="bg-gray-900 text-white">
-    <div class="container mx-auto p-4 max-w-6xl">
-        <header class="mb-6">
-            <h1 class="text-3xl font-bold mb-2">HAROSAT</h1>
-            <p class="text-xl text-gray-400">ECOTECHNICAL - Contabilidad T2 2026</p>
-        </header>
+<body>
 
-```
-    <nav class="mb-6 flex gap-2 flex-wrap">
-        <button onclick="showSection('dashboard')" class="bg-blue-600 px-4 py-2 rounded">📊 Dashboard</button>
-        <button onclick="showSection('ingresos')" class="bg-green-600 px-4 py-2 rounded">💰 Ingresos</button>
-        <button onclick="showSection('gastos')" class="bg-red-600 px-4 py-2 rounded">💸 Gastos</button>
-        <button onclick="document.getElementById('importFile').click()" class="bg-purple-600 px-4 py-2 rounded">📥 Importar</button>
-    </nav>
-    <input type="file" id="importFile" accept=".csv,.xlsx" style="display:none" onchange="importData(event)">
+<!-- TOPBAR -->
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="section">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="bg-green-900 p-6 rounded-lg">
-                <h3 class="text-lg font-bold mb-2">INGRESOS</h3>
-                <p id="totalIngresos" class="text-4xl font-bold">0,00 €</p>
-            </div>
-            <div class="bg-red-900 p-6 rounded-lg">
-                <h3 class="text-lg font-bold mb-2">GASTOS</h3>
-                <p id="totalGastos" class="text-4xl font-bold">0,00 €</p>
-            </div>
-        </div>
-
-        <div class="bg-gray-800 p-6 rounded-lg mb-6">
-            <h3 class="text-xl font-bold mb-4">Últimas Operaciones</h3>
-            <div id="ultimasOperaciones" class="space-y-2"></div>
-        </div>
-    </div>
-
-    <!-- INGRESOS -->
-    <div id="ingresos" class="section hidden">
-        <div class="bg-gray-800 p-6 rounded-lg mb-6">
-            <h2 class="text-2xl font-bold mb-4">Registrar Ingreso</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="date" id="fechaIngreso" class="bg-gray-700 p-2 rounded">
-                <input type="text" id="conceptoIngreso" placeholder="Concepto" class="bg-gray-700 p-2 rounded">
-                <input type="number" id="importeIngreso" placeholder="Importe" step="0.01" class="bg-gray-700 p-2 rounded">
-            </div>
-            <button onclick="addIngreso()" class="bg-green-600 px-6 py-2 rounded">+ Añadir Ingreso</button>
-        </div>
-
-        <div class="bg-gray-800 p-6 rounded-lg">
-            <h3 class="text-xl font-bold mb-4">Listado de Ingresos</h3>
-            <div id="listaIngresos" class="space-y-2"></div>
-        </div>
-    </div>
-
-    <!-- GASTOS -->
-    <div id="gastos" class="section hidden">
-        <div class="bg-gray-800 p-6 rounded-lg mb-6">
-            <h2 class="text-2xl font-bold mb-4">Registrar Gasto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="date" id="fechaGasto" class="bg-gray-700 p-2 rounded">
-                <input type="text" id="conceptoGasto" placeholder="Concepto" class="bg-gray-700 p-2 rounded">
-                <input type="number" id="importeGasto" placeholder="Importe" step="0.01" class="bg-gray-700 p-2 rounded">
-            </div>
-            <button onclick="addGasto()" class="bg-red-600 px-6 py-2 rounded">+ Añadir Gasto</button>
-        </div>
-
-        <div class="bg-gray-800 p-6 rounded-lg">
-            <h3 class="text-xl font-bold mb-4">Listado de Gastos</h3>
-            <div id="listaGastos" class="space-y-2"></div>
-        </div>
-    </div>
+<div class="topbar">
+<div class="topbar-left">
+<div class="logo">HARO<span>SAT</span></div>
+<div class="trimestre-badge" onclick="goTo('dashboard')">
+<span id="periodo-badge-text">T1 2026</span>
+</div>
+</div>
+<div class="topbar-right">
+<div class="sync-indicator">
+<div class="sync-dot" id="sync-dot"></div>
+<span id="sync-text">Conectado</span>
+</div>
+<button class="btn btn-green btn-sm" onclick="openModal('ingreso')">+ Ingreso</button>
+<button class="btn btn-ghost btn-sm" onclick="openModal('gasto')">+ Gasto</button>
+</div>
 </div>
 
-<script>
-    // Configuración Supabase
-    const SUPABASE_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
-    
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<div class="layout">
 
-    // Navegación
-    function showSection(section) {
-        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-        document.getElementById(section).classList.remove('hidden');
-        if (section === 'dashboard') loadDashboard();
-        if (section === 'ingresos') loadIngresos();
-        if (section === 'gastos') loadGastos();
-    }
+<!-- SIDEBAR -->
 
-    // Dashboard
-    async function loadDashboard() {
-        try {
-            const { data: ingresos } = await supabase.from('conta_ingresos').select('*');
-            const { data: gastos } = await supabase.from('conta_gastos').select('*');
+<aside class="sidebar">
+<div class="nav-section">
+<div class="nav-label">Principal</div>
+<div class="nav-item active" onclick="goTo('dashboard')"><span class="nav-icon">📊</span><span>Dashboard</span></div>
+<div class="nav-item" onclick="goTo('ingresos')"><span class="nav-icon">💶</span><span>Ingresos</span></div>
+<div class="nav-item" onclick="goTo('gastos')"><span class="nav-icon">🧾</span><span>Gastos</span></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Impuestos</div>
+<div class="nav-item" onclick="goTo('iva')"><span class="nav-icon">📋</span><span>IVA · Mod.303</span></div>
+<div class="nav-item" onclick="goTo('irpf')"><span class="nav-icon">🏛️</span><span>IRPF · Mod.130</span></div>
+<div class="nav-item" onclick="goTo('cierre')"><span class="nav-icon">📁</span><span>Cierre trimestral</span></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Herramientas</div>
+<div class="nav-item" onclick="goTo('asesor')"><span class="nav-icon">🤖</span><span>Asesor IA</span></div>
+</div>
+<div class="sidebar-bottom">
+<div class="period-box">
+<div class="period-title">Período</div>
+<select class="period-select" id="periodoSel" onchange="renderAll()">
+<option value="0">T1 · Ene-Mar</option>
+<option value="1">T2 · Abr-Jun</option>
+<option value="2">T3 · Jul-Sep</option>
+<option value="3">T4 · Oct-Dic</option>
+<option value="all">Año completo</option>
+</select>
+<select class="period-select" id="yearSel" onchange="renderAll()">
+<option value="2026">2026</option>
+<option value="2025">2025</option>
+<option value="2024">2024</option>
+</select>
+</div>
+</div>
+</aside>
 
-            const totalIngresos = (ingresos || []).reduce((sum, i) => sum + parseFloat(i.importe || 0), 0);
-            const totalGastos = (gastos || []).reduce((sum, g) => sum + parseFloat(g.importe || 0), 0);
+<!-- CONTENT -->
 
-            document.getElementById('totalIngresos').textContent = totalIngresos.toFixed(2) + ' €';
-            document.getElementById('totalGastos').textContent = totalGastos.toFixed(2) + ' €';
+<main class="content">
 
-            const todas = [
-                ...(ingresos || []).map(i => ({...i, tipo: 'ingreso'})),
-                ...(gastos || []).map(g => ({...g, tipo: 'gasto'}))
-            ].sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 10);
-
-            const html = todas.map(op => `
-                <div class="p-3 rounded ${op.tipo === 'ingreso' ? 'bg-green-800' : 'bg-red-800'}">
-                    <div class="flex justify-between">
-                        <span>${op.fecha} - ${op.concepto}</span>
-                        <span class="font-bold">${parseFloat(op.importe).toFixed(2)} €</span>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('ultimasOperaciones').innerHTML = html || '<p class="text-gray-400">No hay operaciones</p>';
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error cargando datos: ' + error.message);
-        }
-    }
-
-    // Ingresos
-    async function loadIngresos() {
-        try {
-            const { data } = await supabase.from('conta_ingresos').select('*').order('fecha', { ascending: false });
-            
-            const html = (data || []).map(i => `
-                <div class="bg-green-800 p-3 rounded flex justify-between">
-                    <span>${i.fecha} - ${i.concepto}</span>
-                    <span class="font-bold">${parseFloat(i.importe).toFixed(2)} €</span>
-                </div>
-            `).join('');
-
-            document.getElementById('listaIngresos').innerHTML = html || '<p class="text-gray-400">No hay ingresos</p>';
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    async function addIngreso() {
-        const fecha = document.getElementById('fechaIngreso').value;
-        const concepto = document.getElementById('conceptoIngreso').value;
-        const importe = parseFloat(document.getElementById('importeIngreso').value);
-
-        if (!fecha || !concepto || !importe) {
-            alert('Completa todos los campos');
-            return;
-        }
-
-        try {
-            const { error } = await supabase.from('conta_ingresos').insert([{
-                fecha,
-                concepto,
-                importe,
-                iva: importe * 0.21,
-                irpf: importe * 0.15
-            }]);
-
-            if (error) throw error;
-
-            document.getElementById('fechaIngreso').value = '';
-            document.getElementById('conceptoIngreso').value = '';
-            document.getElementById('importeIngreso').value = '';
-            
-            loadIngresos();
-            alert('Ingreso añadido');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    }
-
-    // Gastos
-    async function loadGastos() {
-        try {
-            const { data } = await supabase.from('conta_gastos').select('*').order('fecha', { ascending: false });
-            
-            const html = (data || []).map(g => `
-                <div class="bg-red-800 p-3 rounded flex justify-between">
-                    <span>${g.fecha} - ${g.concepto}</span>
-                    <span class="font-bold">${parseFloat(g.importe).toFixed(2)} €</span>
-                </div>
-            `).join('');
-
-            document.getElementById('listaGastos').innerHTML = html || '<p class="text-gray-400">No hay gastos</p>';
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    async function addGasto() {
-        const fecha = document.getElementById('fechaGasto').value;
-        const concepto = document.getElementById('conceptoGasto').value;
-        const importe = parseFloat(document.getElementById('importeGasto').value);
-
-        if (!fecha || !concepto || !importe) {
-            alert('Completa todos los campos');
-            return;
-        }
-
-        try {
-            const { error } = await supabase.from('conta_gastos').insert([{
-                fecha,
-                concepto,
-                importe,
-                iva: importe * 0.21
-            }]);
-
-            if (error) throw error;
-
-            document.getElementById('fechaGasto').value = '';
-            document.getElementById('conceptoGasto').value = '';
-            document.getElementById('importeGasto').value = '';
-            
-            loadGastos();
-            alert('Gasto añadido');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    }
-
-    // Importar datos desde CSV
-    async function importData(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            try {
-                const text = e.target.result;
-                const lines = text.split('\n').filter(l => l.trim());
-                
-                if (lines.length < 2) {
-                    alert('Archivo vacío');
-                    return;
-                }
-
-                const tipo = confirm('¿Son INGRESOS?\n\nOK = Ingresos\nCancelar = Gastos');
-                const tabla = tipo ? 'conta_ingresos' : 'conta_gastos';
-                
-                let importados = 0;
-                
-                for (let i = 1; i < lines.length; i++) {
-                    const cols = lines[i].split(',');
-                    if (cols.length < 3) continue;
-                    
-                    const fecha = cols[0].trim();
-                    const concepto = cols[1].trim();
-                    const importe = parseFloat(cols[2].trim().replace(',', '.'));
-                    
-                    if (!fecha || !concepto || isNaN(importe)) continue;
-                    
-                    const registro = {
-                        fecha,
-                        concepto,
-                        importe,
-                        iva: importe * 0.21
-                    };
-                    
-                    if (tipo) {
-                        registro.irpf = importe * 0.15;
-                    }
-                    
-                    const { error } = await supabase.from(tabla).insert([registro]);
-                    if (!error) importados++;
-                }
-                
-                alert(`Importados ${importados} registros`);
-                loadDashboard();
-            } catch (error) {
-                alert('Error importando: ' + error.message);
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    // Cargar dashboard al inicio
-    document.getElementById('fechaIngreso').value = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaGasto').value = new Date().toISOString().split('T')[0];
-    loadDashboard();
-</script>
 ```
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+<div class="page-header">
+<div><div class="page-title">Dashboard</div><div class="page-sub" id="dash-sub">Resumen del período</div></div>
+<div class="page-actions">
+<button class="btn btn-ghost btn-sm" onclick="exportarExcel()">⬇ Exportar Excel</button>
+</div>
+</div>
+<div id="alertas"></div>
+<div class="kpi-grid" id="kpis"></div>
+<div class="g2">
+<div class="card">
+<div class="card-header"><div class="card-title">Progreso fiscal año</div></div>
+<div class="card-body" id="progreso-anual"></div>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title">Últimas operaciones</div><button class="btn btn-ghost btn-sm" onclick="goTo('ingresos')">Ver todo</button></div>
+<div id="ultimas" style="padding:0;"></div>
+</div>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title">⚡ Consejos del asesor</div></div>
+<div class="card-body" id="consejos"></div>
+</div>
+</div>
+
+<!-- INGRESOS -->
+<div id="page-ingresos" class="page">
+<div class="page-header">
+<div><div class="page-title">Ingresos</div><div class="page-sub">Facturas emitidas y cobros</div></div>
+<button class="btn btn-green" onclick="openModal('ingreso')">+ Nuevo ingreso</button>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title" id="ing-title">Operaciones</div><div id="ing-resumen" style="font-size:11px;color:var(--muted);"></div></div>
+<div id="tabla-ing" style="padding:0;"></div>
+</div>
+</div>
+
+<!-- GASTOS -->
+<div id="page-gastos" class="page">
+<div class="page-header">
+<div><div class="page-title">Gastos</div><div class="page-sub">Facturas recibidas y pagos</div></div>
+<button class="btn btn-ghost" onclick="openModal('gasto')">+ Nuevo gasto</button>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title" id="gas-title">Operaciones</div><div id="gas-resumen" style="font-size:11px;color:var(--muted);"></div></div>
+<div id="tabla-gas" style="padding:0;"></div>
+</div>
+</div>
+
+<!-- IVA -->
+<div id="page-iva" class="page">
+<div class="page-header"><div><div class="page-title">Modelo 303 · IVA</div><div class="page-sub">Liquidación trimestral</div></div></div>
+<div class="g2">
+<div class="card"><div class="card-header"><div class="card-title">IVA Repercutido (ventas)</div></div><div class="card-body" id="iva-rep"></div></div>
+<div class="card"><div class="card-header"><div class="card-title">IVA Soportado (compras)</div></div><div class="card-body" id="iva-sop"></div></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title">Resultado liquidación</div></div><div class="card-body" id="iva-res"></div></div>
+</div>
+
+<!-- IRPF -->
+<div id="page-irpf" class="page">
+<div class="page-header"><div><div class="page-title">IRPF · Modelo 130</div><div class="page-sub">Estimación directa simplificada · Autónomo</div></div></div>
+<div class="g2">
+<div class="card"><div class="card-header"><div class="card-title">Cálculo IRPF anual estimado</div></div><div class="card-body" id="irpf-calc"></div></div>
+<div class="card"><div class="card-header"><div class="card-title">Cuota RETA</div></div><div class="card-body" id="reta-calc"></div></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title">Modelo 130 · Pago fraccionado</div></div><div class="card-body" id="m130"></div></div>
+</div>
+
+<!-- CIERRE TRIMESTRAL -->
+<div id="page-cierre" class="page">
+<div class="page-header">
+<div><div class="page-title">Cierre trimestral</div><div class="page-sub">Resumen para tu gestor</div></div>
+<div class="page-actions">
+<button class="btn btn-gold" onclick="exportarPDF()">📄 Exportar PDF gestor</button>
+<button class="btn btn-ghost" onclick="exportarExcel()">📊 Exportar Excel</button>
+</div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title">Resumen completo del trimestre</div></div><div class="card-body" id="cierre-body"></div></div>
+</div>
+
+<!-- ASESOR IA -->
+<div id="page-asesor" class="page">
+<div class="page-header"><div><div class="page-title">Asesor Fiscal IA</div><div class="page-sub">Consultas en lenguaje natural con acceso a tus datos</div></div></div>
+<div class="card">
+<div class="card-body">
+<div id="ia-chat" style="max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+<div style="display:flex;gap:8px;">
+<input id="ia-input" style="flex:1;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;" placeholder="Ej: ¿Cuánto tengo que pagar de IVA este trimestre?" onkeydown="if(event.key==='Enter')sendIA()">
+<button class="btn btn-primary" onclick="sendIA()">Enviar</button>
+</div>
+<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;" id="ia-sugs"></div>
+</div>
+</div>
+</div>
+```
+
+</main>
+</div>
+
+<!-- MODAL OPERACIÓN -->
+
+<div class="overlay" id="modal-overlay">
+<div class="modal">
+<div class="modal-title" id="modal-title">Nueva operación</div>
+<div class="form-grid">
+<div class="field full">
+<label>Concepto / descripción *</label>
+<input id="f-concepto" placeholder="Ej: Instalación caldera Wolf — Carlos García">
+</div>
+<div class="field">
+<label>Fecha *</label>
+<input type="date" id="f-fecha">
+</div>
+<div class="field">
+<label>Tipo</label>
+<select id="f-tipo">
+<option value="factura">Factura</option>
+<option value="cobro">Cobro directo</option>
+<option value="material">Material</option>
+<option value="herramienta">Herramienta/equipo</option>
+<option value="vehiculo">Vehículo/combustible</option>
+<option value="nomina">Nómina/SS</option>
+<option value="otros">Otros</option>
+</select>
+</div>
+<div class="field">
+<label>Base imponible (€) *</label>
+<input type="number" id="f-base" step="0.01" placeholder="0.00" oninput="calcModal()">
+</div>
+<div class="field">
+<label>% IVA</label>
+<select id="f-iva" onchange="calcModal()">
+<option value="21">21% — General</option>
+<option value="10">10% — Reducido</option>
+<option value="4">4% — Superreducido</option>
+<option value="0">0% — Exento</option>
+</select>
+</div>
+<div class="field">
+<label>% Retención IRPF</label>
+<select id="f-ret" onchange="calcModal()">
+<option value="0">0% — Sin retención</option>
+<option value="7">7% — Inicio actividad</option>
+<option value="15">15% — General</option>
+<option value="19">19% — Arrendamientos</option>
+</select>
+</div>
+<div class="field">
+<label>Cuota IVA (€)</label>
+<input type="number" id="f-cuota" readonly>
+</div>
+<div class="field">
+<label>Total factura (€)</label>
+<input type="number" id="f-total" readonly>
+</div>
+<div class="field full">
+<label>Cliente / proveedor / notas</label>
+<input id="f-notas" placeholder="Nombre, nº factura, referencia...">
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+<button class="btn btn-primary" id="modal-btn" onclick="saveOp()">Guardar</button>
+</div>
+</div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// SUPABASE — ÚNICA BASE DE DATOS
+// ═══════════════════════════════════════════
+const SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+const HEADERS = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'};
+
+async function sbGet(table, query='') {
+const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${query}`, {headers:HEADERS});
+if(!r.ok) throw new Error(await r.text());
+return r.json();
+}
+async function sbInsert(table, row) {
+const r = await fetch(`${SUPA_URL}/rest/v1/${table}`, {method:'POST',headers:{...HEADERS,'Prefer':'return=representation'},body:JSON.stringify(row)});
+if(!r.ok) throw new Error(await r.text());
+return r.json();
+}
+async function sbUpdate(table, id, row) {
+const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {method:'PATCH',headers:{...HEADERS,'Prefer':'return=representation'},body:JSON.stringify(row)});
+if(!r.ok) throw new Error(await r.text());
+return r.json();
+}
+async function sbDelete(table, id) {
+const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {method:'DELETE',headers:HEADERS});
+if(!r.ok) throw new Error(await r.text());
+}
+
+// ═══════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════
+let ingresos = [];
+let gastos = [];
+let config = {cuota_reta: 300};
+let editingId = null;
+let editingTipo = null;
+let modalTipo = 'ingreso';
+
+// ═══════════════════════════════════════════
+// SYNC STATUS
+// ═══════════════════════════════════════════
+function setSyncStatus(state, msg) {
+const dot = document.getElementById('sync-dot');
+const txt = document.getElementById('sync-text');
+dot.className = 'sync-dot' + (state === 'syncing' ? ' syncing' : state === 'error' ? ' error' : '');
+txt.textContent = msg;
+}
+
+// ═══════════════════════════════════════════
+// CARGAR DATOS
+// ═══════════════════════════════════════════
+async function cargarDatos() {
+setSyncStatus('syncing', 'Cargando...');
+try {
+const [ings, gasts] = await Promise.all([
+sbGet('conta_ingresos', 'select=*&order=fecha.desc'),
+sbGet('conta_gastos', 'select=*&order=fecha.desc')
+]);
+ingresos = ings.map(mapRow);
+gastos = gasts.map(mapRow);
+setSyncStatus('ok', 'Sincronizado');
+renderAll();
+} catch(e) {
+setSyncStatus('error', 'Sin conexión');
+toast('Error al cargar datos de Supabase', 'err');
+}
+}
+
+function mapRow(r) {
+return {
+id: r.id, concepto: r.concepto, fecha: r.fecha, tipo: r.tipo,
+base: +r.base, pIva: +r.piva, cuotaIva: +r.cuotaiva,
+pRet: +r.pret, retencion: +r.retencion, total: +r.total,
+notas: r.notas || ''
+};
+}
+
+function toRow(op) {
+return {
+id: op.id, concepto: op.concepto, fecha: op.fecha, tipo: op.tipo,
+base: op.base, piva: op.pIva, cuotaiva: op.cuotaIva,
+pret: op.pRet, retencion: op.retencion, total: op.total,
+notas: op.notas
+};
+}
+
+// ═══════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════
+function goTo(page) {
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+document.getElementById('page-'+page).classList.add('active');
+const pages = ['dashboard','ingresos','gastos','iva','irpf','cierre','asesor'];
+const idx = pages.indexOf(page);
+document.querySelectorAll('.nav-item')[idx]?.classList.add('active');
+renderAll();
+}
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+function openModal(tipo, id) {
+modalTipo = tipo;
+editingId = null; editingTipo = null;
+
+if(id) {
+const arr = tipo === 'ingreso' ? ingresos : gastos;
+const op = arr.find(x => x.id === id);
+if(!op) return;
+editingId = id; editingTipo = tipo;
+document.getElementById('modal-title').textContent = tipo === 'ingreso' ? '✏️ Editar ingreso' : '✏️ Editar gasto';
+document.getElementById('modal-btn').textContent = 'Guardar cambios';
+document.getElementById('f-concepto').value = op.concepto;
+document.getElementById('f-fecha').value = op.fecha;
+document.getElementById('f-tipo').value = op.tipo;
+document.getElementById('f-base').value = op.base;
+document.getElementById('f-iva').value = op.pIva;
+document.getElementById('f-ret').value = op.pRet;
+document.getElementById('f-notas').value = op.notas;
+calcModal();
+} else {
+document.getElementById('modal-title').textContent = tipo === 'ingreso' ? '💶 Nuevo ingreso' : '🧾 Nuevo gasto';
+document.getElementById('modal-btn').textContent = tipo === 'ingreso' ? 'Guardar ingreso' : 'Guardar gasto';
+document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
+document.getElementById('f-concepto').value = '';
+document.getElementById('f-base').value = '';
+document.getElementById('f-cuota').value = '';
+document.getElementById('f-total').value = '';
+document.getElementById('f-notas').value = '';
+document.getElementById('f-iva').value = '21';
+document.getElementById('f-ret').value = '0';
+document.getElementById('f-tipo').value = tipo === 'gasto' ? 'material' : 'factura';
+}
+document.getElementById('modal-overlay').classList.add('open');
+setTimeout(() => document.getElementById('f-concepto').focus(), 100);
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+function calcModal() {
+const base = parseFloat(document.getElementById('f-base').value) || 0;
+const pIva = parseFloat(document.getElementById('f-iva').value) || 0;
+const pRet = parseFloat(document.getElementById('f-ret').value) || 0;
+const cuota = base * pIva / 100;
+const ret = base * pRet / 100;
+document.getElementById('f-cuota').value = cuota.toFixed(2);
+document.getElementById('f-total').value = (base + cuota - ret).toFixed(2);
+}
+
+async function saveOp() {
+const concepto = document.getElementById('f-concepto').value.trim();
+const fecha = document.getElementById('f-fecha').value;
+const base = parseFloat(document.getElementById('f-base').value);
+if(!concepto || !fecha || isNaN(base) || base <= 0) { toast('Rellena concepto, fecha y base', 'err'); return; }
+
+const pIva = parseFloat(document.getElementById('f-iva').value) || 0;
+const pRet = parseFloat(document.getElementById('f-ret').value) || 0;
+const op = {
+id: editingId || Date.now(),
+concepto, fecha, tipo: document.getElementById('f-tipo').value,
+base, pIva, cuotaIva: base * pIva / 100,
+pRet, retencion: base * pRet / 100,
+total: base + (base * pIva / 100) - (base * pRet / 100),
+notas: document.getElementById('f-notas').value.trim()
+};
+
+const tabla = modalTipo === 'ingreso' ? 'conta_ingresos' : 'conta_gastos';
+const arr = modalTipo === 'ingreso' ? ingresos : gastos;
+
+setSyncStatus('syncing', 'Guardando...');
+try {
+if(editingId) {
+await sbUpdate(tabla, editingId, toRow(op));
+const idx = arr.findIndex(x => x.id === editingId);
+if(idx >= 0) arr[idx] = op;
+toast('Operación actualizada ✓', 'ok');
+} else {
+await sbInsert(tabla, toRow(op));
+arr.unshift(op);
+toast('Operación guardada ✓', 'ok');
+}
+setSyncStatus('ok', 'Sincronizado');
+closeModal();
+renderAll();
+} catch(e) {
+setSyncStatus('error', 'Error al guardar');
+toast('Error al guardar en Supabase', 'err');
+}
+}
+
+async function delOp(tipo, id) {
+if(!confirm('¿Eliminar esta operación?')) return;
+const tabla = tipo === 'ingreso' ? 'conta_ingresos' : 'conta_gastos';
+setSyncStatus('syncing', 'Eliminando...');
+try {
+await sbDelete(tabla, id);
+if(tipo === 'ingreso') ingresos = ingresos.filter(x => x.id !== id);
+else gastos = gastos.filter(x => x.id !== id);
+setSyncStatus('ok', 'Sincronizado');
+renderAll();
+toast('Operación eliminada', 'info');
+} catch(e) {
+setSyncStatus('error', 'Error');
+toast('Error al eliminar', 'err');
+}
+}
+
+// ═══════════════════════════════════════════
+// FILTROS
+// ═══════════════════════════════════════════
+const T_MESES = [[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
+
+function getPeriodo() {
+return {
+p: document.getElementById('periodoSel').value,
+y: parseInt(document.getElementById('yearSel').value)
+};
+}
+
+function filtrar(arr) {
+const {p, y} = getPeriodo();
+return arr.filter(x => {
+const d = new Date(x.fecha);
+if(d.getFullYear() !== y) return false;
+if(p === 'all') return true;
+return T_MESES[parseInt(p)].includes(d.getMonth());
+});
+}
+
+function totales(arr) {
+return arr.reduce((a,b) => ({
+base: a.base + b.base,
+cuotaIva: a.cuotaIva + b.cuotaIva,
+retencion: a.retencion + b.retencion,
+total: a.total + b.total
+}), {base:0,cuotaIva:0,retencion:0,total:0});
+}
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+function fmt(n) { return n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtE(n) { return fmt(n)+' €'; }
+function tipoLabel(t) {
+return {factura:'Factura',cobro:'Cobro',material:'Material',herramienta:'Herramienta',vehiculo:'Vehículo',nomina:'Nómina/SS',otros:'Otros'}[t]||t;
+}
+
+function toast(msg, type='ok') {
+const el = document.getElementById('toast');
+el.textContent = msg;
+el.className = `toast show ${type}`;
+setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════
+// RENDER DASHBOARD
+// ═══════════════════════════════════════════
+function renderAll() {
+const {p, y} = getPeriodo();
+const label = p === 'all' ? `Año ${y}` : `T${parseInt(p)+1} ${y}`;
+document.getElementById('dash-sub').textContent = `Resumen · ${label}`;
+document.getElementById('periodo-badge-text').textContent = label;
+
+const ings = filtrar(ingresos);
+const gasts = filtrar(gastos);
+const tI = totales(ings);
+const tG = totales(gasts);
+const resultado = tI.base - tG.base;
+const ivaLiq = tI.cuotaIva - tG.cuotaIva;
+
+// KPIs
+document.getElementById('kpis').innerHTML = `
+<div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div>
+<div class="kpi-label">Ingresos</div>
+<div class="kpi-val" style="color:var(--green)">${fmtE(tI.base)}</div>
+<div class="kpi-sub">${ings.length} ops · IVA: ${fmtE(tI.cuotaIva)}</div></div>
+<div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>
+<div class="kpi-label">Gastos</div>
+<div class="kpi-val" style="color:var(--red)">${fmtE(tG.base)}</div>
+<div class="kpi-sub">${gasts.length} ops · IVA: ${fmtE(tG.cuotaIva)}</div></div>
+<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>
+<div class="kpi-label">Resultado neto</div>
+<div class="kpi-val" style="color:${resultado>=0?'var(--green)':'var(--red)'}">
+${resultado>=0?'+':''}${fmtE(resultado)}</div>
+<div class="kpi-sub">Base imponible neta</div></div>
+<div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div>
+<div class="kpi-label">IVA a liquidar</div>
+<div class="kpi-val" style="color:${ivaLiq>=0?'var(--orange)':'var(--green)'}">
+${fmtE(Math.abs(ivaLiq))}</div>
+<div class="kpi-sub">${ivaLiq>=0?'A pagar':'A devolver'}</div></div>
+`;
+
+renderAlertas(tI.base, tG.base, ivaLiq, y, p);
+renderProgreso(y, resultado);
+renderUltimas();
+renderTabla(ings, 'ingreso', 'tabla-ing', 'ing-title', 'ing-resumen');
+renderTabla(gasts, 'gasto', 'tabla-gas', 'gas-title', 'gas-resumen');
+renderIVA(ings, gasts, tI, tG);
+renderIRPF(y);
+renderCierre(ings, gasts, tI, tG, ivaLiq, label);
+}
+
+function renderProgreso(y, resultado) {
+const todasI = ingresos.filter(x => new Date(x.fecha).getFullYear() === y);
+const baseAnual = totales(todasI).base;
+const tramos = [{hasta:12450,pct:19},{hasta:20200,pct:24},{hasta:35200,pct:30},{hasta:60000,pct:37},{hasta:300000,pct:45}];
+let tramoActual = tramos[0];
+for(const t of tramos) { if(baseAnual > t.hasta) tramoActual = t; else { tramoActual = t; break; } }
+const pct = Math.min(100, baseAnual / 60000 * 100);
+const color = baseAnual > 45000 ? 'var(--red)' : baseAnual > 25000 ? 'var(--orange)' : 'var(--green)';
+
+document.getElementById('progreso-anual').innerHTML = `
+<div style="margin-bottom:14px;">
+<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;">
+<span>Facturación año ${y}</span><span style="color:white;font-weight:700;">${fmtE(baseAnual)}</span></div>
+<div class="prog-wrap"><div class="prog" style="width:${pct}%;background:${color};"></div></div>
+<div style="font-size:10px;color:var(--muted);margin-top:4px;">Tramo IRPF: <span style="color:var(--gold);font-weight:600;">${tramoActual.pct}%</span></div>
+</div>
+<div class="fiscal-row"><span class="lbl">Rendimiento estimado</span><span class="val">${fmtE(resultado)}</span></div>
+<div class="fiscal-row"><span class="lbl">IRPF estimado</span><span class="val" style="color:var(--orange)">${fmtE(resultado>0?resultado*tramoActual.pct/100:0)}</span></div>
+<div class="fiscal-row"><span class="lbl">RETA mensual</span><span class="val" style="color:var(--red)">${fmtE(config.cuota_reta)}</span></div>
+`;
+}
+
+function renderUltimas() {
+const todas = [
+...ingresos.map(x => ({...x, modo:'ingreso'})),
+...gastos.map(x => ({...x, modo:'gasto'}))
+].sort((a,b) => new Date(b.fecha)-new Date(a.fecha)).slice(0,6);
+
+if(!todas.length) {
+document.getElementById('ultimas').innerHTML = `<div class="empty"><div class="icon">📭</div><p>Sin operaciones aún</p></div>`;
+return;
+}
+document.getElementById('ultimas').innerHTML = `<table><thead><tr><th>Fecha</th><th>Concepto</th><th></th><th class="num">Base</th></tr></thead><tbody>
+${todas.map(op => `<tr>
+<td style="color:var(--muted);font-size:11px;">${op.fecha}</td>
+<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${op.concepto}</td>
+<td><span class="badge ${op.modo==='ingreso'?'badge-green':'badge-red'}">${op.modo==='ingreso'?'▲':'▼'}</span></td>
+<td class="num ${op.modo==='ingreso'?'pos':'neg'}">${op.modo==='ingreso'?'+':'-'}${fmtE(op.base)}</td>
+</tr>`).join('')}
+</tbody></table>`;
+}
+
+function renderAlertas(ingBase, gasBase, ivaLiq, y, p) {
+const todasI = ingresos.filter(x => new Date(x.fecha).getFullYear() === y);
+const baseAnual = totales(todasI).base;
+const alerts = [], consejos = [];
+
+if(ivaLiq > 500) alerts.push({t:'warn',title:'⏰ IVA pendiente de liquidar',msg:`Tienes ${fmtE(ivaLiq)} de IVA a pagar en la próxima declaración. Tenlo provisionado.`});
+if(baseAnual > 40000) alerts.push({t:'danger',title:'🔴 Tramo IRPF alto',msg:`Con ${fmtE(baseAnual)} facturados entras en el tramo del 37-45%. Cada factura adicional tiene un coste fiscal muy elevado.`});
+else if(baseAnual > 25000) alerts.push({t:'warn',title:'⚠️ Tramo IRPF 30%',msg:`Llevas ${fmtE(baseAnual)} facturados. A partir de 35.200€ subes al tramo del 37%.`});
+
+const resultado = ingBase - gasBase;
+if(resultado > 15000) consejos.push({t:'info',title:'🏦 Provisiona para impuestos',msg:`Resultado de ${fmtE(resultado)}. Reserva al menos el 28% (${fmtE(resultado*0.28)}) para IRPF y SS.`});
+if(ingBase > 5000 && gasBase < ingBase * 0.12) consejos.push({t:'info',title:'💡 Gastos deducibles bajos',msg:`Solo tienes un ${((gasBase/ingBase)*100).toFixed(0)}% en gastos. Revisa si faltan facturas de combustible, material, teléfono o RETA.`});
+if(!ingBase && !gasBase) consejos.push({t:'info',title:'👋 Empieza registrando',msg:`Usa "+ Ingreso" y "+ Gasto" en la barra superior para registrar tus operaciones.`});
+
+document.getElementById('alertas').innerHTML = alerts.map(a => `
+<div class="alert alert-${a.t}"><div class="alert-icon">${a.t==='danger'?'🚨':'⚠️'}</div>
+<div><div class="alert-title">${a.title}</div>${a.msg}</div></div>`).join('');
+
+document.getElementById('consejos').innerHTML = consejos.length
+? consejos.map(c => `<div class="alert alert-${c.t}" style="margin-bottom:8px;"><div class="alert-icon">ℹ️</div><div><div class="alert-title">${c.title}</div>${c.msg}</div></div>`).join('')
+: `<div style="color:var(--muted);font-size:12px;text-align:center;padding:16px;">✅ Todo en orden. Sigue registrando para recibir consejos personalizados.</div>`;
+}
+
+function renderTabla(arr, tipo, contId, titleId, resId) {
+const t = totales(arr);
+const sign = tipo === 'ingreso' ? '+' : '-';
+const cls = tipo === 'ingreso' ? 'pos' : 'neg';
+document.getElementById(titleId).textContent = `${arr.length} operaciones`;
+document.getElementById(resId).innerHTML = `Base: <strong>${fmtE(t.base)}</strong> · IVA: <strong>${fmtE(t.cuotaIva)}</strong>`;
+
+if(!arr.length) {
+document.getElementById(contId).innerHTML = `<div class="empty"><div class="icon">${tipo==='ingreso'?'💶':'🧾'}</div><p>Sin ${tipo==='ingreso'?'ingresos':'gastos'} en este período</p></div>`;
+return;
+}
+document.getElementById(contId).innerHTML = `<div class="table-wrap"><table>
+<thead><tr><th>Fecha</th><th>Concepto</th><th>Tipo</th><th class="num">Base</th><th class="num">IVA%</th><th class="num">Cuota IVA</th><th class="num">Retención</th><th class="num">Total</th><th></th></tr></thead>
+<tbody>${arr.map(op => `<tr>
+<td style="color:var(--muted);white-space:nowrap;">${op.fecha}</td>
+<td><div>${op.concepto.substring(0,42)}${op.concepto.length>42?'…':''}</div>${op.notas?`<div style="font-size:10px;color:var(--muted)">${op.notas}</div>`:''}</td>
+<td><span class="badge badge-blue">${tipoLabel(op.tipo)}</span></td>
+<td class="num ${cls}">${sign}${fmtE(op.base)}</td>
+<td class="num">${op.pIva}%</td>
+<td class="num neu">${fmtE(op.cuotaIva)}</td>
+<td class="num" style="color:var(--muted)">${op.retencion>0?fmtE(op.retencion):'—'}</td>
+<td class="num">${fmtE(op.total)}</td>
+<td style="white-space:nowrap;">
+<button class="action-btn edit" onclick="openModal('${tipo}',${op.id})">✏️</button>
+<button class="action-btn del" onclick="delOp('${tipo}',${op.id})">✕</button>
+</td>
+</tr>`).join('')}</tbody>
+<tfoot><tr>
+<td colspan="3" style="color:var(--muted);font-size:11px;">TOTALES</td>
+<td class="num ${cls}">${sign}${fmtE(t.base)}</td><td></td>
+<td class="num neu">${fmtE(t.cuotaIva)}</td>
+<td class="num" style="color:var(--muted)">${fmtE(t.retencion)}</td>
+<td class="num">${fmtE(t.total)}</td><td></td>
+</tr></tfoot>
+</table></div>`;
+}
+
+function renderIVA(ings, gasts, tI, tG) {
+const grpI = {}, grpG = {};
+ings.forEach(x => { if(!grpI[x.pIva]) grpI[x.pIva]={base:0,cuota:0}; grpI[x.pIva].base+=x.base; grpI[x.pIva].cuota+=x.cuotaIva; });
+gasts.forEach(x => { if(!grpG[x.pIva]) grpG[x.pIva]={base:0,cuota:0}; grpG[x.pIva].base+=x.base; grpG[x.pIva].cuota+=x.cuotaIva; });
+const grp = g => Object.entries(g).map(([pct,v]) => `<div class="fiscal-row"><span class="lbl">IVA ${pct}% — base ${fmtE(v.base)}</span><span class="val">${fmtE(v.cuota)}</span></div>`).join('') || '<div style="color:var(--muted);font-size:12px;padding:8px 0">Sin operaciones</div>';
+const res = tI.cuotaIva - tG.cuotaIva;
+document.getElementById('iva-rep').innerHTML = grp(grpI)+`<div class="fiscal-row total"><span class="lbl">Total repercutido</span><span class="val" style="color:var(--orange)">${fmtE(tI.cuotaIva)}</span></div>`;
+document.getElementById('iva-sop').innerHTML = grp(grpG)+`<div class="fiscal-row total"><span class="lbl">Total soportado</span><span class="val" style="color:var(--green)">${fmtE(tG.cuotaIva)}</span></div>`;
+document.getElementById('iva-res').innerHTML = `
+<div class="fiscal-row"><span class="lbl">IVA repercutido</span><span class="val">${fmtE(tI.cuotaIva)}</span></div>
+<div class="fiscal-row"><span class="lbl">IVA soportado deducible</span><span class="val">− ${fmtE(tG.cuotaIva)}</span></div>
+<div class="fiscal-row total"><span class="lbl">${res>=0?'🔴 A INGRESAR':'🟢 A DEVOLVER'}</span><span class="val" style="color:${res>=0?'var(--red)':'var(--green)'};font-size:20px;">${fmtE(Math.abs(res))}</span></div>
+<div class="alert alert-info" style="margin-top:14px;"><div class="alert-icon">ℹ️</div><div><div class="alert-title">Plazos Modelo 303</div>T1: 1-20 abr · T2: 1-20 jul · T3: 1-20 oct · T4: 1-30 ene</div></div>`;
+}
+
+function renderIRPF(y) {
+const todasI = ingresos.filter(x => new Date(x.fecha).getFullYear() === y);
+const todasG = gastos.filter(x => new Date(x.fecha).getFullYear() === y);
+const tI = totales(todasI), tG = totales(todasG);
+const reta = config.cuota_reta * 12;
+const rendimiento = Math.max(0, tI.base - tG.base - reta);
+const tramos = [{desde:0,hasta:12450,pct:19},{desde:12450,hasta:20200,pct:24},{desde:20200,hasta:35200,pct:30},{desde:35200,hasta:60000,pct:37},{desde:60000,hasta:300000,pct:45}];
+let irpf = 0, det = '';
+let base = rendimiento;
+for(const t of tramos) {
+if(base <= 0) break;
+const en = Math.min(base, t.hasta - t.desde);
+const cuota = en * t.pct / 100;
+irpf += cuota;
+det += `<div class="fiscal-row"><span class="lbl" style="font-size:11px;">Tramo ${t.pct}% (${fmtE(t.desde)}–${fmtE(t.hasta)})</span><span class="val" style="color:var(--muted);font-size:11px;">${fmtE(en)} → ${fmtE(cuota)}</span></div>`;
+}
+const a_pagar = Math.max(0, irpf - tI.retencion);
+
+const ings_t = filtrar(ingresos), gasts_t = filtrar(gastos);
+const tIt = totales(ings_t), tGt = totales(gasts_t);
+const base130 = Math.max(0, tIt.base - tGt.base);
+const cuota130 = base130 * 0.20;
+const ret_t = tIt.retencion;
+const pagar130 = Math.max(0, cuota130 - ret_t);
+
+document.getElementById('irpf-calc').innerHTML = `
+<div class="fiscal-row"><span class="lbl">Ingresos año ${y}</span><span class="val">${fmtE(tI.base)}</span></div>
+<div class="fiscal-row"><span class="lbl">Gastos deducibles</span><span class="val">− ${fmtE(tG.base)}</span></div>
+<div class="fiscal-row"><span class="lbl">RETA anual</span><span class="val">− ${fmtE(reta)}</span></div>
+<div class="fiscal-row total"><span class="lbl">Rendimiento neto</span><span class="val">${fmtE(rendimiento)}</span></div>
+${det}
+<div class="fiscal-row total"><span class="lbl">IRPF estimado total</span><span class="val" style="color:var(--orange)">${fmtE(irpf)}</span></div>
+<div class="fiscal-row"><span class="lbl">Retenciones aplicadas</span><span class="val" style="color:var(--green)">− ${fmtE(tI.retencion)}</span></div>
+<div class="fiscal-row total"><span class="lbl">${a_pagar>=0?'🔴 A INGRESAR':'🟢 A DEVOLVER'}</span><span class="val" style="color:${a_pagar>=0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(Math.abs(a_pagar))}</span></div>
+<div style="font-size:10px;color:var(--muted);margin-top:8px;">* Estimación orientativa. Consulta con tu asesor.</div>`;
+
+document.getElementById('reta-calc').innerHTML = `
+<div class="fiscal-row"><span class="lbl">Cuota mensual</span><span class="val">${fmtE(config.cuota_reta)}/mes</span></div>
+<div class="fiscal-row"><span class="lbl">Total anual</span><span class="val">${fmtE(reta)}</span></div>
+<div class="fiscal-row"><span class="lbl">% deducible IRPF</span><span class="val" style="color:var(--green)">100%</span></div>
+<div class="fiscal-row total"><span class="lbl">Ahorro fiscal IRPF</span><span class="val" style="color:var(--green)">${fmtE(reta*0.30)}</span></div>
+<div class="alert alert-info" style="margin-top:14px;">
+<div class="alert-icon">⚙️</div>
+<div>Cuota RETA: <input type="number" value="${config.cuota_reta}" style="width:70px;background:var(--s3);border:1px solid var(--border);color:white;padding:3px 6px;border-radius:5px;font-family:inherit;font-size:12px;" onchange="config.cuota_reta=parseFloat(this.value)||300;renderAll()"> €/mes</div>
+</div>`;
+
+document.getElementById('m130').innerHTML = `
+<div class="fiscal-row"><span class="lbl">Ingresos período</span><span class="val">${fmtE(tIt.base)}</span></div>
+<div class="fiscal-row"><span class="lbl">Gastos período</span><span class="val">− ${fmtE(tGt.base)}</span></div>
+<div class="fiscal-row"><span class="lbl">20% rendimiento</span><span class="val">${fmtE(cuota130)}</span></div>
+<div class="fiscal-row"><span class="lbl">Retenciones período</span><span class="val">− ${fmtE(ret_t)}</span></div>
+<div class="fiscal-row total"><span class="lbl">${pagar130>0?'🔴 A INGRESAR':'✅ Sin pago'}</span><span class="val" style="color:${pagar130>0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(pagar130)}</span></div>
+<div class="alert alert-warn" style="margin-top:14px;"><div class="alert-icon">⏰</div><div><div class="alert-title">Plazos Modelo 130</div>T1: 1-20 abr · T2: 1-20 jul · T3: 1-20 oct · T4: 1-30 ene</div></div>`;
+}
+
+function renderCierre(ings, gasts, tI, tG, ivaLiq, label) {
+const resultado = tI.base - tG.base;
+document.getElementById('cierre-body').innerHTML = `
+<div style="margin-bottom:20px;">
+<div style="font-size:18px;font-weight:800;color:white;margin-bottom:4px;">HAROSAT ECOTECHNICAL · ${label}</div>
+<div style="font-size:12px;color:var(--muted);">CIF: 09302345H · Haro, La Rioja</div>
+</div>
+<div class="g3" style="margin-bottom:20px;">
+<div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Total ingresos</div><div class="kpi-val" style="color:var(--green);font-size:18px;">${fmtE(tI.base)}</div><div class="kpi-sub">IVA: ${fmtE(tI.cuotaIva)}</div></div>
+<div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Total gastos</div><div class="kpi-val" style="color:var(--red);font-size:18px;">${fmtE(tG.base)}</div><div class="kpi-sub">IVA: ${fmtE(tG.cuotaIva)}</div></div>
+<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Resultado neto</div><div class="kpi-val" style="font-size:18px;color:${resultado>=0?'var(--green)':'var(--red)'}">${fmtE(resultado)}</div></div>
+</div>
+<div class="fiscal-row"><span class="lbl">IVA repercutido</span><span class="val">${fmtE(tI.cuotaIva)}</span></div>
+<div class="fiscal-row"><span class="lbl">IVA soportado</span><span class="val">${fmtE(tG.cuotaIva)}</span></div>
+<div class="fiscal-row"><span class="lbl">Modelo 303 — ${ivaLiq>=0?'A ingresar':'A devolver'}</span><span class="val" style="color:${ivaLiq>=0?'var(--red)':'var(--green)'}">${fmtE(Math.abs(ivaLiq))}</span></div>
+<div class="fiscal-row"><span class="lbl">Retenciones IRPF recibidas</span><span class="val">${fmtE(tI.retencion)}</span></div>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+<div style="font-size:11px;color:var(--muted);margin-bottom:12px;">DESGLOSE INGRESOS (${ings.length} facturas)</div>
+${ings.length ? `<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th>Cliente</th><th class="num">Base</th><th class="num">IVA</th><th class="num">Total</th></tr></thead><tbody>
+${ings.map(op => `<tr><td style="font-size:11px;color:var(--muted)">${op.fecha}</td><td style="font-size:12px">${op.concepto}</td><td style="font-size:11px;color:var(--muted)">${op.notas||'—'}</td><td class="num pos" style="font-size:12px">${fmtE(op.base)}</td><td class="num neu" style="font-size:11px">${fmtE(op.cuotaIva)}</td><td class="num" style="font-size:12px">${fmtE(op.total)}</td></tr>`).join('')}
+</tbody></table></div>` : '<div style="color:var(--muted);font-size:12px;">Sin ingresos</div>'}
+</div>`;
+}
+
+// ═══════════════════════════════════════════
+// EXPORTAR EXCEL (CSV)
+// ═══════════════════════════════════════════
+function exportarExcel() {
+const {p, y} = getPeriodo();
+const label = p === 'all' ? `Año_${y}` : `T${parseInt(p)+1}_${y}`;
+const ings = filtrar(ingresos);
+const gasts = filtrar(gastos);
+
+let csv = 'TIPO;FECHA;CONCEPTO;NOTAS;BASE;IVA%;CUOTA IVA;RETENCION;TOTAL\n';
+ings.forEach(op => csv += `INGRESO;${op.fecha};"${op.concepto}";"${op.notas}";${op.base};${op.pIva}%;${op.cuotaIva};${op.retencion};${op.total}\n`);
+gasts.forEach(op => csv += `GASTO;${op.fecha};"${op.concepto}";"${op.notas}";${op.base};${op.pIva}%;${op.cuotaIva};${op.retencion};${op.total}\n`);
+
+const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+const a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = `HAROSAT_Contabilidad_${label}.csv`;
+a.click();
+toast('Excel exportado ✓', 'ok');
+}
+
+// ═══════════════════════════════════════════
+// EXPORTAR PDF GESTOR
+// ═══════════════════════════════════════════
+function exportarPDF() {
+window.print();
+}
+
+// ═══════════════════════════════════════════
+// ASESOR IA
+// ═══════════════════════════════════════════
+function contextoFiscal() {
+const {p, y} = getPeriodo();
+const ings = filtrar(ingresos), gasts = filtrar(gastos);
+const tI = totales(ings), tG = totales(gasts);
+const reta = config.cuota_reta * 12;
+const rendimiento = tI.base - tG.base - reta;
+return `Soy autónomo español, instalador de climatización y calefacción (HAROSAT Ecotechnical, Haro La Rioja). Período: ${p==='all'?'Año '+y:'T'+(parseInt(p)+1)+' '+y}. Ingresos base: ${fmtE(tI.base)}, Gastos base: ${fmtE(tG.base)}, RETA: ${fmtE(config.cuota_reta)}/mes, Rendimiento neto: ${fmtE(rendimiento)}, IVA repercutido: ${fmtE(tI.cuotaIva)}, IVA soportado: ${fmtE(tG.cuotaIva)}.`;
+}
+
+async function sendIA() {
+const input = document.getElementById('ia-input');
+const pregunta = input.value.trim();
+if(!pregunta) return;
+addMsg('user', pregunta);
+input.value = '';
+const typId = 'typ'+Date.now();
+addTyping(typId);
+try {
+const r = await fetch('https://api.anthropic.com/v1/messages', {
+method:'POST', headers:{'Content-Type':'application/json'},
+body: JSON.stringify({
+model:'claude-sonnet-4-20250514', max_tokens:600,
+system:`Eres asesor fiscal experto en autónomos españoles, estimación directa simplificada, IVA, IRPF, modelo 130, modelo 303 y RETA. Responde en español, conciso y práctico. Datos del usuario: ${contextoFiscal()}`,
+messages:[{role:'user',content:pregunta}]
+})
+});
+const d = await r.json();
+document.getElementById(typId)?.remove();
+addMsg('ia', d.content?.[0]?.text || 'Sin respuesta');
+} catch(e) {
+document.getElementById(typId)?.remove();
+addMsg('ia', 'Error de conexión.');
+}
+}
+
+function addMsg(rol, texto) {
+const chat = document.getElementById('ia-chat');
+const div = document.createElement('div');
+div.style.cssText = `display:flex;gap:10px;align-items:flex-start;${rol==='user'?'flex-direction:row-reverse;':''}`;
+div.innerHTML = `
+<div style="width:32px;height:32px;border-radius:8px;background:${rol==='ia'?'var(--blue)':'var(--s3)'};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${rol==='ia'?'🤖':'👤'}</div>
+<div style="background:${rol==='ia'?'rgba(31,111,235,0.1)':'var(--s2)'};border:1px solid ${rol==='ia'?'rgba(56,139,253,0.25)':'var(--border)'};border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:78%;">${texto.replace(/\n/g,'<br>')}</div>`;
+chat.appendChild(div);
+chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping(id) {
+const chat = document.getElementById('ia-chat');
+const div = document.createElement('div');
+div.id = id;
+div.style.cssText = 'display:flex;gap:10px;align-items:flex-start;';
+div.innerHTML = `<div style="width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;">🤖</div>
+<div style="background:rgba(31,111,235,0.1);border:1px solid rgba(56,139,253,0.25);border-radius:10px;padding:12px 16px;display:flex;gap:5px;">
+<span style="width:6px;height:6px;background:var(--blue2);border-radius:50%;animation:bounce 1.2s infinite;display:inline-block;"></span>
+<span style="width:6px;height:6px;background:var(--blue2);border-radius:50%;animation:bounce 1.2s infinite 0.2s;display:inline-block;"></span>
+<span style="width:6px;height:6px;background:var(--blue2);border-radius:50%;animation:bounce 1.2s infinite 0.4s;display:inline-block;"></span>
+</div>`;
+chat.appendChild(div);
+chat.scrollTop = chat.scrollHeight;
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.getElementById('modal-overlay').addEventListener('click', e => {
+if(e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+// Auto trimestre actual
+const mes = new Date().getMonth();
+document.getElementById('periodoSel').value = Math.floor(mes/3);
+document.getElementById('yearSel').value = new Date().getFullYear();
+
+// Sugerencias asesor
+document.getElementById('ia-sugs').innerHTML = [
+'¿Cuánto IVA pago?','¿Conviene facturar más?','¿Qué gastos deduzco?','Plazos impuestos'
+].map(s => `<button class="btn btn-ghost btn-sm" onclick="document.getElementById('ia-input').value='${s}';sendIA()">${s}</button>`).join('');
+
+// Mensaje inicial asesor
+addMsg('ia', '¡Hola! Soy tu asesor fiscal. Tengo acceso a todos tus datos en tiempo real.\n\n¿En qué te ayudo?');
+
+// Cargar datos de Supabase
+cargarDatos();
+</script>
 
 </body>
 </html>
