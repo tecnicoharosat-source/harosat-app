@@ -787,7 +787,7 @@ reader.readAsText(file);
 event.target.value = '';
 }
 
-function processCSV(text) {
+async function processCSV(text) {
 try {
 const lines = text.split('\n').filter(l => l.trim());
 if(lines.length < 2) {
@@ -800,9 +800,8 @@ for(let i = 1; i < lines.length; i++) {
 const cols = lines[i].split(';').map(c => c.trim().replace(/^"|"$/g, ''));
 if(cols.length < 1) continue;
 
-// Columnas del Excel: NOMBRE, DIRECCIÓN, POBLACIÓN, FECHA ULT. REV
 const row = {
-numero_cliente: i, // Número según posición en Excel
+numero_cliente: i,
 nombre: cols[0] || 'Sin nombre',
 direccion: cols[1] || '',
 poblacion: cols[2] || '',
@@ -818,20 +817,19 @@ imported.push(row);
 
 if(!confirm(`¿Importar ${imported.length} registros?`)) return;
 
-Promise.all(imported.map(row => 
-fetch(`${SUPA_URL}/rest/v1/revisiones`, {
+// Enviar de uno en uno
+for(const row of imported) {
+await fetch(`${SUPA_URL}/rest/v1/revisiones`, {
 method:'POST',
 headers:{...H,'Prefer':'return=representation'},
 body:JSON.stringify(row)
-})
-)).then(() => {
+});
+}
+
 alert(`${imported.length} registros importados ✓`);
 loadData();
-}).catch(err => {
-alert('Error al importar: ' + err.message);
-});
 } catch(err) {
-alert('Error al procesar archivo: ' + err.message);
+alert('Error al procesar: ' + err.message);
 }
 }
 
