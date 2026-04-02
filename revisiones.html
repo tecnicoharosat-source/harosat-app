@@ -452,6 +452,7 @@ grid-template-columns: 1fr 1fr;
 <table>
 <thead>
 <tr>
+<th>Nº</th>
 <th>Cliente</th>
 <th>Población</th>
 <th>Modelo</th>
@@ -587,6 +588,7 @@ const garantiaHTML = item.en_garantia
 
 return `
 <tr>
+<td><strong>#${item.id}</strong></td>
 <td><strong>${item.nombre}</strong></td>
 <td>${item.poblacion}</td>
 <td>${item.modelo}</td>
@@ -793,11 +795,11 @@ return;
 const imported = [];
 for(let i = 1; i < lines.length; i++) {
 const cols = lines[i].split(';').map(c => c.trim().replace(/^"|"$/g, ''));
-if(cols.length < 4) continue;
+if(cols.length < 1) continue;
 
 // Columnas del Excel: NOMBRE, DIRECCIÓN, POBLACIÓN, FECHA ULT. REV
 const row = {
-nombre: cols[0] || '',
+nombre: cols[0] || 'Sin nombre',
 direccion: cols[1] || '',
 poblacion: cols[2] || '',
 telefono: '',
@@ -807,7 +809,6 @@ fecha_revision: cols[3] || new Date().toISOString().split('T')[0],
 en_garantia: false,
 notas: ''
 };
-if(!row.nombre || !row.direccion || !row.poblacion) continue;
 imported.push(row);
 }
 
