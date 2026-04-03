@@ -478,7 +478,11 @@ grid-template-columns: 1fr 1fr;
 </div>
 <div class="modal-body">
 <div class="form-grid">
-<div class="form-field full">
+<div class="form-field">
+<label class="form-label">Nº Cliente</label>
+<input type="number" class="form-input" id="f-numero" min="1">
+</div>
+<div class="form-field">
 <label class="form-label">Nombre Cliente *</label>
 <input type="text" class="form-input" id="f-nombre" placeholder="Nombre completo">
 </div>
@@ -653,6 +657,7 @@ if(id) {
 const item = data.find(x => x.id === id);
 if(!item) return;
 document.getElementById('modal-title').textContent = 'Editar Revisión';
+document.getElementById('f-numero').value = item.numero_cliente || item.id;
 document.getElementById('f-nombre').value = item.nombre;
 document.getElementById('f-direccion').value = item.direccion;
 document.getElementById('f-poblacion').value = item.poblacion;
@@ -664,6 +669,8 @@ document.getElementById('f-garantia').checked = item.en_garantia || false;
 document.getElementById('f-notas').value = item.notas || '';
 } else {
 document.getElementById('modal-title').textContent = 'Nueva Revisión';
+const maxNum = data.length > 0 ? Math.max(...data.map(x => x.numero_cliente || x.id)) : 0;
+document.getElementById('f-numero').value = maxNum + 1;
 document.getElementById('f-nombre').value = '';
 document.getElementById('f-direccion').value = '';
 document.getElementById('f-poblacion').value = '';
@@ -694,6 +701,7 @@ return;
 }
 
 const payload = {
+numero_cliente: parseInt(document.getElementById('f-numero').value) || null,
 nombre,
 direccion,
 poblacion,
