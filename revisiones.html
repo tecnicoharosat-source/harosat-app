@@ -538,10 +538,12 @@ let editingId = null;
 
 async function loadData() {
 try {
-const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*&order=id.asc`, {headers:H});
+const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*`, {headers:H});
 if(!r.ok) {
 console.error('Error HTTP:', r.status);
-throw new Error(`Error ${r.status}`);
+const errorText = await r.text();
+console.error('Error details:', errorText);
+throw new Error(`Error ${r.status}: ${errorText}`);
 }
 data = await r.json();
 console.log('Datos cargados:', data.length);
