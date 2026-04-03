@@ -539,13 +539,17 @@ let editingId = null;
 async function loadData() {
 try {
 const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*&order=id.asc`, {headers:H});
-if(!r.ok) throw new Error('Error');
+if(!r.ok) {
+console.error('Error HTTP:', r.status);
+throw new Error(`Error ${r.status}`);
+}
 data = await r.json();
+console.log('Datos cargados:', data.length);
 renderTable();
 updateStats();
 } catch(e) {
-console.error(e);
-alert('Error al cargar datos: ' + e.message);
+console.error('Error en loadData:', e);
+alert('Error al cargar: ' + e.message);
 }
 }
 
