@@ -191,6 +191,9 @@ background: var(–surface);
 border: 1px solid var(–border);
 border-radius: 8px;
 overflow: hidden;
+max-height: 70vh;
+overflow-y: auto;
+position: relative;
 }
 
 table {
@@ -200,6 +203,9 @@ border-collapse: collapse;
 
 thead {
 background: var(–bg);
+position: sticky;
+top: 0;
+z-index: 10;
 }
 
 th {
@@ -211,6 +217,7 @@ letter-spacing: 0.5px;
 color: var(–muted);
 font-weight: 700;
 border-bottom: 1px solid var(–border);
+background: var(–bg);
 }
 
 td {
