@@ -539,19 +539,17 @@ let editingId = null;
 async function loadData() {
 try {
 const r = await fetch(`${SUPA_URL}/rest/v1/revisiones?select=*`, {headers:H});
-if(!r.ok) {
-console.error('Error HTTP:', r.status);
-const errorText = await r.text();
-console.error('Error details:', errorText);
-throw new Error(`Error ${r.status}: ${errorText}`);
-}
-data = await r.json();
+const text = await r.text();
+console.log('Response status:', r.status);
+console.log('Response text:', text);
+if(!r.ok) throw new Error(`HTTP ${r.status}: ${text}`);
+data = JSON.parse(text);
 console.log('Datos cargados:', data.length);
 renderTable();
 updateStats();
 } catch(e) {
-console.error('Error en loadData:', e);
-alert('Error al cargar: ' + e.message);
+console.error('Error completo:', e);
+document.getElementById('table-body').innerHTML = `<tr><td colspan="10" class="empty">Error: ${e.message}</td></tr>`;
 }
 }
 
