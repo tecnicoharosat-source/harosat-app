@@ -152,7 +152,7 @@ gap: 6px;
 
 .btn-primary {
 background: var(–blue);
-color: white;
+color: black;
 }
 
 .btn-primary:hover {
@@ -202,14 +202,14 @@ border-collapse: collapse;
 }
 
 thead {
-background: var(–bg);
+background: var(–blue);
 }
 
 thead th {
 position: sticky;
 top: 0;
 z-index: 10;
-background: var(–bg);
+background: var(–blue);
 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -219,10 +219,10 @@ text-align: left;
 font-size: 11px;
 text-transform: uppercase;
 letter-spacing: 0.5px;
-color: var(–muted);
+color: white;
 font-weight: 700;
 border-bottom: 1px solid var(–border);
-background: var(–bg);
+background: var(–blue);
 }
 
 td {
@@ -610,7 +610,7 @@ const garantiaHTML = item.en_garantia
 
 return `
 <tr>
-<td><strong>#${item.numero_cliente || item.id}</strong></td>
+<td><strong>${item.numero_cliente || item.id}</strong></td>
 <td><strong>${item.nombre}</strong></td>
 <td>${item.poblacion}</td>
 <td>${item.modelo}</td>
