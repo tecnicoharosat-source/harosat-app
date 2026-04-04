@@ -135,8 +135,6 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(–border);}
 <div class="container">
   <div class="kpi-grid" id="kpis"></div>
 
-  <!-- COMPRAS -->
-
   <div id="tab-compras">
     <div class="search-bar">
       <input class="search-input" id="buscar-compra" placeholder="🔍  Buscar por albarán o descripción..." oninput="renderCompras()">
@@ -147,16 +145,12 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(–border);}
     </div>
   </div>
 
-  <!-- PAGOS -->
-
   <div id="tab-pagos" style="display:none;">
     <div class="card">
       <div class="card-header"><div class="card-title" id="pagos-title">Pagos realizados</div></div>
       <div id="tabla-pagos" style="overflow-x:auto;"></div>
     </div>
   </div>
-
-  <!-- RESUMEN -->
 
   <div id="tab-resumen" style="display:none;">
     <div class="resumen-grid">
@@ -166,8 +160,6 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(–border);}
     <div class="card"><div class="card-header"><div class="card-title">Últimas compras</div></div><div id="resumen-ultimas" style="overflow-x:auto;"></div></div>
   </div>
 </div>
-
-<!-- MODAL COMPRA -->
 
 <div class="overlay" id="modal-compra">
   <div class="modal">
@@ -217,8 +209,6 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(–border);}
   </div>
 </div>
 
-<!-- MODAL PAGO -->
-
 <div class="overlay" id="modal-pago">
   <div class="modal">
     <div class="modal-title">💳 Registrar pago</div>
@@ -250,9 +240,6 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(–border);}
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════
-// SUPABASE
-// ═══════════════════════════════
 const SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 const H = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
@@ -277,9 +264,6 @@ async function sbDelete(table, id) {
   if(!r.ok) throw new Error(await r.text());
 }
 
-// ═══════════════════════════════
-// ESTADO
-// ═══════════════════════════════
 let compras = [];
 let pagos = [];
 let editingCompraId = null;
@@ -289,9 +273,6 @@ function setSyncStatus(state, msg) {
   document.getElementById('sync-text').textContent = msg;
 }
 
-// ═══════════════════════════════
-// CARGAR
-// ═══════════════════════════════
 async function cargarDatos() {
   setSyncStatus('syncing', 'Cargando...');
   try {
@@ -309,9 +290,6 @@ async function cargarDatos() {
   }
 }
 
-// ═══════════════════════════════
-// TABS
-// ═══════════════════════════════
 function goTab(tab) {
   ['compras','pagos','resumen'].forEach(t => {
     document.getElementById('tab-'+t).style.display = t === tab ? 'block' : 'none';
@@ -321,9 +299,6 @@ function goTab(tab) {
   });
 }
 
-// ═══════════════════════════════
-// MODALES
-// ═══════════════════════════════
 function openModalCompra(id) {
   editingCompraId = id || null;
   if(id) {
@@ -404,7 +379,24 @@ async function saveCompra() {
     } else {
       const res = await sbInsert('zab_compras', row);
       compras.unshift(Array.isArray(res) ? res[0] : row);
-      toast('Compra guardada ✓', 'ok');
+      
+      // SINCRONIZACIÓN CON CONTABLE
+      const base = importe / 1.21;
+      const cuotaiva = importe - base;
+      await sbInsert('conta_gastos', {
+        fecha: row.fecha,
+        concepto: `Zabaleta - Alb. ${albaran}`,
+        tipo: 'Material',
+        base: base,
+        piva: 21,
+        cuotaiva: cuotaiva,
+        pret: 0,
+        retencion: 0,
+        total: importe,
+        notas: `Exclusivas Zabaleta - ${descripcion}`
+      });
+      
+      toast('Compra guardada y sincronizada con Contable ✓', 'ok');
     }
     setSyncStatus('ok', 'Sincronizado');
     closeModals();
@@ -464,9 +456,6 @@ async function deletePago(id) {
   } catch(e) { toast('Error al eliminar', 'err'); }
 }
 
-// ═══════════════════════════════
-// RENDER
-// ═══════════════════════════════
 function renderAll() {
   renderKPIs();
   renderCompras();
@@ -596,9 +585,6 @@ function renderResumen() {
   </table>` : `<div class="empty"><p>Sin compras</p></div>`;
 }
 
-// ═══════════════════════════════
-// EXPORTAR
-// ═══════════════════════════════
 function exportarCSV() {
   let csv = 'TIPO;FECHA;ALBARAN/CONCEPTO;DESCRIPCION;IMPORTE;PAGADO;PENDIENTE;ESTADO\n';
   compras.forEach(c => csv += `COMPRA;${c.fecha||''};${c.albaran||''};"${c.descripcion||''}";${c.importe||0};${c.pagado||0};${c.pendiente||0};${c.estado||''}\n`);
@@ -611,9 +597,6 @@ function exportarCSV() {
   toast('Exportado ✓', 'ok');
 }
 
-// ═══════════════════════════════
-// UTILS
-// ═══════════════════════════════
 function fmt(n) { return (+n).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function fmtE(n) { return fmt(n)+' €'; }
 function toast(msg, type='ok') {
@@ -622,9 +605,6 @@ function toast(msg, type='ok') {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// ═══════════════════════════════
-// INIT
-// ═══════════════════════════════
 document.querySelectorAll('.overlay').forEach(o => {
   o.addEventListener('click', e => { if(e.target === o) closeModals(); });
 });
