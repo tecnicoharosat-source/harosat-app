@@ -384,7 +384,7 @@ async function saveCompra() {
       const base = parseFloat((importe / 1.21).toFixed(2));
       const cuotaiva = parseFloat((importe - base).toFixed(2));
       await sbInsert('conta_gastos', {
-        id: crypto.randomUUID(),
+      
         concepto: `Zabaleta - Alb. ${albaran}`,
         fecha: row.fecha,
         tipo: 'Material',
