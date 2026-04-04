@@ -384,14 +384,14 @@ async function saveCompra() {
       const base = importe / 1.21;
       const cuotaiva = importe - base;
       await sbInsert('conta_gastos', {
-        fecha: row.fecha,
         concepto: `Zabaleta - Alb. ${albaran}`,
+        fecha: row.fecha,
         tipo: 'Material',
         base: base,
         piva: 21,
         cuotaiva: cuotaiva,
-        pret: 0,
         retencion: 0,
+        pret: 0,
         total: importe,
         notas: `Exclusivas Zabaleta - ${descripcion}`
       });
