@@ -379,11 +379,12 @@ async function saveCompra() {
     } else {
       const res = await sbInsert('zab_compras', row);
       compras.unshift(Array.isArray(res) ? res[0] : row);
-      
+
       // SINCRONIZACIÓN CON CONTABLE
-      const base = importe / 1.21;
-      const cuotaiva = importe - base;
+      const base = parseFloat((importe / 1.21).toFixed(2));
+      const cuotaiva = parseFloat((importe - base).toFixed(2));
       await sbInsert('conta_gastos', {
+        id: crypto.randomUUID(),
         concepto: `Zabaleta - Alb. ${albaran}`,
         fecha: row.fecha,
         tipo: 'Material',
@@ -395,7 +396,7 @@ async function saveCompra() {
         total: importe,
         notas: `Exclusivas Zabaleta - ${descripcion}`
       });
-      
+
       toast('Compra guardada y sincronizada con Contable ✓', 'ok');
     }
     setSyncStatus('ok', 'Sincronizado');
