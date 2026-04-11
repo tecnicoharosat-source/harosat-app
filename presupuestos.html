@@ -908,7 +908,7 @@ const hdr=cols.join(’;’);
 const rows=datos.map(d=>cols.map(c=>`"${(d[c]??'').toString().replace(/"/g,'""')}"`).join(’;’));
 const a=document.createElement(‘a’);
 a.href=‘data:text/csv;charset=utf-8,\uFEFF’+encodeURIComponent([hdr,…rows].join(’\n’));
-a.download=`presupuestos_${new Date().toISOString().slice(0,10)}.csv`;
+a.download=`presupuestos_${new Date().toISOString().slice(0,10)}.csv`; 
 a.click();
 }
 
