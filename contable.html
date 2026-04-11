@@ -511,7 +511,7 @@ max-width:320px;
 // ═══════════════════════════════════════════
 const SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
-const HEADERS = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'};
+const HEADERS = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
 async function sbGet(table, query='') {
   const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${query}`, {headers:HEADERS});
@@ -529,7 +529,7 @@ async function sbUpdate(table, id, row) {
   return r.json();
 }
 async function sbDelete(table, id) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {method:'DELETE',headers:HEADERS});
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {method:'DELETE',headers:{...HEADERS,'Prefer':'return=minimal'}});
   if(!r.ok) throw new Error(await r.text());
 }
 
@@ -695,7 +695,8 @@ async function saveOp() {
     renderAll();
   } catch(e) {
     setSyncStatus('error', 'Error al guardar');
-    toast('Error al guardar en Supabase', 'err');
+    const msg = e.message || JSON.stringify(e);
+    toast('Error: ' + msg.substring(0, 80), 'err');
   }
 }
 
