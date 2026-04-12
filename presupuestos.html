@@ -106,7 +106,7 @@ color:var(–text);font-family:var(–font-b);font-size:.85rem;padding:.4rem .75
 
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
-thead{background:var(–surface2);position:sticky;top:54px;z-index:10;}
+thead{background:var(–surface2);}
 th{
 font-family:var(–font-h);font-size:.8rem;font-weight:700;letter-spacing:.08em;
 color:var(–muted);text-transform:uppercase;
@@ -754,8 +754,8 @@ function renderPres() {
       <td>${badgePres(p.estado)}</td>
       <td onclick="event.stopPropagation()">
         <div class="td-actions">
-          <button class="btn btn-secondary btn-sm" title="Editar" onclick="editPres(${p.id})">✏️</button>
-          <button class="btn btn-red btn-sm" title="Eliminar" onclick="deletePres(${p.id})">🗑</button>
+          <button class="btn btn-secondary btn-sm" title="Editar" onclick="event.stopPropagation();editPres(${p.id})">✏️</button>
+          <button class="btn btn-red btn-sm" title="Eliminar" onclick="event.stopPropagation();deletePres(${p.id})">🗑</button>
         </div>
       </td>
     </tr>`).join('');
