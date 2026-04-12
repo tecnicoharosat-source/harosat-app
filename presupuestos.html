@@ -327,6 +327,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="tot-row"><span class="tot-lbl">Base Imponible</span><span class="tot-val" id="tot-b">0,00 €</span></div>
         <div class="tot-row"><span class="tot-lbl" id="tot-il">IVA 21%</span><span class="tot-val" id="tot-i">0,00 €</span></div>
         <div class="tot-row"><span class="tot-lbl">TOTAL</span><span class="tot-val big" id="tot-t">0,00 €</span></div>
+        <div class="tot-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px"><span class="tot-lbl" style="color:var(--muted)">Beneficio (cat.)</span><span class="tot-val" id="tot-ben" style="font-size:12px">—</span></div>
       </div>
       <div class="form-section">Condiciones</div>
       <div class="field full"><label>Observaciones</label><textarea id="fp-obs" rows="2"></textarea></div>
@@ -415,7 +416,7 @@ function sbDel(table,id){var dh={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUP
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-var PRES = [], TRAB = [], CLIS = [];
+var PRES = [], TRAB = [], CLIS = [], ARTS = [];
 var CUR_Q = 'T2';
 var EDIT_PID = null, EDIT_TID = null;
 var LINES = [];
@@ -438,6 +439,7 @@ window.onload = function() {
   setQ(m<=3?'T1':m<=6?'T2':m<=9?'T3':'T4');
   setSync('syncing','Cargando...');
   loadClis();
+  loadArts();
   loadP();
   loadT();
 };
@@ -449,6 +451,12 @@ function loadClis() {
       var dl = document.getElementById('cli-dl');
       dl.innerHTML = CLIS.map(function(c){return '<option value="'+esc(c.nombre)+'">';}).join('');
     }).catch(function(){CLIS=[];});
+}
+
+
+function loadArts() {
+  sbGet('articulos','select=id,referencia,descripcion,precio_venta,precio_coste,marca&limit=500')
+    .then(function(d){ARTS=d||[];}).catch(function(){ARTS=[];});
 }
 
 function loadP() {
@@ -653,7 +661,7 @@ function renderLines(){
   var html='';
   for(var i=0;i<LINES.length;i++){var l=LINES[i];
     html+='<tr>'+
-      '<td><input class="l-inp" value="'+esc(l.desc)+'" placeholder="Descripción..." oninput="LINES['+i+'].desc=this.value"></td>'+
+      '<td style="display:flex;gap:4px"><input class="l-inp" id="ld'+i+'" list="arts-dl'+i+'" value="'+esc(l.desc)+'" placeholder="Descripción..." oninput="LINES['+i+'].desc=this.value;onDescInput('+i+',this.value)">'+buildArtsDl(i)+'</td>'+
       '<td style="width:70px"><input class="l-inp" type="number" min="0" step="0.01" value="'+l.qty+'" oninput="LINES['+i+'].qty=parseFloat(this.value)||0;recalc()"></td>'+
       '<td style="width:110px"><input class="l-inp" type="number" min="0" step="0.01" value="'+l.price+'" oninput="LINES['+i+'].price=parseFloat(this.value)||0;recalc()"></td>'+
       '<td class="l-tot" id="lt'+i+'">'+fn((l.qty||0)*(l.price||0))+' €</td>'+
@@ -662,6 +670,32 @@ function renderLines(){
   }
   document.getElementById('lines-bd').innerHTML=html;
 }
+
+function buildArtsDl(i){
+  var html='<datalist id="arts-dl'+i+'">';
+  for(var k=0;k<ARTS.length;k++){var a=ARTS[k];html+='<option value="'+esc(a.descripcion)+'" data-id="'+a.id+'">';}
+  html+='</datalist>';
+  return html;
+}
+function onDescInput(i,val){
+  if(!val)return;
+  var lv=val.toLowerCase();
+  for(var k=0;k<ARTS.length;k++){
+    var a=ARTS[k];
+    if(a.descripcion.toLowerCase()===lv){
+      LINES[i].price=a.precio_venta||0;
+      var el=document.getElementById('ld'+i);
+      // update price field
+      var row=el.parentNode.parentNode;
+      var priceInp=row.querySelector('td:nth-child(3) input');
+      if(priceInp){priceInp.value=a.precio_venta||0;}
+      LINES[i]._coste=a.precio_coste||0;
+      recalc();
+      return;
+    }
+  }
+}
+
 function recalc(){
   var base=0;
   for(var i=0;i<LINES.length;i++){var t=(LINES[i].qty||0)*(LINES[i].price||0);base+=t;var el=document.getElementById('lt'+i);if(el)el.textContent=fn(t)+' €';}
@@ -671,6 +705,10 @@ function recalc(){
   document.getElementById('tot-il').textContent='IVA '+ivp+'%';
   document.getElementById('tot-i').textContent=fn(iva)+' €';
   document.getElementById('tot-t').textContent=fn(base+iva)+' €';
+  // beneficio
+  var coste=0;for(var j=0;j<LINES.length;j++){if(LINES[j]._coste)coste+=(LINES[j].qty||0)*(LINES[j]._coste||0);}
+  var bel=document.getElementById('tot-ben');
+  if(bel){bel.textContent=fn(base-coste)+' €';bel.style.color=base-coste>=0?'var(--green)':'var(--red)';}
 }
 
 // ═══════════════════════════════════════
