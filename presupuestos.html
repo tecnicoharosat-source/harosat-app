@@ -456,6 +456,7 @@ function loadP() {
       PRES = (d||[]).sort(function(a,b){
         return (parseInt((b.numero||'').split('/')[2])||0) - (parseInt((a.numero||'').split('/')[2])||0);
       });
+      alert('Datos recibidos: '+PRES.length+' presupuestos. CUR_Q='+CUR_Q);
       setSync('ok','Sincronizado');
       renderP();
     }).catch(function(e){
