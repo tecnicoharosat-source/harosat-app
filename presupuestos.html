@@ -459,7 +459,8 @@ function loadP() {
       setSync('ok','Sincronizado');
       renderP();
     }).catch(function(e){
-      setSync('error','Error de conexión');
+      setSync('error','Error: '+e.message);
+      alert('ERROR SUPABASE: '+e.message);
       document.getElementById('p-tbl').innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>'+e.message+'</p></div>';
     });
 }
