@@ -433,7 +433,16 @@ function saveCompra() {
           notas: 'Albaran '+albaran+' - '+row.fecha
         });
       })
-      .then(function() {
+      .then(function(artRes) {
+        // Guardar articulo_id en la compra
+        var art = Array.isArray(artRes) ? artRes[0] : artRes;
+        if(art && art.id && compras.length > 0) {
+          var compraId = compras[0].id;
+          if(compraId) {
+            sbPatch('zab_compras', compraId, {articulo_id: art.id}).catch(function(){});
+            compras[0].articulo_id = art.id;
+          }
+        }
         setSyncStatus('ok', 'Sincronizado');
         closeModals();
         renderAll();
@@ -475,16 +484,23 @@ function savePago() {
 }
 
 function deleteCompra(id) {
-  if(!confirm('Eliminar esta compra?')) return;
+  if(!confirm('Eliminar esta compra? Se borrara tambien de Articulos.')) return;
+  var articuloId = null;
+  for(var i=0; i<compras.length; i++) { if(compras[i].id===id){ articuloId=compras[i].articulo_id||null; break; } }
   setSyncStatus('syncing', 'Eliminando...');
   sbDel('zab_compras', id)
     .then(function() {
       var arr = [];
       for(var i=0; i<compras.length; i++) { if(compras[i].id!==id) arr.push(compras[i]); }
       compras = arr;
+      if(articuloId) {
+        return sbDel('articulos', articuloId);
+      }
+    })
+    .then(function() {
       setSyncStatus('ok', 'Sincronizado');
       renderAll();
-      toast('Compra eliminada', 'info');
+      toast('Compra eliminada y borrada de Articulos', 'info');
     })
     .catch(function(e) { toast('Error al eliminar', 'err'); });
 }
