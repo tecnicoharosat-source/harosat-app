@@ -143,11 +143,11 @@ td:first-child{padding-left:1.5rem;} td:last-child{padding-right:1.5rem;}
 /* DETAIL PANEL */
 .dov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:250;display:flex;align-items:stretch;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .2s;}
 .dov.open{opacity:1;pointer-events:all;}
-.dpan{background:var(–surface);border-left:1px solid var(–border2);width:min(480px,100%);overflow-y:auto;transform:translateX(100%);transition:transform .25s ease;}
+.dpan{background:var(–surface);border-left:1px solid var(–border2);width:min(480px,100%);overflow-y:auto;transform:translateX(100%);transition:transform .25s ease;height:100vh;display:flex;flex-direction:column;}
 .dov.open .dpan{transform:translateX(0);}
-.dph{padding:1.1rem 1.5rem;border-bottom:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(–surface);z-index:5;}
+.dph{padding:1.1rem 1.5rem;border-bottom:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;background:var(–surface);z-index:5;flex-shrink:0;}
 .dpn{font-family:var(–fh);font-size:1.45rem;font-weight:800;color:var(–accent);}
-.dpb{padding:1.4rem;}
+.dpb{padding:1.4rem;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
 .dps{font-family:var(–fh);font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(–muted);text-transform:uppercase;margin:.7rem 0 .38rem;}
 .dps:first-child{margin-top:0;}
 .dpbl{background:var(–surface2);border-radius:var(–r);padding:.8rem 1rem;margin-bottom:.5rem;}
@@ -434,7 +434,7 @@ th:first-child,td:first-child{padding-left:.75rem;}
       <button class="btn bs" onclick="closePrev()">✕ Cerrar</button>
     </div>
     <div style="flex:1;overflow-y:auto;background:#e5e7eb;padding:1.5rem;">
-      <iframe id="prev-frame" style="width:100%;min-height:1100px;border:none;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.3);" sandbox="allow-same-origin"></iframe>
+      <iframe id="prev-frame" style="width:100%;min-height:1100px;border:none;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.3);"></iframe>
     </div>
   </div>
 </div>
@@ -905,8 +905,13 @@ function genPDF(id){
   const p=pres.find(x=>x.id===id);if(!p)return;
   const ls=(p.lineas?JSON.parse(p.lineas):[]).filter(l=>l.desc||l.price);
   const html=buildPDF(p,ls);
+  // Use blob URL for maximum mobile compatibility
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
   const frame=document.getElementById('prev-frame');
-  frame.srcdoc=html;
+  if(frame._blobUrl)URL.revokeObjectURL(frame._blobUrl);
+  frame._blobUrl=url;
+  frame.src=url;
   closeD();
   document.getElementById('prev-ov').classList.add('open');
 }
@@ -918,8 +923,19 @@ function closePrev(){
 
 function doPrint(){
   const frame=document.getElementById('prev-frame');
-  frame.contentWindow.focus();
-  frame.contentWindow.print();
+  try{
+    frame.contentWindow.focus();
+    frame.contentWindow.print();
+  }catch(e){
+    // Fallback: open in new tab and print
+    const p=pres.find(x=>x.id===prevId);if(!p)return;
+    const ls=(p.lineas?JSON.parse(p.lineas):[]).filter(l=>l.desc||l.price);
+    const win=window.open('','_blank');
+    win.document.write(buildPDF(p,ls));
+    win.document.close();
+    win.focus();
+    setTimeout(()=>win.print(),800);
+  }
 }
 
 function doWA(){
