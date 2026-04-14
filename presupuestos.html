@@ -1052,22 +1052,17 @@ function genPDF(id) {
   '<div class="pi"><div class="ppc">10%</div><div class="pdc">Al finalizar los trabajos</div></div>'+
   '</div></div>'+
 
-  (function(){
-    var r='';
-    if(p.observaciones && p.observaciones.trim()){
-      var obs=p.observaciones.trim().split('\n');
-      r+='<div class="obs-box"><div class="obs-tit">Observaciones</div>';
-      for(var oi=0;oi<obs.length;oi++){if(obs[oi].trim())r+='<div class="obs-item">&#8212; '+esc(obs[oi].trim())+'</div>';}
-      r+='</div>';
-    }
-    if(p.notas && p.notas.trim()){
-      var nts=p.notas.trim().split('\n');var nn=0;
-      r+='<div class="notas-box"><div class="notas-tit">Notas</div>';
-      for(var ni=0;ni<nts.length;ni++){if(nts[ni].trim()){nn++;r+='<div class="nota"><span class="nota-n">'+nn+'.</span><div>'+esc(nts[ni].trim())+'</div></div>';}}
-      r+='</div>';
-    }
-    return r;
-  })()+
+  '<div class="obs-box"><div class="obs-tit">Observaciones</div>'+
+  '<div class="obs-item">— Garantía de instalación: un año.</div>'+
+  '<div class="obs-item">— Garantía del equipo según fabricante.</div>'+
+  '<div class="obs-item">— Trabajos de albañilería y electricidad no incluidos.</div>'+
+  (p.observaciones && p.observaciones.trim() ? '<div class="obs-item">— '+esc(p.observaciones.trim())+'</div>' : '')+
+  '</div>'+
+
+  '<div class="notas-box"><div class="notas-tit">Notas</div>'+
+  '<div class="nota"><span class="nota-n">1.</span><div>Todos los materiales pertenecen a la empresa instaladora hasta que se realice el pago total de las cantidades recogidas en este presupuesto.</div></div>'+
+  notaTecnica+
+  '</div>'+
 
   '<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>'+
   'Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.<br>'+
@@ -1095,19 +1090,16 @@ function genPDF(id) {
   '</div>'+
 
   '<script>function captureAndShare(){'+
-  'var btn=document.querySelector(".nopr");'+
-  'btn.style.visibility="hidden";'+
-  'var num="'+esc(p.numero).replace(/\//g,"_")+'";'+
-  'html2canvas(document.getElementById("pagina1"),{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(function(c1){'+
-  'var l1=document.createElement("a");l1.download="Presupuesto_"+num+"_p1.png";l1.href=c1.toDataURL("image/png");l1.click();'+
-  'return new Promise(function(res){setTimeout(res,600);});'+
-  '}).then(function(){'+
-  'return html2canvas(document.getElementById("pagina2"),{scale:2,useCORS:true,backgroundColor:"#ffffff"});'+
-  '}).then(function(c2){'+
-  'var l2=document.createElement("a");l2.download="Presupuesto_"+num+"_p2.png";l2.href=c2.toDataURL("image/png");l2.click();'+
-  'btn.style.visibility="visible";'+
+  'var el=document.getElementById("pagina1");'+
+  'var btn=document.querySelector(".nopr");btn.style.display="none";'+
+  'html2canvas(el,{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(function(canvas){'+
+  'btn.style.display="flex";'+
+  'var link=document.createElement("a");'+
+  'link.download="Presupuesto_'+esc(p.numero).replace(/\//g,"_")+'.png";'+
+  'link.href=canvas.toDataURL("image/png");'+
+  'link.click();'+
   'setTimeout(function(){window.open("https://wa.me/","_blank");},800);'+
-  '}).catch(function(){btn.style.visibility="visible";alert("Error al capturar");});'+
+  '}).catch(function(){btn.style.display="flex";alert("Error al capturar");});'+
   '}<\/script>'+
   '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'+
   '</body></html>';
