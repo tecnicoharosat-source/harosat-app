@@ -1052,13 +1052,22 @@ function genPDF(id) {
   '<div class="pi"><div class="ppc">10%</div><div class="pdc">Al finalizar los trabajos</div></div>'+
   '</div></div>'+
 
-  (p.observaciones && p.observaciones.trim() ? '<div class="obs-box"><div class="obs-tit">Observaciones</div>'+
-  p.observaciones.trim().split('\n').map(function(l){return l.trim()?'<div class="obs-item">— '+esc(l.trim())+'</div>':'';}).join('')+
-  '</div>' : '')+
-
-  (p.notas && p.notas.trim() ? '<div class="notas-box"><div class="notas-tit">Notas</div>'+
-  p.notas.trim().split('\n').map(function(l,i){return l.trim()?'<div class="nota"><span class="nota-n">'+(i+1)+'.</span><div>'+esc(l.trim())+'</div></div>':'';}).join('')+
-  '</div>' : '')+
+  (function(){
+    var r='';
+    if(p.observaciones && p.observaciones.trim()){
+      var obs=p.observaciones.trim().split('\n');
+      r+='<div class="obs-box"><div class="obs-tit">Observaciones</div>';
+      for(var oi=0;oi<obs.length;oi++){if(obs[oi].trim())r+='<div class="obs-item">&#8212; '+esc(obs[oi].trim())+'</div>';}
+      r+='</div>';
+    }
+    if(p.notas && p.notas.trim()){
+      var nts=p.notas.trim().split('\n');var nn=0;
+      r+='<div class="notas-box"><div class="notas-tit">Notas</div>';
+      for(var ni=0;ni<nts.length;ni++){if(nts[ni].trim()){nn++;r+='<div class="nota"><span class="nota-n">'+nn+'.</span><div>'+esc(nts[ni].trim())+'</div></div>';}}
+      r+='</div>';
+    }
+    return r;
+  })()+
 
   '<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>'+
   'Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.<br>'+
