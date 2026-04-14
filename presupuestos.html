@@ -450,7 +450,7 @@ function loadClis() {
     .then(function(d) {
       CLIS = d || [];
       var dl = document.getElementById('cli-dl');
-      dl.innerHTML = CLIS.map(function(c){return '<option value="'+esc(c.nombre)+'">';}).join('');
+      var dlHtml='';for(var ci=0;ci<CLIS.length;ci++){dlHtml+='<option value="'+esc(CLIS[ci].nombre)+'">';}dl.innerHTML=dlHtml;
     }).catch(function(){CLIS=[];});
 }
 
@@ -721,13 +721,13 @@ function saveP() {
   var base=0;LINES.forEach(function(l){base+=(l.qty||0)*(l.price||0);});
   var ivp=parseInt(document.getElementById('fp-iva').value)||0;
   var iva=base*ivp/100;
-  var descs=LINES.map(function(l){return l.desc;}).filter(Boolean).join(' / ').substring(0,300);
+  var descs='';var descParts=[];for(var di=0;di<LINES.length;di++){if(LINES[di].desc)descParts.push(LINES[di].desc);}descs=descParts.join(' / ').substring(0,300);
   var row={numero:document.getElementById('fp-num').value,fecha_emision:document.getElementById('fp-fe').value||null,fecha_aceptacion:document.getElementById('fp-fa').value||null,estado:document.getElementById('fp-est').value,cliente:cli,direccion:document.getElementById('fp-dir').value.trim(),telefono:document.getElementById('fp-tel').value.trim(),iva_pct:ivp,base_imponible:base,iva_importe:iva,total:base+iva,descripcion:descs,lineas:JSON.stringify(LINES),observaciones:document.getElementById('fp-obs').value.trim(),notas:document.getElementById('fp-not').value.trim()};
   setSync('syncing','Guardando...');
   if(EDIT_PID){
     sbPatch('presupuestos',EDIT_PID,row).then(function(){
-      var idx=PRES.findIndex(function(p){return p.id===EDIT_PID;});
-      if(idx>=0)PRES[idx]=Object.assign({},PRES[idx],row);
+      var idx=-1;for(var fi=0;fi<PRES.length;fi++){if(PRES[fi].id===EDIT_PID){idx=fi;break;}}
+      if(idx>=0){var merged={};for(var k in PRES[idx])merged[k]=PRES[idx][k];for(var k in row)merged[k]=row[k];PRES[idx]=merged;}
       if(row.estado==='aceptado'&&!TRAB.filter(function(t){return t.presupuesto_id===EDIT_PID;}).length)mkTrab(Object.assign({},row,{id:EDIT_PID}));
       setSync('ok','Sincronizado');closeModalP();renderP();toast('Presupuesto actualizado ✓','ok');
     }).catch(function(e){setSync('error','Error');toast('Error: '+e.message,'err');});
@@ -777,7 +777,7 @@ function saveT(){
   if(!EDIT_TID)return;
   var row={estado:document.getElementById('ft-est').value,tecnico:document.getElementById('ft-tec').value,fecha_inicio:document.getElementById('ft-ini').value||null,fecha_fin:document.getElementById('ft-fin').value||null,notas:document.getElementById('ft-not').value.trim()};
   sbPatch('trabajos',EDIT_TID,row).then(function(){
-    var idx=TRAB.findIndex(function(t){return t.id===EDIT_TID;});if(idx>=0)TRAB[idx]=Object.assign({},TRAB[idx],row);
+    var idx=-1;for(var fi=0;fi<TRAB.length;fi++){if(TRAB[fi].id===EDIT_TID){idx=fi;break;}}if(idx>=0){var merged={};for(var k in TRAB[idx])merged[k]=TRAB[idx][k];for(var k in row)merged[k]=row[k];TRAB[idx]=merged;}
     closeModalT();renderT();toast('Trabajo actualizado ✓','ok');
   }).catch(function(e){toast('Error: '+e.message,'err');});
 }
@@ -798,7 +798,7 @@ function sendCont(id) {
   showConf('📊','Registrar en Contable','Cliente: '+t.cliente+'\nBase: '+fmtE(t.base_imponible||0)+'\nIVA '+(t.iva_pct||21)+'%: '+fmtE(t.iva_importe||0)+'\nTotal: '+fmtE(t.total||0)+'\nTrimestre: T'+tri,function(){
     sbPost('conta_ingresos',{fecha:fecha,concepto:(t.presupuesto_num||'')+' — '+t.cliente+(t.descripcion?' — '+t.descripcion.substring(0,80):''),tipo:'Factura',base:t.base_imponible||0,piva:t.iva_pct||21,cuotaiva:t.iva_importe||0,pret:0,retencion:0,total:t.total||0,notas:t.cliente})
       .then(function(){return sbPatch('trabajos',id,{enviado_contable:true});})
-      .then(function(){var idx=TRAB.findIndex(function(x){return x.id===id;});if(idx>=0)TRAB[idx].enviado_contable=true;renderT();toast('✓ Registrado en Contable','ok');})
+      .then(function(){var idx=-1;for(var fi=0;fi<TRAB.length;fi++){if(TRAB[fi].id===id){idx=fi;break;}}if(idx>=0)TRAB[idx].enviado_contable=true;renderT();toast('✓ Registrado en Contable','ok');})
       .catch(function(e){toast('Error: '+e.message,'err');});
   });
 }
@@ -1141,8 +1141,8 @@ function exportCSV(){
   var data=PRES.filter(function(p){return inQ(p.fecha_emision,CUR_Q);});
   if(!data.length){toast('Sin datos en este período','err');return;}
   var cols=['Número','Fecha Emisión','Fecha Aceptación','Estado','Cliente','Dirección','Teléfono','IVA %','Base Imponible','Cuota IVA','Total','Descripción'];
-  var rows=[cols.map(function(c){return'"'+c+'"';}).join(';')];
-  data.forEach(function(p){rows.push([p.numero||'',p.fecha_emision||'',p.fecha_aceptacion||'',p.estado||'',p.cliente||'',p.direccion||'',p.telefono||'',p.iva_pct||21,(p.base_imponible||0).toFixed(2),(p.iva_importe||0).toFixed(2),(p.total||0).toFixed(2),p.descripcion||''].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(';'));});
+  var rows=[];var hdrRow='';for(var hi=0;hi<cols.length;hi++){hdrRow+=(hi>0?';':'')+'"'+cols[hi]+'"';}rows.push(hdrRow);
+  for(var exi=0;exi<data.length;exi++){var p=data[exi];var vals=[p.numero||'',p.fecha_emision||'',p.fecha_aceptacion||'',p.estado||'',p.cliente||'',p.direccion||'',p.telefono||'',p.iva_pct||21,(p.base_imponible||0).toFixed(2),(p.iva_importe||0).toFixed(2),(p.total||0).toFixed(2),p.descripcion||''];var row='';for(var vi=0;vi<vals.length;vi++){row+=(vi>0?';':'')+'"'+String(vals[vi]).replace(/"/g,'""')+'"';}rows.push(row);}
   var csv='\uFEFF'+rows.join('\r\n');
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download='HAROSAT_Presupuestos_'+CUR_Q+'_'+new Date().getFullYear()+'.csv';a.click();
   toast('Exportado ✓','ok');
