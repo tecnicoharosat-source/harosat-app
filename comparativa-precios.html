@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT · Comparativa Precios</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap');
+
+:root {
+–blue: #3B8AC7;
+–yellow: #FDB913;
+–green: #5A9F3E;
+–red: #D94F3D;
+–dark: #1a1f2e;
+–dark2: #242938;
+–dark3: #2e3447;
+–border: #3a4158;
+–text: #e8ecf4;
+–muted: #8891aa;
+–cheap: #1a3d1a;
+–cheap-border: #5A9F3E;
+–expensive: #3d1a1a;
+–expensive-border: #D94F3D;
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: ‘Barlow’, sans-serif;
+background: var(–dark);
+color: var(–text);
+min-height: 100vh;
+}
+
+/* HEADER */
+header {
+background: var(–dark2);
+border-bottom: 3px solid var(–yellow);
+padding: 0 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 60px;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.logo {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 22px;
+font-weight: 800;
+letter-spacing: 1px;
+}
+.logo span { color: var(–yellow); }
+
+.header-subtitle {
+font-size: 12px;
+color: var(–muted);
+font-weight: 400;
+letter-spacing: 2px;
+text-transform: uppercase;
+}
+
+/* TABS */
+.tabs {
+background: var(–dark2);
+border-bottom: 1px solid var(–border);
+display: flex;
+padding: 0 24px;
+gap: 4px;
+}
+.tab {
+padding: 12px 20px;
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 1px;
+text-transform: uppercase;
+cursor: pointer;
+border-bottom: 3px solid transparent;
+color: var(–muted);
+transition: all .2s;
+background: none;
+border-top: none;
+border-left: none;
+border-right: none;
+}
+.tab:hover { color: var(–text); }
+.tab.active { color: var(–blue); border-bottom-color: var(–blue); }
+
+/* PANELS */
+.panel { display: none; padding: 24px; }
+.panel.active { display: block; }
+
+/* CARDS */
+.card {
+background: var(–dark2);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 20px;
+margin-bottom: 20px;
+}
+.card-title {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 16px;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: var(–yellow);
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+/* FORMS */
+.form-row {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+align-items: flex-end;
+}
+.form-group {
+display: flex;
+flex-direction: column;
+gap: 6px;
+flex: 1;
+min-width: 140px;
+}
+.form-group label {
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: var(–muted);
+}
+input, select {
+background: var(–dark3);
+border: 1px solid var(–border);
+color: var(–text);
+padding: 9px 12px;
+border-radius: 5px;
+font-family: ‘Barlow’, sans-serif;
+font-size: 14px;
+transition: border-color .2s;
+}
+input:focus, select:focus {
+outline: none;
+border-color: var(–blue);
+}
+select option { background: var(–dark3); }
+
+/* BUTTONS */
+.btn {
+padding: 9px 18px;
+border-radius: 5px;
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+cursor: pointer;
+border: none;
+transition: all .2s;
+white-space: nowrap;
+}
+.btn-primary { background: var(–blue); color: #fff; }
+.btn-primary:hover { background: #2d6fa0; }
+.btn-success { background: var(–green); color: #fff; }
+.btn-success:hover { background: #477d30; }
+.btn-danger { background: var(–red); color: #fff; font-size: 12px; padding: 5px 10px; }
+.btn-danger:hover { background: #b03d2e; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+/* TABLE BASE */
+.table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(–border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+background: var(–dark3);
+padding: 10px 14px;
+text-align: left;
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: var(–muted);
+border-bottom: 2px solid var(–border);
+white-space: nowrap;
+position: sticky;
+top: 0;
+}
+tbody tr { border-bottom: 1px solid var(–border); transition: background .15s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(–dark3); }
+td { padding: 10px 14px; vertical-align: middle; }
+
+/* COMPARADOR TABLE */
+.price-cell {
+text-align: right;
+font-weight: 500;
+min-width: 80px;
+}
+.price-best {
+background: var(–cheap) !important;
+color: #7dd87d;
+font-weight: 700;
+border-left: 3px solid var(–cheap-border);
+}
+.price-worst {
+background: var(–expensive) !important;
+color: #e88080;
+}
+.price-empty { color: var(–border); font-style: italic; font-size: 11px; }
+
+.saving-badge {
+display: inline-block;
+background: var(–green);
+color: #fff;
+padding: 2px 8px;
+border-radius: 4px;
+font-size: 12px;
+font-weight: 700;
+white-space: nowrap;
+}
+.saving-zero { color: var(–muted); font-size: 12px; }
+
+/* FILTERS */
+.filters {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+margin-bottom: 16px;
+align-items: center;
+}
+.filter-btn {
+padding: 5px 14px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .5px;
+cursor: pointer;
+border: 1px solid var(–border);
+background: var(–dark3);
+color: var(–muted);
+transition: all .2s;
+}
+.filter-btn.active, .filter-btn:hover {
+background: var(–blue);
+color: #fff;
+border-color: var(–blue);
+}
+
+/* STATS */
+.stats-row {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+gap: 12px;
+margin-bottom: 20px;
+}
+.stat-card {
+background: var(–dark2);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 16px;
+text-align: center;
+}
+.stat-value {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 28px;
+font-weight: 800;
+color: var(–blue);
+}
+.stat-label { font-size: 11px; color: var(–muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+/* LOADING / EMPTY */
+.loading, .empty {
+text-align: center;
+padding: 40px;
+color: var(–muted);
+font-style: italic;
+}
+.spinner {
+display: inline-block;
+width: 20px; height: 20px;
+border: 2px solid var(–border);
+border-top-color: var(–blue);
+border-radius: 50%;
+animation: spin .6s linear infinite;
+margin-right: 8px;
+vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOAST */
+#toast {
+position: fixed;
+bottom: 24px;
+right: 24px;
+background: var(–dark2);
+border: 1px solid var(–border);
+border-left: 4px solid var(–green);
+padding: 12px 20px;
+border-radius: 6px;
+font-size: 14px;
+opacity: 0;
+transform: translateY(10px);
+transition: all .3s;
+z-index: 999;
+max-width: 300px;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.error { border-left-color: var(–red); }
+
+/* DISTRIBUIDOR RANKING */
+.rank-bar {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 8px;
+}
+.rank-name { width: 120px; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-track { flex: 1; background: var(–dark3); border-radius: 3px; height: 8px; }
+.rank-fill { height: 100%; border-radius: 3px; background: var(–blue); transition: width .5s; }
+.rank-count { font-size: 12px; color: var(–muted); min-width: 60px; text-align: right; }
+
+.categoria-badge {
+display: inline-block;
+padding: 2px 8px;
+border-radius: 3px;
+font-size: 11px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: .5px;
+}
+.cat-fontaneria { background: #1a3a5c; color: #6ab4f5; }
+.cat-calefaccion { background: #3d1a00; color: #f5a050; }
+.cat-climatizacion { background: #1a3d1a; color: #7dd87d; }
+.cat-frio { background: #1a2a3d; color: #60c0f0; }
+.cat-otros { background: #2a1a3d; color: #c0a0f0; }
+
+@media (max-width: 600px) {
+.form-row { flex-direction: column; }
+.stats-row { grid-template-columns: 1fr 1fr; }
+header { flex-direction: column; height: auto; padding: 12px; gap: 4px; }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">HARO<span>SAT</span></div>
+    <div class="header-subtitle">Comparativa Precios</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" onclick="showTab('comparador')">📊 Comparador</button>
+  <button class="tab" onclick="showTab('articulos')">📦 Artículos</button>
+  <button class="tab" onclick="showTab('precios')">💶 Precios</button>
+  <button class="tab" onclick="showTab('ranking')">🏆 Ranking</button>
+</nav>
+
+<!-- COMPARADOR -->
+
+<div id="tab-comparador" class="panel active">
+  <div class="filters" id="cat-filters">
+    <button class="filter-btn active" onclick="filterCategoria('')">Todos</button>
+    <button class="filter-btn" onclick="filterCategoria('fontaneria')">Fontanería</button>
+    <button class="filter-btn" onclick="filterCategoria('calefaccion')">Calefacción</button>
+    <button class="filter-btn" onclick="filterCategoria('climatizacion')">Climatización</button>
+    <button class="filter-btn" onclick="filterCategoria('frio')">Frío</button>
+    <button class="filter-btn" onclick="filterCategoria('otros')">Otros</button>
+    <input type="text" id="buscar-art" placeholder="Buscar artículo..." style="flex:1;min-width:160px;max-width:280px;" oninput="renderComparador()">
+  </div>
+  <div id="comparador-loading" class="loading"><span class="spinner"></span>Cargando...</div>
+  <div id="comparador-content" style="display:none;">
+    <div class="stats-row" id="stats-row"></div>
+    <div class="table-wrap">
+      <table id="comparador-table">
+        <thead id="comp-thead"></thead>
+        <tbody id="comp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ARTÍCULOS -->
+
+<div id="tab-articulos" class="panel">
+  <div class="card">
+    <div class="card-title">➕ Nuevo Artículo</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:3;min-width:200px;">
+        <label>Nombre</label>
+        <input type="text" id="art-nombre" placeholder="Ej: Válvula esfera 1/2">
+      </div>
+      <div class="form-group">
+        <label>Referencia</label>
+        <input type="text" id="art-ref" placeholder="Ej: VAL-001">
+      </div>
+      <div class="form-group">
+        <label>Unidad</label>
+        <input type="text" id="art-unidad" placeholder="Ud, m, kg...">
+      </div>
+      <div class="form-group">
+        <label>Categoría</label>
+        <select id="art-cat">
+          <option value="fontaneria">Fontanería</option>
+          <option value="calefaccion">Calefacción</option>
+          <option value="climatizacion">Climatización</option>
+          <option value="frio">Frío</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:0;">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="addArticulo()">Añadir</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th><th>Referencia</th><th>Unidad</th><th>Categoría</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="art-tbody">
+        <tr><td colspan="5" class="loading"><span class="spinner"></span>Cargando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PRECIOS -->
+
+<div id="tab-precios" class="panel">
+  <div class="card">
+    <div class="card-title">💶 Registrar Precio</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:3;min-width:200px;">
+        <label>Artículo</label>
+        <select id="precio-art"></select>
+      </div>
+      <div class="form-group" style="flex:2;">
+        <label>Distribuidor</label>
+        <select id="precio-dist"></select>
+      </div>
+      <div class="form-group">
+        <label>Precio (€)</label>
+        <input type="number" id="precio-valor" placeholder="0.00" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="precio-fecha">
+      </div>
+      <div class="form-group" style="flex:0;">
+        <label>&nbsp;</label>
+        <button class="btn btn-success" onclick="addPrecio()">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="filters">
+    <select id="filtro-art-precio" onchange="renderPreciosLog()" style="max-width:220px;">
+      <option value="">Todos los artículos</option>
+    </select>
+    <select id="filtro-dist-precio" onchange="renderPreciosLog()" style="max-width:180px;">
+      <option value="">Todos los distribuidores</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Artículo</th><th>Distribuidor</th><th>Precio</th><th>Fecha</th><th></th></tr>
+      </thead>
+      <tbody id="precios-tbody">
+        <tr><td colspan="5" class="loading"><span class="spinner"></span>Cargando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- RANKING -->
+
+<div id="tab-ranking" class="panel">
+  <div class="card">
+    <div class="card-title">🏆 Distribuidor más económico</div>
+    <div id="ranking-content" class="loading"><span class="spinner"></span>Calculando...</div>
+  </div>
+  <div class="card">
+    <div class="card-title">💰 Ahorro potencial total</div>
+    <div id="ahorro-total" class="loading"><span class="spinner"></span></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+
+// ← REEMPLAZA la KEY con tu anon key real
+
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...opts.headers
+    },
+    ...opts
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return opts.method === 'DELETE' ? null : res.json();
+}
+
+// STATE
+let articulos = [], distribuidores = [], precios = [];
+let currentCat = '';
+
+// TABS
+function showTab(t) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  event.target.classList.add('active');
+  if (t === 'ranking') renderRanking();
+}
+
+// TOAST
+function toast(msg, err = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (err ? ' error' : '');
+  setTimeout(() => el.className = '', 3000);
+}
+
+// LOAD ALL DATA
+async function loadAll() {
+  try {
+    [articulos, distribuidores, precios] = await Promise.all([
+      sbFetch('precio_articulos?order=nombre.asc'),
+      sbFetch('precio_distribuidores?order=nombre.asc'),
+      sbFetch('precios?order=fecha.desc')
+    ]);
+    renderAll();
+  } catch(e) {
+    toast('Error cargando datos: ' + e.message, true);
+    console.error(e);
+  }
+}
+
+function renderAll() {
+  renderArticulos();
+  renderComparador();
+  renderPreciosLog();
+  populateSelects();
+}
+
+// CATEGORÍA BADGE
+function catBadge(c) {
+  const labels = { fontaneria: 'Fontanería', calefaccion: 'Calefacción', climatizacion: 'Climatización', frio: 'Frío', otros: 'Otros' };
+  return `<span class="categoria-badge cat-${c || 'otros'}">${labels[c] || 'Otros'}</span>`;
+}
+
+// ======= ARTÍCULOS =======
+function renderArticulos() {
+  const tbody = document.getElementById('art-tbody');
+  if (!articulos.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay artículos. Añade el primero.</td></tr>'; return; }
+  tbody.innerHTML = articulos.map(a => `
+    <tr>
+      <td><strong>${a.nombre}</strong></td>
+      <td style="color:var(--muted)">${a.referencia || '—'}</td>
+      <td>${a.unidad || '—'}</td>
+      <td>${catBadge(a.categoria)}</td>
+      <td><button class="btn btn-danger" onclick="delArticulo(${a.id})">✕</button></td>
+    </tr>
+  `).join('');
+}
+
+async function addArticulo() {
+  const nombre = document.getElementById('art-nombre').value.trim();
+  if (!nombre) { toast('Introduce un nombre', true); return; }
+  try {
+    const [r] = await sbFetch('precio_articulos', {
+      method: 'POST',
+      body: JSON.stringify({
+        nombre,
+        referencia: document.getElementById('art-ref').value.trim() || null,
+        unidad: document.getElementById('art-unidad').value.trim() || null,
+        categoria: document.getElementById('art-cat').value
+      })
+    });
+    articulos.push(r);
+    articulos.sort((a,b) => a.nombre.localeCompare(b.nombre));
+    ['art-nombre','art-ref','art-unidad'].forEach(id => document.getElementById(id).value = '');
+    renderArticulos();
+    populateSelects();
+    renderComparador();
+    toast('Artículo añadido');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+async function delArticulo(id) {
+  if (!confirm('¿Eliminar artículo y todos sus precios?')) return;
+  try {
+    await sbFetch(`precio_articulos?id=eq.${id}`, { method: 'DELETE', prefer: '' });
+    articulos = articulos.filter(a => a.id !== id);
+    precios = precios.filter(p => p.articulo_id !== id);
+    renderArticulos();
+    renderComparador();
+    renderPreciosLog();
+    populateSelects();
+    toast('Artículo eliminado');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+// ======= SELECTS =======
+function populateSelects() {
+  const artSel = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const v = el.value;
+    el.innerHTML = '<option value="">— Seleccionar —</option>' +
+      articulos.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
+    el.value = v;
+  };
+  const distSel = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const v = el.value;
+    el.innerHTML = '<option value="">— Seleccionar —</option>' +
+      distribuidores.map(d => `<option value="${d.id}">${d.nombre}</option>`).join('');
+    el.value = v;
+  };
+  artSel('precio-art');
+  distSel('precio-dist');
+
+  // filtros log
+  const fa = document.getElementById('filtro-art-precio');
+  const fd = document.getElementById('filtro-dist-precio');
+  if (fa) {
+    const va = fa.value;
+    fa.innerHTML = '<option value="">Todos los artículos</option>' + articulos.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
+    fa.value = va;
+  }
+  if (fd) {
+    const vd = fd.value;
+    fd.innerHTML = '<option value="">Todos los distribuidores</option>' + distribuidores.map(d => `<option value="${d.id}">${d.nombre}</option>`).join('');
+    fd.value = vd;
+  }
+}
+
+// ======= PRECIOS LOG =======
+function renderPreciosLog() {
+  const tbody = document.getElementById('precios-tbody');
+  const artF = document.getElementById('filtro-art-precio')?.value;
+  const distF = document.getElementById('filtro-dist-precio')?.value;
+  let rows = precios;
+  if (artF) rows = rows.filter(p => p.articulo_id == artF);
+  if (distF) rows = rows.filter(p => p.distribuidor_id == distF);
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Sin registros.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(p => {
+    const art = articulos.find(a => a.id === p.articulo_id);
+    const dist = distribuidores.find(d => d.id === p.distribuidor_id);
+    return `<tr>
+      <td>${art?.nombre || '—'}</td>
+      <td>${dist?.nombre || '—'}</td>
+      <td style="font-weight:700;color:var(--yellow)">${parseFloat(p.precio).toFixed(2)} €</td>
+      <td style="color:var(--muted)">${p.fecha || '—'}</td>
+      <td><button class="btn btn-danger" onclick="delPrecio(${p.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function addPrecio() {
+  const art_id = document.getElementById('precio-art').value;
+  const dist_id = document.getElementById('precio-dist').value;
+  const valor = parseFloat(document.getElementById('precio-valor').value);
+  const fecha = document.getElementById('precio-fecha').value || new Date().toISOString().slice(0,10);
+  if (!art_id || !dist_id || isNaN(valor) || valor < 0) { toast('Rellena todos los campos', true); return; }
+  try {
+    // Upsert: si ya existe ese artículo+distribuidor, actualizar precio
+    const existing = precios.find(p => p.articulo_id == art_id && p.distribuidor_id == dist_id);
+    let r;
+    if (existing) {
+      [r] = await sbFetch(`precios?id=eq.${existing.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ precio: valor, fecha })
+      });
+      precios = precios.map(p => p.id === existing.id ? r : p);
+      toast('Precio actualizado');
+    } else {
+      [r] = await sbFetch('precios', {
+        method: 'POST',
+        body: JSON.stringify({ articulo_id: parseInt(art_id), distribuidor_id: parseInt(dist_id), precio: valor, fecha })
+      });
+      precios.unshift(r);
+      toast('Precio guardado');
+    }
+    document.getElementById('precio-valor').value = '';
+    renderPreciosLog();
+    renderComparador();
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+async function delPrecio(id) {
+  try {
+    await sbFetch(`precios?id=eq.${id}`, { method: 'DELETE', prefer: '' });
+    precios = precios.filter(p => p.id !== id);
+    renderPreciosLog();
+    renderComparador();
+    toast('Precio eliminado');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+// ======= COMPARADOR =======
+function filterCategoria(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderComparador();
+}
+
+function renderComparador() {
+  const loading = document.getElementById('comparador-loading');
+  const content = document.getElementById('comparador-content');
+  loading.style.display = 'none';
+  content.style.display = 'block';
+
+  const buscar = (document.getElementById('buscar-art')?.value || '').toLowerCase();
+  let arts = articulos;
+  if (currentCat) arts = arts.filter(a => a.categoria === currentCat);
+  if (buscar) arts = arts.filter(a => a.nombre.toLowerCase().includes(buscar) || (a.referencia||'').toLowerCase().includes(buscar));
+
+  const thead = document.getElementById('comp-thead');
+  const tbody = document.getElementById('comp-tbody');
+
+  if (!arts.length) {
+    thead.innerHTML = '';
+    tbody.innerHTML = '<tr><td class="empty" colspan="20">No hay artículos para mostrar.</td></tr>';
+    document.getElementById('stats-row').innerHTML = '';
+    return;
+  }
+
+  // Header
+  thead.innerHTML = '<tr><th>Artículo</th><th>Cat.</th>' +
+    distribuidores.map(d => `<th style="text-align:right">${d.nombre}</th>`).join('') +
+    '<th style="text-align:center;color:var(--green)">💰 Ahorro</th>' +
+    '<th style="color:var(--green)">Más barato</th></tr>';
+
+  let totalAhorro = 0, artConPrecio = 0;
+  const distWins = {};
+  distribuidores.forEach(d => distWins[d.id] = 0);
+
+  tbody.innerHTML = arts.map(art => {
+    const artPrecios = precios.filter(p => p.articulo_id === art.id);
+    const precioMap = {};
+    artPrecios.forEach(p => { precioMap[p.distribuidor_id] = parseFloat(p.precio); });
+
+    const vals = Object.values(precioMap).filter(v => !isNaN(v));
+    const minVal = vals.length ? Math.min(...vals) : null;
+    const maxVal = vals.length ? Math.max(...vals) : null;
+    const ahorro = (minVal !== null && maxVal !== null && vals.length > 1) ? (maxVal - minVal) : 0;
+    if (vals.length > 0) artConPrecio++;
+    totalAhorro += ahorro;
+
+    const bestDist = distribuidores.find(d => precioMap[d.id] === minVal);
+    if (bestDist && vals.length > 1) distWins[bestDist.id] = (distWins[bestDist.id] || 0) + 1;
+
+    const cells = distribuidores.map(d => {
+      const v = precioMap[d.id];
+      if (v === undefined) return `<td class="price-cell price-empty">—</td>`;
+      const isBest = v === minVal && vals.length > 1;
+      const isWorst = v === maxVal && vals.length > 1;
+      return `<td class="price-cell ${isBest ? 'price-best' : isWorst ? 'price-worst' : ''}">${v.toFixed(2)} €</td>`;
+    }).join('');
+
+    const ahorroCell = ahorro > 0
+      ? `<td style="text-align:center"><span class="saving-badge">-${ahorro.toFixed(2)} €</span></td>`
+      : `<td style="text-align:center"><span class="saving-zero">—</span></td>`;
+
+    const mejorCell = bestDist && vals.length > 0
+      ? `<td style="color:var(--green);font-weight:700;font-size:12px">${bestDist.nombre}</td>`
+      : `<td class="price-empty">—</td>`;
+
+    return `<tr><td><strong>${art.nombre}</strong>${art.referencia ? `<br><span style="font-size:11px;color:var(--muted)">${art.referencia}</span>` : ''}</td><td>${catBadge(art.categoria)}</td>${cells}${ahorroCell}${mejorCell}</tr>`;
+  }).join('');
+
+  // Stats
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${arts.length}</div><div class="stat-label">Artículos</div></div>
+    <div class="stat-card"><div class="stat-value">${artConPrecio}</div><div class="stat-label">Con precios</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green)">${totalAhorro.toFixed(2)} €</div><div class="stat-label">Ahorro potencial</div></div>
+    <div class="stat-card"><div class="stat-value">${distribuidores.length}</div><div class="stat-label">Distribuidores</div></div>
+  `;
+
+  // Guarda wins para ranking
+  window._distWins = distWins;
+}
+
+// ======= RANKING =======
+function renderRanking() {
+  const wins = window._distWins || {};
+  const content = document.getElementById('ranking-content');
+  const total = Object.values(wins).reduce((s, v) => s + v, 0);
+  if (!total) {
+    content.innerHTML = '<p style="color:var(--muted)">Añade precios en varios distribuidores para ver el ranking.</p>';
+    return;
+  }
+  const sorted = distribuidores
+    .map(d => ({ nombre: d.nombre, wins: wins[d.id] || 0 }))
+    .sort((a, b) => b.wins - a.wins);
+  const max = sorted[0].wins || 1;
+  content.innerHTML = sorted.map((d, i) => `
+    <div class="rank-bar">
+      <div class="rank-name">${i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : ''}${d.nombre}</div>
+      <div class="rank-track"><div class="rank-fill" style="width:${(d.wins/max*100).toFixed(0)}%;background:${i===0?'var(--yellow)':i===1?'#aaa':i===2?'#cd7f32':'var(--blue)'}"></div></div>
+      <div class="rank-count">${d.wins} vez${d.wins !== 1 ? 'es' : ''}</div>
+    </div>
+  `).join('');
+
+  // Ahorro total
+  const totalAh = precios.length ? (() => {
+    let sum = 0;
+    articulos.forEach(art => {
+      const vals = precios.filter(p => p.articulo_id === art.id).map(p => parseFloat(p.precio)).filter(v => !isNaN(v));
+      if (vals.length > 1) sum += Math.max(...vals) - Math.min(...vals);
+    });
+    return sum;
+  })() : 0;
+
+  document.getElementById('ahorro-total').innerHTML = `
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;color:var(--green)">${totalAh.toFixed(2)} €</div>
+    <div style="color:var(--muted);font-size:13px;margin-top:4px">diferencia entre el distribuidor más caro y el más barato por artículo (suma de todos)</div>
+  `;
+}
+
+// INIT
+document.getElementById('precio-fecha').value = new Date().toISOString().slice(0,10);
+loadAll();
+</script>
+
+</body>
+</html>
