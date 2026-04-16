@@ -257,6 +257,7 @@ function compressImage(dataUrl, callback) {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() { setTimeout(initSigCanvas, 250); cargarSesiones(); });
+setInterval(function(){fetch(SUPA_URL+'/rest/v1/escaner_sesiones?limit=1',{headers:{'apikey':SUPA_KEY}}).catch(function(){});},4*60*1000);
 
 // ── SESIONES ──────────────────────────────────────────────────────────────────
 async function cargarSesiones() {
