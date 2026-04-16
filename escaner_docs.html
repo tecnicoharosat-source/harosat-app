@@ -358,17 +358,27 @@ async function borrarSesion() {
   } catch(e) { syncErr('Error'); toast('❌ ' + e.message); }
 }
 
-// ── FILE INPUT ────────────────────────────────────────────────────────────────
-document.getElementById('inputCamera').addEventListener('change', handleFiles);
-document.getElementById('inputGallery').addEventListener('change', handleFiles);
-
-function handleFiles(e) {
-  var files = Array.from(e.target.files || []);
-  e.target.value = '';
-  if (!files.length) return;
-  // Process one at a time through crop modal; queue the rest
-  procesarCola(files, 0);
+// ── FILE INPUT ────────────────────────────────────────────────────────────────────────────────
+// FIX iOS: clonar input tras cada uso para que Safari dispare 'change' siempre
+function rebindInputs() {
+  var ids = ['inputCamera', 'inputGallery'];
+  for (var ii = 0; ii < ids.length; ii++) {
+    (function(id) {
+      var oldEl = document.getElementById(id);
+      if (!oldEl) return;
+      var newEl = oldEl.cloneNode(true);
+      oldEl.parentNode.replaceChild(newEl, oldEl);
+      newEl.addEventListener('change', function(e) {
+        var files = Array.from(e.target.files || []);
+        rebindInputs();
+        if (!files.length) return;
+        procesarCola(files, 0);
+      });
+    })(ids[ii]);
+  }
 }
+rebindInputs();
+
 
 function procesarCola(files, idx) {
   if (idx >= files.length) return;
@@ -594,11 +604,19 @@ async function deleteDoc(i) {
 
 // ── RENDER LIST ───────────────────────────────────────────────────────────────
 function renderList() {
-  var list=document.getElementById('docList'); var empty=document.getElementById('emptyState'); var badge=document.getElementById('countBadge');
-  while(list.firstChild){list.removeChild(list.firstChild);}
-  if(docs.length===0){list.appendChild(empty);empty.style.display='block';badge.style.display='none';return;}
-  empty.style.display='none'; badge.style.display='inline'; badge.textContent=String(docs.length);
-  for(var i=0;i<docs.length;i++){list.appendChild(buildCard(i));}
+  var list  = document.getElementById('docList');
+  var badge = document.getElementById('countBadge');
+  while (list.firstChild) { list.removeChild(list.firstChild); }
+  if (docs.length === 0) {
+    var empty = document.createElement('div');
+    empty.id = 'emptyState'; empty.className = 'empty-state';
+    empty.textContent = '\uD83D\uDCC2 Aun no hay documentos en esta sesion.';
+    list.appendChild(empty);
+    if (badge) badge.style.display = 'none';
+    return;
+  }
+  if (badge) { badge.style.display = 'inline'; badge.textContent = String(docs.length); }
+  for (var i = 0; i < docs.length; i++) { list.appendChild(buildCard(i)); }
 }
 
 function buildCard(i) {
