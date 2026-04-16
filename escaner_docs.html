@@ -207,11 +207,11 @@ textarea.field-input{min-height:70px;}
 <script>
 // ── SUPABASE ──────────────────────────────────────────────────────────────────
 var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MTYxNTMsImV4cCI6MjA1ODM5MjE1M30.T5KPnkDPzFGcGqYMVgEOxGlXnmCXFvlsAMNsDkMaWgQ';
+var SUPA_KEY = 'sb_publishable_Po1BdA40uWcWxrW6gwO_ng_PLaZmxXC';
 
 function sbFetch(path, opts) {
   var url = SUPA_URL + '/rest/v1/' + path;
-  var headers = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+  var headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
   if (opts && opts.headers) { var k = Object.keys(opts.headers); for (var i=0;i<k.length;i++){headers[k[i]]=opts.headers[k[i]];} }
   return fetch(url, Object.assign({}, opts, { headers: headers }));
 }
