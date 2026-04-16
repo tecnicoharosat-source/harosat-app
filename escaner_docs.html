@@ -11,216 +11,116 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
-  --blue: #3B8AC7;
-  --yellow: #FDB913;
-  --green: #5A9F3E;
-  --dark: #1a1a2e;
-  --mid: #16213e;
-  --card: #0f3460;
-  --text: #e0e0e0;
-  --muted: #8899aa;
-  --red: #e74c3c;
-  --radius: 14px;
+  --blue:#3B8AC7; --yellow:#FDB913; --green:#5A9F3E;
+  --dark:#1a1a2e; --mid:#16213e; --card:#0f3460;
+  --text:#e0e0e0; --muted:#8899aa; --red:#e74c3c; --radius:14px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body {
-  background: var(--dark); color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  min-height: 100vh; overflow-x: hidden;
-}
-header {
-  background: linear-gradient(135deg, var(--mid) 0%, var(--dark) 100%);
-  border-bottom: 2px solid var(--blue);
-  padding: 14px 20px 10px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.header-left { display: flex; flex-direction: column; }
-.logo { font-size: 22px; font-weight: 800; color: var(--yellow); letter-spacing: 1px; }
-.logo span { color: var(--blue); }
-.subtitle { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
-.sync-status { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
-.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-.sync-dot.ok { background: var(--green); }
-.sync-dot.err { background: var(--red); }
-.sync-dot.pulse { background: var(--yellow); animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;min-height:100vh;overflow-x:hidden;}
+header{background:linear-gradient(135deg,var(--mid) 0%,var(--dark) 100%);border-bottom:2px solid var(--blue);padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-left{display:flex;flex-direction:column;}
+.logo{font-size:22px;font-weight:800;color:var(--yellow);letter-spacing:1px;}
+.logo span{color:var(--blue);}
+.subtitle{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.sync-dot.ok{background:var(--green);}
+.sync-dot.err{background:var(--red);}
+.sync-dot.pulse{background:var(--yellow);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+main{padding:18px 14px 120px;max-width:640px;margin:0 auto;}
+.sesiones-bar{display:flex;gap:8px;align-items:center;margin-bottom:18px;overflow-x:auto;padding-bottom:4px;}
+.sesion-chip{flex-shrink:0;padding:7px 14px;border-radius:20px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.07);color:var(--text);border:1px solid rgba(255,255,255,0.1);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis;}
+.sesion-chip.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.sesion-chip:active{opacity:0.7;}
+.btn-nueva-sesion{flex-shrink:0;padding:7px 14px;border-radius:20px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:rgba(253,185,19,0.15);color:var(--yellow);border:1px solid rgba(253,185,19,0.3);}
+.btn-nueva-sesion:active{opacity:0.7;}
+.capture-zone{background:linear-gradient(135deg,var(--mid),var(--card));border:2px dashed var(--blue);border-radius:var(--radius);padding:26px 16px;text-align:center;margin-bottom:20px;}
+.capture-icon{font-size:44px;margin-bottom:8px;display:block;}
+.capture-zone h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:5px;}
+.capture-zone p{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+input[type=file]{display:none;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:13px 22px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;user-select:none;-webkit-user-select:none;}
+.btn:active{opacity:0.75;}
+.btn-camera{background:var(--blue);color:#fff;}
+.btn-gallery{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.2);}
+.section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:11px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(59,138,199,0.25);}
+#docList{margin-bottom:24px;}
+.doc-card{background:var(--mid);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:11px 12px;margin-bottom:10px;display:flex;align-items:center;gap:11px;}
+.doc-thumb-wrap{width:50px;height:64px;flex-shrink:0;border-radius:6px;overflow:hidden;border:2px solid var(--card);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:24px;}
+.doc-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.doc-info{flex:1;min-width:0;}
+.doc-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.doc-name-input{background:rgba(255,255,255,0.06);border:1px solid rgba(59,138,199,0.4);color:#fff;border-radius:6px;padding:5px 8px;font-size:13px;width:100%;margin-top:6px;outline:none;-webkit-appearance:none;}
+.doc-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.btn-icon{width:36px;height:36px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
+.btn-icon:active{opacity:0.7;}
+.btn-del{background:rgba(231,76,60,0.18);color:var(--red);}
+.btn-view{background:rgba(59,138,199,0.18);color:var(--blue);}
+.btn-pdf1{background:rgba(90,159,62,0.18);color:var(--green);}
+.empty-state{text-align:center;padding:28px 16px;color:var(--muted);font-size:14px;}
+.editor-card{background:linear-gradient(135deg,var(--mid),var(--card));border:1px solid rgba(59,138,199,0.3);border-radius:var(--radius);padding:16px;margin-bottom:20px;}
+.editor-card h3{font-size:15px;font-weight:700;margin-bottom:13px;color:#fff;}
+.field-group{margin-bottom:12px;}
+.field-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.field-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:8px;padding:10px 12px;font-size:15px;outline:none;resize:vertical;font-family:inherit;-webkit-appearance:none;}
+.field-input:focus{border-color:var(--blue);}
+textarea.field-input{min-height:70px;}
+.sig-wrap{background:#fff;border-radius:8px;overflow:hidden;margin-top:6px;}
+#sigCanvas{display:block;width:100%;height:130px;touch-action:none;cursor:crosshair;}
+.sig-controls{display:flex;gap:8px;margin-top:8px;}
+.btn-sm{flex:1;padding:9px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-sm-clear{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.3);}
+.btn-sm-save{background:rgba(59,138,199,0.2);color:var(--blue);border:1px solid rgba(59,138,199,0.4);}
+.sig-ok{font-size:11px;color:var(--green);margin-top:4px;text-align:center;display:none;}
+.editor-footer{display:flex;gap:8px;margin-top:14px;}
+.btn-save-sesion{flex:1;padding:11px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-save-sesion:active{opacity:0.75;}
+.btn-del-sesion{padding:11px 16px;border-radius:10px;border:none;background:rgba(231,76,60,0.18);color:var(--red);font-size:14px;font-weight:700;cursor:pointer;}
+.btn-del-sesion:active{opacity:0.75;}
+.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px;border-radius:var(--radius);border:none;cursor:pointer;font-size:13px;font-weight:600;color:#fff;}
+.action-btn:active{opacity:0.75;}
+.action-btn .icon{font-size:28px;}
+.btn-combine{background:linear-gradient(135deg,var(--blue),#2a6fa8);}
+.btn-print{background:linear-gradient(135deg,#555,#333);}
+.btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);}
+.btn-gmail{background:linear-gradient(135deg,#EA4335,#b71c1c);}
 
-main { padding: 18px 14px 120px; max-width: 640px; margin: 0 auto; }
+/* CROP MODAL */
+#cropModal{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.95);flex-direction:column;}
+#cropModal.open{display:flex;}
+.crop-header{background:var(–mid);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.crop-header h3{font-size:15px;font-weight:700;color:#fff;}
+.crop-hint{font-size:11px;color:var(–muted);text-align:center;padding:8px 16px;flex-shrink:0;}
+.crop-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+#cropCanvas{max-width:100%;max-height:100%;touch-action:none;}
+.crop-footer{background:var(–mid);padding:12px 16px;display:flex;gap:10px;flex-shrink:0;}
+.btn-crop-ok{flex:1;padding:13px;border-radius:10px;border:none;background:var(–blue);color:#fff;font-size:15px;font-weight:700;cursor:pointer;}
+.btn-crop-skip{flex:1;padding:13px;border-radius:10px;border:none;background:rgba(255,255,255,0.08);color:var(–text);font-size:15px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.15);}
+.btn-crop-ok:active,.btn-crop-skip:active{opacity:0.75;}
 
-/* SESIONES */
-.sesiones-bar {
-display: flex; gap: 8px; align-items: center; margin-bottom: 18px; overflow-x: auto;
-padding-bottom: 4px;
-}
-.sesion-chip {
-flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: none;
-font-size: 12px; font-weight: 600; cursor: pointer;
-background: rgba(255,255,255,0.07); color: var(–text);
-border: 1px solid rgba(255,255,255,0.1);
-white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis;
-}
-.sesion-chip.active { background: var(–blue); color: #fff; border-color: var(–blue); }
-.sesion-chip:active { opacity: 0.7; }
-.btn-nueva-sesion {
-flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: none;
-font-size: 12px; font-weight: 700; cursor: pointer;
-background: rgba(253,185,19,0.15); color: var(–yellow);
-border: 1px solid rgba(253,185,19,0.3);
-}
-.btn-nueva-sesion:active { opacity: 0.7; }
+/* SELECTION OVERLAY drawn on canvas — via JS */
 
-/* CAPTURE */
-.capture-zone {
-background: linear-gradient(135deg, var(–mid), var(–card));
-border: 2px dashed var(–blue); border-radius: var(–radius);
-padding: 26px 16px; text-align: center; margin-bottom: 20px;
-}
-.capture-icon { font-size: 44px; margin-bottom: 8px; display: block; }
-.capture-zone h2 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
-.capture-zone p { font-size: 13px; color: var(–muted); margin-bottom: 16px; }
-.btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-input[type=file] { display: none; }
-.btn {
-display: inline-flex; align-items: center; gap: 7px;
-padding: 13px 22px; border-radius: 10px;
-font-size: 15px; font-weight: 600; cursor: pointer;
-border: none; user-select: none; -webkit-user-select: none;
-}
-.btn:active { opacity: 0.75; }
-.btn-camera  { background: var(–blue); color: #fff; }
-.btn-gallery { background: rgba(255,255,255,0.08); color: var(–text); border: 1px solid rgba(255,255,255,0.2); }
-
-.section-title {
-font-size: 11px; font-weight: 700; letter-spacing: 2px;
-text-transform: uppercase; color: var(–blue);
-margin-bottom: 11px; display: flex; align-items: center; gap: 8px;
-}
-.section-title::after { content: ‘’; flex: 1; height: 1px; background: rgba(59,138,199,0.25); }
-
-#docList { margin-bottom: 24px; }
-.doc-card {
-background: var(–mid); border: 1px solid rgba(255,255,255,0.07);
-border-radius: var(–radius); padding: 11px 12px;
-margin-bottom: 10px; display: flex; align-items: center; gap: 11px;
-}
-.doc-thumb-wrap {
-width: 50px; height: 64px; flex-shrink: 0; border-radius: 6px; overflow: hidden;
-border: 2px solid var(–card); background: var(–card);
-display: flex; align-items: center; justify-content: center; font-size: 24px;
-}
-.doc-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.doc-info { flex: 1; min-width: 0; }
-.doc-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.doc-meta { font-size: 11px; color: var(–muted); margin-top: 2px; }
-.doc-name-input {
-background: rgba(255,255,255,0.06); border: 1px solid rgba(59,138,199,0.4);
-color: #fff; border-radius: 6px; padding: 5px 8px;
-font-size: 13px; width: 100%; margin-top: 6px; outline: none; -webkit-appearance: none;
-}
-.doc-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
-.btn-icon {
-width: 36px; height: 36px; border-radius: 8px; border: none;
-display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
-}
-.btn-icon:active { opacity: 0.7; }
-.btn-del  { background: rgba(231,76,60,0.18);  color: var(–red); }
-.btn-view { background: rgba(59,138,199,0.18); color: var(–blue); }
-.btn-pdf1 { background: rgba(90,159,62,0.18);  color: var(–green); }
-.empty-state { text-align: center; padding: 28px 16px; color: var(–muted); font-size: 14px; }
-
-.editor-card {
-background: linear-gradient(135deg, var(–mid), var(–card));
-border: 1px solid rgba(59,138,199,0.3); border-radius: var(–radius);
-padding: 16px; margin-bottom: 20px;
-}
-.editor-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 13px; color: #fff; }
-.field-group { margin-bottom: 12px; }
-.field-label { font-size: 11px; color: var(–muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-.field-input {
-width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-color: #fff; border-radius: 8px; padding: 10px 12px;
-font-size: 15px; outline: none; resize: vertical; font-family: inherit; -webkit-appearance: none;
-}
-.field-input:focus { border-color: var(–blue); }
-textarea.field-input { min-height: 70px; }
-
-.sig-wrap { background: #fff; border-radius: 8px; overflow: hidden; margin-top: 6px; }
-#sigCanvas { display: block; width: 100%; height: 130px; touch-action: none; cursor: crosshair; }
-.sig-controls { display: flex; gap: 8px; margin-top: 8px; }
-.btn-sm { flex: 1; padding: 9px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; }
-.btn-sm-clear { background: rgba(231,76,60,0.15); color: var(–red);  border: 1px solid rgba(231,76,60,0.3); }
-.btn-sm-save  { background: rgba(59,138,199,0.2); color: var(–blue); border: 1px solid rgba(59,138,199,0.4); }
-.sig-ok { font-size: 11px; color: var(–green); margin-top: 4px; text-align: center; display: none; }
-
-.editor-footer { display: flex; gap: 8px; margin-top: 14px; }
-.btn-save-sesion {
-flex: 1; padding: 11px; border-radius: 10px; border: none;
-background: var(–blue); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
-}
-.btn-save-sesion:active { opacity: 0.75; }
-.btn-del-sesion {
-padding: 11px 16px; border-radius: 10px; border: none;
-background: rgba(231,76,60,0.18); color: var(–red); font-size: 14px; font-weight: 700; cursor: pointer;
-}
-.btn-del-sesion:active { opacity: 0.75; }
-
-.actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.action-btn {
-display: flex; flex-direction: column; align-items: center; gap: 6px;
-padding: 16px 10px; border-radius: var(–radius); border: none;
-cursor: pointer; font-size: 13px; font-weight: 600; color: #fff;
-}
-.action-btn:active { opacity: 0.75; }
-.action-btn .icon { font-size: 28px; }
-.btn-combine  { background: linear-gradient(135deg, var(–blue), #2a6fa8); }
-.btn-print    { background: linear-gradient(135deg, #555, #333); }
-.btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
-.btn-gmail    { background: linear-gradient(135deg, #EA4335, #b71c1c); }
-
-#loadingOverlay {
-display: none; position: fixed; inset: 0; z-index: 500;
-background: rgba(10,15,30,0.85);
-align-items: center; justify-content: center; flex-direction: column; gap: 14px;
-}
-#loadingOverlay.show { display: flex; }
-.spinner {
-width: 44px; height: 44px; border-radius: 50%;
-border: 4px solid rgba(59,138,199,0.2); border-top-color: var(–blue);
-animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-#loadingMsg { color: #fff; font-size: 14px; font-weight: 600; }
-
-#toast {
-position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-background: rgba(22,33,62,0.97); color: #fff;
-padding: 11px 20px; border-radius: 30px; font-size: 13px; font-weight: 600;
-border: 1px solid rgba(59,138,199,0.4); transition: transform 0.28s ease; z-index: 999;
-}
-#toast.show { transform: translateX(-50%) translateY(0); }
-
-#previewModal {
-display: none; position: fixed; inset: 0; z-index: 300;
-background: rgba(0,0,0,0.88); align-items: center; justify-content: center; padding: 16px;
-}
-#previewModal.open { display: flex; }
-#previewModal img { max-width: 100%; max-height: 88vh; border-radius: 10px; }
-.modal-close {
-position: absolute; top: 18px; right: 18px; width: 40px; height: 40px;
-border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff;
-font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-}
-.counter-badge {
-background: var(–yellow); color: var(–dark);
-border-radius: 20px; padding: 2px 8px; font-size: 11px; font-weight: 800;
-margin-left: 6px; display: none;
-}
+#loadingOverlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,15,30,0.85);align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#loadingOverlay.show{display:flex;}
+.spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(59,138,199,0.2);border-top-color:var(–blue);animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loadingMsg{color:#fff;font-size:14px;font-weight:600;}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(22,33,62,0.97);color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:600;border:1px solid rgba(59,138,199,0.4);transition:transform 0.28s ease;z-index:999;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#previewModal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:16px;}
+#previewModal.open{display:flex;}
+#previewModal img{max-width:100%;max-height:88vh;border-radius:10px;}
+.modal-close{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.counter-badge{background:var(–yellow);color:var(–dark);border-radius:20px;padding:2px 8px;font-size:11px;font-weight:800;margin-left:6px;display:none;}
 </style>
 
 </head>
 <body>
-
 <header>
   <div class="header-left">
     <div class="logo">HARO<span>SAT</span></div>
@@ -233,13 +133,9 @@ margin-left: 6px; display: none;
 </header>
 
 <main>
-  <!-- SESIONES -->
   <div class="sesiones-bar" id="sesionesBar">
     <button class="btn-nueva-sesion" onclick="nuevaSesion()">+ Nueva</button>
   </div>
-
-  <!-- CAPTURE -->
-
   <div class="capture-zone">
     <span class="capture-icon">📷</span>
     <h2>Captura un documento</h2>
@@ -251,15 +147,10 @@ margin-left: 6px; display: none;
     <input type="file" id="inputCamera" accept="image/*" capture="environment">
     <input type="file" id="inputGallery" accept="image/*" multiple>
   </div>
-
-  <div class="section-title">
-    Documentos
-    <span id="countBadge" class="counter-badge">0</span>
-  </div>
+  <div class="section-title">Documentos<span id="countBadge" class="counter-badge">0</span></div>
   <div id="docList">
     <div class="empty-state" id="emptyState">📂 Aun no hay documentos en esta sesion.</div>
   </div>
-
   <div class="editor-card">
     <h3>✏️ Datos del PDF</h3>
     <div class="field-group">
@@ -267,7 +158,7 @@ margin-left: 6px; display: none;
       <input class="field-input" id="pdfTitle" type="text" placeholder="Ej: Facturas Zabaleta Abril 2026">
     </div>
     <div class="field-group">
-      <div class="field-label">Notas / Observaciones</div>
+      <div class="field-label">Notas</div>
       <textarea class="field-input" id="pdfNotes" placeholder="Anotaciones..."></textarea>
     </div>
     <div class="field-group">
@@ -284,101 +175,90 @@ margin-left: 6px; display: none;
       <button class="btn-del-sesion" onclick="borrarSesion()">🗑 Borrar sesion</button>
     </div>
   </div>
-
   <div class="section-title">Acciones</div>
   <div class="actions-grid">
-    <button class="action-btn btn-combine" onclick="generateCombinedPDF(false)">
-      <span class="icon">📄</span>PDF Combinado
-    </button>
-    <button class="action-btn btn-print" onclick="doPrint()">
-      <span class="icon">🖨️</span>Imprimir
-    </button>
-    <button class="action-btn btn-whatsapp" onclick="shareWhatsApp()">
-      <span class="icon">💬</span>WhatsApp
-    </button>
-    <button class="action-btn btn-gmail" onclick="shareGmail()">
-      <span class="icon">📧</span>Gmail
-    </button>
+    <button class="action-btn btn-combine" onclick="generateCombinedPDF(false)"><span class="icon">📄</span>PDF Combinado</button>
+    <button class="action-btn btn-print" onclick="doPrint()"><span class="icon">🖨️</span>Imprimir</button>
+    <button class="action-btn btn-whatsapp" onclick="shareWhatsApp()"><span class="icon">💬</span>WhatsApp</button>
+    <button class="action-btn btn-gmail" onclick="shareGmail()"><span class="icon">📧</span>Gmail</button>
   </div>
 </main>
 
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div id="loadingMsg">Cargando...</div>
+<!-- CROP MODAL -->
+
+<div id="cropModal">
+  <div class="crop-header">
+    <h3>✂️ Recortar documento</h3>
+  </div>
+  <div class="crop-hint">Arrastra para mover · Esquinas para redimensionar</div>
+  <div class="crop-canvas-wrap">
+    <canvas id="cropCanvas"></canvas>
+  </div>
+  <div class="crop-footer">
+    <button class="btn-crop-skip" onclick="cropSkip()">Sin recorte</button>
+    <button class="btn-crop-ok" onclick="cropConfirm()">✂️ Recortar</button>
+  </div>
 </div>
 
-<div id="previewModal">
-  <button class="modal-close" onclick="closePreview()">✕</button>
-  <img id="previewImg" src="" alt="Vista previa">
-</div>
-
+<div id="loadingOverlay"><div class="spinner"></div><div id="loadingMsg">Cargando...</div></div>
+<div id="previewModal"><button class="modal-close" onclick="closePreview()">✕</button><img id="previewImg" src="" alt=""></div>
 <div id="toast"></div>
 
 <script>
-// ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
 var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MTYxNTMsImV4cCI6MjA1ODM5MjE1M30.T5KPnkDPzFGcGqYMVgEOxGlXnmCXFvlsAMNsDkMaWgQ';
 
 function sbFetch(path, opts) {
   var url = SUPA_URL + '/rest/v1/' + path;
-  var headers = {
-    'apikey': SUPA_KEY,
-    'Authorization': 'Bearer ' + SUPA_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
-  if (opts && opts.headers) {
-    var k = Object.keys(opts.headers);
-    for (var i = 0; i < k.length; i++) { headers[k[i]] = opts.headers[k[i]]; }
-  }
+  var headers = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+  if (opts && opts.headers) { var k = Object.keys(opts.headers); for (var i=0;i<k.length;i++){headers[k[i]]=opts.headers[k[i]];} }
   return fetch(url, Object.assign({}, opts, { headers: headers }));
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-var sesiones   = [];   // lista de sesiones del servidor
-var sesionId   = null; // sesion activa
-var docs       = [];   // documentos de la sesion activa (en memoria)
-var savedSig   = null;
-var sigDrawing = false;
-var lastPoint  = null;
-var busy       = false;
+var sesiones=[]; var sesionId=null; var docs=[];
+var savedSig=null; var sigDrawing=false; var lastPoint=null; var busy=false;
 
-// ── SYNC STATUS ───────────────────────────────────────────────────────────────
-function syncOk(txt)    { dot('ok');  document.getElementById('syncTxt').textContent = txt || 'Sincronizado'; }
-function syncErr(txt)   { dot('err'); document.getElementById('syncTxt').textContent = txt || 'Error'; }
-function syncBusy(txt)  { dot('pulse'); document.getElementById('syncTxt').textContent = txt || 'Guardando...'; }
-function dot(cls) {
-  var d = document.getElementById('syncDot');
-  d.className = 'sync-dot ' + cls;
-}
+// ── PENDING CROP ──────────────────────────────────────────────────────────────
+var pendingFile = null; // { name, dataUrl, mimeType, kb } waiting for crop decision
 
-// ── LOADING ───────────────────────────────────────────────────────────────────
-function showLoading(msg) {
-  document.getElementById('loadingMsg').textContent = msg || 'Cargando...';
-  document.getElementById('loadingOverlay').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('show');
-}
+// ── LOADING / TOAST / SYNC ────────────────────────────────────────────────────
+function showLoading(msg){document.getElementById('loadingMsg').textContent=msg||'Cargando...';document.getElementById('loadingOverlay').classList.add('show');}
+function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
+var toastTimer=null;
+function toast(msg,ms){ms=ms||2600;var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},ms);}
+function syncOk(t){dot('ok');document.getElementById('syncTxt').textContent=t||'Sincronizado';}
+function syncErr(t){dot('err');document.getElementById('syncTxt').textContent=t||'Error';}
+function syncBusy(t){dot('pulse');document.getElementById('syncTxt').textContent=t||'Guardando...';}
+function dot(c){document.getElementById('syncDot').className='sync-dot '+c;}
 
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-var toastTimer = null;
-function toast(msg, ms) {
-  ms = ms || 2600;
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { el.classList.remove('show'); }, ms);
+// ── COMPRESS IMAGE (FIX principal: fotos iOS son 3-8MB) ───────────────────────
+// Reduce a max 1200px y calidad 0.82 JPEG. Resultado ~150-300KB. Supabase lo acepta siempre.
+function compressImage(dataUrl, callback) {
+  var img = new Image();
+  img.onload = function() {
+    var MAX = 1200;
+    var w = img.width; var h = img.height;
+    if (w > MAX || h > MAX) {
+      var ratio = Math.min(MAX / w, MAX / h);
+      w = Math.round(w * ratio); h = Math.round(h * ratio);
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    var compressed = canvas.toDataURL('image/jpeg', 0.82);
+    callback(compressed);
+  };
+  img.onerror = function() { callback(dataUrl); }; // fallback: original
+  img.src = dataUrl;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-window.addEventListener('load', function() {
-  setTimeout(initSigCanvas, 250);
-  cargarSesiones();
-});
+window.addEventListener('load', function() { setTimeout(initSigCanvas, 250); cargarSesiones(); });
 
-// ── CARGAR SESIONES ───────────────────────────────────────────────────────────
+// ── SESIONES ──────────────────────────────────────────────────────────────────
 async function cargarSesiones() {
   showLoading('Cargando sesiones...');
   try {
@@ -386,30 +266,19 @@ async function cargarSesiones() {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     sesiones = await r.json();
     renderSesionesBar();
-    if (sesiones.length > 0) {
-      await activarSesion(sesiones[0].id);
-    } else {
-      await nuevaSesion();
-    }
+    if (sesiones.length > 0) { await activarSesion(sesiones[0].id); }
+    else { await nuevaSesion(); }
     syncOk();
-  } catch(e) {
-    syncErr('Sin conexion');
-    toast('⚠️ No se pudo conectar a Supabase');
-  } finally {
-    hideLoading();
-  }
+  } catch(e) { syncErr('Sin conexion'); toast('⚠️ Sin conexion a Supabase'); }
+  finally { hideLoading(); }
 }
 
 function renderSesionesBar() {
   var bar = document.getElementById('sesionesBar');
   while (bar.firstChild) { bar.removeChild(bar.firstChild); }
-
-  var btnNueva = document.createElement('button');
-  btnNueva.className = 'btn-nueva-sesion';
-  btnNueva.textContent = '+ Nueva';
-  btnNueva.onclick = nuevaSesion;
-  bar.appendChild(btnNueva);
-
+  var btnN = document.createElement('button');
+  btnN.className = 'btn-nueva-sesion'; btnN.textContent = '+ Nueva'; btnN.onclick = nuevaSesion;
+  bar.appendChild(btnN);
   for (var i = 0; i < sesiones.length; i++) {
     (function(s) {
       var chip = document.createElement('button');
@@ -421,34 +290,20 @@ function renderSesionesBar() {
   }
 }
 
-// ── NUEVA SESION ──────────────────────────────────────────────────────────────
 async function nuevaSesion() {
-  syncBusy('Creando sesion...');
+  syncBusy('Creando...');
   try {
-    var r = await sbFetch('escaner_sesiones', {
-      method: 'POST',
-      body: JSON.stringify({ titulo: 'Nueva sesion', notas: '', firma_base64: null })
-    });
+    var r = await sbFetch('escaner_sesiones', { method:'POST', body: JSON.stringify({ titulo:'Nueva sesion', notas:'', firma_base64:null }) });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    var arr = await r.json();
-    var nueva = arr[0];
+    var arr = await r.json(); var nueva = arr[0];
     sesiones.unshift(nueva);
     await activarSesion(nueva.id);
-    renderSesionesBar();
-    syncOk();
-    toast('✅ Nueva sesion creada');
-  } catch(e) {
-    syncErr('Error');
-    toast('❌ Error creando sesion: ' + e.message);
-  }
+    renderSesionesBar(); syncOk(); toast('✅ Nueva sesion creada');
+  } catch(e) { syncErr('Error'); toast('❌ ' + e.message); }
 }
 
-// ── ACTIVAR SESION ────────────────────────────────────────────────────────────
 async function activarSesion(id) {
-  sesionId = id;
-  docs = [];
-  renderSesionesBar();
-  // Cargar metadatos de la sesion
+  sesionId = id; docs = []; renderSesionesBar();
   try {
     var rS = await sbFetch('escaner_sesiones?id=eq.' + id + '&select=*');
     if (rS.ok) {
@@ -460,95 +315,47 @@ async function activarSesion(id) {
         if (s.firma_base64) {
           savedSig = s.firma_base64;
           document.getElementById('sigStatus').style.display = 'block';
-          // Dibujar firma guardada en canvas
-          var img = new Image();
-          img.onload = function() {
-            var dpr = window.devicePixelRatio || 1;
-            var w = sigCanvas.offsetWidth;
-            var h = sigCanvas.offsetHeight;
-            sigCtx.clearRect(0, 0, w, h);
-            sigCtx.drawImage(img, 0, 0, w, h);
-          };
-          img.src = s.firma_base64;
-        } else {
-          savedSig = null;
-          sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-          document.getElementById('sigStatus').style.display = 'none';
-        }
+          var fImg = new Image();
+          fImg.onload = function() { var dpr=window.devicePixelRatio||1; sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); sigCtx.drawImage(fImg,0,0,sigCanvas.offsetWidth,sigCanvas.offsetHeight); };
+          fImg.src = s.firma_base64;
+        } else { savedSig=null; sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); document.getElementById('sigStatus').style.display='none'; }
       }
     }
-    // Cargar documentos
     var rD = await sbFetch('escaner_documentos?sesion_id=eq.' + id + '&order=orden.asc&select=*');
     if (rD.ok) {
-      var docArr = await rD.json();
-      docs = [];
+      var docArr = await rD.json(); docs = [];
       for (var i = 0; i < docArr.length; i++) {
-        docs.push({
-          id:       docArr[i].id,
-          name:     docArr[i].nombre,
-          dataUrl:  docArr[i].imagen_base64,
-          mimeType: docArr[i].mime_type,
-          size:     (docArr[i].tamanyo_kb || 0) + ' KB',
-          date:     new Date(docArr[i].created_at).toLocaleDateString('es-ES'),
-          orden:    docArr[i].orden
-        });
+        docs.push({ id:docArr[i].id, name:docArr[i].nombre, dataUrl:docArr[i].imagen_base64, mimeType:docArr[i].mime_type, size:(docArr[i].tamanyo_kb||0)+' KB', date:new Date(docArr[i].created_at).toLocaleDateString('es-ES'), orden:docArr[i].orden });
       }
       renderList();
     }
-  } catch(e) {
-    toast('⚠️ Error cargando documentos');
-  }
+  } catch(e) { toast('⚠️ Error cargando documentos'); }
 }
 
-// ── GUARDAR SESION (titulo + notas + firma) ───────────────────────────────────
 async function guardarSesion() {
-  if (!sesionId) return;
-  syncBusy('Guardando...');
+  if (!sesionId) return; syncBusy('Guardando...');
   try {
-    var titulo = (document.getElementById('pdfTitle').value || '').trim() || 'Nueva sesion';
-    var notas  = (document.getElementById('pdfNotes').value  || '').trim();
-    var r = await sbFetch('escaner_sesiones?id=eq.' + sesionId, {
-      method: 'PATCH',
-      body: JSON.stringify({ titulo: titulo, notas: notas, firma_base64: savedSig, updated_at: new Date().toISOString() })
-    });
+    var titulo = (document.getElementById('pdfTitle').value||'').trim()||'Nueva sesion';
+    var notas  = (document.getElementById('pdfNotes').value||'').trim();
+    var r = await sbFetch('escaner_sesiones?id=eq.' + sesionId, { method:'PATCH', body:JSON.stringify({ titulo:titulo, notas:notas, firma_base64:savedSig, updated_at:new Date().toISOString() }) });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    // Actualizar nombre en lista local
-    for (var i = 0; i < sesiones.length; i++) {
-      if (sesiones[i].id === sesionId) { sesiones[i].titulo = titulo; break; }
-    }
-    renderSesionesBar();
-    syncOk('Guardado');
-    toast('✅ Sesion guardada');
-  } catch(e) {
-    syncErr('Error');
-    toast('❌ Error guardando: ' + e.message);
-  }
+    for (var i=0;i<sesiones.length;i++) { if (sesiones[i].id===sesionId) { sesiones[i].titulo=titulo; break; } }
+    renderSesionesBar(); syncOk('Guardado'); toast('✅ Sesion guardada');
+  } catch(e) { syncErr('Error'); toast('❌ ' + e.message); }
 }
 
-// ── BORRAR SESION ─────────────────────────────────────────────────────────────
 async function borrarSesion() {
   if (!sesionId) return;
-  if (!confirm('¿Borrar esta sesion y todos sus documentos?')) return;
+  if (!confirm('Borrar esta sesion y todos sus documentos?')) return;
   syncBusy('Borrando...');
   try {
-    // CASCADE borra los documentos automaticamente
-    var r = await sbFetch('escaner_sesiones?id=eq.' + sesionId, { method: 'DELETE' });
+    var r = await sbFetch('escaner_sesiones?id=eq.' + sesionId, { method:'DELETE' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    sesiones = sesiones.filter(function(s) { return s.id !== sesionId; });
-    sesionId = null;
-    docs = [];
-    if (sesiones.length > 0) {
-      await activarSesion(sesiones[0].id);
-    } else {
-      await nuevaSesion();
-    }
-    renderSesionesBar();
-    syncOk();
-    toast('🗑 Sesion borrada');
-  } catch(e) {
-    syncErr('Error');
-    toast('❌ Error borrando: ' + e.message);
-  }
+    sesiones = sesiones.filter(function(s){return s.id!==sesionId;});
+    sesionId=null; docs=[];
+    if (sesiones.length>0) { await activarSesion(sesiones[0].id); } else { await nuevaSesion(); }
+    renderSesionesBar(); syncOk(); toast('🗑 Sesion borrada');
+  } catch(e) { syncErr('Error'); toast('❌ ' + e.message); }
 }
 
 // ── FILE INPUT ────────────────────────────────────────────────────────────────
@@ -559,381 +366,405 @@ function handleFiles(e) {
   var files = Array.from(e.target.files || []);
   e.target.value = '';
   if (!files.length) return;
-  for (var i = 0; i < files.length; i++) { processFile(files[i]); }
+  // Process one at a time through crop modal; queue the rest
+  procesarCola(files, 0);
 }
 
-function processFile(file) {
+function procesarCola(files, idx) {
+  if (idx >= files.length) return;
+  var file = files[idx];
   if (!file || !file.type.startsWith('image/')) {
-    toast('⚠️ Solo se admiten imagenes');
-    return;
+    toast('⚠️ Solo imagenes'); procesarCola(files, idx+1); return;
   }
   var reader = new FileReader();
-  reader.onerror = function() { toast('❌ Error leyendo archivo'); };
+  reader.onerror = function() { toast('❌ Error leyendo'); procesarCola(files, idx+1); };
   reader.onload = function(ev) {
     var dataUrl = ev.target.result;
-    if (!dataUrl || dataUrl.length < 100) { toast('❌ Archivo invalido'); return; }
+    if (!dataUrl || dataUrl.length < 100) { toast('❌ Archivo invalido'); procesarCola(files, idx+1); return; }
     var name = file.name.replace(/\.[^.]+$/, '') || 'Documento';
     var kb = Math.round(file.size / 1024);
-    subirDocumento(name, dataUrl, file.type, kb);
+    // Primero comprimir, luego abrir recorte
+    compressImage(dataUrl, function(compressed) {
+      pendingFile = { name:name, dataUrl:compressed, mimeType:'image/jpeg', kb:Math.round(compressed.length*0.75/1024) };
+      // After crop modal closes, procesarCola continues via cropDone callback
+      pendingCola = files; pendingColaIdx = idx + 1;
+      abrirCrop(compressed);
+    });
   };
   reader.readAsDataURL(file);
 }
 
-// ── SUBIR DOCUMENTO A SUPABASE ────────────────────────────────────────────────
-async function subirDocumento(name, dataUrl, mimeType, kb) {
-  if (!sesionId) { toast('⚠️ Selecciona o crea una sesion primero'); return; }
-  syncBusy('Guardando imagen...');
+var pendingCola = []; var pendingColaIdx = 0;
+
+// ── CROP MODAL ────────────────────────────────────────────────────────────────
+var cropCanvas = document.getElementById('cropCanvas');
+var cropCtx    = cropCanvas.getContext('2d');
+var cropImg    = null;
+var cropScale  = 1;
+// Selection rectangle in image coords
+var sel = { x:0, y:0, w:0, h:0 };
+// Drag state
+var dragMode = null; // 'move' | 'tl'|'tr'|'bl'|'br'
+var dragStart = { x:0, y:0 };
+var selStart  = { x:0, y:0, w:0, h:0 };
+var HANDLE = 22; // handle hit size px (canvas coords)
+
+function abrirCrop(dataUrl) {
+  var img = new Image();
+  img.onload = function() {
+    cropImg = img;
+    // Size canvas to fit screen
+    var wrap = document.querySelector('.crop-canvas-wrap');
+    var maxW = wrap.clientWidth  || window.innerWidth;
+    var maxH = wrap.clientHeight || (window.innerHeight - 160);
+    cropScale = Math.min(maxW / img.width, maxH / img.height, 1);
+    cropCanvas.width  = Math.round(img.width  * cropScale);
+    cropCanvas.height = Math.round(img.height * cropScale);
+    // Default selection: 10% inset
+    var pad = 0.10;
+    sel.x = Math.round(img.width  * pad);
+    sel.y = Math.round(img.height * pad);
+    sel.w = Math.round(img.width  * (1 - pad*2));
+    sel.h = Math.round(img.height * (1 - pad*2));
+    drawCrop();
+    document.getElementById('cropModal').classList.add('open');
+  };
+  img.onerror = function() { cropSkip(); };
+  img.src = dataUrl;
+}
+
+function drawCrop() {
+  var cw = cropCanvas.width; var ch = cropCanvas.height;
+  var s = cropScale;
+  cropCtx.clearRect(0,0,cw,ch);
+  // Full image
+  cropCtx.drawImage(cropImg, 0, 0, cw, ch);
+  // Darken outside selection
+  var sx=sel.x*s; var sy=sel.y*s; var sw=sel.w*s; var sh=sel.h*s;
+  cropCtx.fillStyle='rgba(0,0,0,0.52)';
+  cropCtx.fillRect(0,0,cw,sy);                        // top
+  cropCtx.fillRect(0,sy+sh,cw,ch-sy-sh);              // bottom
+  cropCtx.fillRect(0,sy,sx,sh);                        // left
+  cropCtx.fillRect(sx+sw,sy,cw-sx-sw,sh);             // right
+  // Border
+  cropCtx.strokeStyle='#00d4ff'; cropCtx.lineWidth=2;
+  cropCtx.strokeRect(sx,sy,sw,sh);
+  // Corner handles
+  var handles = corners(sx,sy,sw,sh);
+  for (var k in handles) {
+    var hp = handles[k];
+    cropCtx.fillStyle='#fff';
+    cropCtx.fillRect(hp.x-8,hp.y-8,16,16);
+    cropCtx.strokeStyle='#00d4ff'; cropCtx.lineWidth=2;
+    cropCtx.strokeRect(hp.x-8,hp.y-8,16,16);
+  }
+}
+
+function corners(sx,sy,sw,sh) {
+  return { tl:{x:sx,y:sy}, tr:{x:sx+sw,y:sy}, bl:{x:sx,y:sy+sh}, br:{x:sx+sw,y:sy+sh} };
+}
+
+function getCropPos(e) {
+  var rect = cropCanvas.getBoundingClientRect();
+  var src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+function hitHandle(px, py) {
+  var s = cropScale;
+  var sx=sel.x*s; var sy=sel.y*s; var sw=sel.w*s; var sh=sel.h*s;
+  var c = corners(sx,sy,sw,sh);
+  var H = HANDLE;
+  if (Math.abs(px-c.tl.x)<H && Math.abs(py-c.tl.y)<H) return 'tl';
+  if (Math.abs(px-c.tr.x)<H && Math.abs(py-c.tr.y)<H) return 'tr';
+  if (Math.abs(px-c.bl.x)<H && Math.abs(py-c.bl.y)<H) return 'bl';
+  if (Math.abs(px-c.br.x)<H && Math.abs(py-c.br.y)<H) return 'br';
+  if (px>sx && px<sx+sw && py>sy && py<sy+sh) return 'move';
+  return null;
+}
+
+function cropPointerDown(e) {
+  e.preventDefault();
+  var p = getCropPos(e);
+  dragMode = hitHandle(p.x, p.y);
+  if (!dragMode) return;
+  dragStart = p;
+  selStart = { x:sel.x, y:sel.y, w:sel.w, h:sel.h };
+}
+function cropPointerMove(e) {
+  e.preventDefault();
+  if (!dragMode) return;
+  var p = getCropPos(e);
+  var dx = (p.x - dragStart.x) / cropScale;
+  var dy = (p.y - dragStart.y) / cropScale;
+  var iw = cropImg.width; var ih = cropImg.height;
+  var MIN = 40;
+  if (dragMode === 'move') {
+    sel.x = Math.max(0, Math.min(iw - selStart.w, selStart.x + dx));
+    sel.y = Math.max(0, Math.min(ih - selStart.h, selStart.y + dy));
+    sel.w = selStart.w; sel.h = selStart.h;
+  } else if (dragMode === 'tl') {
+    var nx=Math.max(0,Math.min(selStart.x+selStart.w-MIN,selStart.x+dx));
+    var ny=Math.max(0,Math.min(selStart.y+selStart.h-MIN,selStart.y+dy));
+    sel.w=selStart.x+selStart.w-nx; sel.h=selStart.y+selStart.h-ny; sel.x=nx; sel.y=ny;
+  } else if (dragMode === 'tr') {
+    var nw=Math.max(MIN,Math.min(iw-selStart.x,selStart.w+dx));
+    var ny=Math.max(0,Math.min(selStart.y+selStart.h-MIN,selStart.y+dy));
+    sel.w=nw; sel.h=selStart.y+selStart.h-ny; sel.y=ny;
+  } else if (dragMode === 'bl') {
+    var nx=Math.max(0,Math.min(selStart.x+selStart.w-MIN,selStart.x+dx));
+    var nh=Math.max(MIN,Math.min(ih-selStart.y,selStart.h+dy));
+    sel.x=nx; sel.w=selStart.x+selStart.w-nx; sel.h=nh;
+  } else if (dragMode === 'br') {
+    sel.w=Math.max(MIN,Math.min(iw-selStart.x,selStart.w+dx));
+    sel.h=Math.max(MIN,Math.min(ih-selStart.y,selStart.h+dy));
+  }
+  drawCrop();
+}
+function cropPointerUp(e) { dragMode = null; }
+
+cropCanvas.addEventListener('mousedown',  cropPointerDown);
+cropCanvas.addEventListener('mousemove',  cropPointerMove);
+cropCanvas.addEventListener('mouseup',    cropPointerUp);
+cropCanvas.addEventListener('touchstart', cropPointerDown, { passive:false });
+cropCanvas.addEventListener('touchmove',  cropPointerMove, { passive:false });
+cropCanvas.addEventListener('touchend',   cropPointerUp);
+
+function cropConfirm() {
+  // Extract selection from original image
+  var offscreen = document.createElement('canvas');
+  offscreen.width  = Math.round(sel.w);
+  offscreen.height = Math.round(sel.h);
+  var octx = offscreen.getContext('2d');
+  octx.drawImage(cropImg, sel.x, sel.y, sel.w, sel.h, 0, 0, sel.w, sel.h);
+  var cropped = offscreen.toDataURL('image/jpeg', 0.88);
+  pendingFile.dataUrl  = cropped;
+  pendingFile.mimeType = 'image/jpeg';
+  pendingFile.kb = Math.round(cropped.length * 0.75 / 1024);
+  cropDone();
+}
+
+function cropSkip() {
+  cropDone();
+}
+
+function cropDone() {
+  document.getElementById('cropModal').classList.remove('open');
+  if (pendingFile) {
+    var pf = pendingFile; pendingFile = null;
+    subirDocumento(pf.name, pf.dataUrl, pf.mimeType, pf.kb, function() {
+      procesarCola(pendingCola, pendingColaIdx);
+    });
+  }
+}
+
+// ── SUBIR DOCUMENTO ───────────────────────────────────────────────────────────
+async function subirDocumento(name, dataUrl, mimeType, kb, callback) {
+  if (!sesionId) { toast('⚠️ Selecciona una sesion primero'); if(callback)callback(); return; }
+  syncBusy('Guardando...');
   try {
     var orden = docs.length;
     var r = await sbFetch('escaner_documentos', {
       method: 'POST',
-      body: JSON.stringify({
-        sesion_id:      sesionId,
-        nombre:         name,
-        imagen_base64:  dataUrl,
-        mime_type:      mimeType || 'image/jpeg',
-        tamanyo_kb:     kb,
-        orden:          orden
-      })
+      body: JSON.stringify({ sesion_id:sesionId, nombre:name, imagen_base64:dataUrl, mime_type:mimeType||'image/jpeg', tamanyo_kb:kb, orden:orden })
     });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var arr = await r.json();
-    var nuevo = arr[0];
-    docs.push({
-      id:       nuevo.id,
-      name:     nuevo.nombre,
-      dataUrl:  nuevo.imagen_base64,
-      mimeType: nuevo.mime_type,
-      size:     (nuevo.tamanyo_kb || 0) + ' KB',
-      date:     new Date(nuevo.created_at).toLocaleDateString('es-ES'),
-      orden:    nuevo.orden
-    });
-    renderList();
-    syncOk();
-    toast('📄 Documento guardado');
-  } catch(e) {
-    syncErr('Error');
-    toast('❌ Error guardando imagen: ' + e.message);
-  }
-}
-
-// ── RENOMBRAR DOCUMENTO ───────────────────────────────────────────────────────
-async function renombrarDoc(i, nuevoNombre) {
-  var d = docs[i];
-  if (!d || !d.id) return;
-  d.name = nuevoNombre || 'Documento';
-  try {
-    await sbFetch('escaner_documentos?id=eq.' + d.id, {
-      method: 'PATCH',
-      body: JSON.stringify({ nombre: d.name })
-    });
-  } catch(e) { /* silencioso */ }
-}
-
-// ── BORRAR DOCUMENTO ──────────────────────────────────────────────────────────
-async function deleteDoc(i) {
-  var d = docs[i];
-  syncBusy('Borrando...');
-  try {
-    if (d.id) {
-      var r = await sbFetch('escaner_documentos?id=eq.' + d.id, { method: 'DELETE' });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
+    if (!r.ok) {
+      var errTxt = await r.text();
+      throw new Error('HTTP ' + r.status + ' ' + errTxt.substring(0,80));
     }
-    docs.splice(i, 1);
-    renderList();
-    syncOk();
-    toast('🗑 Documento eliminado');
-  } catch(e) {
-    syncErr('Error');
-    toast('❌ Error borrando: ' + e.message);
-  }
+    var arr = await r.json(); var nuevo = arr[0];
+    docs.push({ id:nuevo.id, name:nuevo.nombre, dataUrl:nuevo.imagen_base64, mimeType:nuevo.mime_type, size:(nuevo.tamanyo_kb||0)+' KB', date:new Date(nuevo.created_at).toLocaleDateString('es-ES'), orden:nuevo.orden });
+    renderList(); syncOk(); toast('📄 Documento guardado');
+  } catch(e) { syncErr('Error'); toast('❌ Error: ' + e.message); }
+  finally { if (callback) callback(); }
+}
+
+// ── BORRAR / RENOMBRAR ────────────────────────────────────────────────────────
+async function renombrarDoc(i, nombre) {
+  var d = docs[i]; if (!d||!d.id) return; d.name = nombre||'Documento';
+  try { await sbFetch('escaner_documentos?id=eq.'+d.id, { method:'PATCH', body:JSON.stringify({nombre:d.name}) }); } catch(e){}
+}
+async function deleteDoc(i) {
+  var d = docs[i]; syncBusy('Borrando...');
+  try {
+    if (d.id) { var r = await sbFetch('escaner_documentos?id=eq.'+d.id, {method:'DELETE'}); if(!r.ok) throw new Error('HTTP '+r.status); }
+    docs.splice(i,1); renderList(); syncOk(); toast('🗑 Documento eliminado');
+  } catch(e) { syncErr('Error'); toast('❌ '+e.message); }
 }
 
 // ── RENDER LIST ───────────────────────────────────────────────────────────────
 function renderList() {
-  var list  = document.getElementById('docList');
-  var empty = document.getElementById('emptyState');
-  var badge = document.getElementById('countBadge');
-  while (list.firstChild) { list.removeChild(list.firstChild); }
-  if (docs.length === 0) {
-    list.appendChild(empty);
-    empty.style.display = 'block';
-    badge.style.display = 'none';
-    return;
-  }
-  empty.style.display = 'none';
-  badge.style.display = 'inline';
-  badge.textContent = String(docs.length);
-  for (var i = 0; i < docs.length; i++) { list.appendChild(buildCard(i)); }
+  var list=document.getElementById('docList'); var empty=document.getElementById('emptyState'); var badge=document.getElementById('countBadge');
+  while(list.firstChild){list.removeChild(list.firstChild);}
+  if(docs.length===0){list.appendChild(empty);empty.style.display='block';badge.style.display='none';return;}
+  empty.style.display='none'; badge.style.display='inline'; badge.textContent=String(docs.length);
+  for(var i=0;i<docs.length;i++){list.appendChild(buildCard(i));}
 }
 
 function buildCard(i) {
-  var d = docs[i];
-  var card = document.createElement('div');
-  card.className = 'doc-card';
-
-  var thumbWrap = document.createElement('div');
-  thumbWrap.className = 'doc-thumb-wrap';
-  var img = document.createElement('img');
-  img.alt = ''; img.src = d.dataUrl;
-  thumbWrap.appendChild(img);
-
-  var info = document.createElement('div');
-  info.className = 'doc-info';
-
-  var nameDiv = document.createElement('div');
-  nameDiv.className = 'doc-name';
-  nameDiv.textContent = d.name;
-
-  var meta = document.createElement('div');
-  meta.className = 'doc-meta';
-  meta.textContent = d.size + ' · ' + d.date;
-
-  var inp = document.createElement('input');
-  inp.className = 'doc-name-input';
-  inp.type = 'text'; inp.value = d.name; inp.placeholder = 'Nombre';
-  (function(idx) {
-    inp.addEventListener('change', function() { renombrarDoc(idx, this.value); });
-  })(i);
-
-  info.appendChild(nameDiv); info.appendChild(meta); info.appendChild(inp);
-
-  var actions = document.createElement('div');
-  actions.className = 'doc-actions';
-
-  var bView = document.createElement('button');
-  bView.className = 'btn-icon btn-view'; bView.title = 'Ver'; bView.textContent = '👁';
-  (function(idx) { bView.onclick = function() { previewDoc(idx); }; })(i);
-
-  var bPdf = document.createElement('button');
-  bPdf.className = 'btn-icon btn-pdf1'; bPdf.title = 'PDF'; bPdf.textContent = '📥';
-  (function(idx) { bPdf.onclick = function() { downloadSinglePDF(idx); }; })(i);
-
-  var bDel = document.createElement('button');
-  bDel.className = 'btn-icon btn-del'; bDel.title = 'Eliminar'; bDel.textContent = '🗑';
-  (function(idx) { bDel.onclick = function() { deleteDoc(idx); }; })(i);
-
-  actions.appendChild(bView); actions.appendChild(bPdf); actions.appendChild(bDel);
-  card.appendChild(thumbWrap); card.appendChild(info); card.appendChild(actions);
+  var d=docs[i];
+  var card=document.createElement('div'); card.className='doc-card';
+  var tw=document.createElement('div'); tw.className='doc-thumb-wrap';
+  var img=document.createElement('img'); img.alt=''; img.src=d.dataUrl; tw.appendChild(img);
+  var info=document.createElement('div'); info.className='doc-info';
+  var nd=document.createElement('div'); nd.className='doc-name'; nd.textContent=d.name;
+  var mt=document.createElement('div'); mt.className='doc-meta'; mt.textContent=d.size+' · '+d.date;
+  var inp=document.createElement('input'); inp.className='doc-name-input'; inp.type='text'; inp.value=d.name; inp.placeholder='Nombre';
+  (function(idx){inp.addEventListener('change',function(){renombrarDoc(idx,this.value);});})(i);
+  info.appendChild(nd); info.appendChild(mt); info.appendChild(inp);
+  var ac=document.createElement('div'); ac.className='doc-actions';
+  var bv=document.createElement('button'); bv.className='btn-icon btn-view'; bv.textContent='👁';
+  (function(idx){bv.onclick=function(){previewDoc(idx);};})(i);
+  var bp=document.createElement('button'); bp.className='btn-icon btn-pdf1'; bp.textContent='📥';
+  (function(idx){bp.onclick=function(){downloadSinglePDF(idx);};})(i);
+  var bd=document.createElement('button'); bd.className='btn-icon btn-del'; bd.textContent='🗑';
+  (function(idx){bd.onclick=function(){deleteDoc(idx);};})(i);
+  ac.appendChild(bv); ac.appendChild(bp); ac.appendChild(bd);
+  card.appendChild(tw); card.appendChild(info); card.appendChild(ac);
   return card;
 }
 
 // ── PREVIEW ───────────────────────────────────────────────────────────────────
-function previewDoc(i) {
-  document.getElementById('previewImg').src = docs[i].dataUrl;
-  document.getElementById('previewModal').classList.add('open');
-}
-function closePreview() {
-  document.getElementById('previewModal').classList.remove('open');
-  document.getElementById('previewImg').src = '';
-}
+function previewDoc(i){document.getElementById('previewImg').src=docs[i].dataUrl;document.getElementById('previewModal').classList.add('open');}
+function closePreview(){document.getElementById('previewModal').classList.remove('open');document.getElementById('previewImg').src='';}
 
-// ── SIGNATURE PAD ─────────────────────────────────────────────────────────────
-var sigCanvas = document.getElementById('sigCanvas');
-var sigCtx    = sigCanvas.getContext('2d');
+// ── SIGNATURE ─────────────────────────────────────────────────────────────────
+var sigCanvas=document.getElementById('sigCanvas'); var sigCtx=sigCanvas.getContext('2d');
+function initSigCanvas(){
+  var dpr=window.devicePixelRatio||1; var w=sigCanvas.offsetWidth; var h=sigCanvas.offsetHeight;
+  if(w===0||h===0){setTimeout(initSigCanvas,100);return;}
+  sigCanvas.width=w*dpr; sigCanvas.height=h*dpr;
+  sigCtx.setTransform(1,0,0,1,0,0); sigCtx.scale(dpr,dpr);
+  sigCtx.strokeStyle='#111'; sigCtx.lineWidth=2.5; sigCtx.lineCap='round'; sigCtx.lineJoin='round';
+}
+window.addEventListener('resize',initSigCanvas);
+function getSigPos(e){var rect=sigCanvas.getBoundingClientRect();var src=e.touches?e.touches[0]:e;return{x:src.clientX-rect.left,y:src.clientY-rect.top};}
+sigCanvas.addEventListener('mousedown',function(e){sigDrawing=true;lastPoint=getSigPos(e);});
+sigCanvas.addEventListener('mousemove',function(e){if(!sigDrawing)return;sigDraw(getSigPos(e));});
+sigCanvas.addEventListener('mouseup',function(){sigDrawing=false;});
+sigCanvas.addEventListener('mouseleave',function(){sigDrawing=false;});
+sigCanvas.addEventListener('touchstart',function(e){e.preventDefault();sigDrawing=true;lastPoint=getSigPos(e);},{passive:false});
+sigCanvas.addEventListener('touchmove',function(e){e.preventDefault();if(!sigDrawing)return;sigDraw(getSigPos(e));},{passive:false});
+sigCanvas.addEventListener('touchend',function(){sigDrawing=false;});
+function sigDraw(pt){if(!lastPoint){lastPoint=pt;return;}sigCtx.beginPath();sigCtx.moveTo(lastPoint.x,lastPoint.y);sigCtx.lineTo(pt.x,pt.y);sigCtx.stroke();lastPoint=pt;}
+function clearSig(){sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);savedSig=null;document.getElementById('sigStatus').style.display='none';}
+function saveSig(){savedSig=sigCanvas.toDataURL('image/png');document.getElementById('sigStatus').style.display='block';toast('✅ Firma guardada — pulsa Guardar para sincronizar');}
 
-function initSigCanvas() {
-  var dpr = window.devicePixelRatio || 1;
-  var w = sigCanvas.offsetWidth; var h = sigCanvas.offsetHeight;
-  if (w === 0 || h === 0) { setTimeout(initSigCanvas, 100); return; }
-  sigCanvas.width = w * dpr; sigCanvas.height = h * dpr;
-  sigCtx.setTransform(1,0,0,1,0,0); sigCtx.scale(dpr, dpr);
-  sigCtx.strokeStyle = '#111'; sigCtx.lineWidth = 2.5;
-  sigCtx.lineCap = 'round'; sigCtx.lineJoin = 'round';
-}
-window.addEventListener('resize', initSigCanvas);
-
-function getSigPos(e) {
-  var rect = sigCanvas.getBoundingClientRect();
-  var src = e.touches ? e.touches[0] : e;
-  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
-}
-sigCanvas.addEventListener('mousedown',  function(e) { sigDrawing = true; lastPoint = getSigPos(e); });
-sigCanvas.addEventListener('mousemove',  function(e) { if (!sigDrawing) return; sigDraw(getSigPos(e)); });
-sigCanvas.addEventListener('mouseup',    function()  { sigDrawing = false; });
-sigCanvas.addEventListener('mouseleave', function()  { sigDrawing = false; });
-sigCanvas.addEventListener('touchstart', function(e) { e.preventDefault(); sigDrawing = true; lastPoint = getSigPos(e); }, { passive: false });
-sigCanvas.addEventListener('touchmove',  function(e) { e.preventDefault(); if (!sigDrawing) return; sigDraw(getSigPos(e)); }, { passive: false });
-sigCanvas.addEventListener('touchend',   function()  { sigDrawing = false; });
-
-function sigDraw(pt) {
-  if (!lastPoint) { lastPoint = pt; return; }
-  sigCtx.beginPath(); sigCtx.moveTo(lastPoint.x, lastPoint.y);
-  sigCtx.lineTo(pt.x, pt.y); sigCtx.stroke(); lastPoint = pt;
-}
-function clearSig() {
-  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-  savedSig = null; document.getElementById('sigStatus').style.display = 'none';
-}
-function saveSig() {
-  savedSig = sigCanvas.toDataURL('image/png');
-  document.getElementById('sigStatus').style.display = 'block';
-  toast('✅ Firma guardada — pulsa Guardar para sincronizar');
-}
-
-// ── HELPERS PDF ───────────────────────────────────────────────────────────────
-function getImgFormat(dataUrl) {
-  if (dataUrl.indexOf('data:image/png')  === 0) return 'PNG';
-  if (dataUrl.indexOf('data:image/gif')  === 0) return 'GIF';
-  if (dataUrl.indexOf('data:image/webp') === 0) return 'WEBP';
-  return 'JPEG';
-}
-function loadImage(src) {
-  return new Promise(function(resolve, reject) {
-    var img = new Image();
-    var timer = setTimeout(function() { reject(new Error('Timeout')); }, 20000);
-    img.onload  = function() { clearTimeout(timer); resolve(img); };
-    img.onerror = function() { clearTimeout(timer); reject(new Error('Error imagen')); };
-    img.src = src;
-  });
-}
-function fitToPage(iw, ih, maxW, maxH) {
-  var ratio = Math.min(maxW / iw, maxH / ih);
-  return { w: iw * ratio, h: ih * ratio };
-}
-function sanitize(name) {
-  return (name || 'HAROSAT').replace(/[^\w\s\-]/g, '').trim().replace(/\s+/g, '_') || 'HAROSAT';
-}
-function fallbackDownload(blob, title) {
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = sanitize(title) + '.pdf';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
-}
+// ── PDF HELPERS ───────────────────────────────────────────────────────────────
+function getImgFormat(d){if(d.indexOf('data:image/png')===0)return'PNG';if(d.indexOf('data:image/gif')===0)return'GIF';return'JPEG';}
+function loadImage(src){return new Promise(function(res,rej){var img=new Image();var t=setTimeout(function(){rej(new Error('Timeout'));},20000);img.onload=function(){clearTimeout(t);res(img);};img.onerror=function(){clearTimeout(t);rej(new Error('Error imagen'));};img.src=src;});}
+function fitToPage(iw,ih,maxW,maxH){var r=Math.min(maxW/iw,maxH/ih);return{w:iw*r,h:ih*r};}
+function sanitize(n){return(n||'HAROSAT').replace(/[^\w\s\-]/g,'').trim().replace(/\s+/g,'_')||'HAROSAT';}
+function fallbackDownload(blob,title){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=sanitize(title)+'.pdf';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},4000);}
 
 // ── SINGLE PDF ────────────────────────────────────────────────────────────────
 async function downloadSinglePDF(i) {
-  if (busy) return; busy = true; showLoading('Generando PDF...');
+  if(busy)return; busy=true; showLoading('Generando PDF...');
   try {
-    var d = docs[i];
-    var jsPDF = window.jspdf.jsPDF;
-    var pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    var img = await loadImage(d.dataUrl);
-    var fit = fitToPage(img.naturalWidth || img.width, img.naturalHeight || img.height, 190, 270);
-    pdf.addImage(d.dataUrl, getImgFormat(d.dataUrl), (210 - fit.w) / 2, (297 - fit.h) / 2, fit.w, fit.h);
-    pdf.save(sanitize(d.name) + '.pdf');
-    toast('📥 PDF descargado');
-  } catch(e) { toast('❌ ' + e.message); }
-  finally { busy = false; hideLoading(); }
+    var d=docs[i]; var jsPDF=window.jspdf.jsPDF;
+    var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    var img=await loadImage(d.dataUrl);
+    var fit=fitToPage(img.naturalWidth||img.width,img.naturalHeight||img.height,190,270);
+    pdf.addImage(d.dataUrl,getImgFormat(d.dataUrl),(210-fit.w)/2,(297-fit.h)/2,fit.w,fit.h);
+    pdf.save(sanitize(d.name)+'.pdf'); toast('📥 PDF descargado');
+  } catch(e){toast('❌ '+e.message);}
+  finally{busy=false;hideLoading();}
 }
 
 // ── COMBINED PDF ──────────────────────────────────────────────────────────────
 async function generateCombinedPDF(returnBlob) {
-  if (busy) return null;
-  if (docs.length === 0) { toast('⚠️ Añade al menos un documento'); return null; }
-  busy = true; showLoading('Generando PDF combinado...');
+  if(busy)return null;
+  if(docs.length===0){toast('⚠️ Añade al menos un documento');return null;}
+  busy=true; showLoading('Generando PDF combinado...');
   try {
-    var jsPDF  = window.jspdf.jsPDF;
-    var pdf    = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    var titulo = (document.getElementById('pdfTitle').value || '').trim() || 'Documentos HAROSAT';
-    var notas  = (document.getElementById('pdfNotes').value  || '').trim();
-
+    var jsPDF=window.jspdf.jsPDF;
+    var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    var titulo=(document.getElementById('pdfTitle').value||'').trim()||'Documentos HAROSAT';
+    var notas=(document.getElementById('pdfNotes').value||'').trim();
     // Portada
-    pdf.setFillColor(26,26,46); pdf.rect(0,0,210,297,'F');
-    pdf.setFillColor(59,138,199); pdf.rect(0,0,210,6,'F'); pdf.rect(0,291,210,6,'F');
-    pdf.setTextColor(253,185,19); pdf.setFontSize(28); pdf.setFont('helvetica','bold');
-    pdf.text('HAROSAT', 105, 102, { align: 'center' });
-    pdf.setTextColor(255,255,255); pdf.setFontSize(15);
-    pdf.text(titulo, 105, 118, { align: 'center', maxWidth: 170 });
-    pdf.setFontSize(10); pdf.setTextColor(136,153,170);
-    pdf.text(new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' }), 105, 134, { align:'center' });
-    var nd = docs.length;
-    pdf.text(String(nd) + (nd === 1 ? ' documento' : ' documentos'), 105, 143, { align: 'center' });
-
-    if (notas) {
-      pdf.setFillColor(15,52,96); pdf.roundedRect(20,156,170,52,4,4,'F');
-      pdf.setTextColor(224,224,224); pdf.setFont('helvetica','normal'); pdf.setFontSize(9);
-      pdf.text('Notas:', 28, 168);
-      var lines = pdf.splitTextToSize(notas, 154);
-      var show = [];
-      for (var n = 0; n < Math.min(lines.length, 5); n++) { show.push(lines[n]); }
-      pdf.text(show, 28, 176);
+    pdf.setFillColor(26,26,46);pdf.rect(0,0,210,297,'F');
+    pdf.setFillColor(59,138,199);pdf.rect(0,0,210,6,'F');pdf.rect(0,291,210,6,'F');
+    pdf.setTextColor(253,185,19);pdf.setFontSize(28);pdf.setFont('helvetica','bold');
+    pdf.text('HAROSAT',105,102,{align:'center'});
+    pdf.setTextColor(255,255,255);pdf.setFontSize(15);
+    pdf.text(titulo,105,118,{align:'center',maxWidth:170});
+    pdf.setFontSize(10);pdf.setTextColor(136,153,170);
+    pdf.text(new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'}),105,134,{align:'center'});
+    var nd=docs.length;
+    pdf.text(String(nd)+(nd===1?' documento':' documentos'),105,143,{align:'center'});
+    if(notas){
+      pdf.setFillColor(15,52,96);pdf.roundedRect(20,156,170,52,4,4,'F');
+      pdf.setTextColor(224,224,224);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+      pdf.text('Notas:',28,168);
+      var lines=pdf.splitTextToSize(notas,154); var show=[];
+      for(var n=0;n<Math.min(lines.length,5);n++){show.push(lines[n]);}
+      pdf.text(show,28,176);
     }
-    if (savedSig) {
-      pdf.setTextColor(136,153,170); pdf.setFontSize(8); pdf.text('Firma:', 28, 238);
-      pdf.addImage(savedSig, 'PNG', 28, 242, 60, 20);
-      pdf.setDrawColor(59,138,199); pdf.setLineWidth(0.3); pdf.line(28,263,90,263);
+    if(savedSig){
+      pdf.setTextColor(136,153,170);pdf.setFontSize(8);pdf.text('Firma:',28,238);
+      pdf.addImage(savedSig,'PNG',28,242,60,20);
+      pdf.setDrawColor(59,138,199);pdf.setLineWidth(0.3);pdf.line(28,263,90,263);
     }
-    pdf.setTextColor(136,153,170); pdf.setFontSize(7);
-    pdf.text('HAROSAT Ecotecnica · Haro, La Rioja', 105, 284, { align: 'center' });
-
+    pdf.setTextColor(136,153,170);pdf.setFontSize(7);
+    pdf.text('HAROSAT Ecotecnica · Haro, La Rioja',105,284,{align:'center'});
     // Paginas
-    for (var i = 0; i < docs.length; i++) {
-      var d = docs[i];
-      pdf.addPage();
-      pdf.setFillColor(22,33,62); pdf.rect(0,0,210,14,'F');
-      pdf.setFillColor(59,138,199); pdf.rect(0,0,5,14,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(9); pdf.setFont('helvetica','bold');
-      pdf.text(String(i+1) + '. ' + d.name, 10, 9);
-      pdf.setFont('helvetica','normal'); pdf.setFontSize(7); pdf.setTextColor(136,153,170);
-      pdf.text(d.date, 200, 9, { align: 'right' });
-      var di = await loadImage(d.dataUrl);
-      var fit = fitToPage(di.naturalWidth || di.width, di.naturalHeight || di.height, 186, 265);
-      pdf.addImage(d.dataUrl, getImgFormat(d.dataUrl), (210 - fit.w) / 2, 18, fit.w, fit.h);
-      pdf.setFillColor(26,26,46); pdf.rect(0,289,210,8,'F');
-      pdf.setTextColor(100,100,120); pdf.setFontSize(7);
-      pdf.text('Pagina ' + String(i+2), 105, 294, { align: 'center' });
+    for(var i=0;i<docs.length;i++){
+      var d=docs[i]; pdf.addPage();
+      pdf.setFillColor(22,33,62);pdf.rect(0,0,210,14,'F');
+      pdf.setFillColor(59,138,199);pdf.rect(0,0,5,14,'F');
+      pdf.setTextColor(255,255,255);pdf.setFontSize(9);pdf.setFont('helvetica','bold');
+      pdf.text(String(i+1)+'. '+d.name,10,9);
+      pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.setTextColor(136,153,170);
+      pdf.text(d.date,200,9,{align:'right'});
+      var di=await loadImage(d.dataUrl);
+      var fit=fitToPage(di.naturalWidth||di.width,di.naturalHeight||di.height,186,265);
+      pdf.addImage(d.dataUrl,getImgFormat(d.dataUrl),(210-fit.w)/2,18,fit.w,fit.h);
+      pdf.setFillColor(26,26,46);pdf.rect(0,289,210,8,'F');
+      pdf.setTextColor(100,100,120);pdf.setFontSize(7);
+      pdf.text('Pagina '+String(i+2),105,294,{align:'center'});
     }
-
-    if (returnBlob) { var blob = pdf.output('blob'); busy = false; hideLoading(); return blob; }
-    pdf.save(sanitize(titulo) + '.pdf');
-    toast('✅ PDF combinado generado');
-    busy = false; hideLoading(); return null;
-  } catch(e) {
-    toast('❌ Error: ' + e.message);
-    busy = false; hideLoading(); return null;
-  }
+    if(returnBlob){var blob=pdf.output('blob');busy=false;hideLoading();return blob;}
+    pdf.save(sanitize(titulo)+'.pdf'); toast('✅ PDF combinado generado');
+    busy=false;hideLoading();return null;
+  } catch(e){toast('❌ '+e.message);busy=false;hideLoading();return null;}
 }
 
 // ── PRINT ─────────────────────────────────────────────────────────────────────
-async function doPrint() {
-  if (busy) return;
-  if (docs.length === 0) { toast('⚠️ Añade al menos un documento'); return; }
-  var blob = await generateCombinedPDF(true);
-  if (!blob) return;
-  window.open(URL.createObjectURL(blob), '_blank');
+async function doPrint(){
+  if(busy)return;if(docs.length===0){toast('⚠️ Añade al menos un documento');return;}
+  var blob=await generateCombinedPDF(true);if(!blob)return;
+  window.open(URL.createObjectURL(blob),'_blank');
   toast('🖨️ Abre el PDF y usa Compartir → Imprimir');
 }
 
 // ── WHATSAPP ──────────────────────────────────────────────────────────────────
-async function shareWhatsApp() {
-  if (busy) return;
-  if (docs.length === 0) { toast('⚠️ Añade al menos un documento'); return; }
-  var blob = await generateCombinedPDF(true);
-  if (!blob) return;
-  var titulo = (document.getElementById('pdfTitle').value || '').trim() || 'Documentos HAROSAT';
-  var file = new File([blob], sanitize(titulo) + '.pdf', { type: 'application/pdf' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: titulo, text: titulo + ' — HAROSAT' }); return; }
-    catch(e) { if (e.name === 'AbortError') return; }
+async function shareWhatsApp(){
+  if(busy)return;if(docs.length===0){toast('⚠️ Añade al menos un documento');return;}
+  var blob=await generateCombinedPDF(true);if(!blob)return;
+  var titulo=(document.getElementById('pdfTitle').value||'').trim()||'Documentos HAROSAT';
+  var file=new File([blob],sanitize(titulo)+'.pdf',{type:'application/pdf'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:titulo,text:titulo+' — HAROSAT'});return;}
+    catch(e){if(e.name==='AbortError')return;}
   }
-  fallbackDownload(blob, titulo);
-  setTimeout(function() {
-    window.open('https://wa.me/?text=' + encodeURIComponent('Te envio: ' + titulo), '_blank');
-    toast('📥 PDF descargado. Adjuntalo en WhatsApp.');
-  }, 700);
+  fallbackDownload(blob,titulo);
+  setTimeout(function(){window.open('https://wa.me/?text='+encodeURIComponent('Te envio: '+titulo),'_blank');toast('📥 PDF descargado. Adjuntalo en WhatsApp.');},700);
 }
 
 // ── GMAIL ─────────────────────────────────────────────────────────────────────
-async function shareGmail() {
-  if (busy) return;
-  if (docs.length === 0) { toast('⚠️ Añade al menos un documento'); return; }
-  var blob = await generateCombinedPDF(true);
-  if (!blob) return;
-  var titulo = (document.getElementById('pdfTitle').value || '').trim() || 'Documentos HAROSAT';
-  var file = new File([blob], sanitize(titulo) + '.pdf', { type: 'application/pdf' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: titulo, text: 'Adjunto: ' + titulo }); return; }
-    catch(e) { if (e.name === 'AbortError') return; }
+async function shareGmail(){
+  if(busy)return;if(docs.length===0){toast('⚠️ Añade al menos un documento');return;}
+  var blob=await generateCombinedPDF(true);if(!blob)return;
+  var titulo=(document.getElementById('pdfTitle').value||'').trim()||'Documentos HAROSAT';
+  var file=new File([blob],sanitize(titulo)+'.pdf',{type:'application/pdf'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:titulo,text:'Adjunto: '+titulo});return;}
+    catch(e){if(e.name==='AbortError')return;}
   }
-  fallbackDownload(blob, titulo);
-  var subj = encodeURIComponent(titulo + ' — HAROSAT');
-  var body = encodeURIComponent('Adjunto: ' + titulo + '\n\nHAROSAT Ecotecnica · Haro, La Rioja');
-  setTimeout(function() {
-    window.open('https://mail.google.com/mail/?view=cm&fs=1&su=' + subj + '&body=' + body, '_blank');
-    toast('📥 PDF descargado. Adjuntalo en Gmail.');
-  }, 700);
+  fallbackDownload(blob,titulo);
+  var subj=encodeURIComponent(titulo+' — HAROSAT');
+  var body=encodeURIComponent('Adjunto: '+titulo+'\n\nHAROSAT Ecotecnica · Haro, La Rioja');
+  setTimeout(function(){window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+subj+'&body='+body,'_blank');toast('📥 PDF descargado. Adjuntalo en Gmail.');},700);
 }
 </script>
 
