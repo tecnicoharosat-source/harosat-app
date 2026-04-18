@@ -25,16 +25,16 @@
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek";
   const TABLA = "presupuestos";
 
-  // Ajusta estos nombres a los de tus columnas en Supabase
+  // Columnas reales de la tabla presupuestos
   const C = {
     id:          "id",
     numero:      "numero",
     cliente:     "cliente",
     telefono:    "telefono",
-    email:       "email",
+    email:       null,               // no existe en la tabla
     descripcion: "descripcion",
     total:       "total",
-    fecha:       "fecha",
+    fecha:       "fecha_emision",
     firmado:     "firmado",
     firma_img:   "firma_img",
   };
@@ -264,7 +264,7 @@
     if (!id) { mostrarError("Enlace no válido. Falta el ID del presupuesto."); return; }
 
     try {
-      const data = await sb("GET", `${TABLA}?${C.id}=eq.${id}`);
+      const data = await sb("GET", `${TABLA}?${C.id}=eq.${parseInt(id)}`);
       if (!data || data.length === 0) { mostrarError("Presupuesto no encontrado."); return; }
       presupuesto = data[0];
 
@@ -441,7 +441,7 @@
     const cuerpo = encodeURIComponent(
       `He firmado el presupuesto ${p[C.numero]}.\n\nTrabajo: ${p[C.descripcion]}\nImporte: ${fmt(p[C.total])}\n\nHAROSAT Ecotechnical`
     );
-    window.open(`https://mail.google.com/mail/?view=cm&to=${p[C.email] || ""}&su=${asunto}&body=${cuerpo}`, "_blank");
+    window.open(`https://mail.google.com/mail/?view=cm&to=${p[C.email] || p[C.telefono] || ""}&su=${asunto}&body=${cuerpo}`, "_blank");
   }
 
   // ── Arrancar ───────────────────────────────────────────────────────────
