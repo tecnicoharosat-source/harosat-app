@@ -1187,261 +1187,260 @@ function generarHtmlFirmado(p, firmaImg, timestamp) {
   var ivaVal = p.iva_pct===0?'—':fn(p.iva_importe||0)+' €';
   return '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Presupuesto Firmado '+esc(p.numero)+'</title>'+
   '<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">'+
-  '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Barlow,Arial,sans-serif;font-size:13px;color:#111;background:#fff}.page{max-width:210mm;margin:0 auto;padding:14mm}@media print{.nopr{display:none!important}@page{margin:0;size:A4}}.nopr{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:99}.pbtn{padding:9px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:18px}.cn{font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:800;color:#1e3a5f}.cs{font-size:11px;color:#f4a01c;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}.ci{font-size:11px;color:#6b7280;margin-top:8px;line-height:1.7}.dt h1{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;color:#1e3a5f;text-align:right;text-transform:uppercase}.dm{font-size:11px;color:#555;margin-top:5px;line-height:1.7;text-align:right}.dm strong{color:#111}.cls{background:#f8f9fa;border:1px solid #e5e7eb;border-radius:5px;padding:12px 16px;margin-bottom:18px}.cll{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px}.cln{font-size:15px;font-weight:700;color:#1e3a5f}.cla{font-size:12px;color:#374151;margin-top:3px}.clt{font-size:12px;color:#6b7280;margin-top:2px}table.tl{width:100%;border-collapse:collapse;margin-bottom:18px}table.tl thead tr{background:#1e3a5f}table.tl thead th{color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px 12px;text-align:left}table.tl thead th:nth-child(2){text-align:center}table.tl thead th:nth-child(3),table.tl thead th:nth-child(4){text-align:right}.tsec{display:flex;justify-content:flex-end;margin-bottom:18px}.tbox{width:280px;border:1px solid #e5e7eb;border-radius:5px;overflow:hidden}.tr_{display:flex;justify-content:space-between;padding:7px 13px;font-size:12px}.tr_:nth-child(odd){background:#f9fafb}.trf{background:#1e3a5f!important;color:#fff;font-size:14px;font-weight:700;padding:10px 13px;display:flex;justify-content:space-between}.firma-section{border:2px solid #1e3a5f;border-radius:8px;padding:16px;margin-bottom:18px}.firma-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.firma-badge{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}.firma-meta{font-size:11px;color:#6b7280;line-height:1.7}.firma-boxes{display:flex;gap:16px}.firma-box{flex:1}.firma-lbl{font-size:10px;font-weight:700;color:#374151;text-transform:uppercase;margin-bottom:6px}.firma-img-wrap{border:1px solid #e5e7eb;border-radius:6px;background:#fff;padding:8px;min-height:90px;display:flex;align-items:center;justify-content:center}.firma-img-wrap img{max-width:100%;max-height:80px}.firma-sello{border:1px solid #e5e7eb;border-radius:6px;background:#f9fafb;padding:8px;min-height:90px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6b7280;text-align:center}.foot{border-top:1px solid #e5e7eb;margin-top:20px;padding-top:8px;font-size:10px;color:#9ca3af;text-align:center;line-height:1.65}</style></head><body>'+
-
-‘<div class="nopr"><button class="pbtn" style="background:#1e3a5f;color:#fff" onclick="window.print()">🖨️ Imprimir / PDF</button><button class="pbtn" style="background:#f3f4f6;color:#374151" onclick="window.close()">✕ Cerrar</button></div>’+
-‘<div class="page">’+
-‘<div class="hdr"><div><div class="cn">HAROSAT</div><div class="cs">Ecotechnical</div><div class="ci">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja<br>Tel.: 640 05 64 84 · 616 68 49 79<br>harosatecnicos@gmail.com · C.I.F.: 09302345H</div></div>’+
-‘<div class="dt"><h1>Presupuesto Firmado</h1><div class="dm"><strong>Nº:</strong> ‘+esc(p.numero)+’<br><strong>Fecha:</strong> ‘+fd(p.fecha_emision)+’<br><strong>Firmado:</strong> ‘+timestamp+’</div></div></div>’+
-‘<div class="cls"><div class="cll">Cliente</div><div class="cln">’+esc(p.cliente)+’</div>’+(p.direccion?’<div class="cla">’+esc(p.direccion)+’</div>’:’’)+(p.telefono?’<div class="clt">Tel.: ‘+esc(p.telefono)+’</div>’:’’)+’</div>’+
-‘<table class="tl"><thead><tr><th style="width:58%">Descripción</th><th style="width:8%">Cant.</th><th style="width:17%">Precio unit.</th><th style="width:17%">Importe</th></tr></thead><tbody>’+filas+’</tbody></table>’+
-‘<div class="tsec"><div class="tbox"><div class="tr_"><span>Base imponible</span><span>’+fn(p.base_imponible||0)+’ €</span></div><div class="tr_"><span>’+ivaLbl+’</span><span>’+ivaVal+’</span></div><div class="trf"><span>TOTAL PRESUPUESTO</span><span style="color:#f4a01c">’+fn(p.total||0)+’ €</span></div></div></div>’+
-‘<div class="firma-section">’+
-‘<div class="firma-header"><div style="font-size:14px;font-weight:700;color:#1e3a5f">Documentación de Firma</div><div class="firma-badge">✅ ACEPTADO Y FIRMADO</div></div>’+
-‘<div class="firma-meta">Presupuesto aceptado y firmado digitalmente el <strong>’+timestamp+’</strong><br>’+
-‘Cliente: <strong>’+esc(p.cliente)+’</strong> | Importe total: <strong>’+fn(p.total||0)+’ €</strong></div>’+
-‘<div class="firma-boxes" style="margin-top:12px">’+
-‘<div class="firma-box"><div class="firma-lbl">Firma del cliente</div><div class="firma-img-wrap"><img src="'+firmaImg+'" alt="Firma"></div></div>’+
-‘<div class="firma-box"><div class="firma-lbl">Sello empresa</div><div class="firma-sello">HAROSAT Ecotechnical<br>NIF: 09302345H<br>Técnico autorizado</div></div>’+
-‘</div></div>’+
-‘<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>’+
-‘Según el RGPD, Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.</div>’+
-‘</div></body></html>’;
+  '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Barlow,Arial,sans-serif;font-size:13px;color:#111;background:#fff}.page{max-width:210mm;margin:0 auto;padding:14mm}@media print{.nopr{display:none!important}@page{margin:0;size:A4}}.nopr{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:99}.pbtn{padding:9px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:18px}.cn{font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:800;color:#1e3a5f}.cs{font-size:11px;color:#f4a01c;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}.ci{font-size:11px;color:#6b7280;margin-top:8px;line-height:1.7}.dt h1{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;color:#1e3a5f;text-align:right;text-transform:uppercase}.dm{font-size:11px;color:#555;margin-top:5px;line-height:1.7;text-align:right}.dm strong{color:#111}.cls{background:#f8f9fa;border:1px solid #e5e7eb;border-radius:5px;padding:12px 16px;margin-bottom:18px}.cll{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px}.cln{font-size:15px;font-weight:700;color:#1e3a5f}.cla{font-size:12px;color:#374151;margin-top:3px}.clt{font-size:12px;color:#6b7280;margin-top:2px}table.tl{width:100%;border-collapse:collapse;margin-bottom:18px}table.tl thead tr{background:#1e3a5f}table.tl thead th{color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px 12px;text-align:left}table.tl thead th:nth-child(2){text-align:center}table.tl thead th:nth-child(3),table.tl thead th:nth-child(4){text-align:right}.tsec{display:flex;justify-content:flex-end;margin-bottom:18px}.tbox{width:280px;border:1px solid #e5e7eb;border-radius:5px;overflow:hidden}.tr_{display:flex;justify-content:space-between;padding:7px 13px;font-size:12px}.tr_:nth-child(odd){background:#f9fafb}.trf{background:#1e3a5f!important;color:#fff;font-size:14px;font-weight:700;padding:10px 13px;display:flex;justify-content:space-between}.firma-section{border:2px solid #1e3a5f;border-radius:8px;padding:16px;margin-bottom:18px}.firma-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.firma-badge{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}.firma-meta{font-size:11px;color:#6b7280;line-height:1.7}.firma-boxes{display:flex;gap:16px}.firma-box{flex:1}.firma-lbl{font-size:10px;font-weight:700;color:#374151;text-transform:uppercase;margin-bottom:6px}.firma-img-wrap{border:1px solid #e5e7eb;border-radius:6px;background:#fff;padding:8px;min-height:90px;display:flex;align-items:center;justify-content:center}.firma-img-wrap img{max-width:100%;max-height:80px}.firma-sello{border:1px solid #e5e7eb;border-radius:6px;background:#f9fafb;padding:8px;min-height:90px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6b7280;text-align:center}.foot{border-top:1px solid #e5e7eb;margin-top:20px;padding-top:8px;font-size:10px;color:#9ca3af;text-align:center;line-height:1.65}<\/style><\/head><body>'+
+  '<div class="nopr"><button class="pbtn" style="background:#1e3a5f;color:#fff" onclick="window.print()">🖨️ Imprimir / PDF</button><button class="pbtn" style="background:#f3f4f6;color:#374151" onclick="window.close()">✕ Cerrar</button></div>'+
+  '<div class="page">'+
+  '<div class="hdr"><div><div class="cn">HAROSAT</div><div class="cs">Ecotechnical</div><div class="ci">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja<br>Tel.: 640 05 64 84 · 616 68 49 79<br>harosatecnicos@gmail.com · C.I.F.: 09302345H</div></div>'+
+  '<div class="dt"><h1>Presupuesto Firmado</h1><div class="dm"><strong>Nº:</strong> '+esc(p.numero)+'<br><strong>Fecha:</strong> '+fd(p.fecha_emision)+'<br><strong>Firmado:</strong> '+timestamp+'</div></div></div>'+
+  '<div class="cls"><div class="cll">Cliente</div><div class="cln">'+esc(p.cliente)+'</div>'+(p.direccion?'<div class="cla">'+esc(p.direccion)+'</div>':'')+(p.telefono?'<div class="clt">Tel.: '+esc(p.telefono)+'</div>':'')+'</div>'+
+  '<table class="tl"><thead><tr><th style="width:58%">Descripción</th><th style="width:8%">Cant.</th><th style="width:17%">Precio unit.</th><th style="width:17%">Importe</th></tr></thead><tbody>'+filas+'</tbody></table>'+
+  '<div class="tsec"><div class="tbox"><div class="tr_"><span>Base imponible</span><span>'+fn(p.base_imponible||0)+' €</span></div><div class="tr_"><span>'+ivaLbl+'</span><span>'+ivaVal+'</span></div><div class="trf"><span>TOTAL PRESUPUESTO</span><span style="color:#f4a01c">'+fn(p.total||0)+' €</span></div></div></div>'+
+  '<div class="firma-section">'+
+  '<div class="firma-header"><div style="font-size:14px;font-weight:700;color:#1e3a5f">Documentación de Firma</div><div class="firma-badge">✅ ACEPTADO Y FIRMADO</div></div>'+
+  '<div class="firma-meta">Presupuesto aceptado y firmado digitalmente el <strong>'+timestamp+'</strong><br>'+
+  'Cliente: <strong>'+esc(p.cliente)+'</strong> | Importe total: <strong>'+fn(p.total||0)+' €</strong></div>'+
+  '<div class="firma-boxes" style="margin-top:12px">'+
+  '<div class="firma-box"><div class="firma-lbl">Firma del cliente</div><div class="firma-img-wrap"><img src="'+firmaImg+'" alt="Firma"></div></div>'+
+  '<div class="firma-box"><div class="firma-lbl">Sello empresa</div><div class="firma-sello">HAROSAT Ecotechnical<br>NIF: 09302345H<br>Técnico autorizado</div></div>'+
+  '</div></div>'+
+  '<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>'+
+  'Según el RGPD, Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.</div>'+
+  '<\/div><\/body><\/html>';
 }
 
 // Close modals on bg click
-document.getElementById(‘modal-p’).addEventListener(‘click’,function(e){if(e.target===this)closeModalP();});
-document.getElementById(‘modal-t’).addEventListener(‘click’,function(e){if(e.target===this)closeModalT();});
-document.getElementById(‘firma-overlay’).addEventListener(‘click’,function(e){if(e.target===this)cerrarFirma();});
+document.getElementById('modal-p').addEventListener('click',function(e){if(e.target===this)closeModalP();});
+document.getElementById('modal-t').addEventListener('click',function(e){if(e.target===this)closeModalT();});
+document.getElementById('firma-overlay').addEventListener('click',function(e){if(e.target===this)cerrarFirma();});
 
 // ═══════════════════════════════════════
 // PDF
 // ═══════════════════════════════════════
 function genPDF(id) {
-var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
-var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc||l.price;});
-var win=window.open(’’,’_blank’);
-if(!win){toast(‘Permite ventanas emergentes para imprimir’,‘err’);return;}
+  var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
+  var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc||l.price;});
+  var win=window.open('','_blank');
+  if(!win){toast('Permite ventanas emergentes para imprimir','err');return;}
 
-var filas=’’;
-var i;
-for(i=0;i<ls.length;i++){
-var l=ls[i];
-filas+=’<tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;line-height:1.5;vertical-align:top">’+esc(l.desc)+’</td>’+
-‘<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:center;vertical-align:top">’+l.qty+’</td>’+
-‘<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:right;vertical-align:top">’+fn(l.price)+’ €</td>’+
-‘<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:right;vertical-align:top;font-weight:600">’+fn((l.qty||0)*(l.price||0))+’ €</td></tr>’;
-}
+  var filas='';
+  var i;
+  for(i=0;i<ls.length;i++){
+    var l=ls[i];
+    filas+='<tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;line-height:1.5;vertical-align:top">'+esc(l.desc)+'</td>'+
+    '<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:center;vertical-align:top">'+l.qty+'</td>'+
+    '<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:right;vertical-align:top">'+fn(l.price)+' €</td>'+
+    '<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:right;vertical-align:top;font-weight:600">'+fn((l.qty||0)*(l.price||0))+' €</td></tr>';
+  }
 
-var ivaLbl=p.iva_pct===0?‘IVA NO INCLUIDO’:‘IVA (’+p.iva_pct+’%)’;
-var ivaVal=p.iva_pct===0?’—’:fn(p.iva_importe||0)+’ €’;
+  var ivaLbl=p.iva_pct===0?'IVA NO INCLUIDO':'IVA ('+p.iva_pct+'%)';
+  var ivaVal=p.iva_pct===0?'—':fn(p.iva_importe||0)+' €';
 
-var notaTecnica=’<div class="nota"><span class="nota-n">2.</span><div><strong>NOTA TÉCNICA SOBRE EL SISTEMA DE EVACUACIÓN DE PRODUCTOS DE COMBUSTIÓN:</strong><br>Se procederá a la reutilización del conducto de evacuación de humos existente para la conexión de la nueva caldera, tras verificación visual de su estado. El usuario, mediante la aceptación del presente presupuesto, manifiesta su conocimiento y conformidad expresa con esta circunstancia. La adecuación previa, el estado de conservación, la estanqueidad y el cumplimiento normativo del sistema de evacuación preexistente son responsabilidad exclusiva del titular de la instalación. En consecuencia, HAROSAT ECOTECHNICAL queda exonerada de cualquier responsabilidad derivada de defectos, deterioros, fugas o incumplimientos normativos del conducto de humos reutilizado, así como de las consecuencias que de ello pudieran derivarse.</div></div>’;
+  var notaTecnica='<div class="nota"><span class="nota-n">2.</span><div><strong>NOTA TÉCNICA SOBRE EL SISTEMA DE EVACUACIÓN DE PRODUCTOS DE COMBUSTIÓN:</strong><br>Se procederá a la reutilización del conducto de evacuación de humos existente para la conexión de la nueva caldera, tras verificación visual de su estado. El usuario, mediante la aceptación del presente presupuesto, manifiesta su conocimiento y conformidad expresa con esta circunstancia. La adecuación previa, el estado de conservación, la estanqueidad y el cumplimiento normativo del sistema de evacuación preexistente son responsabilidad exclusiva del titular de la instalación. En consecuencia, HAROSAT ECOTECHNICAL queda exonerada de cualquier responsabilidad derivada de defectos, deterioros, fugas o incumplimientos normativos del conducto de humos reutilizado, así como de las consecuencias que de ello pudieran derivarse.</div></div>';
 
-var banner=’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’;
+  var banner='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';
 
-var html=’<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Presupuesto ‘+esc(p.numero)+’</title>’+
-‘<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">’+
-‘<style>’+
-‘*{margin:0;padding:0;box-sizing:border-box}’+
-‘body{font-family:Barlow,Arial,sans-serif;font-size:13px;color:#111;background:#fff}’+
-‘.page{max-width:210mm;margin:0 auto;padding:14mm 14mm}’+
-‘@media print{body{margin:0}.page{padding:10mm 13mm;max-width:100%}@page{margin:0;size:A4}.nopr{display:none!important}’+
-‘.page-break{page-break-before:always}}’+
-‘.nopr{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:99}’+
-‘.pbtn{padding:9px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}’+
-‘.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:18px}’+
-‘.cn{font-family:“Barlow Condensed”,sans-serif;font-size:30px;font-weight:800;color:#1e3a5f}’+
-‘.cs{font-size:11px;color:#f4a01c;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}’+
-‘.ci{font-size:11px;color:#6b7280;margin-top:8px;line-height:1.7}’+
-‘.dt h1{font-family:“Barlow Condensed”,sans-serif;font-size:24px;font-weight:800;color:#1e3a5f;text-align:right;text-transform:uppercase}’+
-‘.dm{font-size:11px;color:#555;margin-top:5px;line-height:1.7;text-align:right}.dm strong{color:#111}’+
-‘.cls{background:#f8f9fa;border:1px solid #e5e7eb;border-radius:5px;padding:12px 16px;margin-bottom:18px}’+
-‘.cll{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px}’+
-‘.cln{font-size:15px;font-weight:700;color:#1e3a5f}.cla{font-size:12px;color:#374151;margin-top:3px}.clt{font-size:12px;color:#6b7280;margin-top:2px}’+
-‘table.tl{width:100%;border-collapse:collapse;margin-bottom:18px}’+
-‘table.tl thead tr{background:#1e3a5f}’+
-‘table.tl thead th{color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px 12px;text-align:left}’+
-‘table.tl thead th:nth-child(2){text-align:center}table.tl thead th:nth-child(3),table.tl thead th:nth-child(4){text-align:right}’+
-‘.tsec{display:flex;justify-content:flex-end;margin-bottom:18px}’+
-‘.tbox{width:280px;border:1px solid #e5e7eb;border-radius:5px;overflow:hidden}’+
-‘.tr_{display:flex;justify-content:space-between;padding:7px 13px;font-size:12px}’+
-‘.tr_:nth-child(odd){background:#f9fafb}’+
-‘.trf{background:#1e3a5f!important;color:#fff;font-size:14px;font-weight:700;padding:10px 13px;display:flex;justify-content:space-between}’+
-‘.psec{border:1px solid #e5e7eb;border-radius:5px;padding:11px 16px;margin-bottom:16px}’+
-‘.ptit{font-size:11px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}’+
-‘.pitems{display:flex;gap:8px}’+
-‘.pi{flex:1;background:#f0f4ff;border-radius:4px;padding:8px;text-align:center}’+
-‘.ppc{font-size:18px;font-weight:800;color:#1e3a5f;font-family:“Barlow Condensed”,sans-serif}’+
-‘.pdc{font-size:10px;color:#6b7280;margin-top:2px}’+
-‘.obs-box{border:1px solid #e5e7eb;border-radius:5px;padding:11px 16px;margin-bottom:14px}’+
-‘.obs-tit{font-size:10px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}’+
-‘.obs-item{font-size:11px;color:#374151;line-height:1.65;padding:2px 0}’+
-‘.notas-box{margin-bottom:14px}’+
-‘.notas-tit{font-size:10px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}’+
-‘.nota{display:flex;gap:8px;margin-bottom:10px;font-size:11px;color:#374151;line-height:1.65}’+
-‘.nota-n{font-weight:700;flex-shrink:0;min-width:14px}’+
-‘.foot{border-top:1px solid #e5e7eb;margin-top:20px;padding-top:8px;font-size:10px;color:#9ca3af;text-align:center;line-height:1.65}’+
-‘.p2-hdr{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1e3a5f;padding-bottom:10px;margin-bottom:20px}’+
-‘.p2-logo{font-family:“Barlow Condensed”,sans-serif;font-size:20px;font-weight:800;color:#1e3a5f}’+
-‘.p2-info{font-size:10px;color:#555;text-align:right;line-height:1.6}’+
-‘.firmas{display:flex;justify-content:space-between;gap:30px;margin-bottom:30px}’+
-‘.fbox{flex:1;border:1px solid #d1d5db;border-radius:5px;padding:12px 14px;min-height:100px}’+
-‘.flbl{font-size:10px;font-weight:700;color:#374151;text-transform:uppercase;margin-bottom:6px}’+
-‘.finfo{font-size:11px;color:#9ca3af;margin-top:8px}’+
-‘.banner-img{width:100%;border-radius:6px;display:block}’+
-‘</style></head><body>’+
+  var html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Presupuesto '+esc(p.numero)+'</title>'+
+  '<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">'+
+  '<'+'style>'+
+  '*{margin:0;padding:0;box-sizing:border-box}'+
+  'body{font-family:Barlow,Arial,sans-serif;font-size:13px;color:#111;background:#fff}'+
+  '.page{max-width:210mm;margin:0 auto;padding:14mm 14mm}'+
+  '@media print{body{margin:0}.page{padding:10mm 13mm;max-width:100%}@page{margin:0;size:A4}.nopr{display:none!important}'+
+  '.page-break{page-break-before:always}}'+
+  '.nopr{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:99}'+
+  '.pbtn{padding:9px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}'+
+  '.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:18px}'+
+  '.cn{font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:800;color:#1e3a5f}'+
+  '.cs{font-size:11px;color:#f4a01c;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}'+
+  '.ci{font-size:11px;color:#6b7280;margin-top:8px;line-height:1.7}'+
+  '.dt h1{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;color:#1e3a5f;text-align:right;text-transform:uppercase}'+
+  '.dm{font-size:11px;color:#555;margin-top:5px;line-height:1.7;text-align:right}.dm strong{color:#111}'+
+  '.cls{background:#f8f9fa;border:1px solid #e5e7eb;border-radius:5px;padding:12px 16px;margin-bottom:18px}'+
+  '.cll{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:6px}'+
+  '.cln{font-size:15px;font-weight:700;color:#1e3a5f}.cla{font-size:12px;color:#374151;margin-top:3px}.clt{font-size:12px;color:#6b7280;margin-top:2px}'+
+  'table.tl{width:100%;border-collapse:collapse;margin-bottom:18px}'+
+  'table.tl thead tr{background:#1e3a5f}'+
+  'table.tl thead th{color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px 12px;text-align:left}'+
+  'table.tl thead th:nth-child(2){text-align:center}table.tl thead th:nth-child(3),table.tl thead th:nth-child(4){text-align:right}'+
+  '.tsec{display:flex;justify-content:flex-end;margin-bottom:18px}'+
+  '.tbox{width:280px;border:1px solid #e5e7eb;border-radius:5px;overflow:hidden}'+
+  '.tr_{display:flex;justify-content:space-between;padding:7px 13px;font-size:12px}'+
+  '.tr_:nth-child(odd){background:#f9fafb}'+
+  '.trf{background:#1e3a5f!important;color:#fff;font-size:14px;font-weight:700;padding:10px 13px;display:flex;justify-content:space-between}'+
+  '.psec{border:1px solid #e5e7eb;border-radius:5px;padding:11px 16px;margin-bottom:16px}'+
+  '.ptit{font-size:11px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}'+
+  '.pitems{display:flex;gap:8px}'+
+  '.pi{flex:1;background:#f0f4ff;border-radius:4px;padding:8px;text-align:center}'+
+  '.ppc{font-size:18px;font-weight:800;color:#1e3a5f;font-family:"Barlow Condensed",sans-serif}'+
+  '.pdc{font-size:10px;color:#6b7280;margin-top:2px}'+
+  '.obs-box{border:1px solid #e5e7eb;border-radius:5px;padding:11px 16px;margin-bottom:14px}'+
+  '.obs-tit{font-size:10px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}'+
+  '.obs-item{font-size:11px;color:#374151;line-height:1.65;padding:2px 0}'+
+  '.notas-box{margin-bottom:14px}'+
+  '.notas-tit{font-size:10px;font-weight:700;color:#1e3a5f;text-transform:uppercase;margin-bottom:8px}'+
+  '.nota{display:flex;gap:8px;margin-bottom:10px;font-size:11px;color:#374151;line-height:1.65}'+
+  '.nota-n{font-weight:700;flex-shrink:0;min-width:14px}'+
+  '.foot{border-top:1px solid #e5e7eb;margin-top:20px;padding-top:8px;font-size:10px;color:#9ca3af;text-align:center;line-height:1.65}'+
+  '.p2-hdr{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1e3a5f;padding-bottom:10px;margin-bottom:20px}'+
+  '.p2-logo{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:800;color:#1e3a5f}'+
+  '.p2-info{font-size:10px;color:#555;text-align:right;line-height:1.6}'+
+  '.firmas{display:flex;justify-content:space-between;gap:30px;margin-bottom:30px}'+
+  '.fbox{flex:1;border:1px solid #d1d5db;border-radius:5px;padding:12px 14px;min-height:100px}'+
+  '.flbl{font-size:10px;font-weight:700;color:#374151;text-transform:uppercase;margin-bottom:6px}'+
+  '.finfo{font-size:11px;color:#9ca3af;margin-top:8px}'+
+  '.banner-img{width:100%;border-radius:6px;display:block}'+
+  '<\/style><\/head><body>'+
 
-‘<div class="nopr">’+
-‘<button class="pbtn" style="background:#1e3a5f;color:#fff" onclick="window.print()">🖨️ Imprimir / PDF</button>’+
-‘<button class="pbtn" style="background:#25D366;color:#000" onclick="captureAndShare()">📱 Imagen WhatsApp</button>’+
-‘<button class="pbtn" style="background:#f3f4f6;color:#374151" onclick="window.close()">✕ Cerrar</button>’+
-‘</div>’+
+  '<div class="nopr">'+
+  '<button class="pbtn" style="background:#1e3a5f;color:#fff" onclick="window.print()">🖨️ Imprimir / PDF</button>'+
+  '<button class="pbtn" style="background:#25D366;color:#000" onclick="captureAndShare()">📱 Imagen WhatsApp</button>'+
+  '<button class="pbtn" style="background:#f3f4f6;color:#374151" onclick="window.close()">✕ Cerrar</button>'+
+  '</div>'+
 
-‘<div class="page" id="pagina1">’+
-‘<div class="hdr">’+
-‘<div><div class="cn">HAROSAT</div><div class="cs">Ecotechnical</div>’+
-‘<div class="ci">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja<br>Tel.: 640 05 64 84 · 616 68 49 79<br>harosatecnicos@gmail.com · C.I.F.: 09302345H</div></div>’+
-‘<div class="dt"><h1>Presupuesto</h1><div class="dm"><strong>Nº de Presupuesto:</strong> ‘+esc(p.numero)+’<br><strong>Fecha:</strong> ‘+fd(p.fecha_emision)+’<br><strong>Página:</strong> 1</div></div>’+
-‘</div>’+
+  '<div class="page" id="pagina1">'+
+  '<div class="hdr">'+
+  '<div><div class="cn">HAROSAT</div><div class="cs">Ecotechnical</div>'+
+  '<div class="ci">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja<br>Tel.: 640 05 64 84 · 616 68 49 79<br>harosatecnicos@gmail.com · C.I.F.: 09302345H</div></div>'+
+  '<div class="dt"><h1>Presupuesto</h1><div class="dm"><strong>Nº de Presupuesto:</strong> '+esc(p.numero)+'<br><strong>Fecha:</strong> '+fd(p.fecha_emision)+'<br><strong>Página:</strong> 1</div></div>'+
+  '</div>'+
 
-‘<div class="cls"><div class="cll">Cliente</div><div class="cln">’+esc(p.cliente)+’</div>’+
-(p.direccion?’<div class="cla">’+esc(p.direccion)+’</div>’:’’)+
-(p.telefono?’<div class="clt">Tel.: ‘+esc(p.telefono)+’</div>’:’’)+
-‘</div>’+
+  '<div class="cls"><div class="cll">Cliente</div><div class="cln">'+esc(p.cliente)+'</div>'+
+  (p.direccion?'<div class="cla">'+esc(p.direccion)+'</div>':'')+
+  (p.telefono?'<div class="clt">Tel.: '+esc(p.telefono)+'</div>':'')+
+  '</div>'+
 
-‘<table class="tl"><thead><tr>’+
-‘<th style="width:58%">Descripción</th><th style="width:8%">Cant.</th>’+
-‘<th style="width:17%">Precio unit.</th><th style="width:17%">Importe</th>’+
-‘</tr></thead><tbody>’+filas+’</tbody></table>’+
+  '<table class="tl"><thead><tr>'+
+  '<th style="width:58%">Descripción</th><th style="width:8%">Cant.</th>'+
+  '<th style="width:17%">Precio unit.</th><th style="width:17%">Importe</th>'+
+  '</tr></thead><tbody>'+filas+'</tbody></table>'+
 
-‘<div class="tsec"><div class="tbox">’+
-‘<div class="tr_"><span>Base imponible</span><span>’+fn(p.base_imponible||0)+’ €</span></div>’+
-‘<div class="tr_"><span>’+ivaLbl+’</span><span>’+ivaVal+’</span></div>’+
-‘<div class="trf"><span>TOTAL PRESUPUESTO</span><span style="color:#f4a01c">’+fn(p.total||0)+’ €</span></div>’+
-‘</div></div>’+
+  '<div class="tsec"><div class="tbox">'+
+  '<div class="tr_"><span>Base imponible</span><span>'+fn(p.base_imponible||0)+' €</span></div>'+
+  '<div class="tr_"><span>'+ivaLbl+'</span><span>'+ivaVal+'</span></div>'+
+  '<div class="trf"><span>TOTAL PRESUPUESTO</span><span style="color:#f4a01c">'+fn(p.total||0)+' €</span></div>'+
+  '</div></div>'+
 
-‘<div class="psec"><div class="ptit">Forma de Pago</div><div class="pitems">’+
-‘<div class="pi"><div class="ppc">60%</div><div class="pdc">Al realizar el pedido</div></div>’+
-‘<div class="pi"><div class="ppc">30%</div><div class="pdc">A mitad de la obra</div></div>’+
-‘<div class="pi"><div class="ppc">10%</div><div class="pdc">Al finalizar los trabajos</div></div>’+
-‘</div></div>’+
+  '<div class="psec"><div class="ptit">Forma de Pago</div><div class="pitems">'+
+  '<div class="pi"><div class="ppc">60%</div><div class="pdc">Al realizar el pedido</div></div>'+
+  '<div class="pi"><div class="ppc">30%</div><div class="pdc">A mitad de la obra</div></div>'+
+  '<div class="pi"><div class="ppc">10%</div><div class="pdc">Al finalizar los trabajos</div></div>'+
+  '</div></div>'+
 
-‘<div class="obs-box"><div class="obs-tit">Observaciones</div>’+
-‘<div class="obs-item">— Garantía de instalación: un año.</div>’+
-‘<div class="obs-item">— Garantía del equipo según fabricante.</div>’+
-‘<div class="obs-item">— Trabajos de albañilería y electricidad no incluidos.</div>’+
-(p.observaciones && p.observaciones.trim() ? ‘<div class="obs-item">— ‘+esc(p.observaciones.trim())+’</div>’ : ‘’)+
-‘</div>’+
+  '<div class="obs-box"><div class="obs-tit">Observaciones</div>'+
+  '<div class="obs-item">— Garantía de instalación: un año.</div>'+
+  '<div class="obs-item">— Garantía del equipo según fabricante.</div>'+
+  '<div class="obs-item">— Trabajos de albañilería y electricidad no incluidos.</div>'+
+  (p.observaciones && p.observaciones.trim() ? '<div class="obs-item">— '+esc(p.observaciones.trim())+'</div>' : '')+
+  '</div>'+
 
-‘<div class="notas-box"><div class="notas-tit">Notas</div>’+
-‘<div class="nota"><span class="nota-n">1.</span><div>Todos los materiales pertenecen a la empresa instaladora hasta que se realice el pago total de las cantidades recogidas en este presupuesto.</div></div>’+
-notaTecnica+
-‘</div>’+
+  '<div class="notas-box"><div class="notas-tit">Notas</div>'+
+  '<div class="nota"><span class="nota-n">1.</span><div>Todos los materiales pertenecen a la empresa instaladora hasta que se realice el pago total de las cantidades recogidas en este presupuesto.</div></div>'+
+  notaTecnica+
+  '</div>'+
 
-‘<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>’+
-‘Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.<br>’+
-‘Puede ejercer sus derechos dirigiéndose a nuestro domicilio fiscal o a tecnicoharosat@gmail.com</div>’+
-‘</div>’+
+  '<div class="foot">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>'+
+  'Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.<br>'+
+  'Puede ejercer sus derechos dirigiéndose a nuestro domicilio fiscal o a tecnicoharosat@gmail.com</div>'+
+  '</div>'+
 
-‘<div class="page page-break" id="pagina2">’+
-‘<div class="p2-hdr">’+
-‘<div class="p2-logo">HAROSAT ECOTECHNICAL</div>’+
-‘<div class="p2-info">Presupuesto ‘+esc(p.numero)+’ — ‘+fd(p.fecha_emision)+’ — Página 2<br>’+esc(p.cliente)+’</div>’+
-‘</div>’+
+  '<div class="page page-break" id="pagina2">'+
+  '<div class="p2-hdr">'+
+  '<div class="p2-logo">HAROSAT ECOTECHNICAL</div>'+
+  '<div class="p2-info">Presupuesto '+esc(p.numero)+' — '+fd(p.fecha_emision)+' — Página 2<br>'+esc(p.cliente)+'</div>'+
+  '</div>'+
 
-‘<div class="firmas">’+
-‘<div class="fbox"><div class="flbl">Sello de la empresa</div>’+
-‘<div class="finfo">NIF: 09302345H<br>HAROSAT Ecotechnical<br>Técnico instalador autorizado</div></div>’+
-‘<div class="fbox"><div class="flbl">Firma del cliente</div>’+
-‘<div class="finfo">DNI: ___________________<br>Cliente: ‘+esc(p.cliente)+’</div></div>’+
-‘</div>’+
+  '<div class="firmas">'+
+  '<div class="fbox"><div class="flbl">Sello de la empresa</div>'+
+  '<div class="finfo">NIF: 09302345H<br>HAROSAT Ecotechnical<br>Técnico instalador autorizado</div></div>'+
+  '<div class="fbox"><div class="flbl">Firma del cliente</div>'+
+  '<div class="finfo">DNI: ___________________<br>Cliente: '+esc(p.cliente)+'</div></div>'+
+  '</div>'+
 
-‘<img src="data:image/jpeg;base64,'+banner+'" class="banner-img" alt="HAROSAT Publicidad">’+
+  '<img src="data:image/jpeg;base64,'+banner+'" class="banner-img" alt="HAROSAT Publicidad">'+
 
-‘<div class="foot" style="margin-top:16px">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>’+
-‘Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.</div>’+
-‘</div>’+
+  '<div class="foot" style="margin-top:16px">Sta. Lucía, 66, BJ – 26200 Haro – La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>'+
+  'Según el Reglamento General de Protección de Datos (RGPD), Reglamento UE 2016/679, sus datos serán tratados con total confidencialidad.</div>'+
+  '</div>'+
 
-‘<scr’+‘ipt>function captureAndShare(){’+
-‘var el=document.getElementById(“pagina1”);’+
-‘var btn=document.querySelector(”.nopr”);btn.style.display=“none”;’+
-‘html2canvas(el,{scale:2,useCORS:true,backgroundColor:”#ffffff”}).then(function(canvas){’+
-‘btn.style.display=“flex”;’+
-‘var link=document.createElement(“a”);’+
-‘link.download=“Presupuesto_’+esc(p.numero).replace(///g,’_’)+’.png”;’+
-‘link.href=canvas.toDataURL(“image/png”);’+
-‘link.click();’+
-‘setTimeout(function(){window.open(“https://wa.me/”,”_blank”);},800);’+
-‘}).catch(function(){btn.style.display=“flex”;alert(“Error al capturar”);});’+
-‘}</script>’+
-‘<scr’+‘ipt src=“https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js”></script>’+
-‘</body></html>’;
+  '<scr'+'ipt>function captureAndShare(){'+
+  'var el=document.getElementById("pagina1");'+
+  'var btn=document.querySelector(".nopr");btn.style.display="none";'+
+  'html2canvas(el,{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(function(canvas){'+
+  'btn.style.display="flex";'+
+  'var link=document.createElement("a");'+
+  'link.download="Presupuesto_'+esc(p.numero).replace(/\//g,'_')+'.png";'+
+  'link.href=canvas.toDataURL("image/png");'+
+  'link.click();'+
+  'setTimeout(function(){window.open("https://wa.me/","_blank");},800);'+
+  '}).catch(function(){btn.style.display="flex";alert("Error al capturar");});'+
+  '}<\/script>'+
+  '<scr'+'ipt src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'+
+  '<\/body><\/html>';
 
-win.document.write(html);
-win.document.close();
-win.focus();
+  win.document.write(html);
+  win.document.close();
+  win.focus();
 }
 
 // ═══════════════════════════════════════
 // WHATSAPP
 // ═══════════════════════════════════════
 function shareWA(id){
-var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
-var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});
-var lineas=’’;
-var i;
-for(i=0;i<ls.length;i++){var l=ls[i];lineas+=’• ‘+l.desc+(l.qty!=1?’ (×’+l.qty+’)’:’’)+’ — ‘+fn((l.qty||0)*(l.price||0))+’ €\n’;}
-var txt=’*PRESUPUESTO ‘+p.numero+’ — HAROSAT ECOTECHNICAL*\n\n*Cliente:* ‘+p.cliente+’\n’+(p.direccion?’*Dirección:* ‘+p.direccion+’\n’:’’)+(p.telefono?’*Tel.:* ‘+p.telefono+’\n’:’’)+’*Fecha:* ‘+fd(p.fecha_emision)+’\n\n*DESCRIPCIÓN:*\n’+lineas+’\n*Base imponible:* ‘+fn(p.base_imponible||0)+’ €\n*IVA ‘+(p.iva_pct||21)+’%:* ‘+fn(p.iva_importe||0)+’ €\n*TOTAL: ‘+fn(p.total||0)+’ €*\n\n*Forma de pago:* 60% al pedido · 30% mitad obra · 10% al finalizar\n\n_HAROSAT Ecotechnical — Tel.: 640 05 64 84_\n_harosatecnicos@gmail.com_’;
-window.open(‘https://wa.me/?text=’+encodeURIComponent(txt),’_blank’);
+  var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
+  var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});
+  var lineas='';
+  var i;
+  for(i=0;i<ls.length;i++){var l=ls[i];lineas+='• '+l.desc+(l.qty!=1?' (×'+l.qty+')':'')+' — '+fn((l.qty||0)*(l.price||0))+' €\n';}
+  var txt='*PRESUPUESTO '+p.numero+' — HAROSAT ECOTECHNICAL*\n\n*Cliente:* '+p.cliente+'\n'+(p.direccion?'*Dirección:* '+p.direccion+'\n':'')+(p.telefono?'*Tel.:* '+p.telefono+'\n':'')+'*Fecha:* '+fd(p.fecha_emision)+'\n\n*DESCRIPCIÓN:*\n'+lineas+'\n*Base imponible:* '+fn(p.base_imponible||0)+' €\n*IVA '+(p.iva_pct||21)+'%:* '+fn(p.iva_importe||0)+' €\n*TOTAL: '+fn(p.total||0)+' €*\n\n*Forma de pago:* 60% al pedido · 30% mitad obra · 10% al finalizar\n\n_HAROSAT Ecotechnical — Tel.: 640 05 64 84_\n_harosatecnicos@gmail.com_';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
 
 // ═══════════════════════════════════════
 // EMAIL
 // ═══════════════════════════════════════
 function shareEmail(id){
-var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
-var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});
-var lineas=’’;
-var i;
-for(i=0;i<ls.length;i++){var l=ls[i];lineas+=’  • ‘+l.desc+(l.qty!=1?’ (×’+l.qty+’)’:’’)+’ — ‘+fn((l.qty||0)*(l.price||0))+’ €\n’;}
-var asunto=‘Presupuesto ‘+p.numero+’ — HAROSAT Ecotechnical’;
-var body=‘Estimado/a ‘+p.cliente+’,\n\nLe enviamos el presupuesto ‘+p.numero+’ de fecha ‘+fd(p.fecha_emision)+’.\n\nDESCRIPCIÓN DEL TRABAJO:\n’+lineas+’\n  Base imponible: ‘+fn(p.base_imponible||0)+’ €\n  IVA ‘+(p.iva_pct||21)+’%: ‘+fn(p.iva_importe||0)+’ €\n  TOTAL: ‘+fn(p.total||0)+’ €\n\nForma de pago: 60% al realizar el pedido, 30% a mitad de obra, 10% al finalizar.\n\nQuedamos a su disposición.\n\nUn saludo,\nJesús\nHAROSAT Ecotechnical\nTel.: 640 05 64 84 · 616 68 49 79\nharosatecnicos@gmail.com’;
-var gmailUrl=‘https://mail.google.com/mail/?view=cm&fs=1&su=’+encodeURIComponent(asunto)+’&body=’+encodeURIComponent(body);
-window.open(gmailUrl,’_blank’);
+  var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
+  var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});
+  var lineas='';
+  var i;
+  for(i=0;i<ls.length;i++){var l=ls[i];lineas+='  • '+l.desc+(l.qty!=1?' (×'+l.qty+')':'')+' — '+fn((l.qty||0)*(l.price||0))+' €\n';}
+  var asunto='Presupuesto '+p.numero+' — HAROSAT Ecotechnical';
+  var body='Estimado/a '+p.cliente+',\n\nLe enviamos el presupuesto '+p.numero+' de fecha '+fd(p.fecha_emision)+'.\n\nDESCRIPCIÓN DEL TRABAJO:\n'+lineas+'\n  Base imponible: '+fn(p.base_imponible||0)+' €\n  IVA '+(p.iva_pct||21)+'%: '+fn(p.iva_importe||0)+' €\n  TOTAL: '+fn(p.total||0)+' €\n\nForma de pago: 60% al realizar el pedido, 30% a mitad de obra, 10% al finalizar.\n\nQuedamos a su disposición.\n\nUn saludo,\nJesús\nHAROSAT Ecotechnical\nTel.: 640 05 64 84 · 616 68 49 79\nharosatecnicos@gmail.com';
+  var gmailUrl='https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(asunto)+'&body='+encodeURIComponent(body);
+  window.open(gmailUrl,'_blank');
 }
 
 // ═══════════════════════════════════════
 // EXPORTAR / IMPORTAR CSV
 // ═══════════════════════════════════════
 function exportCSV(){
-var data=PRES.filter(function(p){return inQ(p.fecha_emision,CUR_Q);});
-if(!data.length){toast(‘Sin datos en este período’,‘err’);return;}
-var cols=[‘Número’,‘Fecha Emisión’,‘Fecha Aceptación’,‘Estado’,‘Cliente’,‘Dirección’,‘Teléfono’,‘IVA %’,‘Base Imponible’,‘Cuota IVA’,‘Total’,‘Descripción’];
-var rows=[cols.map(function(c){return’”’+c+’”’;}).join(’;’)];
-data.forEach(function(p){rows.push([p.numero||’’,p.fecha_emision||’’,p.fecha_aceptacion||’’,p.estado||’’,p.cliente||’’,p.direccion||’’,p.telefono||’’,p.iva_pct||21,(p.base_imponible||0).toFixed(2),(p.iva_importe||0).toFixed(2),(p.total||0).toFixed(2),p.descripcion||’’].map(function(v){return’”’+String(v).replace(/”/g,’””’)+’”’;}).join(’;’));});
-var csv=’\uFEFF’+rows.join(’\r\n’);
-var a=document.createElement(‘a’);a.href=URL.createObjectURL(new Blob([csv],{type:‘text/csv;charset=utf-8;’}));a.download=‘HAROSAT_Presupuestos_’+CUR_Q+’_’+new Date().getFullYear()+’.csv’;a.click();
-toast(‘Exportado ✓’,‘ok’);
+  var data=PRES.filter(function(p){return inQ(p.fecha_emision,CUR_Q);});
+  if(!data.length){toast('Sin datos en este período','err');return;}
+  var cols=['Número','Fecha Emisión','Fecha Aceptación','Estado','Cliente','Dirección','Teléfono','IVA %','Base Imponible','Cuota IVA','Total','Descripción'];
+  var rows=[cols.map(function(c){return'"'+c+'"';}).join(';')];
+  data.forEach(function(p){rows.push([p.numero||'',p.fecha_emision||'',p.fecha_aceptacion||'',p.estado||'',p.cliente||'',p.direccion||'',p.telefono||'',p.iva_pct||21,(p.base_imponible||0).toFixed(2),(p.iva_importe||0).toFixed(2),(p.total||0).toFixed(2),p.descripcion||''].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(';'));});
+  var csv='\uFEFF'+rows.join('\r\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download='HAROSAT_Presupuestos_'+CUR_Q+'_'+new Date().getFullYear()+'.csv';a.click();
+  toast('Exportado ✓','ok');
 }
 function importCSV(e){
-var file=e.target.files[0];if(!file)return;
-var reader=new FileReader();
-reader.onload=function(ev){
-var lines=ev.target.result.split(/\r?\n/).filter(function(l){return l.trim();});
-if(lines.length<2){toast(‘Archivo vacío’,‘err’);return;}
-var hdr=parseLine(lines[0]);
-function idx(k){for(var i=0;i<hdr.length;i++){if(hdr[i].toLowerCase().indexOf(k)>=0)return i;}return -1;}
-var ni=idx(‘número’),ci=idx(‘cliente’),fi=idx(‘fecha emis’),bi=idx(‘base’),ii=idx(‘cuota’),ti=idx(‘total’),ei=idx(‘estado’),di=idx(‘descripci’),vi=idx(‘iva %’);
-var proms=[];
-for(var j=1;j<lines.length;j++){var c=parseLine(lines[j]);if(!c.length)continue;var cl=ci>=0?c[ci]:c[1];if(!cl)continue;
-proms.push(sbPost(‘presupuestos’,{numero:c[ni]||nextNum(),cliente:cl,fecha_emision:c[fi]||new Date().toISOString().split(‘T’)[0],estado:c[ei]||‘pendiente’,iva_pct:parseInt(c[vi])||21,base_imponible:parseFloat((c[bi]||‘0’).replace(’,’,’.’))||0,iva_importe:parseFloat((c[ii]||‘0’).replace(’,’,’.’))||0,total:parseFloat((c[ti]||‘0’).replace(’,’,’.’))||0,descripcion:c[di]||’’}).catch(function(){return null;}));}
-Promise.all(proms).then(function(res){var ok=res.filter(function(r){return r;}).length;loadP();toast(‘Importados: ‘+ok,‘ok’);});
-e.target.value=’’;
-};
-reader.readAsText(file,‘UTF-8’);
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var lines=ev.target.result.split(/\r?\n/).filter(function(l){return l.trim();});
+    if(lines.length<2){toast('Archivo vacío','err');return;}
+    var hdr=parseLine(lines[0]);
+    function idx(k){for(var i=0;i<hdr.length;i++){if(hdr[i].toLowerCase().indexOf(k)>=0)return i;}return -1;}
+    var ni=idx('número'),ci=idx('cliente'),fi=idx('fecha emis'),bi=idx('base'),ii=idx('cuota'),ti=idx('total'),ei=idx('estado'),di=idx('descripci'),vi=idx('iva %');
+    var proms=[];
+    for(var j=1;j<lines.length;j++){var c=parseLine(lines[j]);if(!c.length)continue;var cl=ci>=0?c[ci]:c[1];if(!cl)continue;
+      proms.push(sbPost('presupuestos',{numero:c[ni]||nextNum(),cliente:cl,fecha_emision:c[fi]||new Date().toISOString().split('T')[0],estado:c[ei]||'pendiente',iva_pct:parseInt(c[vi])||21,base_imponible:parseFloat((c[bi]||'0').replace(',','.'))||0,iva_importe:parseFloat((c[ii]||'0').replace(',','.'))||0,total:parseFloat((c[ti]||'0').replace(',','.'))||0,descripcion:c[di]||''}).catch(function(){return null;}));}
+    Promise.all(proms).then(function(res){var ok=res.filter(function(r){return r;}).length;loadP();toast('Importados: '+ok,'ok');});
+    e.target.value='';
+  };
+  reader.readAsText(file,'UTF-8');
 }
-function parseLine(l){var r=[],c=’’,q=false;for(var i=0;i<l.length;i++){var ch=l[i];if(ch===’”’){if(q&&l[i+1]===’”’){c+=’”’;i++;}else q=!q;}else if((ch===’,’||ch===’;’)&&!q){r.push(c.trim());c=’’;}else c+=ch;}r.push(c.trim());return r;}
+function parseLine(l){var r=[],c='',q=false;for(var i=0;i<l.length;i++){var ch=l[i];if(ch==='"'){if(q&&l[i+1]==='"'){c+='"';i++;}else q=!q;}else if((ch===','||ch===';')&&!q){r.push(c.trim());c='';}else c+=ch;}r.push(c.trim());return r;}
 </script>
 
 </body>
