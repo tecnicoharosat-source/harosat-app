@@ -263,7 +263,7 @@ function setSync(s, msg) {
 // ── CARGA ─────────────────────────────────────────────────────────────────────
 function cargar() {
   setSync('syncing', 'Cargando...');
-  sbGet('select=id,numero,cliente,telefono,email,descripcion,total,fecha_emision,estado_firma,firma_img,fecha_envio,fecha_firma&order=fecha_emision.desc&limit=200')
+  sbGet('select=id,numero,cliente,telefono,descripcion,total,fecha_emision,estado_firma,firma_img,fecha_envio,fecha_firma&order=fecha_emision.desc&limit=200')
     .then(function(d) {
       PRES = d || [];
       setSync('ok', 'Sincronizado');
