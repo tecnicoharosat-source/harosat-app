@@ -2,450 +2,499 @@
 
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Firmar Presupuesto · HAROSAT</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
-    * { font-family: 'Outfit', sans-serif; }
-    canvas { touch-action: none; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { animation: spin 0.8s linear infinite; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeIn 0.35s ease forwards; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT · Gestión de Firmas</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060910; --s1: #0d1117; --s2: #161b22; --s3: #21262d;
+  --border: #30363d; --blue: #1f6feb; --blue2: #388bfd;
+  --green: #3fb950; --red: #f85149; --orange: #d29922;
+  --gold: #e3b341; --purple: #a371f7; --text: #e6edf3;
+  --muted: #7d8590; --light: #b1bac4; --r: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* TOPBAR */
+.topbar { height: 52px; background: var(–s1); border-bottom: 1px solid var(–border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+.logo { font-weight: 800; font-size: 16px; letter-spacing: .08em; }
+.logo span { color: var(–blue2); }
+.logo small { font-weight: 300; color: var(–muted); font-size: 13px; margin-left: 6px; }
+.sync { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(–muted); background: var(–s2); border: 1px solid var(–border); padding: 5px 12px; border-radius: 20px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(–green); }
+.dot.syncing { background: var(–orange); animation: pulse 1s infinite; }
+.dot.error { background: var(–red); }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+
+/* CONTENT */
+.content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+/* KPI */
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+.kpi { background: var(–s1); border: 1px solid var(–border); border-radius: var(–r); padding: 16px 18px; position: relative; overflow: hidden; }
+.kpi-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(–muted); margin-bottom: 6px; }
+.kpi-val { font-size: 24px; font-weight: 800; font-family: ‘JetBrains Mono’, monospace; color: white; }
+
+/* FILTROS */
+.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.fbtn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(–border); background: var(–s2); color: var(–muted); transition: all .12s; white-space: nowrap; }
+.fbtn.active { background: var(–blue); color: white; border-color: var(–blue); }
+.fbtn:hover:not(.active) { color: var(–text); border-color: var(–blue2); }
+.search { flex: 1; min-width: 200px; background: var(–s2); border: 1px solid var(–border); color: var(–text); padding: 8px 14px; border-radius: 8px; font-family: ‘Outfit’, sans-serif; font-size: 13px; }
+.search:focus { outline: none; border-color: var(–blue); }
+.search::placeholder { color: var(–muted); }
+
+/* TABLA */
+.card { background: var(–s1); border: 1px solid var(–border); border-radius: var(–r); overflow: hidden; }
+.card-hdr { padding: 14px 18px; border-bottom: 1px solid var(–border); display: flex; justify-content: space-between; align-items: center; }
+.card-title { font-size: 13px; font-weight: 700; color: white; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(–muted); border-bottom: 1px solid var(–border); white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid rgba(48,54,61,.5); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.mono { font-family: ‘JetBrains Mono’, monospace; }
+.num { text-align: right; font-family: ‘JetBrains Mono’, monospace; }
+.empty { text-align: center; padding: 48px 20px; color: var(–muted); }
+
+/* BADGES */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.b-pendiente  { background: rgba(48,54,61,.6);    color: var(–muted); }
+.b-enviado    { background: rgba(56,139,253,.15); color: #79c0ff; }
+.b-firmado    { background: rgba(163,113,247,.15);color: var(–purple); }
+.b-aceptado   { background: rgba(63,185,80,.15);  color: var(–green); }
+.b-rechazado  { background: rgba(248,81,73,.15);  color: #ff7b72; }
+
+/* BOTONES ACCIÓN */
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 7px; font-family: ‘Outfit’, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all .12s; white-space: nowrap; }
+.btn-blue  { background: var(–blue); color: white; }
+.btn-blue:hover { background: var(–blue2); }
+.btn-ghost { background: var(–s2); color: var(–light); border: 1px solid var(–border); }
+.btn-ghost:hover { background: var(–s3); color: white; }
+.btn-green { background: var(–green); color: #000; }
+.btn-green:hover { opacity: .85; }
+.btn-red   { background: transparent; color: var(–red); border: 1px solid var(–red); }
+.btn-red:hover { background: var(–red); color: white; }
+.btn-wa    { background: #25D366; color: #000; }
+.btn-wa:hover { background: #1ebe5d; }
+.btn-sm { padding: 4px 10px; font-size: 11px; }
+.action-btn { background: none; border: none; cursor: pointer; padding: 4px 7px; border-radius: 5px; font-size: 13px; color: var(–muted); transition: all .1s; }
+.action-btn:hover { color: var(–blue2); background: rgba(56,139,253,.1); }
+
+/* MODAL ENVÍO */
+.overlay { visibility: hidden; opacity: 0; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 16px; transition: opacity .2s; }
+.overlay.open { visibility: visible; opacity: 1; }
+.modal { background: var(–s1); border: 1px solid var(–border); border-radius: 14px; padding: 24px; width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; }
+.modal-title { font-size: 17px; font-weight: 800; color: white; margin-bottom: 4px; }
+.modal-sub { font-size: 12px; color: var(–muted); margin-bottom: 20px; }
+.link-box { background: var(–s2); border: 1px solid var(–border); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; }
+.link-lbl { font-size: 10px; font-weight: 700; color: var(–muted); text-transform: uppercase; margin-bottom: 5px; }
+.link-url { font-size: 11px; color: #79c0ff; word-break: break-all; font-family: ‘JetBrains Mono’, monospace; }
+.send-btns { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.send-btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-family: ‘Outfit’, sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; transition: all .12s; }
+.send-btn:active { transform: scale(.98); }
+.send-wa    { background: #25D366; color: #000; }
+.send-wa:hover { background: #1ebe5d; }
+.send-gmail { background: white; color: #374151; }
+.send-gmail:hover { background: #f3f4f6; }
+.send-copy  { background: var(–s3); color: var(–text); border: 1px solid var(–border); }
+.send-copy:hover { background: var(–s2); }
+.form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+/* PANEL FIRMA */
+.side-bg { visibility: hidden; opacity: 0; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300; transition: opacity .2s; }
+.side-bg.open { visibility: visible; opacity: 1; }
+.side-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100%); background: var(–s1); border-left: 1px solid var(–border); overflow-y: auto; z-index: 301; transform: translateX(100%); transition: transform .25s ease; }
+.side-panel.open { transform: translateX(0); }
+.side-hd { padding: 16px 20px; border-bottom: 1px solid var(–border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(–s1); z-index: 5; }
+.side-num { font-size: 17px; font-weight: 800; color: var(–blue2); }
+.side-close { background: none; border: none; color: var(–muted); font-size: 18px; cursor: pointer; padding: 2px 6px; }
+.side-close:hover { color: var(–text); }
+.side-bd { padding: 20px; }
+.s-sec { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(–muted); margin: .8rem 0 .4rem; }
+.s-sec:first-child { margin-top: 0; }
+.s-blk { background: var(–s2); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+.s-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 3px 0; font-size: 12px; }
+.s-lbl { color: var(–muted); flex-shrink: 0; margin-right: 8px; }
+.s-val { color: var(–text); font-weight: 500; text-align: right; }
+.s-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding-bottom: 24px; }
+.firma-img { width: 100%; border: 1px solid var(–border); border-radius: 8px; background: #f8fafc; margin-top: 4px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(–s2); border: 1px solid var(–border); border-radius: 10px; padding: 12px 18px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; transform: translateY(80px); opacity: 0; transition: all .3s; max-width: 320px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok  { border-color: rgba(63,185,80,.4);  color: var(–green); }
+.toast.err { border-color: rgba(248,81,73,.4);  color: var(–red); }
+.toast.info{ border-color: rgba(56,139,253,.4); color: var(–blue2); }
+
+/* RESPONSIVE */
+@media(max-width:800px) { .kpis { grid-template-columns: repeat(3,1fr); } }
+@media(max-width:540px) { .kpis { grid-template-columns: repeat(2,1fr); } .content { padding: 14px; } }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
+</style>
+
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body>
 
-<!-- ── CONFIGURACIÓN ─────────────────────────────────────────────────── -->
+<!-- TOPBAR -->
 
-<script>
-  const SUPABASE_URL      = "https://sobiyfyzalynxcpfoldc.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek";
-  const TABLA = "presupuestos";
+<div class="topbar">
+  <div class="logo">HARO<span>SAT</span><small>· Gestión de Firmas</small></div>
+  <div class="sync">
+    <div class="dot syncing" id="sync-dot"></div>
+    <span id="sync-txt">Conectando...</span>
+  </div>
+</div>
 
-  // Columnas reales de la tabla presupuestos
-  const C = {
-    id:          "id",
-    numero:      "numero",
-    cliente:     "cliente",
-    telefono:    "telefono",
-    email:       null,               // no existe en la tabla
-    descripcion: "descripcion",
-    total:       "total",
-    fecha:       "fecha_emision",
-    firmado:     "firmado",
-    firma_img:   "firma_img",
-  };
-</script>
+<!-- CONTENT -->
 
-<!-- ── CONTENIDO ─────────────────────────────────────────────────────── -->
+<div class="content">
 
-<div class="max-w-lg mx-auto px-4 py-8 flex flex-col gap-6">
+  <!-- KPIs -->
 
-  <!-- Logo / cabecera -->
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--muted)"></div><div class="kpi-label">Total</div><div class="kpi-val" id="k-total">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--muted)"></div><div class="kpi-label">Pendientes</div><div class="kpi-val" id="k-pendiente">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue2)"></div><div class="kpi-label">Enviados</div><div class="kpi-val" id="k-enviado">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--purple)"></div><div class="kpi-label">Firmados</div><div class="kpi-val" id="k-firmado">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Aceptados</div><div class="kpi-val" id="k-aceptado">0</div></div>
+  </div>
 
-  <div class="flex items-center gap-3">
-    <img src="icon-firma.png" alt="Firma HAROSAT" class="w-14 h-14 rounded-2xl shadow-md" />
-    <div>
-      <p class="font-bold text-slate-800 text-lg leading-tight">HAROSAT Ecotechnical</p>
-      <p class="text-xs text-slate-400">Firma de presupuesto</p>
+  <!-- FILTROS -->
+
+  <div class="filters">
+    <button class="fbtn active" id="f-todos"      onclick="setFiltro('todos')">Todos</button>
+    <button class="fbtn"        id="f-pendiente"  onclick="setFiltro('pendiente')">⏳ Pendiente</button>
+    <button class="fbtn"        id="f-enviado"    onclick="setFiltro('enviado')">📤 Enviado</button>
+    <button class="fbtn"        id="f-firmado"    onclick="setFiltro('firmado')">✍️ Firmado</button>
+    <button class="fbtn"        id="f-aceptado"   onclick="setFiltro('aceptado')">✅ Aceptado</button>
+    <button class="fbtn"        id="f-rechazado"  onclick="setFiltro('rechazado')">❌ Rechazado</button>
+    <input class="search" id="buscar" placeholder="🔍  Buscar cliente o número..." oninput="render()">
+  </div>
+
+  <!-- TABLA -->
+
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-title" id="card-tit">Presupuestos</span>
+      <button class="btn btn-ghost btn-sm" onclick="cargar()">↺ Actualizar</button>
     </div>
+    <div id="tabla"></div>
   </div>
 
-  <!-- Pantalla: cargando -->
+</div>
 
-  <div id="screen-loading" class="flex flex-col items-center gap-3 py-20">
-    <div class="w-8 h-8 rounded-full border-4 border-blue-600 border-t-transparent spinner"></div>
-    <p class="text-sm text-slate-400">Cargando presupuesto…</p>
-  </div>
+<!-- MODAL ENVÍO -->
 
-  <!-- Pantalla: error -->
-
-  <div id="screen-error" class="hidden fade-in bg-red-50 border border-red-200 rounded-2xl p-6 text-center flex flex-col gap-3">
-    <p class="text-3xl">⚠️</p>
-    <p class="font-semibold text-red-700" id="error-msg">Error al cargar el presupuesto.</p>
-    <p class="text-sm text-slate-500">Contacta con HAROSAT Ecotechnical.</p>
-  </div>
-
-  <!-- Pantalla: ya firmado -->
-
-  <div id="screen-ya-firmado" class="hidden fade-in flex flex-col items-center gap-4 py-12 text-center">
-    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-3xl">✅</div>
-    <p class="font-bold text-slate-800 text-lg">Presupuesto ya firmado</p>
-    <p class="text-sm text-slate-500">Este presupuesto ya fue aceptado anteriormente.<br>Gracias por confiar en HAROSAT.</p>
-  </div>
-
-  <!-- Pantalla: presupuesto + firma -->
-
-  <div id="screen-firmar" class="hidden fade-in flex flex-col gap-5">
+<div class="overlay" id="modal-envio">
+  <div class="modal">
+    <div class="modal-title">📤 Enviar para firmar</div>
+    <div class="modal-sub" id="me-sub"></div>
 
 ```
-<!-- Tarjeta presupuesto -->
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-4">
-  <div class="flex justify-between items-start">
-    <div>
-      <p class="text-xs font-mono text-slate-400" id="p-numero"></p>
-      <p class="font-bold text-slate-800 text-lg mt-0.5" id="p-cliente"></p>
-      <p class="text-sm text-slate-500 mt-0.5" id="p-descripcion"></p>
-    </div>
-    <div class="text-right">
-      <p class="font-bold text-blue-600 text-xl" id="p-total"></p>
-      <p class="text-xs text-slate-400 mt-0.5" id="p-fecha"></p>
-    </div>
-  </div>
-  <div class="border-t border-slate-100 pt-3">
-    <p class="text-xs text-slate-400">Emitido por <strong class="text-slate-600">HAROSAT Ecotechnical</strong></p>
-  </div>
+<div class="link-box">
+  <div class="link-lbl">Enlace de firma del cliente</div>
+  <div class="link-url" id="me-link"></div>
 </div>
 
-<!-- Aviso legal -->
-<div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col gap-3">
-  <div class="flex items-center gap-2">
-    <span class="text-amber-500 text-lg">⚠️</span>
-    <p class="font-semibold text-amber-800 text-sm">Antes de firmar, lee atentamente</p>
-  </div>
-  <p class="text-sm text-slate-700 leading-relaxed">
-    Al firmar este documento, <strong id="aviso-cliente"></strong> declara haber leído y
-    <strong> aceptado íntegramente</strong> el presupuesto <strong id="aviso-numero"></strong>,
-    incluyendo el importe de <strong id="aviso-total" class="text-blue-600"></strong> (IVA incluido),
-    las condiciones de pago y los materiales descritos.
-  </p>
-  <p class="text-xs text-slate-400 border-t border-amber-200 pt-2">
-    Esta firma tiene validez como aceptación formal conforme al artículo 1262 del Código Civil español.
-  </p>
-</div>
-
-<!-- Checkbox obligatorio -->
-<label class="flex items-start gap-3 cursor-pointer bg-white border border-slate-200 rounded-xl p-3 select-none">
-  <input type="checkbox" id="chk-acepto" class="mt-0.5 w-5 h-5 accent-blue-600 flex-shrink-0" />
-  <span class="text-sm text-slate-700 leading-snug">
-    He leído y <strong>acepto</strong> las condiciones del presupuesto
-    <strong id="chk-numero"></strong> por importe de
-    <strong class="text-blue-600" id="chk-total"></strong>
-  </span>
-</label>
-
-<!-- Selector modo firma -->
-<div>
-  <p class="text-sm font-semibold text-slate-700 mb-2">Firma del cliente</p>
-
-  <!-- Pestañas -->
-  <div class="flex bg-slate-100 rounded-xl p-1 gap-1 mb-3">
-    <button id="tab-manual" onclick="setModo('manual')"
-      class="flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm">
-      ✍️ Firmar a mano
-    </button>
-    <button id="tab-auto" onclick="setModo('auto')"
-      class="flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500">
-      ✦ Firma automática
-    </button>
-  </div>
-
-  <!-- Canvas firma manual -->
-  <div id="modo-manual" class="flex flex-col gap-2">
-    <div class="relative rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 overflow-hidden">
-      <canvas id="canvas-manual" width="600" height="160" class="w-full cursor-crosshair" style="display:block"></canvas>
-      <div id="placeholder-manual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <p class="text-slate-400 text-sm select-none">Firma aquí con el dedo o el ratón</p>
-      </div>
-      <div class="absolute bottom-7 left-8 right-8 border-b border-slate-300 pointer-events-none"></div>
-    </div>
-    <button onclick="limpiarManual()" class="self-end text-xs text-slate-500 hover:text-red-500 underline underline-offset-2">Borrar firma</button>
-  </div>
-
-  <!-- Canvas firma automática -->
-  <div id="modo-auto" class="hidden flex flex-col gap-2">
-    <div class="relative rounded-xl border-2 border-slate-200 bg-slate-50 overflow-hidden">
-      <canvas id="canvas-auto" width="600" height="160" class="w-full" style="display:block"></canvas>
-      <div id="placeholder-auto" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <p class="text-slate-400 text-sm">Pulsa el botón para generar tu firma</p>
-      </div>
-    </div>
-    <div class="flex justify-between">
-      <button onclick="generarFirmaAuto()"
-        class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition">
-        ✦ Generar firma automática
-      </button>
-      <button id="btn-limpiar-auto" onclick="limpiarAuto()" class="hidden text-xs text-slate-500 hover:text-red-500 underline underline-offset-2">Borrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Botón confirmar firma -->
-<button id="btn-confirmar" onclick="confirmarFirma()" disabled
-  class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-4 rounded-xl transition active:scale-95 text-base">
-  Confirmar firma →
-</button>
-```
-
-  </div><!-- /screen-firmar -->
-
-  <!-- Pantalla: firmado OK -->
-
-  <div id="screen-ok" class="hidden fade-in flex flex-col gap-5">
-    <div class="flex flex-col items-center gap-3 py-6 text-center">
-      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-3xl">✅</div>
-      <p class="font-bold text-slate-800 text-xl">¡Presupuesto aceptado!</p>
-      <p class="text-sm text-slate-500">Tu firma ha sido registrada correctamente.<br>HAROSAT se pondrá en contacto contigo pronto.</p>
-    </div>
-
-```
-<!-- Resumen firmado -->
-<div class="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col gap-2 shadow-sm">
-  <p class="text-xs text-slate-400 font-mono" id="ok-numero"></p>
-  <p class="font-semibold text-slate-800" id="ok-cliente"></p>
-  <p class="text-sm text-slate-500" id="ok-descripcion"></p>
-  <p class="font-bold text-blue-600 text-lg" id="ok-total"></p>
-</div>
-
-<!-- Botones envío -->
-<p class="text-xs text-slate-500 text-center">Guarda una copia del presupuesto firmado:</p>
-<div class="grid grid-cols-2 gap-3">
-  <button id="btn-whatsapp" onclick="enviarWhatsApp()"
-    class="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3 rounded-xl transition active:scale-95">
-    <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-    WhatsApp
+<div class="send-btns">
+  <button class="send-btn send-wa" id="me-wa">
+    <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Enviar por WhatsApp
   </button>
-  <button id="btn-gmail" onclick="enviarGmail()"
-    class="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 rounded-xl border border-slate-200 transition active:scale-95">
-    <svg viewBox="0 0 24 24" class="w-5 h-5">
-      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/>
-    </svg>
-    Gmail
+  <button class="send-btn send-gmail" id="me-gmail">
+    <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>
+    Enviar por Gmail
+  </button>
+  <button class="send-btn send-copy" id="me-copy">
+    📋 Copiar enlace
   </button>
 </div>
+
+<div class="form-actions">
+  <button class="btn btn-ghost" onclick="cerrarModalEnvio()">Cancelar</button>
+</div>
 ```
 
-  </div><!-- /screen-ok -->
+  </div>
+</div>
 
-</div><!-- /container -->
+<!-- PANEL LATERAL DETALLE -->
 
-<!-- ── LÓGICA ──────────────────────────────────────────────────────────── -->
+<div class="side-bg" id="side-bg" onclick="closeSide()"></div>
+<div class="side-panel" id="side-panel">
+  <div class="side-hd">
+    <span class="side-num" id="side-num"></span>
+    <button class="side-close" onclick="closeSide()">✕</button>
+  </div>
+  <div class="side-bd" id="side-bd"></div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-  // ── Estado global ──────────────────────────────────────────────────────
-  let presupuesto = null;
-  let modoActivo  = "manual";
-  let hayFirma    = false;
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+var FIRMA_BASE = 'https://tecnicoharosat-source.github.io/harosat-app/firmar.html';
+var H = { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' };
 
-  const fmt = (n) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n ?? 0);
+function sbGet(qs) { return fetch(SUPA_URL + '/rest/v1/presupuestos?' + qs, { headers: H }).then(function(r){ if(!r.ok) return r.text().then(function(t){throw new Error(t);}); return r.json(); }); }
+function sbPatch(id, row) { return fetch(SUPA_URL + '/rest/v1/presupuestos?id=eq.' + id, { method: 'PATCH', headers: H, body: JSON.stringify(row) }).then(function(r){ if(!r.ok) return r.text().then(function(t){throw new Error(t);}); }); }
 
-  // ── Supabase fetch ─────────────────────────────────────────────────────
-  async function sb(method, path, body) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-      method,
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json",
-        Prefer: method === "POST" ? "return=representation" : "",
-      },
-      body: body ? JSON.stringify(body) : undefined,
+// ── ESTADO ────────────────────────────────────────────────────────────────────
+var PRES = [];
+var filtroActivo = 'todos';
+var presActivo = null;
+
+// ── SYNC ──────────────────────────────────────────────────────────────────────
+function setSync(s, msg) {
+  var d = document.getElementById('sync-dot');
+  d.className = 'dot' + (s === 'syncing' ? ' syncing' : s === 'error' ? ' error' : '');
+  document.getElementById('sync-txt').textContent = msg;
+}
+
+// ── CARGA ─────────────────────────────────────────────────────────────────────
+function cargar() {
+  setSync('syncing', 'Cargando...');
+  sbGet('select=id,numero,cliente,telefono,email,descripcion,total,fecha_emision,estado_firma,firma_img,fecha_envio,fecha_firma&order=fecha_emision.desc&limit=200')
+    .then(function(d) {
+      PRES = d || [];
+      setSync('ok', 'Sincronizado');
+      render();
+    })
+    .catch(function(e) {
+      setSync('error', 'Error de conexión');
+      document.getElementById('tabla').innerHTML = '<div class="empty">⚠️ ' + e.message + '</div>';
     });
-    if (!res.ok) throw new Error(await res.text());
-    return res.status === 204 ? null : res.json();
-  }
+}
 
-  // ── Pantallas ──────────────────────────────────────────────────────────
-  function show(id) {
-    ["screen-loading","screen-error","screen-ya-firmado","screen-firmar","screen-ok"]
-      .forEach(s => document.getElementById(s).classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
-  }
+// ── FILTRO ────────────────────────────────────────────────────────────────────
+function setFiltro(f) {
+  filtroActivo = f;
+  document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('f-' + f).classList.add('active');
+  render();
+}
 
-  // ── Cargar presupuesto por ID ──────────────────────────────────────────
-  async function init() {
-    const params = new URLSearchParams(location.search);
-    const id = params.get("id");
-    if (!id) { mostrarError("Enlace no válido. Falta el ID del presupuesto."); return; }
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  var sr = (document.getElementById('buscar').value || '').toLowerCase();
+  var fil = PRES.filter(function(p) {
+    if (filtroActivo !== 'todos' && p.estado_firma !== filtroActivo) return false;
+    if (sr && ((p.numero||'') + ' ' + (p.cliente||'')).toLowerCase().indexOf(sr) === -1) return false;
+    return true;
+  });
 
-    try {
-      const data = await sb("GET", `${TABLA}?${C.id}=eq.${parseInt(id)}`);
-      if (!data || data.length === 0) { mostrarError("Presupuesto no encontrado."); return; }
-      presupuesto = data[0];
+  // KPIs
+  var cnt = { pendiente:0, enviado:0, firmado:0, aceptado:0, rechazado:0 };
+  PRES.forEach(function(p){ if(cnt[p.estado_firma] !== undefined) cnt[p.estado_firma]++; });
+  document.getElementById('k-total').textContent     = PRES.length;
+  document.getElementById('k-pendiente').textContent = cnt.pendiente;
+  document.getElementById('k-enviado').textContent   = cnt.enviado;
+  document.getElementById('k-firmado').textContent   = cnt.firmado;
+  document.getElementById('k-aceptado').textContent  = cnt.aceptado;
+  document.getElementById('card-tit').textContent    = fil.length + ' presupuesto' + (fil.length !== 1 ? 's' : '');
 
-      if (presupuesto[C.firmado]) { show("screen-ya-firmado"); return; }
+  var el = document.getElementById('tabla');
+  if (!fil.length) { el.innerHTML = '<div class="empty">Sin resultados</div>'; return; }
 
-      rellenarPantalla();
-      show("screen-firmar");
-    } catch (e) {
-      mostrarError("Error de conexión: " + e.message);
-    }
-  }
+  var html = '<div class="table-wrap"><table><thead><tr>' +
+    '<th>Número</th><th>Cliente</th><th>Descripción</th><th>Fecha</th>' +
+    '<th class="num">Total</th><th>Estado firma</th><th>Acción</th>' +
+    '</tr></thead><tbody>';
 
-  function mostrarError(msg) {
-    document.getElementById("error-msg").textContent = msg;
-    show("screen-error");
-  }
-
-  function rellenarPantalla() {
-    const p = presupuesto;
-    setText("p-numero",      p[C.numero]);
-    setText("p-cliente",     p[C.cliente]);
-    setText("p-descripcion", p[C.descripcion]);
-    setText("p-total",       fmt(p[C.total]));
-    setText("p-fecha",       p[C.fecha]);
-    setText("aviso-cliente", p[C.cliente]);
-    setText("aviso-numero",  p[C.numero]);
-    setText("aviso-total",   fmt(p[C.total]));
-    setText("chk-numero",    p[C.numero]);
-    setText("chk-total",     fmt(p[C.total]));
-
-    document.getElementById("chk-acepto").addEventListener("change", actualizarBoton);
-  }
-
-  function setText(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val ?? "";
-  }
-
-  // ── Modo de firma ──────────────────────────────────────────────────────
-  function setModo(modo) {
-    modoActivo = modo;
-    hayFirma = false;
-    actualizarBoton();
-
-    document.getElementById("modo-manual").classList.toggle("hidden", modo !== "manual");
-    document.getElementById("modo-auto").classList.toggle("hidden", modo !== "auto");
-    document.getElementById("tab-manual").className = modo === "manual"
-      ? "flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm"
-      : "flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500";
-    document.getElementById("tab-auto").className = modo === "auto"
-      ? "flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm"
-      : "flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500";
-  }
-
-  function actualizarBoton() {
-    const acepto = document.getElementById("chk-acepto").checked;
-    const btn = document.getElementById("btn-confirmar");
-    btn.disabled = !(acepto && hayFirma);
-  }
-
-  // ── Canvas manual ──────────────────────────────────────────────────────
-  (function initCanvasManual() {
-    const canvas = document.getElementById("canvas-manual");
-    const ctx = canvas.getContext("2d");
-    let dibujando = false;
-
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
-      if (e.touches) return { x: (e.touches[0].clientX - rect.left) * sx, y: (e.touches[0].clientY - rect.top) * sy };
-      return { x: (e.clientX - rect.left) * sx, y: (e.clientY - rect.top) * sy };
+  fil.forEach(function(p) {
+    var ef = p.estado_firma || 'pendiente';
+    var accion = '';
+    if (ef === 'pendiente' || ef === 'enviado') {
+      accion = '<button class="btn btn-blue btn-sm" onclick="event.stopPropagation();abrirEnvio(' + p.id + ')">📤 Enviar</button>';
+    } else if (ef === 'firmado') {
+      accion =
+        '<button class="btn btn-green btn-sm" onclick="event.stopPropagation();cambiarEstado(' + p.id + ',\'aceptado\')" style="margin-right:4px">✅ Aceptar</button>' +
+        '<button class="btn btn-red btn-sm"   onclick="event.stopPropagation();cambiarEstado(' + p.id + ',\'rechazado\')">❌ Rechazar</button>';
+    } else if (ef === 'aceptado') {
+      accion = '<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();abrirEnvio(' + p.id + ')">↺ Reenviar</button>';
     }
 
-    function iniciar(e) { e.preventDefault(); const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); dibujando = true; }
-    function dibujar(e) {
-      e.preventDefault();
-      if (!dibujando) return;
-      const p = getPos(e);
-      ctx.lineWidth = 2.5; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#1e293b";
-      ctx.lineTo(p.x, p.y); ctx.stroke();
-      document.getElementById("placeholder-manual").style.display = "none";
-      hayFirma = true; actualizarBoton();
-    }
-    function parar(e) { e.preventDefault(); dibujando = false; }
+    html += '<tr onclick="abrirDetalle(' + p.id + ')" style="cursor:pointer">' +
+      '<td class="mono" style="color:var(--blue2);font-weight:700">' + esc(p.numero||'') + '</td>' +
+      '<td style="font-weight:600;color:white">' + esc(p.cliente||'') + '</td>' +
+      '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">' + esc(p.descripcion||'') + '</td>' +
+      '<td style="color:var(--muted)">' + fd(p.fecha_emision) + '</td>' +
+      '<td class="num" style="font-weight:700;color:white">' + fn(p.total||0) + ' €</td>' +
+      '<td>' + badgeFirma(ef) + '</td>' +
+      '<td onclick="event.stopPropagation()">' + accion + '</td>' +
+      '</tr>';
+  });
 
-    canvas.addEventListener("mousedown", iniciar);
-    canvas.addEventListener("mousemove", dibujar);
-    canvas.addEventListener("mouseup", parar);
-    canvas.addEventListener("mouseleave", parar);
-    canvas.addEventListener("touchstart", iniciar, { passive: false });
-    canvas.addEventListener("touchmove", dibujar, { passive: false });
-    canvas.addEventListener("touchend", parar, { passive: false });
-  })();
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+}
 
-  function limpiarManual() {
-    const canvas = document.getElementById("canvas-manual");
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById("placeholder-manual").style.display = "";
-    hayFirma = false; actualizarBoton();
+// ── BADGE ─────────────────────────────────────────────────────────────────────
+function badgeFirma(e) {
+  var map = { pendiente:'⏳ Pendiente', enviado:'📤 Enviado', firmado:'✍️ Firmado', aceptado:'✅ Aceptado', rechazado:'❌ Rechazado' };
+  return '<span class="badge b-' + e + '">' + (map[e] || e) + '</span>';
+}
+
+// ── MODAL ENVÍO ───────────────────────────────────────────────────────────────
+function abrirEnvio(id) {
+  var p = PRES.filter(function(x){ return x.id === id; })[0];
+  if (!p) return;
+  presActivo = p;
+
+  var enlace = FIRMA_BASE + '?id=' + p.id;
+  document.getElementById('me-sub').textContent = p.numero + ' · ' + p.cliente + ' · ' + fn(p.total||0) + ' €';
+  document.getElementById('me-link').textContent = enlace;
+
+  // WhatsApp
+  var tel = (p.telefono || '').replace(/\s/g, '');
+  var txtWA = encodeURIComponent(
+    '✍️ *Presupuesto ' + p.numero + ' — HAROSAT Ecotechnical*\n\n' +
+    'Estimado/a ' + p.cliente + ',\n\n' +
+    'Le enviamos el enlace para revisar y *firmar su presupuesto* por importe de *' + fn(p.total||0) + ' €*\n\n' +
+    '👉 ' + enlace + '\n\n' +
+    '_Pulse el enlace, revise el presupuesto y fírmelo desde su móvil o PC._\n\n' +
+    'HAROSAT Ecotechnical · 640 05 64 84'
+  );
+  document.getElementById('me-wa').onclick = function() {
+    var url = tel ? 'https://wa.me/34' + tel + '?text=' + txtWA : 'https://wa.me/?text=' + txtWA;
+    window.open(url, '_blank');
+    marcarEnviado(id);
+    cerrarModalEnvio();
+  };
+
+  // Gmail
+  var asunto = encodeURIComponent('Presupuesto ' + p.numero + ' para firmar — HAROSAT');
+  var cuerpo = encodeURIComponent(
+    'Estimado/a ' + p.cliente + ',\n\n' +
+    'Le enviamos el enlace para revisar y firmar su presupuesto ' + p.numero + ' por importe de ' + fn(p.total||0) + ' €.\n\n' +
+    'Pulse el siguiente enlace para firmarlo desde su móvil o PC:\n' + enlace + '\n\n' +
+    'Gracias por confiar en HAROSAT Ecotechnical.\n\n' +
+    'Un saludo,\nHAROSAT Ecotechnical\nTel.: 640 05 64 84 · 616 68 49 79\nharosatecnicos@gmail.com'
+  );
+  document.getElementById('me-gmail').onclick = function() {
+    window.open('https://mail.google.com/mail/?view=cm&su=' + asunto + '&body=' + cuerpo, '_blank');
+    marcarEnviado(id);
+    cerrarModalEnvio();
+  };
+
+  // Copiar
+  document.getElementById('me-copy').onclick = function() {
+    navigator.clipboard.writeText(enlace).then(function(){ toast('Enlace copiado ✓', 'ok'); }).catch(function(){ toast('No se pudo copiar', 'err'); });
+  };
+
+  document.getElementById('modal-envio').classList.add('open');
+}
+
+function cerrarModalEnvio() {
+  document.getElementById('modal-envio').classList.remove('open');
+}
+document.getElementById('modal-envio').addEventListener('click', function(e){ if (e.target === this) cerrarModalEnvio(); });
+
+function marcarEnviado(id) {
+  var p = PRES.filter(function(x){ return x.id === id; })[0];
+  if (!p || p.estado_firma === 'firmado' || p.estado_firma === 'aceptado') return;
+  sbPatch(id, { estado_firma: 'enviado', fecha_envio: new Date().toISOString() })
+    .then(function() {
+      var idx = PRES.findIndex(function(x){ return x.id === id; });
+      if (idx >= 0) { PRES[idx].estado_firma = 'enviado'; PRES[idx].fecha_envio = new Date().toISOString(); }
+      render();
+      toast('Marcado como enviado ✓', 'ok');
+    })
+    .catch(function(e){ toast('Error: ' + e.message, 'err'); });
+}
+
+// ── CAMBIAR ESTADO ────────────────────────────────────────────────────────────
+function cambiarEstado(id, estado) {
+  var row = { estado_firma: estado };
+  if (estado === 'aceptado' || estado === 'rechazado') row.fecha_firma = new Date().toISOString();
+  sbPatch(id, row)
+    .then(function() {
+      var idx = PRES.findIndex(function(x){ return x.id === id; });
+      if (idx >= 0) Object.assign(PRES[idx], row);
+      render();
+      closeSide();
+      toast('Estado actualizado ✓', 'ok');
+    })
+    .catch(function(e){ toast('Error: ' + e.message, 'err'); });
+}
+
+// ── DETALLE LATERAL ───────────────────────────────────────────────────────────
+function abrirDetalle(id) {
+  var p = PRES.filter(function(x){ return x.id === id; })[0];
+  if (!p) return;
+  var ef = p.estado_firma || 'pendiente';
+  document.getElementById('side-num').textContent = p.numero;
+
+  var html =
+    '<div class="s-sec">Presupuesto</div><div class="s-blk">' +
+    '<div class="s-row"><span class="s-lbl">Número</span><span class="s-val mono" style="color:var(--blue2)">' + esc(p.numero||'') + '</span></div>' +
+    '<div class="s-row"><span class="s-lbl">Fecha</span><span class="s-val">' + fd(p.fecha_emision) + '</span></div>' +
+    '<div class="s-row"><span class="s-lbl">Total</span><span class="s-val" style="font-size:16px;font-weight:800;color:var(--blue2)">' + fn(p.total||0) + ' €</span></div>' +
+    '</div>' +
+
+    '<div class="s-sec">Cliente</div><div class="s-blk">' +
+    '<div class="s-row"><span class="s-lbl">Nombre</span><span class="s-val">' + esc(p.cliente||'') + '</span></div>' +
+    (p.telefono ? '<div class="s-row"><span class="s-lbl">Teléfono</span><span class="s-val">' + esc(p.telefono) + '</span></div>' : '') +
+    '</div>' +
+
+    '<div class="s-sec">Estado de firma</div><div class="s-blk">' +
+    '<div class="s-row"><span class="s-lbl">Estado</span><span class="s-val">' + badgeFirma(ef) + '</span></div>' +
+    (p.fecha_envio ? '<div class="s-row"><span class="s-lbl">Enviado</span><span class="s-val">' + fdt(p.fecha_envio) + '</span></div>' : '') +
+    (p.fecha_firma ? '<div class="s-row"><span class="s-lbl">Firmado</span><span class="s-val">' + fdt(p.fecha_firma) + '</span></div>' : '') +
+    '</div>';
+
+  if (p.firma_img) {
+    html += '<div class="s-sec">Firma del cliente</div>' +
+      '<img src="' + p.firma_img + '" class="firma-img" alt="Firma">';
   }
 
-  // ── Canvas automático ──────────────────────────────────────────────────
-  function generarFirmaAuto() {
-    const canvas = document.getElementById("canvas-auto");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#f8fafc"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "italic 52px Georgia, serif";
-    ctx.fillStyle = "#1e293b"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(presupuesto[C.cliente], canvas.width / 2, canvas.height / 2 - 8);
-    ctx.beginPath(); ctx.moveTo(60, canvas.height / 2 + 24); ctx.lineTo(canvas.width - 60, canvas.height / 2 + 24);
-    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1; ctx.stroke();
-    ctx.font = "11px monospace"; ctx.fillStyle = "#64748b"; ctx.textAlign = "right";
-    ctx.fillText(`Aceptado el ${presupuesto[C.fecha]}`, canvas.width - 20, canvas.height - 12);
-    document.getElementById("placeholder-auto").style.display = "none";
-    document.getElementById("btn-limpiar-auto").classList.remove("hidden");
-    hayFirma = true; actualizarBoton();
+  html += '<div class="s-actions">';
+  if (ef === 'pendiente' || ef === 'enviado') {
+    html += '<button class="btn btn-blue" style="width:100%" onclick="abrirEnvio(' + p.id + ');closeSide()">📤 Enviar enlace de firma</button>';
   }
-
-  function limpiarAuto() {
-    const canvas = document.getElementById("canvas-auto");
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById("placeholder-auto").style.display = "";
-    document.getElementById("btn-limpiar-auto").classList.add("hidden");
-    hayFirma = false; actualizarBoton();
+  if (ef === 'firmado') {
+    html +=
+      '<button class="btn btn-green" style="width:100%" onclick="cambiarEstado(' + p.id + ',\'aceptado\')">✅ Marcar como Aceptado</button>' +
+      '<button class="btn btn-red"   style="width:100%" onclick="cambiarEstado(' + p.id + ',\'rechazado\')">❌ Marcar como Rechazado</button>';
   }
-
-  // ── Confirmar firma → guardar en Supabase ──────────────────────────────
-  async function confirmarFirma() {
-    const canvas = modoActivo === "manual"
-      ? document.getElementById("canvas-manual")
-      : document.getElementById("canvas-auto");
-    const dataURL = canvas.toDataURL("image/png");
-
-    const btn = document.getElementById("btn-confirmar");
-    btn.disabled = true;
-    btn.textContent = "Guardando…";
-
-    try {
-      await sb("PATCH", `${TABLA}?${C.id}=eq.${presupuesto[C.id]}`, {
-        [C.firmado]:   true,
-        [C.firma_img]: dataURL,
-      });
-
-      // Rellenar pantalla OK
-      setText("ok-numero",      presupuesto[C.numero]);
-      setText("ok-cliente",     presupuesto[C.cliente]);
-      setText("ok-descripcion", presupuesto[C.descripcion]);
-      setText("ok-total",       fmt(presupuesto[C.total]));
-
-      show("screen-ok");
-    } catch (e) {
-      btn.disabled = false;
-      btn.textContent = "Confirmar firma →";
-      alert("Error al guardar la firma: " + e.message);
-    }
+  if (ef === 'aceptado' || ef === 'rechazado') {
+    html += '<button class="btn btn-ghost" style="width:100%" onclick="abrirEnvio(' + p.id + ');closeSide()">↺ Reenviar enlace</button>';
   }
+  html += '</div>';
 
-  // ── Envío desde pantalla OK ────────────────────────────────────────────
-  function enviarWhatsApp() {
-    const p = presupuesto;
-    const texto = encodeURIComponent(
-      `✅ *He firmado el presupuesto ${p[C.numero]}*\n\n` +
-      `Trabajo: ${p[C.descripcion]}\nImporte: ${fmt(p[C.total])}\n\n` +
-      `Presupuesto aceptado digitalmente.\nHAROSAT Ecotechnical`
-    );
-    const tel = (p[C.telefono] || "").replace(/\s/g, "");
-    window.open(tel ? `https://wa.me/34${tel}?text=${texto}` : `https://wa.me/?text=${texto}`, "_blank");
-  }
+  document.getElementById('side-bd').innerHTML = html;
+  document.getElementById('side-bg').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
+}
 
-  function enviarGmail() {
-    const p = presupuesto;
-    const asunto = encodeURIComponent(`Presupuesto ${p[C.numero]} firmado`);
-    const cuerpo = encodeURIComponent(
-      `He firmado el presupuesto ${p[C.numero]}.\n\nTrabajo: ${p[C.descripcion]}\nImporte: ${fmt(p[C.total])}\n\nHAROSAT Ecotechnical`
-    );
-    window.open(`https://mail.google.com/mail/?view=cm&to=${p[C.email] || p[C.telefono] || ""}&su=${asunto}&body=${cuerpo}`, "_blank");
-  }
+function closeSide() {
+  document.getElementById('side-bg').classList.remove('open');
+  document.getElementById('side-panel').classList.remove('open');
+}
 
-  // ── Arrancar ───────────────────────────────────────────────────────────
-  init();
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function fn(n) { return Number(n||0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function fd(d) { if (!d) return '—'; var p = d.split('-'); return p.length === 3 ? p[2]+'/'+p[1]+'/'+p[0] : d; }
+function fdt(d) { if (!d) return '—'; var dt = new Date(d); return dt.toLocaleDateString('es-ES') + ' ' + dt.toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'}); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + (type||'info');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+cargar();
+setInterval(cargar, 30000); // refresco automático cada 30 seg
 </script>
 
 </body>
