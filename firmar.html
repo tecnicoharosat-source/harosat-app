@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Firmar Presupuesto · HAROSAT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+    * { font-family: 'Outfit', sans-serif; }
+    canvas { touch-action: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.8s linear infinite; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.35s ease forwards; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- ── CONFIGURACIÓN ─────────────────────────────────────────────────── -->
+
+<script>
+  const SUPABASE_URL      = "https://sobiyfyzalynxcpfoldc.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek";
+  const TABLA = "presupuestos";
+
+  // Ajusta estos nombres a los de tus columnas en Supabase
+  const C = {
+    id:          "id",
+    numero:      "numero",
+    cliente:     "cliente",
+    telefono:    "telefono",
+    email:       "email",
+    descripcion: "descripcion",
+    total:       "total",
+    fecha:       "fecha",
+    firmado:     "firmado",
+    firma_img:   "firma_img",
+  };
+</script>
+
+<!-- ── CONTENIDO ─────────────────────────────────────────────────────── -->
+
+<div class="max-w-lg mx-auto px-4 py-8 flex flex-col gap-6">
+
+  <!-- Logo / cabecera -->
+
+  <div class="flex items-center gap-3">
+    <img src="icon-firma.png" alt="Firma HAROSAT" class="w-14 h-14 rounded-2xl shadow-md" />
+    <div>
+      <p class="font-bold text-slate-800 text-lg leading-tight">HAROSAT Ecotechnical</p>
+      <p class="text-xs text-slate-400">Firma de presupuesto</p>
+    </div>
+  </div>
+
+  <!-- Pantalla: cargando -->
+
+  <div id="screen-loading" class="flex flex-col items-center gap-3 py-20">
+    <div class="w-8 h-8 rounded-full border-4 border-blue-600 border-t-transparent spinner"></div>
+    <p class="text-sm text-slate-400">Cargando presupuesto…</p>
+  </div>
+
+  <!-- Pantalla: error -->
+
+  <div id="screen-error" class="hidden fade-in bg-red-50 border border-red-200 rounded-2xl p-6 text-center flex flex-col gap-3">
+    <p class="text-3xl">⚠️</p>
+    <p class="font-semibold text-red-700" id="error-msg">Error al cargar el presupuesto.</p>
+    <p class="text-sm text-slate-500">Contacta con HAROSAT Ecotechnical.</p>
+  </div>
+
+  <!-- Pantalla: ya firmado -->
+
+  <div id="screen-ya-firmado" class="hidden fade-in flex flex-col items-center gap-4 py-12 text-center">
+    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-3xl">✅</div>
+    <p class="font-bold text-slate-800 text-lg">Presupuesto ya firmado</p>
+    <p class="text-sm text-slate-500">Este presupuesto ya fue aceptado anteriormente.<br>Gracias por confiar en HAROSAT.</p>
+  </div>
+
+  <!-- Pantalla: presupuesto + firma -->
+
+  <div id="screen-firmar" class="hidden fade-in flex flex-col gap-5">
+
+```
+<!-- Tarjeta presupuesto -->
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-4">
+  <div class="flex justify-between items-start">
+    <div>
+      <p class="text-xs font-mono text-slate-400" id="p-numero"></p>
+      <p class="font-bold text-slate-800 text-lg mt-0.5" id="p-cliente"></p>
+      <p class="text-sm text-slate-500 mt-0.5" id="p-descripcion"></p>
+    </div>
+    <div class="text-right">
+      <p class="font-bold text-blue-600 text-xl" id="p-total"></p>
+      <p class="text-xs text-slate-400 mt-0.5" id="p-fecha"></p>
+    </div>
+  </div>
+  <div class="border-t border-slate-100 pt-3">
+    <p class="text-xs text-slate-400">Emitido por <strong class="text-slate-600">HAROSAT Ecotechnical</strong></p>
+  </div>
+</div>
+
+<!-- Aviso legal -->
+<div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col gap-3">
+  <div class="flex items-center gap-2">
+    <span class="text-amber-500 text-lg">⚠️</span>
+    <p class="font-semibold text-amber-800 text-sm">Antes de firmar, lee atentamente</p>
+  </div>
+  <p class="text-sm text-slate-700 leading-relaxed">
+    Al firmar este documento, <strong id="aviso-cliente"></strong> declara haber leído y
+    <strong> aceptado íntegramente</strong> el presupuesto <strong id="aviso-numero"></strong>,
+    incluyendo el importe de <strong id="aviso-total" class="text-blue-600"></strong> (IVA incluido),
+    las condiciones de pago y los materiales descritos.
+  </p>
+  <p class="text-xs text-slate-400 border-t border-amber-200 pt-2">
+    Esta firma tiene validez como aceptación formal conforme al artículo 1262 del Código Civil español.
+  </p>
+</div>
+
+<!-- Checkbox obligatorio -->
+<label class="flex items-start gap-3 cursor-pointer bg-white border border-slate-200 rounded-xl p-3 select-none">
+  <input type="checkbox" id="chk-acepto" class="mt-0.5 w-5 h-5 accent-blue-600 flex-shrink-0" />
+  <span class="text-sm text-slate-700 leading-snug">
+    He leído y <strong>acepto</strong> las condiciones del presupuesto
+    <strong id="chk-numero"></strong> por importe de
+    <strong class="text-blue-600" id="chk-total"></strong>
+  </span>
+</label>
+
+<!-- Selector modo firma -->
+<div>
+  <p class="text-sm font-semibold text-slate-700 mb-2">Firma del cliente</p>
+
+  <!-- Pestañas -->
+  <div class="flex bg-slate-100 rounded-xl p-1 gap-1 mb-3">
+    <button id="tab-manual" onclick="setModo('manual')"
+      class="flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm">
+      ✍️ Firmar a mano
+    </button>
+    <button id="tab-auto" onclick="setModo('auto')"
+      class="flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500">
+      ✦ Firma automática
+    </button>
+  </div>
+
+  <!-- Canvas firma manual -->
+  <div id="modo-manual" class="flex flex-col gap-2">
+    <div class="relative rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 overflow-hidden">
+      <canvas id="canvas-manual" width="600" height="160" class="w-full cursor-crosshair" style="display:block"></canvas>
+      <div id="placeholder-manual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <p class="text-slate-400 text-sm select-none">Firma aquí con el dedo o el ratón</p>
+      </div>
+      <div class="absolute bottom-7 left-8 right-8 border-b border-slate-300 pointer-events-none"></div>
+    </div>
+    <button onclick="limpiarManual()" class="self-end text-xs text-slate-500 hover:text-red-500 underline underline-offset-2">Borrar firma</button>
+  </div>
+
+  <!-- Canvas firma automática -->
+  <div id="modo-auto" class="hidden flex flex-col gap-2">
+    <div class="relative rounded-xl border-2 border-slate-200 bg-slate-50 overflow-hidden">
+      <canvas id="canvas-auto" width="600" height="160" class="w-full" style="display:block"></canvas>
+      <div id="placeholder-auto" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <p class="text-slate-400 text-sm">Pulsa el botón para generar tu firma</p>
+      </div>
+    </div>
+    <div class="flex justify-between">
+      <button onclick="generarFirmaAuto()"
+        class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition">
+        ✦ Generar firma automática
+      </button>
+      <button id="btn-limpiar-auto" onclick="limpiarAuto()" class="hidden text-xs text-slate-500 hover:text-red-500 underline underline-offset-2">Borrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Botón confirmar firma -->
+<button id="btn-confirmar" onclick="confirmarFirma()" disabled
+  class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-4 rounded-xl transition active:scale-95 text-base">
+  Confirmar firma →
+</button>
+```
+
+  </div><!-- /screen-firmar -->
+
+  <!-- Pantalla: firmado OK -->
+
+  <div id="screen-ok" class="hidden fade-in flex flex-col gap-5">
+    <div class="flex flex-col items-center gap-3 py-6 text-center">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-3xl">✅</div>
+      <p class="font-bold text-slate-800 text-xl">¡Presupuesto aceptado!</p>
+      <p class="text-sm text-slate-500">Tu firma ha sido registrada correctamente.<br>HAROSAT se pondrá en contacto contigo pronto.</p>
+    </div>
+
+```
+<!-- Resumen firmado -->
+<div class="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col gap-2 shadow-sm">
+  <p class="text-xs text-slate-400 font-mono" id="ok-numero"></p>
+  <p class="font-semibold text-slate-800" id="ok-cliente"></p>
+  <p class="text-sm text-slate-500" id="ok-descripcion"></p>
+  <p class="font-bold text-blue-600 text-lg" id="ok-total"></p>
+</div>
+
+<!-- Botones envío -->
+<p class="text-xs text-slate-500 text-center">Guarda una copia del presupuesto firmado:</p>
+<div class="grid grid-cols-2 gap-3">
+  <button id="btn-whatsapp" onclick="enviarWhatsApp()"
+    class="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3 rounded-xl transition active:scale-95">
+    <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    WhatsApp
+  </button>
+  <button id="btn-gmail" onclick="enviarGmail()"
+    class="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 rounded-xl border border-slate-200 transition active:scale-95">
+    <svg viewBox="0 0 24 24" class="w-5 h-5">
+      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/>
+    </svg>
+    Gmail
+  </button>
+</div>
+```
+
+  </div><!-- /screen-ok -->
+
+</div><!-- /container -->
+
+<!-- ── LÓGICA ──────────────────────────────────────────────────────────── -->
+
+<script>
+  // ── Estado global ──────────────────────────────────────────────────────
+  let presupuesto = null;
+  let modoActivo  = "manual";
+  let hayFirma    = false;
+
+  const fmt = (n) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n ?? 0);
+
+  // ── Supabase fetch ─────────────────────────────────────────────────────
+  async function sb(method, path, body) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      method,
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: method === "POST" ? "return=representation" : "",
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.status === 204 ? null : res.json();
+  }
+
+  // ── Pantallas ──────────────────────────────────────────────────────────
+  function show(id) {
+    ["screen-loading","screen-error","screen-ya-firmado","screen-firmar","screen-ok"]
+      .forEach(s => document.getElementById(s).classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+  }
+
+  // ── Cargar presupuesto por ID ──────────────────────────────────────────
+  async function init() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    if (!id) { mostrarError("Enlace no válido. Falta el ID del presupuesto."); return; }
+
+    try {
+      const data = await sb("GET", `${TABLA}?${C.id}=eq.${id}`);
+      if (!data || data.length === 0) { mostrarError("Presupuesto no encontrado."); return; }
+      presupuesto = data[0];
+
+      if (presupuesto[C.firmado]) { show("screen-ya-firmado"); return; }
+
+      rellenarPantalla();
+      show("screen-firmar");
+    } catch (e) {
+      mostrarError("Error de conexión: " + e.message);
+    }
+  }
+
+  function mostrarError(msg) {
+    document.getElementById("error-msg").textContent = msg;
+    show("screen-error");
+  }
+
+  function rellenarPantalla() {
+    const p = presupuesto;
+    setText("p-numero",      p[C.numero]);
+    setText("p-cliente",     p[C.cliente]);
+    setText("p-descripcion", p[C.descripcion]);
+    setText("p-total",       fmt(p[C.total]));
+    setText("p-fecha",       p[C.fecha]);
+    setText("aviso-cliente", p[C.cliente]);
+    setText("aviso-numero",  p[C.numero]);
+    setText("aviso-total",   fmt(p[C.total]));
+    setText("chk-numero",    p[C.numero]);
+    setText("chk-total",     fmt(p[C.total]));
+
+    document.getElementById("chk-acepto").addEventListener("change", actualizarBoton);
+  }
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val ?? "";
+  }
+
+  // ── Modo de firma ──────────────────────────────────────────────────────
+  function setModo(modo) {
+    modoActivo = modo;
+    hayFirma = false;
+    actualizarBoton();
+
+    document.getElementById("modo-manual").classList.toggle("hidden", modo !== "manual");
+    document.getElementById("modo-auto").classList.toggle("hidden", modo !== "auto");
+    document.getElementById("tab-manual").className = modo === "manual"
+      ? "flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm"
+      : "flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500";
+    document.getElementById("tab-auto").className = modo === "auto"
+      ? "flex-1 py-2 rounded-lg text-sm font-medium transition bg-white text-slate-800 shadow-sm"
+      : "flex-1 py-2 rounded-lg text-sm font-medium transition text-slate-500";
+  }
+
+  function actualizarBoton() {
+    const acepto = document.getElementById("chk-acepto").checked;
+    const btn = document.getElementById("btn-confirmar");
+    btn.disabled = !(acepto && hayFirma);
+  }
+
+  // ── Canvas manual ──────────────────────────────────────────────────────
+  (function initCanvasManual() {
+    const canvas = document.getElementById("canvas-manual");
+    const ctx = canvas.getContext("2d");
+    let dibujando = false;
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+      if (e.touches) return { x: (e.touches[0].clientX - rect.left) * sx, y: (e.touches[0].clientY - rect.top) * sy };
+      return { x: (e.clientX - rect.left) * sx, y: (e.clientY - rect.top) * sy };
+    }
+
+    function iniciar(e) { e.preventDefault(); const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); dibujando = true; }
+    function dibujar(e) {
+      e.preventDefault();
+      if (!dibujando) return;
+      const p = getPos(e);
+      ctx.lineWidth = 2.5; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#1e293b";
+      ctx.lineTo(p.x, p.y); ctx.stroke();
+      document.getElementById("placeholder-manual").style.display = "none";
+      hayFirma = true; actualizarBoton();
+    }
+    function parar(e) { e.preventDefault(); dibujando = false; }
+
+    canvas.addEventListener("mousedown", iniciar);
+    canvas.addEventListener("mousemove", dibujar);
+    canvas.addEventListener("mouseup", parar);
+    canvas.addEventListener("mouseleave", parar);
+    canvas.addEventListener("touchstart", iniciar, { passive: false });
+    canvas.addEventListener("touchmove", dibujar, { passive: false });
+    canvas.addEventListener("touchend", parar, { passive: false });
+  })();
+
+  function limpiarManual() {
+    const canvas = document.getElementById("canvas-manual");
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("placeholder-manual").style.display = "";
+    hayFirma = false; actualizarBoton();
+  }
+
+  // ── Canvas automático ──────────────────────────────────────────────────
+  function generarFirmaAuto() {
+    const canvas = document.getElementById("canvas-auto");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#f8fafc"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "italic 52px Georgia, serif";
+    ctx.fillStyle = "#1e293b"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(presupuesto[C.cliente], canvas.width / 2, canvas.height / 2 - 8);
+    ctx.beginPath(); ctx.moveTo(60, canvas.height / 2 + 24); ctx.lineTo(canvas.width - 60, canvas.height / 2 + 24);
+    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.font = "11px monospace"; ctx.fillStyle = "#64748b"; ctx.textAlign = "right";
+    ctx.fillText(`Aceptado el ${presupuesto[C.fecha]}`, canvas.width - 20, canvas.height - 12);
+    document.getElementById("placeholder-auto").style.display = "none";
+    document.getElementById("btn-limpiar-auto").classList.remove("hidden");
+    hayFirma = true; actualizarBoton();
+  }
+
+  function limpiarAuto() {
+    const canvas = document.getElementById("canvas-auto");
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("placeholder-auto").style.display = "";
+    document.getElementById("btn-limpiar-auto").classList.add("hidden");
+    hayFirma = false; actualizarBoton();
+  }
+
+  // ── Confirmar firma → guardar en Supabase ──────────────────────────────
+  async function confirmarFirma() {
+    const canvas = modoActivo === "manual"
+      ? document.getElementById("canvas-manual")
+      : document.getElementById("canvas-auto");
+    const dataURL = canvas.toDataURL("image/png");
+
+    const btn = document.getElementById("btn-confirmar");
+    btn.disabled = true;
+    btn.textContent = "Guardando…";
+
+    try {
+      await sb("PATCH", `${TABLA}?${C.id}=eq.${presupuesto[C.id]}`, {
+        [C.firmado]:   true,
+        [C.firma_img]: dataURL,
+      });
+
+      // Rellenar pantalla OK
+      setText("ok-numero",      presupuesto[C.numero]);
+      setText("ok-cliente",     presupuesto[C.cliente]);
+      setText("ok-descripcion", presupuesto[C.descripcion]);
+      setText("ok-total",       fmt(presupuesto[C.total]));
+
+      show("screen-ok");
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = "Confirmar firma →";
+      alert("Error al guardar la firma: " + e.message);
+    }
+  }
+
+  // ── Envío desde pantalla OK ────────────────────────────────────────────
+  function enviarWhatsApp() {
+    const p = presupuesto;
+    const texto = encodeURIComponent(
+      `✅ *He firmado el presupuesto ${p[C.numero]}*\n\n` +
+      `Trabajo: ${p[C.descripcion]}\nImporte: ${fmt(p[C.total])}\n\n` +
+      `Presupuesto aceptado digitalmente.\nHAROSAT Ecotechnical`
+    );
+    const tel = (p[C.telefono] || "").replace(/\s/g, "");
+    window.open(tel ? `https://wa.me/34${tel}?text=${texto}` : `https://wa.me/?text=${texto}`, "_blank");
+  }
+
+  function enviarGmail() {
+    const p = presupuesto;
+    const asunto = encodeURIComponent(`Presupuesto ${p[C.numero]} firmado`);
+    const cuerpo = encodeURIComponent(
+      `He firmado el presupuesto ${p[C.numero]}.\n\nTrabajo: ${p[C.descripcion]}\nImporte: ${fmt(p[C.total])}\n\nHAROSAT Ecotechnical`
+    );
+    window.open(`https://mail.google.com/mail/?view=cm&to=${p[C.email] || ""}&su=${asunto}&body=${cuerpo}`, "_blank");
+  }
+
+  // ── Arrancar ───────────────────────────────────────────────────────────
+  init();
+</script>
+
+</body>
+</html>
