@@ -243,7 +243,7 @@ tr:hover td { background: rgba(255,255,255,.02); }
 <script>
 var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
-var FIRMA_BASE = 'https://tecnicoharosat-source.github.io/harosat-app/firmar.html';
+var FIRMA_BASE = 'https://tecnicoharosat-source.github.io/harosat-app/cliente-firma.html';
 var H = { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' };
 
 function sbGet(qs) { return fetch(SUPA_URL + '/rest/v1/presupuestos?' + qs, { headers: H }).then(function(r){ if(!r.ok) return r.text().then(function(t){throw new Error(t);}); return r.json(); }); }
