@@ -5,7 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>HAROSAT · Firmar presupuesto</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#060910;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--border:#30363d;--text:#e6edf3;--muted:#7d8590;--light:#b1bac4;--blue:#1f6feb;--blue2:#388bfd;--green:#3fb950;--red:#f85149;--gold:#e3b341;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -35,6 +35,7 @@ canvas{display:block;width:100%;cursor:crosshair;}
 .btn-auto{background:var(--s3);border:1px solid var(--border);color:var(--light);padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:14px;}
 .btn-ok{width:100%;padding:14px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;}
 .btn-ok:disabled{opacity:.4;cursor:not-allowed;}
+.btn-pdf{width:100%;padding:14px;background:var(--s2);color:white;border:1px solid var(--border);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:10px;}
 .success{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 16px;text-align:center;}
 .ok-icon{width:64px;height:64px;background:rgba(63,185,80,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;}
 .ok-title{font-size:20px;font-weight:800;color:white;}
@@ -48,11 +49,13 @@ canvas{display:block;width:100%;cursor:crosshair;}
 <div class="topbar"><div class="logo">HARO<span>SAT</span></div></div>
 <div class="content" id="app"><div class="loading">Cargando presupuesto…</div></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
 var SUPA_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 var H={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
-var PRES=null, MODO='manual', DIBUJANDO=false, HAY_FIRMA=false;
+var PRES=null, MODO='manual', DIBUJANDO=false, HAY_FIRMA=false, FIRMA_IMG=null;
 
 function fn(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -62,7 +65,7 @@ var id=params.get('id');
 if(!id){
   document.getElementById('app').innerHTML='<div class="error">⚠️ Enlace no válido</div>';
 }else{
-  fetch(SUPA_URL+'/rest/v1/presupuestos?id=eq.'+id+'&select=id,numero,cliente,descripcion,total,fecha_emision,estado_firma,firma_img',{headers:H})
+  fetch(SUPA_URL+'/rest/v1/presupuestos?id=eq.'+id+'&select=id,numero,cliente,descripcion,total,fecha_emision,estado_firma,firma_img,fecha_firma',{headers:H})
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d||!d[0]){document.getElementById('app').innerHTML='<div class="error">⚠️ Presupuesto no encontrado</div>';return;}
@@ -76,11 +79,13 @@ if(!id){
 }
 
 function mostrarYaFirmado(){
+  FIRMA_IMG=PRES.firma_img;
   var html='<div class="success">'+
     '<div class="ok-icon">✅</div>'+
     '<div class="ok-title">Presupuesto ya firmado</div>'+
     '<div class="ok-sub">'+esc(PRES.numero)+' · '+esc(PRES.cliente)+'</div>';
   if(PRES.firma_img)html+='<img src="'+PRES.firma_img+'" class="firma-img" alt="Firma">';
+  html+='<button class="btn-pdf" onclick="descargarPDF()">📄 Descargar PDF firmado</button>';
   html+='</div>';
   document.getElementById('app').innerHTML=html;
 }
@@ -135,7 +140,6 @@ function setModo(m){
 function initCanvas(){
   var c=document.getElementById('cnv');if(!c)return;
   var ctx=c.getContext('2d');
-  // Fondo blanco inicial
   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
   function gp(e){var r=c.getBoundingClientRect();var sx=c.width/r.width,sy=c.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
   function start(e){e.preventDefault();var p=gp(e);ctx.beginPath();ctx.moveTo(p.x,p.y);DIBUJANDO=true;}
@@ -155,52 +159,128 @@ function limpiar(){
 }
 
 function generarAuto(){
-  var c=document.getElementById('cnv');if(!c)return;
-  var ctx=c.getContext('2d');
-  ctx.clearRect(0,0,c.width,c.height);
-  // Fondo blanco
-  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
-  // Nombre en cursiva elegante negra
-  ctx.font='italic 56px Georgia,serif';
-  ctx.fillStyle='#111111';
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
-  ctx.fillText(PRES.cliente,c.width/2,c.height/2-14);
-  // Línea separadora
-  ctx.beginPath();ctx.moveTo(60,c.height/2+22);ctx.lineTo(c.width-60,c.height/2+22);
-  ctx.strokeStyle='#cccccc';ctx.lineWidth=1;ctx.stroke();
-  // Fecha y hora
-  var ahora=new Date();
-  var fechahora=ahora.toLocaleDateString('es-ES')+' '+ahora.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-  ctx.font='13px Georgia,serif';
-  ctx.fillStyle='#444444';
-  ctx.textAlign='center';
-  ctx.fillText('Firmado el '+fechahora,c.width/2,c.height/2+42);
-  document.getElementById('cph').style.display='none';
-  HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;
+  document.fonts.load('72px "Great Vibes"').then(function(){
+    var c=document.getElementById('cnv');if(!c)return;
+    var ctx=c.getContext('2d');
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+    // Nombre en cursiva elegante
+    var nombre=PRES.cliente.toLowerCase().replace(/\b\w/g,function(l){return l.toUpperCase();});
+    ctx.font='72px "Great Vibes"';
+    ctx.fillStyle='#1a1a2e';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(nombre,c.width/2,c.height/2-10);
+    // Línea decorativa
+    ctx.beginPath();ctx.moveTo(80,c.height/2+26);ctx.lineTo(c.width-80,c.height/2+26);
+    ctx.strokeStyle='#cccccc';ctx.lineWidth=1;ctx.stroke();
+    // Fecha y hora
+    var ahora=new Date();
+    var fechahora=ahora.toLocaleDateString('es-ES')+' · '+ahora.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    ctx.font='12px Georgia,serif';
+    ctx.fillStyle='#888888';
+    ctx.textAlign='center';
+    ctx.fillText('Firmado digitalmente el '+fechahora,c.width/2,c.height/2+44);
+    document.getElementById('cph').style.display='none';
+    HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;
+  });
 }
 
 function confirmar(){
   var c=document.getElementById('cnv');if(!c||!HAY_FIRMA)return;
   var btn=document.getElementById('btn-ok');btn.disabled=true;btn.textContent='Guardando…';
-  // Garantizar fondo blanco antes de exportar (firma manual sobre fondo transparente)
   var ctx=c.getContext('2d');
   ctx.globalCompositeOperation='destination-over';
   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
   ctx.globalCompositeOperation='source-over';
-  var img=c.toDataURL('image/png');
-  fetch(SUPA_URL+'/rest/v1/presupuestos?id=eq.'+PRES.id,{method:'PATCH',headers:H,body:JSON.stringify({estado_firma:'firmado',firma_img:img,fecha_firma:new Date().toISOString()})})
+  FIRMA_IMG=c.toDataURL('image/png');
+  var ahora=new Date().toISOString();
+  fetch(SUPA_URL+'/rest/v1/presupuestos?id=eq.'+PRES.id,{method:'PATCH',headers:H,body:JSON.stringify({estado_firma:'firmado',firma_img:FIRMA_IMG,fecha_firma:ahora})})
     .then(function(r){
       if(!r.ok)return r.text().then(function(t){throw new Error(t);});
-      PRES.firma_img=img;
+      PRES.firma_img=FIRMA_IMG;
+      PRES.fecha_firma=ahora;
       document.getElementById('app').innerHTML='<div class="success">'+
         '<div class="ok-icon">✅</div>'+
         '<div class="ok-title">¡Presupuesto firmado!</div>'+
         '<div class="ok-sub">'+esc(PRES.numero)+' · '+fn(PRES.total)+' €</div>'+
         '<div style="font-size:13px;color:var(--muted);max-width:300px">Gracias, <strong style="color:white">'+esc(PRES.cliente)+'</strong>. HAROSAT Ecotechnical se pondrá en contacto con usted.</div>'+
-        '<img src="'+img+'" class="firma-img" alt="Firma">'+
+        '<img src="'+FIRMA_IMG+'" class="firma-img" alt="Firma">'+
+        '<button class="btn-pdf" onclick="descargarPDF()">📄 Descargar PDF firmado</button>'+
         '</div>';
     }).catch(function(e){btn.disabled=false;btn.textContent='Confirmar y firmar →';alert('Error: '+e.message);});
+}
+
+function descargarPDF(){
+  var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=210, mg=18;
+
+  // Cabecera navy
+  doc.setFillColor(13,17,23);
+  doc.rect(0,0,W,28,'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.setTextColor(255,255,255);
+  doc.text('HAROSAT',mg,17);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(56,139,253);
+  doc.text('Ecotechnical · Haro, La Rioja',mg+38,17);
+
+  // Título
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.setTextColor(30,30,30);
+  doc.text('PRESUPUESTO FIRMADO',mg,42);
+  doc.setDrawColor(220,220,220);
+  doc.line(mg,46,W-mg,46);
+
+  // Datos
+  var y=56;
+  function fila(lbl,val,negrita){
+    doc.setFontSize(10);
+    doc.setTextColor(120,120,120);doc.setFont('helvetica','normal');doc.text(lbl,mg,y);
+    doc.setTextColor(20,20,20);
+    if(negrita)doc.setFont('helvetica','bold');else doc.setFont('helvetica','normal');
+    doc.text(String(val),W-mg,y,{align:'right'});
+    y+=8;
+  }
+  fila('Número de presupuesto',PRES.numero,true);
+  fila('Cliente',PRES.cliente,true);
+
+  // Descripción
+  doc.setFontSize(10);
+  doc.setTextColor(120,120,120);doc.setFont('helvetica','normal');doc.text('Descripción',mg,y);y+=6;
+  doc.setTextColor(20,20,20);
+  var desc=doc.splitTextToSize(PRES.descripcion||'—',W-mg*2);
+  doc.text(desc,mg,y);
+  y+=desc.length*6+4;
+
+  // Total
+  doc.setDrawColor(220,220,220);doc.line(mg,y,W-mg,y);y+=8;
+  doc.setFont('helvetica','bold');doc.setFontSize(13);
+  doc.setTextColor(31,111,235);doc.text('TOTAL',mg,y);
+  doc.setTextColor(20,20,20);doc.text(fn(PRES.total)+' €',W-mg,y,{align:'right'});
+  y+=14;
+
+  // Firma
+  doc.setDrawColor(220,220,220);doc.line(mg,y,W-mg,y);y+=10;
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(30,30,30);
+  doc.text('FIRMA DEL CLIENTE',mg,y);y+=8;
+  if(FIRMA_IMG){
+    try{doc.addImage(FIRMA_IMG,'PNG',mg,y,W-mg*2,40);y+=44;}catch(e){}
+  }
+  var fechaStr=PRES.fecha_firma?new Date(PRES.fecha_firma).toLocaleString('es-ES'):'—';
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,100,100);
+  doc.text('Firmado digitalmente el '+fechaStr,mg,y);y+=6;
+  doc.text('Validez legal conforme al art. 1262 del Código Civil español.',mg,y);
+
+  // Pie
+  doc.setFillColor(13,17,23);doc.rect(0,282,W,15,'F');
+  doc.setTextColor(150,150,150);doc.setFontSize(8);
+  doc.text('HAROSAT Ecotechnical · harosat@gmail.com · Haro, La Rioja',W/2,291,{align:'center'});
+
+  doc.save('Presupuesto_'+PRES.numero+'_firmado.pdf');
 }
 </script>
 
