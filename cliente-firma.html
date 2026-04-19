@@ -28,9 +28,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .tabs{display:flex;background:var(--s2);border-radius:10px;padding:3px;gap:3px;margin-bottom:14px;}
 .tab{flex:1;padding:9px;text-align:center;border-radius:7px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Outfit',sans-serif;}
 .tab.on{background:var(--s1);color:white;box-shadow:0 1px 4px rgba(0,0,0,.4);}
-.cwrap{position:relative;border:2px dashed var(--border);border-radius:10px;background:var(--s3);overflow:hidden;touch-action:none;margin-bottom:8px;}
+.cwrap{position:relative;border:2px dashed var(--border);border-radius:10px;background:#ffffff;overflow:hidden;touch-action:none;margin-bottom:8px;}
 canvas{display:block;width:100%;cursor:crosshair;}
-.cph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:13px;color:var(--muted);}
+.cph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:13px;color:#aaaaaa;}
 .btn-clear{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;font-family:'Outfit',sans-serif;display:block;margin:0 0 14px auto;}
 .btn-auto{background:var(--s3);border:1px solid var(--border);color:var(--light);padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:14px;}
 .btn-ok{width:100%;padding:14px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;}
@@ -39,7 +39,7 @@ canvas{display:block;width:100%;cursor:crosshair;}
 .ok-icon{width:64px;height:64px;background:rgba(63,185,80,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;}
 .ok-title{font-size:20px;font-weight:800;color:white;}
 .ok-sub{font-size:13px;color:var(--muted);}
-.firma-img{width:100%;border-radius:8px;margin-top:8px;}
+.firma-img{width:100%;border-radius:8px;margin-top:8px;border:1px solid var(--border);}
 .loading{text-align:center;padding:60px 20px;color:var(--muted);}
 .error{text-align:center;padding:60px 20px;color:var(--red);}
 </style>
@@ -105,7 +105,7 @@ function mostrarFormulario(){
     '<button class="tab" id="tab-auto" onclick="setModo(\'auto\')">✦ Firma automática</button>'+
     '</div>'+
     '<div class="cwrap" id="cwrap"><canvas id="cnv" width="600" height="160"></canvas><div class="cph" id="cph">Firma aquí con el dedo o el ratón</div>'+
-    '<div style="position:absolute;bottom:28px;left:8%;right:8%;border-bottom:1px solid var(--border);pointer-events:none"></div></div>'+
+    '<div style="position:absolute;bottom:28px;left:8%;right:8%;border-bottom:1px solid #cccccc;pointer-events:none"></div></div>'+
     '<button class="btn-clear" onclick="limpiar()">Borrar firma</button>'+
     '<button class="btn-ok" id="btn-ok" onclick="confirmar()" disabled>Confirmar y firmar →</button>'+
     '</div>';
@@ -125,7 +125,7 @@ function setModo(m){
     btn.onclick=generarAuto;
     cwrap.parentNode.insertBefore(btn, document.getElementById('btn-ok'));
   }else{
-    cwrap.innerHTML='<canvas id="cnv" width="600" height="160"></canvas><div class="cph" id="cph">Firma aquí con el dedo o el ratón</div><div style="position:absolute;bottom:28px;left:8%;right:8%;border-bottom:1px solid var(--border);pointer-events:none"></div>';
+    cwrap.innerHTML='<canvas id="cnv" width="600" height="160"></canvas><div class="cph" id="cph">Firma aquí con el dedo o el ratón</div><div style="position:absolute;bottom:28px;left:8%;right:8%;border-bottom:1px solid #cccccc;pointer-events:none"></div>';
     var old=document.querySelector('.btn-auto');if(old)old.remove();
     setTimeout(initCanvas,60);
   }
@@ -135,9 +135,11 @@ function setModo(m){
 function initCanvas(){
   var c=document.getElementById('cnv');if(!c)return;
   var ctx=c.getContext('2d');
+  // Fondo blanco inicial
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
   function gp(e){var r=c.getBoundingClientRect();var sx=c.width/r.width,sy=c.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
   function start(e){e.preventDefault();var p=gp(e);ctx.beginPath();ctx.moveTo(p.x,p.y);DIBUJANDO=true;}
-  function draw(e){e.preventDefault();if(!DIBUJANDO)return;var p=gp(e);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#e6edf3';ctx.lineTo(p.x,p.y);ctx.stroke();document.getElementById('cph').style.display='none';HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;}
+  function draw(e){e.preventDefault();if(!DIBUJANDO)return;var p=gp(e);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#000000';ctx.lineTo(p.x,p.y);ctx.stroke();document.getElementById('cph').style.display='none';HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;}
   function stop(e){e.preventDefault();DIBUJANDO=false;}
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop,{passive:false});
@@ -145,7 +147,9 @@ function initCanvas(){
 
 function limpiar(){
   var c=document.getElementById('cnv');if(!c)return;
-  c.getContext('2d').clearRect(0,0,c.width,c.height);
+  var ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
   document.getElementById('cph').style.display='';
   HAY_FIRMA=false;document.getElementById('btn-ok').disabled=true;
 }
@@ -154,12 +158,24 @@ function generarAuto(){
   var c=document.getElementById('cnv');if(!c)return;
   var ctx=c.getContext('2d');
   ctx.clearRect(0,0,c.width,c.height);
-  ctx.fillStyle='#161b22';ctx.fillRect(0,0,c.width,c.height);
-  ctx.font='italic 52px Georgia,serif';ctx.fillStyle='#e6edf3';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(PRES.cliente,c.width/2,c.height/2-8);
-  ctx.beginPath();ctx.moveTo(60,c.height/2+26);ctx.lineTo(c.width-60,c.height/2+26);ctx.strokeStyle='#30363d';ctx.lineWidth=1;ctx.stroke();
-  ctx.font='11px monospace';ctx.fillStyle='#7d8590';ctx.textAlign='right';
-  ctx.fillText('Aceptado '+new Date().toLocaleDateString('es-ES'),c.width-16,c.height-12);
+  // Fondo blanco
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+  // Nombre en cursiva elegante negra
+  ctx.font='italic 56px Georgia,serif';
+  ctx.fillStyle='#111111';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(PRES.cliente,c.width/2,c.height/2-14);
+  // Línea separadora
+  ctx.beginPath();ctx.moveTo(60,c.height/2+22);ctx.lineTo(c.width-60,c.height/2+22);
+  ctx.strokeStyle='#cccccc';ctx.lineWidth=1;ctx.stroke();
+  // Fecha y hora
+  var ahora=new Date();
+  var fechahora=ahora.toLocaleDateString('es-ES')+' '+ahora.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  ctx.font='13px Georgia,serif';
+  ctx.fillStyle='#444444';
+  ctx.textAlign='center';
+  ctx.fillText('Firmado el '+fechahora,c.width/2,c.height/2+42);
   document.getElementById('cph').style.display='none';
   HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;
 }
@@ -167,6 +183,11 @@ function generarAuto(){
 function confirmar(){
   var c=document.getElementById('cnv');if(!c||!HAY_FIRMA)return;
   var btn=document.getElementById('btn-ok');btn.disabled=true;btn.textContent='Guardando…';
+  // Garantizar fondo blanco antes de exportar (firma manual sobre fondo transparente)
+  var ctx=c.getContext('2d');
+  ctx.globalCompositeOperation='destination-over';
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+  ctx.globalCompositeOperation='source-over';
   var img=c.toDataURL('image/png');
   fetch(SUPA_URL+'/rest/v1/presupuestos?id=eq.'+PRES.id,{method:'PATCH',headers:H,body:JSON.stringify({estado_firma:'firmado',firma_img:img,fecha_firma:new Date().toISOString()})})
     .then(function(r){
