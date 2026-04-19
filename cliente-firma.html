@@ -5,7 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>HAROSAT · Firmar presupuesto</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Montserrat:ital,wght@1,300;1,400;1,500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#060910;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--border:#30363d;--text:#e6edf3;--muted:#7d8590;--light:#b1bac4;--blue:#1f6feb;--blue2:#388bfd;--green:#3fb950;--red:#f85149;--gold:#e3b341;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -159,28 +159,32 @@ function limpiar(){
 }
 
 function generarAuto(){
-  document.fonts.load('72px "Great Vibes"').then(function(){
+  document.fonts.load('italic 300 48px "Montserrat"').then(function(){
     var c=document.getElementById('cnv');if(!c)return;
     var ctx=c.getContext('2d');
     ctx.clearRect(0,0,c.width,c.height);
     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
-    // Nombre en cursiva elegante
+
+    // Nombre en Montserrat Italic Light
     var nombre=PRES.cliente.toLowerCase().replace(/\b\w/g,function(l){return l.toUpperCase();});
-    ctx.font='72px "Great Vibes"';
-    ctx.fillStyle='#1a1a2e';
+    ctx.font='italic 300 48px "Montserrat"';
+    ctx.fillStyle='#111111';
     ctx.textAlign='center';
     ctx.textBaseline='middle';
-    ctx.fillText(nombre,c.width/2,c.height/2-10);
-    // Línea decorativa
-    ctx.beginPath();ctx.moveTo(80,c.height/2+26);ctx.lineTo(c.width-80,c.height/2+26);
-    ctx.strokeStyle='#cccccc';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText(nombre, c.width/2, c.height/2-12);
+
+    // Línea fina elegante
+    ctx.beginPath();ctx.moveTo(60,c.height/2+20);ctx.lineTo(c.width-60,c.height/2+20);
+    ctx.strokeStyle='#dddddd';ctx.lineWidth=1;ctx.stroke();
+
     // Fecha y hora
     var ahora=new Date();
     var fechahora=ahora.toLocaleDateString('es-ES')+' · '+ahora.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-    ctx.font='12px Georgia,serif';
-    ctx.fillStyle='#888888';
+    ctx.font='400 11px "Montserrat"';
+    ctx.fillStyle='#999999';
     ctx.textAlign='center';
-    ctx.fillText('Firmado digitalmente el '+fechahora,c.width/2,c.height/2+44);
+    ctx.fillText('Firmado digitalmente el '+fechahora, c.width/2, c.height/2+40);
+
     document.getElementById('cph').style.display='none';
     HAY_FIRMA=true;document.getElementById('btn-ok').disabled=false;
   });
