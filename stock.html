@@ -285,7 +285,7 @@ async function supa(method,path,body){
 function setConn(ok){document.getElementById('cd').className=ok?'ok':'err';document.getElementById('cl').textContent=ok?'Conectado':'Sin conexión'}
 async function loadItems(){
   try{const d=await supa('GET',TABLE+'?order=descripcion.asc&select=*');items=d||[];setConn(true);render()}
-  catch(e){setConn(false);notify('Error: '+e.message,'err');document.getElementById('tbody').innerHTML='<tr><td colspan="8"><div class="empty"><div class="eico">⚠️</div>Error de conexión</div></td></tr>'}
+  catch(e){setConn(false);notify('Error: '+e.message,'err');document.getElementById('tbody').innerHTML='<tr><td colspan="8"><div class="empty"><div class="eico">⚠️</div><p style="color:#e05252;font-size:13px;margin-top:8px">'+e.message+'</p></div></td></tr>'}
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function render(){
