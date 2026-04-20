@@ -128,6 +128,7 @@ td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
 <nav class="tabs">
   <button class="tab active" onclick="showTab('comparador', this)">📊 Comparador</button>
   <button class="tab" onclick="showTab('articulos', this)">📦 Artículos</button>
+  <button class="tab" onclick="showTab('distribuidores', this)">🏪 Distribuidores</button>
   <button class="tab" onclick="showTab('precios', this)">💶 Precios</button>
   <button class="tab" onclick="showTab('ranking', this)">🏆 Ranking</button>
 </nav>
@@ -198,6 +199,30 @@ td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
       <tbody id="art-tbody">
         <tr><td colspan="5" class="loading"><span class="spinner"></span>Cargando...</td></tr>
       </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DISTRIBUIDORES -->
+
+<div id="tab-distribuidores" class="panel">
+  <div class="card">
+    <div class="card-title">🏪 Nuevo Distribuidor</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:3;min-width:200px;">
+        <label>Nombre</label>
+        <input type="text" id="dist-nombre" placeholder="Ej: Zabaleta, Leroy Merlin...">
+      </div>
+      <div class="form-group" style="flex:0;">
+        <label>&nbsp;</label>
+        <button class="btn btn-success" onclick="addDistribuidor()">➕ Añadir</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nombre</th><th>Artículos con precio</th><th></th></tr></thead>
+      <tbody id="dist-tbody"><tr><td colspan="3" class="loading"><span class="spinner"></span>Cargando...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -332,6 +357,7 @@ async function loadAll() {
 
 function renderAll() {
   renderArticulos();
+  renderDistribuidores();
   renderComparador();
   renderPreciosLog();
   populateSelects();
@@ -502,7 +528,51 @@ async function addPrecio() {
   const art_id = document.getElementById('precio-art').value;
   const dist_id = document.getElementById('precio-dist').value;
   const valor = parseFloat(document.getElementById('precio-valor').value);
-  const fecha = document.getElementById('precio-fecha').value || new Date().toISOString().slice(0,10);
+  const fecha = 
+// ── DISTRIBUIDORES ──
+function renderDistribuidores() {
+  const tbody = document.getElementById('dist-tbody');
+  if (!distribuidores.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">No hay distribuidores. Añade el primero.</td></tr>'; return; }
+  tbody.innerHTML = distribuidores.map(d => {
+    const count = precios.filter(p => p.distribuidor_id === d.id).length;
+    return `<tr>
+      <td><strong style="color:#e8ecf4">${d.nombre}</strong></td>
+      <td style="color:#8891aa">${count} precio${count !== 1 ? 's' : ''} registrado${count !== 1 ? 's' : ''}</td>
+      <td><button class="btn btn-danger" onclick="delDistribuidor(${d.id},'${d.nombre.replace(/'/g,"\'")}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function addDistribuidor() {
+  const nombre = document.getElementById('dist-nombre').value.trim();
+  if (!nombre) { toast('Introduce un nombre', true); return; }
+  if (distribuidores.find(d => d.nombre.toLowerCase() === nombre.toLowerCase())) { toast('Ya existe ese distribuidor', true); return; }
+  try {
+    const [r] = await sbFetch('precio_distribuidores', {
+      method: 'POST',
+      body: JSON.stringify({ nombre })
+    });
+    distribuidores.push(r);
+    distribuidores.sort((a,b) => a.nombre.localeCompare(b.nombre));
+    document.getElementById('dist-nombre').value = '';
+    renderDistribuidores(); populateSelects(); renderComparador();
+    toast('Distribuidor añadido ✔');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+async function delDistribuidor(id, nombre) {
+  if (!confirm('¿Eliminar "' + nombre + '" y todos sus precios?')) return;
+  try {
+    await sbFetch('precios?distribuidor_id=eq.' + id, { method: 'DELETE', prefer: '' });
+    await sbFetch('precio_distribuidores?id=eq.' + id, { method: 'DELETE', prefer: '' });
+    distribuidores = distribuidores.filter(d => d.id !== id);
+    precios = precios.filter(p => p.distribuidor_id !== id);
+    renderDistribuidores(); populateSelects(); renderComparador(); renderPreciosLog();
+    toast('Distribuidor eliminado');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+document.getElementById('precio-fecha').value || new Date().toISOString().slice(0,10);
   if (!art_id || !dist_id || isNaN(valor) || valor < 0) { toast('Rellena todos los campos', true); return; }
   try {
     const existing = precios.find(p => p.articulo_id == art_id && p.distribuidor_id == dist_id);
@@ -616,6 +686,50 @@ function renderRanking() {
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;color:#5A9F3E">${totalAh.toFixed(2)} €</div>
     <div style="color:#8891aa;font-size:13px;margin-top:4px">diferencia entre el distribuidor más caro y el más barato por artículo</div>
   `;
+}
+
+
+// ── DISTRIBUIDORES ──
+function renderDistribuidores() {
+  const tbody = document.getElementById('dist-tbody');
+  if (!distribuidores.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">No hay distribuidores. Añade el primero.</td></tr>'; return; }
+  tbody.innerHTML = distribuidores.map(d => {
+    const count = precios.filter(p => p.distribuidor_id === d.id).length;
+    return `<tr>
+      <td><strong style="color:#e8ecf4">${d.nombre}</strong></td>
+      <td style="color:#8891aa">${count} precio${count !== 1 ? 's' : ''} registrado${count !== 1 ? 's' : ''}</td>
+      <td><button class="btn btn-danger" onclick="delDistribuidor(${d.id},'${d.nombre.replace(/'/g,"\'")}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function addDistribuidor() {
+  const nombre = document.getElementById('dist-nombre').value.trim();
+  if (!nombre) { toast('Introduce un nombre', true); return; }
+  if (distribuidores.find(d => d.nombre.toLowerCase() === nombre.toLowerCase())) { toast('Ya existe ese distribuidor', true); return; }
+  try {
+    const [r] = await sbFetch('precio_distribuidores', {
+      method: 'POST',
+      body: JSON.stringify({ nombre })
+    });
+    distribuidores.push(r);
+    distribuidores.sort((a,b) => a.nombre.localeCompare(b.nombre));
+    document.getElementById('dist-nombre').value = '';
+    renderDistribuidores(); populateSelects(); renderComparador();
+    toast('Distribuidor añadido ✔');
+  } catch(e) { toast('Error: ' + e.message, true); }
+}
+
+async function delDistribuidor(id, nombre) {
+  if (!confirm('¿Eliminar "' + nombre + '" y todos sus precios?')) return;
+  try {
+    await sbFetch('precios?distribuidor_id=eq.' + id, { method: 'DELETE', prefer: '' });
+    await sbFetch('precio_distribuidores?id=eq.' + id, { method: 'DELETE', prefer: '' });
+    distribuidores = distribuidores.filter(d => d.id !== id);
+    precios = precios.filter(p => p.distribuidor_id !== id);
+    renderDistribuidores(); populateSelects(); renderComparador(); renderPreciosLog();
+    toast('Distribuidor eliminado');
+  } catch(e) { toast('Error: ' + e.message, true); }
 }
 
 document.getElementById('precio-fecha').value = new Date().toISOString().slice(0,10);
