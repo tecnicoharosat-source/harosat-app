@@ -177,6 +177,13 @@ td.tprc{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#
     </div>
     <div class="mbody">
       <div class="fgrid">
+        <div class="fi full" id="cat-search-wrap">
+          <label>Buscar en catálogo (opcional)</label>
+          <div style="position:relative">
+            <input type="text" id="cat-search" placeholder="Escribe nombre o referencia para buscar…" oninput="searchCatalog()" autocomplete="off">
+            <div id="cat-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1e2f40;border:1px solid #3B8AC7;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:50"></div>
+          </div>
+        </div>
         <div class="fi"><label>Referencia / Código *</label><input type="text" id="f-ref" placeholder="Ej: CAL-001"></div>
         <div class="fi"><label>Categoría *</label><select id="f-cat"></select></div>
         <div class="fi full"><label>Descripción *</label><input type="text" id="f-desc" placeholder="Descripción del artículo"></div>
@@ -304,6 +311,8 @@ function openModal(id){
   }else{
     document.getElementById('m-ico').textContent='＋';document.getElementById('m-tit').textContent='Nuevo artículo';
     ['f-ref','f-desc','f-qty','f-min','f-precio','f-ubic','f-prov'].forEach(x=>document.getElementById(x).value='');
+    document.getElementById('cat-search').value='';
+    document.getElementById('cat-results').style.display='none';
   }
   document.getElementById('ov-art').classList.add('open');
 }
@@ -364,12 +373,77 @@ function notify(msg,type){
   d.innerHTML='<span>'+(type==='ok'?'✔':type==='err'?'✖':'ℹ')+'</span><span>'+msg+'</span>';
   document.getElementById('notif').appendChild(d);setTimeout(()=>d.remove(),3200);
 }
-document.addEventListener('DOMContentLoaded',()=>{
-  buildCats();loadItems();
-  document.getElementById('srch').addEventListener('input',render);
-  document.getElementById('fcat').addEventListener('change',render);
-  document.getElementById('falt').addEventListener('change',render);
+
+// ── BUSCAR EN CATÁLOGO ──
+let catalogData = [];
+
+async function loadCatalog() {
+try {
+catalogData = await supa(‘GET’, ‘articulos?select=id,referencia,descripcion,categoria,proveedor&order=descripcion.asc’);
+} catch(e) { catalogData = []; }
+}
+
+function searchCatalog() {
+const q = document.getElementById(‘cat-search’).value.trim().toLowerCase();
+const res = document.getElementById(‘cat-results’);
+if (q.length < 2) { res.style.display = ‘none’; return; }
+const matches = catalogData.filter(a =>
+(a.descripcion||’’).toLowerCase().includes(q) ||
+(a.referencia||’’).toLowerCase().includes(q)
+).slice(0, 10);
+if (!matches.length) { res.style.display = ‘none’; return; }
+res.innerHTML = matches.map(a => `<div onclick="selectFromCatalog(${a.id})" style="padding:9px 12px;cursor:pointer;border-bottom:1px solid #2d4a62;font-size:13px;color:#e8f0f7;transition:background .15s" onmouseover="this.style.background='#243647'" onmouseout="this.style.background=''"> <div style="font-weight:600">${a.descripcion||'—'}</div> <div style="font-size:11px;color:#5a7a94">${a.referencia||''} ${a.proveedor ? '· '+a.proveedor : ''}</div> </div>`).join(’’);
+res.style.display = ‘block’;
+}
+
+function selectFromCatalog(id) {
+const a = catalogData.find(x => x.id === id);
+if (!a) return;
+document.getElementById(‘f-ref’).value = a.referencia || ‘’;
+document.getElementById(‘f-desc’).value = a.descripcion || ‘’;
+document.getElementById(‘f-prov’).value = a.proveedor || ‘’;
+// Map category
+const cat = mapStockCat(a.categoria);
+const sel = document.getElementById(‘f-cat’);
+for (let i = 0; i < sel.options.length; i++) {
+if (sel.options[i].value === cat) { sel.selectedIndex = i; break; }
+}
+document.getElementById(‘cat-search’).value = a.descripcion || ‘’;
+document.getElementById(‘cat-results’).style.display = ‘none’;
+}
+
+function mapStockCat(cat) {
+if (!cat) return ‘Varios’;
+const c = cat.toLowerCase();
+if (c.includes(‘caldera’) || c.includes(‘calefac’) || c.includes(‘radiador’)) return ‘Calderas’;
+if (c.includes(‘bomba’) || c.includes(‘calor’)) return ‘Bombas de calor’;
+if (c.includes(‘suelo’)) return ‘Suelo radiante’;
+if (c.includes(‘tuber’) || c.includes(‘tubo’)) return ‘Tuberías y accesorios’;
+if (c.includes(‘válvula’) || c.includes(‘valvula’)) return ‘Válvulas y llaves’;
+if (c.includes(‘depós’) || c.includes(‘acumul’)) return ‘Depósitos y acumuladores’;
+if (c.includes(‘electr’) || c.includes(‘termostato’)) return ‘Eléctrico / Termostatos’;
+if (c.includes(‘canaleta’)) return c.includes(‘7’) ? ‘Canaleta 7x5,5’ : ‘Canaleta 9x6’;
+if (c.includes(‘soporte’) || c.includes(‘aire’)) return ‘Soporte pared aire’;
+if (c.includes(‘herram’)) return ‘Herramientas’;
+if (c.includes(‘epi’) || c.includes(‘segur’)) return ‘EPI / Seguridad’;
+return ‘Varios’;
+}
+
+// Close results when clicking outside
+document.addEventListener(‘click’, e => {
+if (!e.target.closest(’#cat-search-wrap’)) {
+const r = document.getElementById(‘cat-results’);
+if (r) r.style.display = ‘none’;
+}
+});
+
+document.addEventListener(‘DOMContentLoaded’,()=>{
+buildCats();loadItems();loadCatalog();
+document.getElementById(‘srch’).addEventListener(‘input’,render);
+document.getElementById(‘fcat’).addEventListener(‘change’,render);
+document.getElementById(‘falt’).addEventListener(‘change’,render);
 });
 </script>
+
 </body>
 </html>
