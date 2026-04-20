@@ -124,6 +124,19 @@ td.tprc{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#
 .ntf.info{background:rgba(59,138,199,.95);color:#fff;-webkit-text-fill-color:#fff;border:1px solid #3B8AC7}
 @media(max-width:560px){.fgrid{grid-template-columns:1fr}}
 </style>
+
+<script>
+(function(){
+  var V='1776727083';
+  if(localStorage.getItem('app_v')!==V){
+    localStorage.setItem('app_v',V);
+    if(performance.navigation&&performance.navigation.type!==1){
+      window.location.reload(true);
+    }
+  }
+})();
+</script>
+
 </head>
 <body>
 <header>
