@@ -187,7 +187,17 @@ select.fc option{background:var(--card2);}
     <div class="mtitle" id="mtitle">NUEVO AVISO</div>
     <div class="fg">
       <label class="fl">Cliente *</label>
-      <select class="fc" id="fcli"><option value="">Seleccionar cliente...</option></select>
+      <select class="fc" id="fcli" onchange="onCliChange()"><option value="">Seleccionar cliente...</option></select>
+    </div>
+    <div class="fg" id="fg-manual" style="display:none">
+      <label class="fl">Nombre del cliente (manual)</label>
+      <input type="text" class="fc" id="fcli-manual" placeholder="Escribe el nombre del cliente...">
+    </div>
+    <div style="margin-top:-8px;margin-bottom:14px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer">
+        <input type="checkbox" id="chk-manual" onchange="toggleManual()" style="width:15px;height:15px;accent-color:var(--blue)">
+        Cliente no aparece en la lista, escribir manualmente
+      </label>
     </div>
     <div class="fg">
       <label class="fl">Tipo de trabajo *</label>
@@ -265,14 +275,30 @@ async function sbReq(path, opts) {
 
 async function loadClientes() {
   try {
-    clientes = await sbReq("clientes?select=id,nombre,direccion&order=nombre.asc");
+    var cli = await sbReq("clientes?select=id,nombre,direccion&order=nombre.asc");
+    var rev = await sbReq("revisiones?select=nombre,direccion&order=nombre.asc");
+    // Merge: clientes with id, revisiones as manual (id=null)
+    var nombres = {};
+    var lista = [];
+    for (var i=0; i<cli.length; i++) {
+      nombres[cli[i].nombre.toLowerCase()] = true;
+      lista.push({id: cli[i].id, nombre: cli[i].nombre, direccion: cli[i].direccion||"", fuente:"cli"});
+    }
+    for (var i=0; i<rev.length; i++) {
+      if (!nombres[rev[i].nombre.toLowerCase()]) {
+        nombres[rev[i].nombre.toLowerCase()] = true;
+        lista.push({id: null, nombre: rev[i].nombre, direccion: rev[i].direccion||"", fuente:"rev"});
+      }
+    }
+    lista.sort(function(a,b){ return a.nombre.localeCompare(b.nombre,"es"); });
+    clientes = lista;
     var sel = document.getElementById("fcli");
     sel.innerHTML = '<option value="">Seleccionar cliente...</option>';
-    for (var i = 0; i < clientes.length; i++) {
-      var c = clientes[i];
+    for (var i=0; i<lista.length; i++) {
+      var c = lista[i];
       var o = document.createElement("option");
-      o.value = c.id;
-      o.textContent = c.nombre + (c.direccion ? " - " + c.direccion : "");
+      o.value = c.id !== null ? c.id : "rev:"+c.nombre;
+      o.textContent = c.nombre + (c.direccion ? " - " + c.direccion : "") + (c.fuente==="rev" ? " [Rev]" : "");
       sel.appendChild(o);
     }
   } catch(e) { console.error("loadClientes:", e); }
@@ -392,6 +418,10 @@ function abrirModal(a) {
   document.getElementById("fhora").value = "09:00";
   document.getElementById("fimp").value = "";
   document.getElementById("fnotas").value = "";
+  document.getElementById("chk-manual").checked = false;
+  document.getElementById("fg-manual").style.display = "none";
+  document.getElementById("fcli").style.display = "block";
+  document.getElementById("fcli-manual").value = "";
   recsOn = {"1h": true};
   var rbs = document.querySelectorAll(".rb");
   rbs[0].classList.add("on"); rbs[1].classList.remove("on"); rbs[2].classList.remove("on");
@@ -431,9 +461,27 @@ async function guardar() {
   var hora=document.getElementById("fhora").value;
   var imp=document.getElementById("fimp").value;
   var notas=document.getElementById("fnotas").value.trim();
-  if (!cliId||!trab||!fecha) { showToast("Cliente, trabajo y fecha son obligatorios","error"); return; }
+  var esManualCheck = document.getElementById("chk-manual").checked;
+  if ((!cliId&&!esManualCheck)||!trab||!fecha) { showToast("Cliente, trabajo y fecha son obligatorios","error"); return; }
+  // Handle manual client
+  var esManual = document.getElementById("chk-manual").checked;
+  var nombreManual = document.getElementById("fcli-manual").value.trim();
+  if (esManual && !nombreManual) { showToast("Escribe el nombre del cliente", "error"); return; }
   var cli=null;
   for (var i=0;i<clientes.length;i++) { if (String(clientes[i].id)===String(cliId)) { cli=clientes[i]; break; } }
+  // Handle rev: prefix (revisiones client, no id)
+  var realClienteId = null;
+  var realNombre = "";
+  if (esManual) {
+    realClienteId = null;
+    realNombre = nombreManual;
+  } else if (cliId && cliId.indexOf("rev:") === 0) {
+    realClienteId = null;
+    realNombre = cliId.replace("rev:", "");
+  } else {
+    realClienteId = cliId ? parseInt(cliId) : null;
+    realNombre = cli ? cli.nombre : "";
+  }
   var fh=new Date(fecha+"T"+hora+":00").toISOString();
   var dtC=new Date(fecha+"T"+hora+":00");
   var r1=null, r2=null;
@@ -443,7 +491,7 @@ async function guardar() {
     var rf=document.getElementById("frf").value, rh=document.getElementById("frh").value;
     if (rf&&rh) { var rr=new Date(rf+"T"+rh+":00").toISOString(); if(!r1)r1=rr;else r2=rr; }
   }
-  var payload={cliente_id:parseInt(cliId),nombre_cliente:cli?cli.nombre:"",tipo_trabajo:trab,fecha_hora:fh,importe:imp?parseFloat(imp):0,notas:notas,recordatorio_1:r1,recordatorio_2:r2,estado:"pendiente"};
+  var payload={cliente_id:realClienteId,nombre_cliente:realNombre,tipo_trabajo:trab,fecha_hora:fh,importe:imp?parseFloat(imp):0,notas:notas,recordatorio_1:r1,recordatorio_2:r2,estado:"pendiente"};
   var btn=document.getElementById("bsave");
   btn.disabled=true; btn.textContent="Guardando...";
   try {
@@ -452,6 +500,18 @@ async function guardar() {
     cerrarModal(); await loadAvisos(); render();
   } catch(e) { console.error(e); showToast("Error guardando aviso","error"); }
   finally { btn.disabled=false; btn.textContent="Guardar aviso"; }
+}
+
+function onCliChange() {
+  var v = document.getElementById("fcli").value;
+  // if rev: prefix, it is from revisiones (no client_id), allow it
+}
+
+function toggleManual() {
+  var chk = document.getElementById("chk-manual").checked;
+  document.getElementById("fg-manual").style.display = chk ? "block" : "none";
+  document.getElementById("fcli").style.display = chk ? "none" : "block";
+  if (!chk) document.getElementById("fcli-manual").value = "";
 }
 
 function editarAviso(id) { for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){abrirModal(avisos[i]);return;}} }
