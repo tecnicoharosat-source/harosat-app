@@ -19,13 +19,13 @@ header{background:linear-gradient(135deg,var(--bg2),#0d1a38);border-bottom:2px s
 .header-r{display:flex;align-items:center;gap:10px;}
 .clock{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--yellow);letter-spacing:2px;}
 .btn-new{background:linear-gradient(135deg,var(--blue),#2a6fa8);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(59,138,199,0.35);transition:all 0.2s;}
-.btn-new:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,138,199,0.5);}
+.btn-new:hover{transform:translateY(-1px);}
 .banner{background:linear-gradient(135deg,var(--bg2),var(--card));border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .b-left .lbl{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:2px;}
 .b-left .date{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text);letter-spacing:1px;}
 .stats{display:flex;gap:10px;}
 .stat{display:flex;flex-direction:column;align-items:center;background:var(--card2);border-radius:10px;padding:8px 14px;border:1px solid var(--border);min-width:72px;cursor:pointer;transition:all 0.2s;}
-.stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.stat:hover{transform:translateY(-2px);}
 .stat .n{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;}
 .stat .l{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;}
 .stat.p .n{color:var(--yellow);}
@@ -36,7 +36,6 @@ header{background:linear-gradient(135deg,var(--bg2),#0d1a38);border-bottom:2px s
 #notif-bar button{margin-left:auto;background:var(--blue);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
 .tabs{display:flex;padding:14px 18px 0;border-bottom:1px solid var(--border);background:var(--bg);}
 .tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:7px;white-space:nowrap;}
-.tab:hover{color:var(--text);}
 .tab.active{color:var(--bluel);border-bottom-color:var(--blue);}
 .badge{border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;background:var(--card2);color:var(--muted);border:1px solid var(--border);}
 .tab.active .bp{background:rgba(253,185,19,0.15);color:var(--yellow);border-color:rgba(253,185,19,0.3);}
@@ -75,14 +74,10 @@ header{background:linear-gradient(135deg,var(--bg2),#0d1a38);border-bottom:2px s
 .acts{margin-left:auto;display:flex;gap:7px;}
 .ba{border-radius:8px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid;transition:all 0.15s;font-family:'DM Sans',sans-serif;}
 .ba-edit{background:rgba(59,138,199,0.1);border-color:rgba(59,138,199,0.3);color:var(--bluel);}
-.ba-edit:hover{background:rgba(59,138,199,0.25);border-color:var(--blue);transform:translateY(-1px);}
 .ba-done{background:rgba(90,159,62,0.1);border-color:rgba(90,159,62,0.3);color:var(--green);}
-.ba-done:hover{background:rgba(90,159,62,0.25);border-color:var(--green);transform:translateY(-1px);}
 .ba-rej{background:rgba(231,76,60,0.1);border-color:rgba(231,76,60,0.3);color:var(--red);}
-.ba-rej:hover{background:rgba(231,76,60,0.25);border-color:var(--red);transform:translateY(-1px);}
 .empty{text-align:center;padding:60px 20px;color:var(--muted);}
 .empty .ico{font-size:52px;margin-bottom:14px;opacity:0.5;}
-.empty p{font-size:14px;}
 .loading{display:flex;align-items:center;justify-content:center;padding:50px;color:var(--muted);gap:10px;}
 .spinner{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -95,9 +90,16 @@ header{background:linear-gradient(135deg,var(--bg2),#0d1a38);border-bottom:2px s
 .fg{margin-bottom:16px;}
 .fl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;display:block;}
 .fc{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color 0.2s;-webkit-appearance:none;}
-.fc:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,138,199,0.1);}
+.fc:focus{outline:none;border-color:var(--blue);}
 select.fc option{background:var(--card2);}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cli-drop{background:var(--bg2);border:1px solid var(--blue);border-radius:9px;max-height:180px;overflow-y:auto;margin-top:4px;display:none;}
+.cli-item{padding:10px 13px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);}
+.cli-item:last-child{border-bottom:none;}
+.cli-item:active{background:rgba(59,138,199,0.2);}
+.cli-sel{background:rgba(59,138,199,0.15);border:1px solid var(--blue);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);display:none;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.cli-sel span{font-weight:600;}
+.cli-sel button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 2px;}
 .rec-box{background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:16px;}
 .rec-t{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px;}
 .rec-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
@@ -107,9 +109,8 @@ select.fc option{background:var(--card2);}
 .crec.show{display:block;}
 .macts{display:flex;gap:10px;margin-top:22px;}
 .btn-cancel{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
-.btn-save{flex:2;background:linear-gradient(135deg,var(--blue),#2a6fa8);border:none;border-radius:10px;padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(59,138,199,0.35);}
-.btn-save:hover{box-shadow:0 6px 20px rgba(59,138,199,0.5);transform:translateY(-1px);}
-.btn-save:disabled{background:var(--border);color:var(--muted);box-shadow:none;transform:none;cursor:not-allowed;}
+.btn-save{flex:2;background:linear-gradient(135deg,var(--blue),#2a6fa8);border:none;border-radius:10px;padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(59,138,199,0.35);}
+.btn-save:disabled{background:var(--border);color:var(--muted);box-shadow:none;cursor:not-allowed;}
 .cov{display:none;position:fixed;inset:0;background:rgba(5,12,30,0.85);z-index:300;align-items:center;justify-content:center;}
 .cov.show{display:flex;}
 .cbox{background:linear-gradient(135deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:18px;padding:26px;width:90%;max-width:390px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.6);}
@@ -144,33 +145,18 @@ select.fc option{background:var(--card2);}
     <div class="date" id="hoy">Cargando...</div>
   </div>
   <div class="stats">
-    <div class="stat p" onclick="cambiarTab('pendiente',document.getElementById('tp'))">
-      <span class="n" id="np">0</span><span class="l">Pendientes</span>
-    </div>
-    <div class="stat t" onclick="cambiarTab('terminado',document.getElementById('tt'))">
-      <span class="n" id="nt">0</span><span class="l">Terminados</span>
-    </div>
-    <div class="stat r" onclick="cambiarTab('rechazado',document.getElementById('tr'))">
-      <span class="n" id="nr">0</span><span class="l">Rechazados</span>
-    </div>
+    <div class="stat p" onclick="cambiarTab('pendiente',document.getElementById('tp'))"><span class="n" id="np">0</span><span class="l">Pendientes</span></div>
+    <div class="stat t" onclick="cambiarTab('terminado',document.getElementById('tt'))"><span class="n" id="nt">0</span><span class="l">Terminados</span></div>
+    <div class="stat r" onclick="cambiarTab('rechazado',document.getElementById('tr'))"><span class="n" id="nr">0</span><span class="l">Rechazados</span></div>
   </div>
 </div>
 
-<div id="notif-bar">
-  Activa las notificaciones para recibir avisos de tus citas
-  <button onclick="pedirNotif()">Activar</button>
-</div>
+<div id="notif-bar">Activa las notificaciones para recibir avisos<button onclick="pedirNotif()">Activar</button></div>
 
 <div class="tabs">
-  <div class="tab active" id="tp" onclick="cambiarTab('pendiente',this)">
-    Pendientes <span class="badge bp" id="bp">0</span>
-  </div>
-  <div class="tab" id="tt" onclick="cambiarTab('terminado',this)">
-    Terminados <span class="badge bt" id="bt">0</span>
-  </div>
-  <div class="tab" id="tr" onclick="cambiarTab('rechazado',this)">
-    Rechazados <span class="badge br" id="br">0</span>
-  </div>
+  <div class="tab active" id="tp" onclick="cambiarTab('pendiente',this)">Pendientes <span class="badge bp" id="bp">0</span></div>
+  <div class="tab" id="tt" onclick="cambiarTab('terminado',this)">Terminados <span class="badge bt" id="bt">0</span></div>
+  <div class="tab" id="tr" onclick="cambiarTab('rechazado',this)">Rechazados <span class="badge br" id="br">0</span></div>
 </div>
 
 <div class="main">
@@ -185,458 +171,438 @@ select.fc option{background:var(--card2);}
   <div class="modal">
     <div class="mhandle"></div>
     <div class="mtitle" id="mtitle">NUEVO AVISO</div>
-    <div class="fg" id="fg-lista">
-      <label class="fl">Cliente *</label>
-      <input type="text" class="fc" id="cli-search" placeholder="Buscar cliente..." oninput="poblarClientes(this.value)" autocomplete="off" style="margin-bottom:6px" onblur="setTimeout(function(){document.getElementById('cli-lista').style.display='none';},300)">
-      <input type="hidden" id="fcli" value="">
-      <div id="cli-selected" style="display:none;background:rgba(59,138,199,0.15);border:1px solid var(--blue);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);margin-bottom:6px;align-items:center;justify-content:space-between;">
-        <span id="cli-selected-name"></span>
-        <button onclick="limpiarCliente()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;">&#10005;</button>
-      </div>
-      <div id="cli-lista" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;max-height:160px;overflow-y:auto;display:none;"></div>
-    </div>
-    <div class="fg" id="fg-manual" style="display:none">
-      <label class="fl">Nombre del cliente (manual)</label>
-      <input type="text" class="fc" id="fcli-manual" placeholder="Escribe el nombre del cliente...">
-    </div>
-    <div style="margin-top:-8px;margin-bottom:14px">
-      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer">
-        <input type="checkbox" id="chk-manual" onchange="toggleManual()" style="width:15px;height:15px;accent-color:var(--blue)">
-        Cliente no aparece en la lista, escribir manualmente
-      </label>
-    </div>
-    <div class="fg">
-      <label class="fl">Tipo de trabajo *</label>
-      <textarea class="fc" id="ftrab" rows="2" placeholder="Descripcion del trabajo..."></textarea>
-    </div>
+
+```
+<div class="fg" id="fg-lista">
+  <label class="fl">Cliente *</label>
+  <div class="cli-sel" id="cli-sel">
+    <span id="cli-sel-name"></span>
+    <button onclick="limpiarCli()">&#10005;</button>
+  </div>
+  <input type="text" class="fc" id="cli-q" placeholder="Buscar cliente..." autocomplete="off" oninput="filtrarCli(this.value)" style="margin-bottom:4px">
+  <div class="cli-drop" id="cli-drop"></div>
+</div>
+
+<div class="fg" id="fg-manual" style="display:none">
+  <label class="fl">Nombre del cliente (manual)</label>
+  <input type="text" class="fc" id="fcli-manual" placeholder="Escribe el nombre...">
+</div>
+
+<div style="margin-bottom:16px">
+  <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer">
+    <input type="checkbox" id="chk-manual" onchange="togManual()" style="width:16px;height:16px;accent-color:var(--blue)">
+    No aparece en la lista, escribir manualmente
+  </label>
+</div>
+
+<div class="fg"><label class="fl">Tipo de trabajo *</label><textarea class="fc" id="ftrab" rows="2" placeholder="Descripcion del trabajo..."></textarea></div>
+<div class="frow">
+  <div class="fg"><label class="fl">Fecha *</label><input type="date" class="fc" id="ffecha"></div>
+  <div class="fg"><label class="fl">Hora</label><input type="time" class="fc" id="fhora" value="09:00"></div>
+</div>
+<div class="fg"><label class="fl">Importe (euros)</label><input type="number" class="fc" id="fimp" placeholder="0.00" step="0.01" min="0"></div>
+<div class="rec-box">
+  <div class="rec-t">Recordatorios</div>
+  <div class="rec-opts">
+    <button class="rb on" onclick="togRec('1h',this)">1 hora antes</button>
+    <button class="rb" onclick="togRec('1d',this)">1 dia antes</button>
+    <button class="rb" onclick="togRec('custom',this)">Personalizado</button>
+  </div>
+  <div class="crec" id="crec">
     <div class="frow">
-      <div class="fg"><label class="fl">Fecha *</label><input type="date" class="fc" id="ffecha"></div>
-      <div class="fg"><label class="fl">Hora</label><input type="time" class="fc" id="fhora" value="09:00"></div>
-    </div>
-    <div class="fg">
-      <label class="fl">Importe (euros)</label>
-      <input type="number" class="fc" id="fimp" placeholder="0.00" step="0.01" min="0">
-    </div>
-    <div class="rec-box">
-      <div class="rec-t">Recordatorios</div>
-      <div class="rec-opts">
-        <button class="rb on" onclick="togRec('1h',this)">1 hora antes</button>
-        <button class="rb" onclick="togRec('1d',this)">1 dia antes</button>
-        <button class="rb" onclick="togRec('custom',this)">Personalizado</button>
-      </div>
-      <div class="crec" id="crec">
-        <div class="frow">
-          <div class="fg" style="margin-bottom:0"><label class="fl">Fecha aviso</label><input type="date" class="fc" id="frf"></div>
-          <div class="fg" style="margin-bottom:0"><label class="fl">Hora aviso</label><input type="time" class="fc" id="frh" value="08:00"></div>
-        </div>
-      </div>
-    </div>
-    <div class="fg">
-      <label class="fl">Notas</label>
-      <textarea class="fc" id="fnotas" rows="2" placeholder="Notas adicionales..."></textarea>
-    </div>
-    <div class="macts">
-      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn-save" id="bsave" onclick="guardar()">Guardar aviso</button>
+      <div class="fg" style="margin-bottom:0"><label class="fl">Fecha aviso</label><input type="date" class="fc" id="frf"></div>
+      <div class="fg" style="margin-bottom:0"><label class="fl">Hora aviso</label><input type="time" class="fc" id="frh" value="08:00"></div>
     </div>
   </div>
 </div>
+<div class="fg"><label class="fl">Notas</label><textarea class="fc" id="fnotas" rows="2" placeholder="Notas adicionales..."></textarea></div>
+<div class="macts">
+  <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+  <button class="btn-save" id="bsave" onclick="guardar()">Guardar aviso</button>
+</div>
+```
 
-<div class="cov" id="cov">
-  <div class="cbox" id="cbox"></div>
+  </div>
 </div>
 
+<div class="cov" id="cov"><div class="cbox" id="cbox"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-
 var SBURL = "https://sobiyfyzalynxcpfoldc.supabase.co";
 var SBKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek";
-var avisos = [], clientes = [], tabActual = "pendiente", editId = null, recsOn = {"1h": true};
+var avisos = [], clientes = [], tabActual = "pendiente", editId = null;
+var recsOn = {"1h":true};
+var cliSelId = null, cliSelNombre = "";
 
-function pad(x) { return String(x).padStart(2, "0"); }
+function pad(x){return String(x).padStart(2,"0");}
 
-function tick() {
-  var n = new Date();
-  document.getElementById("clock").textContent = pad(n.getHours()) + ":" + pad(n.getMinutes());
+function tick(){
+  var n=new Date();
+  document.getElementById("clock").textContent=pad(n.getHours())+":"+pad(n.getMinutes());
 }
 
-function setHoy() {
-  var n = new Date();
-  var D = ["DOMINGO","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO"];
-  var M = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
-  document.getElementById("hoy").textContent = D[n.getDay()] + " " + n.getDate() + " " + M[n.getMonth()] + " " + n.getFullYear();
+function setHoy(){
+  var n=new Date();
+  var D=["DOMINGO","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO"];
+  var M=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+  document.getElementById("hoy").textContent=D[n.getDay()]+" "+n.getDate()+" "+M[n.getMonth()]+" "+n.getFullYear();
 }
 
-async function sbReq(path, opts) {
-  opts = opts || {};
-  var headers = {"apikey": SBKEY, "Authorization": "Bearer " + SBKEY, "Content-Type": "application/json", "Prefer": "return=representation"};
-  if (opts.headers) Object.assign(headers, opts.headers);
-  opts.headers = headers;
-  var r = await fetch(SBURL + "/rest/v1/" + path, opts);
-  if (!r.ok) throw new Error(await r.text());
-  var t = await r.text();
-  return t ? JSON.parse(t) : [];
+async function sbReq(path,opts){
+  opts=opts||{};
+  var r=await fetch(SBURL+"/rest/v1/"+path,{
+    method:opts.method||"GET",
+    headers:{"apikey":SBKEY,"Authorization":"Bearer "+SBKEY,"Content-Type":"application/json","Prefer":"return=representation"},
+    body:opts.body||undefined
+  });
+  if(!r.ok) throw new Error(await r.text());
+  var t=await r.text();
+  return t?JSON.parse(t):[];
 }
 
-async function loadClientes() {
-  try {
-    var cli = await sbReq("clientes?select=id,nombre,direccion");
-    var rev = [];
-    try { rev = await sbReq("revisiones?select=nombre,direccion"); } catch(e2) { console.warn("revisiones:", e2); }
-    var nombres = {};
-    var lista = [];
-    for (var i=0; i<cli.length; i++) {
-      if (!cli[i].nombre) continue;
-      nombres[cli[i].nombre.toLowerCase()] = true;
-      lista.push({id: cli[i].id, nombre: cli[i].nombre, direccion: cli[i].direccion||"", fuente:"cli"});
+async function loadClientes(){
+  try{
+    var cli=await sbReq("clientes?select=id,nombre,direccion");
+    var rev=[];
+    try{ rev=await sbReq("revisiones?select=nombre,direccion"); }catch(e){}
+    var seen={};
+    var lista=[];
+    for(var i=0;i<cli.length;i++){
+      if(!cli[i].nombre) continue;
+      seen[cli[i].nombre.toLowerCase()]=1;
+      lista.push({id:cli[i].id,nombre:cli[i].nombre,dir:cli[i].direccion||""});
     }
-    for (var i=0; i<rev.length; i++) {
-      if (!rev[i].nombre) continue;
-      if (!nombres[rev[i].nombre.toLowerCase()]) {
-        nombres[rev[i].nombre.toLowerCase()] = true;
-        lista.push({id: null, nombre: rev[i].nombre, direccion: rev[i].direccion||"", fuente:"rev"});
-      }
+    for(var i=0;i<rev.length;i++){
+      if(!rev[i].nombre) continue;
+      if(seen[rev[i].nombre.toLowerCase()]) continue;
+      seen[rev[i].nombre.toLowerCase()]=1;
+      lista.push({id:null,nombre:rev[i].nombre,dir:rev[i].direccion||""});
     }
-    lista.sort(function(a,b){ return a.nombre.localeCompare(b.nombre,"es"); });
-    clientes = lista;
-    poblarClientes("");
-  } catch(e) { console.error("loadClientes:", e); }
+    lista.sort(function(a,b){return a.nombre.localeCompare(b.nombre,"es");});
+    clientes=lista;
+  }catch(e){console.error("loadClientes:",e);}
 }
 
-function poblarClientes(filtro) {
-  var f = (filtro||"").toLowerCase();
-  var lista = document.getElementById("cli-lista");
-  var seleccionado = document.getElementById("fcli").value;
-  // Show list only when typing
-  if (!f) { lista.style.display = "none"; return; }
-  lista.style.display = "block";
-  lista.innerHTML = "";
-  var count = 0;
-  for (var i=0; i<clientes.length; i++) {
-    var c = clientes[i];
-    if (c.nombre.toLowerCase().indexOf(f) === -1) continue;
-    count++;
-    var d = document.createElement("div");
-    d.style.cssText = "padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);color:var(--text);";
-    d.textContent = c.nombre + (c.direccion ? " — " + c.direccion : "") + (c.fuente==="rev" ? " [Rev]" : "");
-    var val = c.id !== null ? String(c.id) : "rev:"+c.nombre;
-    var nombre = c.nombre;
-    d.setAttribute("data-val", val);
-    d.setAttribute("data-nombre", nombre);
-    d.addEventListener("click", function() {
-      seleccionarCliente(this.getAttribute("data-val"), this.getAttribute("data-nombre"));
-    });
-    d.addEventListener("touchend", function(e) {
-      e.preventDefault();
-      seleccionarCliente(this.getAttribute("data-val"), this.getAttribute("data-nombre"));
-    });
-    d.onmouseover = function(){ this.style.background="rgba(59,138,199,0.15)"; };
-    d.onmouseout = function(){ this.style.background=""; };
-    lista.appendChild(d);
-  }
-  if (!count) {
-    var d = document.createElement("div");
-    d.style.cssText = "padding:9px 12px;font-size:13px;color:var(--muted);";
-    d.textContent = "No se encontró ningún cliente";
-    lista.appendChild(d);
-  }
-}
-
-function seleccionarCliente(val, nombre) {
-  document.getElementById("fcli").value = val;
-  document.getElementById("cli-search").value = "";
-  document.getElementById("cli-lista").style.display = "none";
-  var sel = document.getElementById("cli-selected");
-  sel.style.display = "flex";
-  document.getElementById("cli-selected-name").textContent = nombre;
-}
-
-function limpiarCliente() {
-  document.getElementById("fcli").value = "";
-  document.getElementById("cli-selected").style.display = "none";
-  document.getElementById("cli-search").value = "";
-  document.getElementById("cli-lista").style.display = "none";
-}
-
-async function loadAvisos() {
-  try {
-    var d = await sbReq("avisos?select=*");
-    d.sort(function(a,b) { return new Date(a.fecha_hora) - new Date(b.fecha_hora); });
-    avisos = d;
+async function loadAvisos(){
+  try{
+    var d=await sbReq("avisos?select=*");
+    d.sort(function(a,b){return new Date(a.fecha_hora)-new Date(b.fecha_hora);});
+    avisos=d;
     updateCounters();
-  } catch(e) {
-    console.error("loadAvisos:", e);
-    showToast("Error cargando avisos", "error");
-  }
+  }catch(e){console.error("loadAvisos:",e);showToast("Error cargando avisos","error");}
 }
 
-function updateCounters() {
-  var p=0, t=0, r=0;
-  for (var i=0; i<avisos.length; i++) {
-    if (avisos[i].estado==="pendiente") p++;
-    else if (avisos[i].estado==="terminado") t++;
-    else if (avisos[i].estado==="rechazado") r++;
+function updateCounters(){
+  var p=0,t=0,r=0;
+  for(var i=0;i<avisos.length;i++){
+    if(avisos[i].estado==="pendiente") p++;
+    else if(avisos[i].estado==="terminado") t++;
+    else if(avisos[i].estado==="rechazado") r++;
   }
-  document.getElementById("np").textContent=p; document.getElementById("nt").textContent=t; document.getElementById("nr").textContent=r;
-  document.getElementById("bp").textContent=p; document.getElementById("bt").textContent=t; document.getElementById("br").textContent=r;
+  document.getElementById("np").textContent=p;
+  document.getElementById("nt").textContent=t;
+  document.getElementById("nr").textContent=r;
+  document.getElementById("bp").textContent=p;
+  document.getElementById("bt").textContent=t;
+  document.getElementById("br").textContent=r;
 }
 
-function cambiarTab(tab, el) {
-  tabActual = tab;
-  document.querySelectorAll(".tab").forEach(function(t){ t.classList.remove("active"); });
+function cambiarTab(tab,el){
+  tabActual=tab;
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
   el.classList.add("active");
   render();
 }
 
-function render() {
-  var q = (document.getElementById("q").value || "").toLowerCase();
-  var lista = document.getElementById("lista");
-  var rows = [];
-  for (var i=0; i<avisos.length; i++) {
-    if (avisos[i].estado !== tabActual) continue;
-    if (q) {
-      var nm = (avisos[i].nombre_cliente||"").toLowerCase();
-      var tr = (avisos[i].tipo_trabajo||"").toLowerCase();
-      if (nm.indexOf(q)===-1 && tr.indexOf(q)===-1) continue;
+function render(){
+  var q=(document.getElementById("q").value||"").toLowerCase();
+  var lista=document.getElementById("lista");
+  var rows=[];
+  for(var i=0;i<avisos.length;i++){
+    if(avisos[i].estado!==tabActual) continue;
+    if(q){
+      var nm=(avisos[i].nombre_cliente||"").toLowerCase();
+      var tr=(avisos[i].tipo_trabajo||"").toLowerCase();
+      if(nm.indexOf(q)===-1&&tr.indexOf(q)===-1) continue;
     }
     rows.push(avisos[i]);
   }
-  if (!rows.length) {
+  if(!rows.length){
     var lbl={pendiente:"pendientes",terminado:"terminados",rechazado:"rechazados"};
-    lista.innerHTML = '<div class="empty"><div class="ico">&#128197;</div><p>No hay avisos '+lbl[tabActual]+'</p></div>';
+    lista.innerHTML="<div class=\"empty\"><div class=\"ico\">&#128197;</div><p>No hay avisos "+lbl[tabActual]+"</p></div>";
     return;
   }
   var html="";
-  for (var i=0; i<rows.length; i++) html += renderCard(rows[i]);
-  lista.innerHTML = html;
+  for(var i=0;i<rows.length;i++) html+=renderCard(rows[i]);
+  lista.innerHTML=html;
 }
 
-function renderCard(a) {
-  var dt = new Date(a.fecha_hora);
+function renderCard(a){
+  var dt=new Date(a.fecha_hora);
   var DS=["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
   var MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-  var fecha = DS[dt.getDay()]+" "+dt.getDate()+" "+MS[dt.getMonth()]+" "+dt.getFullYear()+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());
-  var imp = a.importe ? parseFloat(a.importe).toFixed(2).replace(".",",")+"\u20AC" : "-";
-  var cd = getCountdown(dt, a.estado);
-  var chips = "";
-  if (a.recordatorio_1) chips += '<span class="rc">&#128276; '+fmtRec(new Date(a.recordatorio_1))+'</span>';
-  if (a.recordatorio_2) chips += '<span class="rc">&#128276; '+fmtRec(new Date(a.recordatorio_2))+'</span>';
-  if (!chips) chips = '<span style="font-size:11px;color:var(--muted)">Sin recordatorios</span>';
-  var acts = "";
-  if (a.estado==="pendiente") {
-    acts = '<button class="ba ba-edit" onclick="editarAviso('+a.id+')">Editar</button>'+
-           '<button class="ba ba-done" onclick="confTerminar('+a.id+')">Terminado</button>'+
-           '<button class="ba ba-rej" onclick="confRechazar('+a.id+')">Rechazar</button>';
-  } else {
-    acts = '<button class="ba ba-edit" onclick="editarAviso('+a.id+')">Ver</button>';
+  var fecha=DS[dt.getDay()]+" "+dt.getDate()+" "+MS[dt.getMonth()]+" "+dt.getFullYear()+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());
+  var imp=a.importe?parseFloat(a.importe).toFixed(2).replace(".",",")+"€":"-";
+  var cd=getCountdown(dt,a.estado);
+  var chips="";
+  if(a.recordatorio_1) chips+="<span class=\"rc\">&#128276; "+fmtRec(new Date(a.recordatorio_1))+"</span>";
+  if(a.recordatorio_2) chips+="<span class=\"rc\">&#128276; "+fmtRec(new Date(a.recordatorio_2))+"</span>";
+  if(!chips) chips="<span style=\"font-size:11px;color:var(--muted)\">Sin recordatorios</span>";
+  var acts="";
+  if(a.estado==="pendiente"){
+    acts="<button class=\"ba ba-edit\" onclick=\"editarAviso("+a.id+")\">Editar</button>"+
+         "<button class=\"ba ba-done\" onclick=\"confTerminar("+a.id+")\">Terminado</button>"+
+         "<button class=\"ba ba-rej\" onclick=\"confRechazar("+a.id+")\">Rechazar</button>";
+  }else{
+    acts="<button class=\"ba ba-edit\" onclick=\"editarAviso("+a.id+")\">Ver</button>";
   }
-  return '<div class="card '+a.estado+'">'+
-    '<div class="card-top">'+
-      '<div class="card-left">'+
-        '<div class="card-fecha">'+fecha+'</div>'+
-        '<div class="card-nombre">'+(a.nombre_cliente||"-")+'</div>'+
-        '<div class="card-trabajo">'+(a.tipo_trabajo||"-")+'</div>'+
+  return "<div class=\"card "+a.estado+"\">"+
+    "<div class=\"card-top\">"+
+      "<div class=\"card-left\">"+
+        "<div class=\"card-fecha\">"+fecha+"</div>"+
+        "<div class=\"card-nombre\">"+(a.nombre_cliente||"-")+"</div>"+
+        "<div class=\"card-trabajo\">"+(a.tipo_trabajo||"-")+"</div>"+
         cd+
-      '</div>'+
-      '<div class="card-right">'+
-        '<span class="ebadge '+a.estado+'">'+a.estado+'</span>'+
-        '<div class="importe">'+imp+'</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="card-bot">'+chips+'<div class="acts">'+acts+'</div></div>'+
-  '</div>';
+      "</div>"+
+      "<div class=\"card-right\">"+
+        "<span class=\"ebadge "+a.estado+"\">"+a.estado+"</span>"+
+        "<div class=\"importe\">"+imp+"</div>"+
+      "</div>"+
+    "</div>"+
+    "<div class=\"card-bot\">"+chips+"<div class=\"acts\">"+acts+"</div></div>"+
+  "</div>";
 }
 
-function getCountdown(dt, estado) {
-  if (estado!=="pendiente") return "";
-  var now=new Date(), diff=dt-now;
-  if (diff<0) return '<div class="cd urg">&#9888; Cita pasada</div>';
-  var h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000);
-  if (h===0&&m<60) return '<div class="cd urg">En '+m+' min</div>';
-  if (h<24) return '<div class="cd warn">En '+h+'h '+m+'min</div>';
+function getCountdown(dt,estado){
+  if(estado!=="pendiente") return "";
+  var now=new Date(),diff=dt-now;
+  if(diff<0) return "<div class=\"cd urg\">Cita pasada</div>";
+  var h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+  if(h===0&&m<60) return "<div class=\"cd urg\">En "+m+" min</div>";
+  if(h<24) return "<div class=\"cd warn\">En "+h+"h "+m+"min</div>";
   var d=Math.floor(h/24);
-  return '<div class="cd ok">En '+d+' dia'+(d>1?"s":"")+'</div>';
+  return "<div class=\"cd ok\">En "+d+" dia"+(d>1?"s":"")+"</div>";
 }
 
-function fmtRec(dt) {
+function fmtRec(dt){
   var D=["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
   return D[dt.getDay()]+" "+dt.getDate()+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());
 }
 
-function abrirModal(a) {
-  a = a || null;
-  editId = a ? a.id : null;
-  document.getElementById("mtitle").textContent = a ? "EDITAR AVISO" : "NUEVO AVISO";
-  document.getElementById("fcli").value = "";
-  document.getElementById("ftrab").value = "";
-  document.getElementById("fhora").value = "09:00";
-  document.getElementById("fimp").value = "";
-  document.getElementById("fnotas").value = "";
-  document.getElementById("chk-manual").checked = false;
-  document.getElementById("fg-manual").style.display = "none";
-  document.getElementById("fg-lista").style.display = "block";
-  document.getElementById("fcli-manual").value = "";
-  document.getElementById("cli-search").value = "";
-  document.getElementById("cli-lista").style.display = "none";
-  document.getElementById("cli-selected").style.display = "none";
-  document.getElementById("fcli").value = "";
-  recsOn = {"1h": true};
-  var rbs = document.querySelectorAll(".rb");
-  rbs[0].classList.add("on"); rbs[1].classList.remove("on"); rbs[2].classList.remove("on");
+/* ---- BUSCADOR CLIENTE ---- */
+function filtrarCli(val){
+  var drop=document.getElementById("cli-drop");
+  var f=val.toLowerCase().trim();
+  if(!f){drop.style.display="none";return;}
+  var html="";
+  for(var i=0;i<clientes.length;i++){
+    var c=clientes[i];
+    if(c.nombre.toLowerCase().indexOf(f)===-1) continue;
+    var etiq=c.nombre+(c.dir?" — "+c.dir:"");
+    html+="<div class=\"cli-item\" data-id=\""+(c.id!==null?c.id:"R:"+c.nombre)+"\" data-nombre=\""+c.nombre+"\">"+etiq+"</div>";
+  }
+  if(!html) html="<div class=\"cli-item\" style=\"color:var(--muted)\">Sin resultados</div>";
+  drop.innerHTML=html;
+  drop.style.display="block";
+  var items=drop.querySelectorAll(".cli-item[data-id]");
+  for(var j=0;j<items.length;j++){
+    items[j].addEventListener("touchstart",function(e){e.preventDefault();elegirCli(this.getAttribute("data-id"),this.getAttribute("data-nombre"));},{passive:false});
+    items[j].addEventListener("click",function(){elegirCli(this.getAttribute("data-id"),this.getAttribute("data-nombre"));});
+  }
+}
+
+function elegirCli(id,nombre){
+  cliSelId=id;
+  cliSelNombre=nombre;
+  document.getElementById("cli-q").value="";
+  document.getElementById("cli-drop").style.display="none";
+  document.getElementById("cli-sel-name").textContent=nombre;
+  document.getElementById("cli-sel").style.display="flex";
+}
+
+function limpiarCli(){
+  cliSelId=null;
+  cliSelNombre="";
+  document.getElementById("cli-sel").style.display="none";
+  document.getElementById("cli-q").value="";
+  document.getElementById("cli-drop").style.display="none";
+}
+
+function togManual(){
+  var chk=document.getElementById("chk-manual").checked;
+  document.getElementById("fg-manual").style.display=chk?"block":"none";
+  document.getElementById("fg-lista").style.display=chk?"none":"block";
+  if(chk) limpiarCli();
+  else document.getElementById("fcli-manual").value="";
+}
+
+/* ---- MODAL ---- */
+function abrirModal(a){
+  a=a||null;
+  editId=a?a.id:null;
+  document.getElementById("mtitle").textContent=a?"EDITAR AVISO":"NUEVO AVISO";
+  document.getElementById("ftrab").value="";
+  document.getElementById("fhora").value="09:00";
+  document.getElementById("fimp").value="";
+  document.getElementById("fnotas").value="";
+  document.getElementById("chk-manual").checked=false;
+  document.getElementById("fg-manual").style.display="none";
+  document.getElementById("fg-lista").style.display="block";
+  document.getElementById("fcli-manual").value="";
+  limpiarCli();
+  recsOn={"1h":true};
+  var rbs=document.querySelectorAll(".rb");
+  rbs[0].classList.add("on");rbs[1].classList.remove("on");rbs[2].classList.remove("on");
   document.getElementById("crec").classList.remove("show");
-  if (a) {
-    document.getElementById("fcli").value = a.cliente_id || "";
-    document.getElementById("ftrab").value = a.tipo_trabajo || "";
-    var dt = new Date(a.fecha_hora);
-    document.getElementById("ffecha").value = dt.toISOString().split("T")[0];
-    document.getElementById("fhora").value = pad(dt.getHours())+":"+pad(dt.getMinutes());
-    document.getElementById("fimp").value = a.importe || "";
-    document.getElementById("fnotas").value = a.notas || "";
+  if(a){
+    if(a.cliente_id){
+      elegirCli(String(a.cliente_id),a.nombre_cliente||"");
+    } else if(a.nombre_cliente){
+      document.getElementById("chk-manual").checked=true;
+      document.getElementById("fg-manual").style.display="block";
+      document.getElementById("fg-lista").style.display="none";
+      document.getElementById("fcli-manual").value=a.nombre_cliente;
+    }
+    document.getElementById("ftrab").value=a.tipo_trabajo||"";
+    var dt=new Date(a.fecha_hora);
+    document.getElementById("ffecha").value=dt.toISOString().split("T")[0];
+    document.getElementById("fhora").value=pad(dt.getHours())+":"+pad(dt.getMinutes());
+    document.getElementById("fimp").value=a.importe||"";
+    document.getElementById("fnotas").value=a.notas||"";
   } else {
-    document.getElementById("ffecha").value = new Date().toISOString().split("T")[0];
+    document.getElementById("ffecha").value=new Date().toISOString().split("T")[0];
   }
   document.getElementById("ov").classList.add("show");
 }
 
-function cerrarModal() { document.getElementById("ov").classList.remove("show"); editId=null; }
-function closeOv(e) { if (e.target===document.getElementById("ov")) cerrarModal(); }
+function cerrarModal(){document.getElementById("ov").classList.remove("show");editId=null;}
+function closeOv(e){if(e.target===document.getElementById("ov")) cerrarModal();}
 
-function togRec(t, btn) {
-  if (t==="custom") {
+function togRec(t,btn){
+  if(t==="custom"){
     var cr=document.getElementById("crec");
-    if (recsOn.custom) { delete recsOn.custom; btn.classList.remove("on"); cr.classList.remove("show"); }
-    else { recsOn.custom=true; btn.classList.add("on"); cr.classList.add("show"); }
+    if(recsOn.custom){delete recsOn.custom;btn.classList.remove("on");cr.classList.remove("show");}
+    else{recsOn.custom=true;btn.classList.add("on");cr.classList.add("show");}
     return;
   }
-  if (recsOn[t]) { delete recsOn[t]; btn.classList.remove("on"); }
-  else { recsOn[t]=true; btn.classList.add("on"); }
+  if(recsOn[t]){delete recsOn[t];btn.classList.remove("on");}
+  else{recsOn[t]=true;btn.classList.add("on");}
 }
 
-async function guardar() {
-  var cliId=document.getElementById("fcli").value;
+async function guardar(){
+  var esManual=document.getElementById("chk-manual").checked;
+  var nombreManual=document.getElementById("fcli-manual").value.trim();
   var trab=document.getElementById("ftrab").value.trim();
   var fecha=document.getElementById("ffecha").value;
   var hora=document.getElementById("fhora").value;
   var imp=document.getElementById("fimp").value;
   var notas=document.getElementById("fnotas").value.trim();
-  var esManualCheck = document.getElementById("chk-manual").checked;
-  if ((!cliId && !esManualCheck) || !trab || !fecha) { showToast("Cliente, trabajo y fecha son obligatorios","error"); return; }
-  // Handle manual client
-  var esManual = document.getElementById("chk-manual").checked;
-  var nombreManual = document.getElementById("fcli-manual").value.trim();
-  if (esManual && !nombreManual) { showToast("Escribe el nombre del cliente", "error"); return; }
-  var cli=null;
-  for (var i=0;i<clientes.length;i++) { if (String(clientes[i].id)===String(cliId)) { cli=clientes[i]; break; } }
-  // Handle rev: prefix (revisiones client, no id)
-  var realClienteId = null;
-  var realNombre = "";
-  if (esManual) {
-    realClienteId = null;
-    realNombre = nombreManual;
-  } else if (cliId && cliId.indexOf("rev:") === 0) {
-    realClienteId = null;
-    realNombre = cliId.replace("rev:", "");
+
+  if(esManual&&!nombreManual){showToast("Escribe el nombre del cliente","error");return;}
+  if(!esManual&&!cliSelId){showToast("Selecciona un cliente de la lista","error");return;}
+  if(!trab||!fecha){showToast("Trabajo y fecha son obligatorios","error");return;}
+
+  var realId=null, realNombre="";
+  if(esManual){
+    realId=null; realNombre=nombreManual;
   } else {
-    realClienteId = cliId ? parseInt(cliId) : null;
-    realNombre = cli ? cli.nombre : "";
+    var idStr=String(cliSelId);
+    if(idStr.indexOf("R:")===-1){ realId=parseInt(idStr); } else { realId=null; }
+    realNombre=cliSelNombre;
   }
+
   var fh=new Date(fecha+"T"+hora+":00").toISOString();
   var dtC=new Date(fecha+"T"+hora+":00");
-  var r1=null, r2=null;
-  if (recsOn["1h"]) { var rr=new Date(dtC.getTime()-3600000); if(!r1)r1=rr.toISOString();else r2=rr.toISOString(); }
-  if (recsOn["1d"]) { var rr=new Date(dtC.getTime()-86400000); if(!r1)r1=rr.toISOString();else r2=rr.toISOString(); }
-  if (recsOn.custom) {
-    var rf=document.getElementById("frf").value, rh=document.getElementById("frh").value;
-    if (rf&&rh) { var rr=new Date(rf+"T"+rh+":00").toISOString(); if(!r1)r1=rr;else r2=rr; }
+  var r1=null,r2=null;
+  if(recsOn["1h"]){var rr=new Date(dtC.getTime()-3600000);if(!r1)r1=rr.toISOString();else r2=rr.toISOString();}
+  if(recsOn["1d"]){var rr=new Date(dtC.getTime()-86400000);if(!r1)r1=rr.toISOString();else r2=rr.toISOString();}
+  if(recsOn.custom){
+    var rf=document.getElementById("frf").value,rh=document.getElementById("frh").value;
+    if(rf&&rh){var rr=new Date(rf+"T"+rh+":00").toISOString();if(!r1)r1=rr;else r2=rr;}
   }
-  var payload={cliente_id:realClienteId,nombre_cliente:realNombre,tipo_trabajo:trab,fecha_hora:fh,importe:imp?parseFloat(imp):0,notas:notas,recordatorio_1:r1,recordatorio_2:r2,estado:"pendiente"};
+
+  var payload={cliente_id:realId,nombre_cliente:realNombre,tipo_trabajo:trab,fecha_hora:fh,importe:imp?parseFloat(imp):0,notas:notas,recordatorio_1:r1,recordatorio_2:r2,estado:"pendiente"};
   var btn=document.getElementById("bsave");
-  btn.disabled=true; btn.textContent="Guardando...";
-  try {
-    if (editId) { await sbReq("avisos?id=eq."+editId,{method:"PATCH",body:JSON.stringify(payload)}); showToast("Aviso actualizado","success"); }
-    else { await sbReq("avisos",{method:"POST",body:JSON.stringify(payload)}); showToast("Aviso creado","success"); }
-    cerrarModal(); await loadAvisos(); render();
-  } catch(e) { console.error(e); showToast("Error guardando aviso","error"); }
-  finally { btn.disabled=false; btn.textContent="Guardar aviso"; }
+  btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(editId){await sbReq("avisos?id=eq."+editId,{method:"PATCH",body:JSON.stringify(payload)});showToast("Aviso actualizado","success");}
+    else{await sbReq("avisos",{method:"POST",body:JSON.stringify(payload)});showToast("Aviso creado","success");}
+    cerrarModal();await loadAvisos();render();
+  }catch(e){console.error(e);showToast("Error guardando aviso","error");}
+  finally{btn.disabled=false;btn.textContent="Guardar aviso";}
 }
 
-function toggleManual() {
-  var chk = document.getElementById("chk-manual").checked;
-  document.getElementById("fg-manual").style.display = chk ? "block" : "none";
-  document.getElementById("fg-lista").style.display = chk ? "none" : "block";
-  if (!chk) { document.getElementById("fcli-manual").value = ""; }
-  else { limpiarCliente(); }
-}
+function editarAviso(id){for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){abrirModal(avisos[i]);return;}}}
 
-function editarAviso(id) { for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){abrirModal(avisos[i]);return;}} }
-
-function confTerminar(id) {
-  var a=null; for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
+function confTerminar(id){
+  var a=null;for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
   if(!a) return;
   document.getElementById("cbox").innerHTML=
-    '<h3 style="color:var(--green)">MARCAR TERMINADO</h3>'+
-    '<p>Se enviara a <strong>'+a.nombre_cliente+'</strong> en Clientes.</p>'+
-    '<div class="fg" style="text-align:left;margin-bottom:10px"><label class="fl">Cobrado (euros)</label>'+
-    '<input type="number" class="fc" id="icob" step="0.01" value="'+(a.importe||0)+'"></div>'+
-    '<div class="fg" style="text-align:left;margin-bottom:18px"><label class="fl">Pendiente de cobro (euros)</label>'+
-    '<input type="number" class="fc" id="ipen" step="0.01" value="0"></div>'+
-    '<div class="cbtns"><button class="bcc" onclick="cerrarConf()">Cancelar</button>'+
-    '<button class="bco green" onclick="terminar('+id+')">Confirmar</button></div>';
+    "<h3 style=\"color:var(--green)\">MARCAR TERMINADO</h3>"+
+    "<p>Se enviara a <strong>"+a.nombre_cliente+"</strong> en Clientes.</p>"+
+    "<div class=\"fg\" style=\"text-align:left;margin-bottom:10px\"><label class=\"fl\">Cobrado (euros)</label>"+
+    "<input type=\"number\" class=\"fc\" id=\"icob\" step=\"0.01\" value=\""+(a.importe||0)+"\"></div>"+
+    "<div class=\"fg\" style=\"text-align:left;margin-bottom:18px\"><label class=\"fl\">Pendiente de cobro (euros)</label>"+
+    "<input type=\"number\" class=\"fc\" id=\"ipen\" step=\"0.01\" value=\"0\"></div>"+
+    "<div class=\"cbtns\"><button class=\"bcc\" onclick=\"cerrarConf()\">Cancelar</button>"+
+    "<button class=\"bco green\" onclick=\"terminar("+id+")\">Confirmar</button></div>";
   document.getElementById("cov").classList.add("show");
 }
 
-function confRechazar(id) {
-  var a=null; for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
+function confRechazar(id){
+  var a=null;for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
   if(!a) return;
   document.getElementById("cbox").innerHTML=
-    '<h3 style="color:var(--red)">RECHAZAR AVISO</h3>'+
-    '<p>Se marcara como rechazado el aviso de <strong>'+a.nombre_cliente+'</strong>.</p>'+
-    '<div class="cbtns" style="margin-top:18px"><button class="bcc" onclick="cerrarConf()">Cancelar</button>'+
-    '<button class="bco red" onclick="rechazar('+id+')">Rechazar</button></div>';
+    "<h3 style=\"color:var(--red)\">RECHAZAR AVISO</h3>"+
+    "<p>Se marcara como rechazado el aviso de <strong>"+a.nombre_cliente+"</strong>.</p>"+
+    "<div class=\"cbtns\" style=\"margin-top:18px\"><button class=\"bcc\" onclick=\"cerrarConf()\">Cancelar</button>"+
+    "<button class=\"bco red\" onclick=\"rechazar("+id+")\">Rechazar</button></div>";
   document.getElementById("cov").classList.add("show");
 }
 
-function cerrarConf() { document.getElementById("cov").classList.remove("show"); }
+function cerrarConf(){document.getElementById("cov").classList.remove("show");}
 
-async function terminar(id) {
-  var a=null; for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
+async function terminar(id){
+  var a=null;for(var i=0;i<avisos.length;i++){if(avisos[i].id===id){a=avisos[i];break;}}
   if(!a) return;
   var cob=parseFloat(document.getElementById("icob").value)||0;
   var pen=parseFloat(document.getElementById("ipen").value)||0;
-  try {
+  try{
     await sbReq("avisos?id=eq."+id,{method:"PATCH",body:JSON.stringify({estado:"terminado"})});
-    await sbReq("clientes?id=eq."+a.cliente_id,{method:"PATCH",body:JSON.stringify({trabajo:a.tipo_trabajo,presupuesto:parseFloat(a.importe)||0,cobrado:cob,pendiente:pen,terminado:true,updated_at:new Date().toISOString()})});
-    cerrarConf(); showToast("Terminado - datos enviados a Clientes","success");
-    await loadAvisos(); render();
-  } catch(e) { console.error(e); showToast("Error al terminar","error"); }
+    if(a.cliente_id){
+      await sbReq("clientes?id=eq."+a.cliente_id,{method:"PATCH",body:JSON.stringify({trabajo:a.tipo_trabajo,presupuesto:parseFloat(a.importe)||0,cobrado:cob,pendiente:pen,terminado:true,updated_at:new Date().toISOString()})});
+    }
+    cerrarConf();showToast("Terminado - datos enviados a Clientes","success");
+    await loadAvisos();render();
+  }catch(e){console.error(e);showToast("Error al terminar","error");}
 }
 
-async function rechazar(id) {
-  try {
+async function rechazar(id){
+  try{
     await sbReq("avisos?id=eq."+id,{method:"PATCH",body:JSON.stringify({estado:"rechazado"})});
-    cerrarConf(); showToast("Aviso rechazado","error");
-    await loadAvisos(); render();
-  } catch(e) { showToast("Error","error"); }
+    cerrarConf();showToast("Aviso rechazado","error");
+    await loadAvisos();render();
+  }catch(e){showToast("Error","error");}
 }
 
-async function pedirNotif() {
+async function pedirNotif(){
   var p=await Notification.requestPermission();
   if(p==="granted"){document.getElementById("notif-bar").classList.remove("show");showToast("Notificaciones activadas","success");}
 }
 
-function checkRecs() {
+function checkRecs(){
   if(Notification.permission!=="granted") return;
-  var now=new Date(), margen=60000;
+  var now=new Date(),margen=60000;
   for(var i=0;i<avisos.length;i++){
-    var a=avisos[i]; if(a.estado!=="pendiente") continue;
+    var a=avisos[i];if(a.estado!=="pendiente") continue;
     var recs=[a.recordatorio_1,a.recordatorio_2];
     for(var j=0;j<recs.length;j++){
       if(!recs[j]) continue;
       var dt=new Date(recs[j]);
       if(Math.abs(dt-now)<margen){
         var c=new Date(a.fecha_hora);
-        new Notification("HAROSAT - Cita proxima",{body:a.nombre_cliente+" - "+a.tipo_trabajo+" - "+pad(c.getHours())+":"+pad(c.getMinutes()),tag:"aviso-"+a.id+"-"+j});
+        new Notification("HAROSAT - Cita proxima",{body:a.nombre_cliente+" - "+a.tipo_trabajo+" - "+pad(c.getHours())+":"+pad(c.getMinutes()),tag:"av-"+a.id+"-"+j});
       }
     }
   }
@@ -645,25 +611,20 @@ function checkRecs() {
 function showToast(msg,type){
   type=type||"info";
   var t=document.getElementById("toast");
-  t.textContent=msg; t.className="toast show "+type;
+  t.textContent=msg;t.className="toast show "+type;
   setTimeout(function(){t.className="toast";},3000);
 }
 
-document.addEventListener("DOMContentLoaded", async function() {
-  tick();
-  setInterval(tick, 1000);
+document.addEventListener("DOMContentLoaded",async function(){
+  tick();setInterval(tick,1000);
   setHoy();
-  document.getElementById("lista").innerHTML = '<div class="loading"><div class="spinner"></div> Cargando...</div>';
   await loadClientes();
   await loadAvisos();
   render();
-  if (Notification.permission === "default") {
-    document.getElementById("notif-bar").classList.add("show");
-  }
-  setInterval(checkRecs, 60000);
+  if(Notification.permission==="default") document.getElementById("notif-bar").classList.add("show");
+  setInterval(checkRecs,60000);
   checkRecs();
 });
-
 </script>
 
 </body>
