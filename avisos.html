@@ -188,7 +188,7 @@ select.fc option{background:var(--card2);}
     <div class="fg" id="fg-lista">
       <label class="fl">Cliente *</label>
       <input type="text" class="fc" id="cli-search" placeholder="Buscar cliente..." oninput="poblarClientes(this.value)" style="margin-bottom:6px">
-      <select class="fc" id="fcli" onchange="onCliChange()" size="4" style="height:auto;padding:4px 0;">
+      <select class="fc" id="fcli" onchange="onCliChange()">
         <option value="">Seleccionar cliente...</option>
       </select>
     </div>
@@ -475,7 +475,7 @@ async function guardar() {
   var imp=document.getElementById("fimp").value;
   var notas=document.getElementById("fnotas").value.trim();
   var esManualCheck = document.getElementById("chk-manual").checked;
-  if ((!cliId&&!esManualCheck)||!trab||!fecha) { showToast("Cliente, trabajo y fecha son obligatorios","error"); return; }
+  if ((!cliId && !esManualCheck) || !trab || !fecha) { showToast("Cliente, trabajo y fecha son obligatorios","error"); return; }
   // Handle manual client
   var esManual = document.getElementById("chk-manual").checked;
   var nombreManual = document.getElementById("fcli-manual").value.trim();
