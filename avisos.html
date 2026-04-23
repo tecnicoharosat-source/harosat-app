@@ -187,7 +187,7 @@ select.fc option{background:var(--card2);}
     <div class="mtitle" id="mtitle">NUEVO AVISO</div>
     <div class="fg" id="fg-lista">
       <label class="fl">Cliente *</label>
-      <input type="text" class="fc" id="cli-search" placeholder="Buscar cliente..." oninput="poblarClientes(this.value)" autocomplete="off" style="margin-bottom:6px">
+      <input type="text" class="fc" id="cli-search" placeholder="Buscar cliente..." oninput="poblarClientes(this.value)" autocomplete="off" style="margin-bottom:6px" onblur="setTimeout(function(){document.getElementById('cli-lista').style.display='none';},300)">
       <input type="hidden" id="fcli" value="">
       <div id="cli-selected" style="display:none;background:rgba(59,138,199,0.15);border:1px solid var(--blue);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);margin-bottom:6px;align-items:center;justify-content:space-between;">
         <span id="cli-selected-name"></span>
@@ -322,10 +322,15 @@ function poblarClientes(filtro) {
     d.textContent = c.nombre + (c.direccion ? " — " + c.direccion : "") + (c.fuente==="rev" ? " [Rev]" : "");
     var val = c.id !== null ? String(c.id) : "rev:"+c.nombre;
     var nombre = c.nombre;
-    d.onmousedown = (function(v, n) { return function(e) {
+    d.setAttribute("data-val", val);
+    d.setAttribute("data-nombre", nombre);
+    d.addEventListener("click", function() {
+      seleccionarCliente(this.getAttribute("data-val"), this.getAttribute("data-nombre"));
+    });
+    d.addEventListener("touchend", function(e) {
       e.preventDefault();
-      seleccionarCliente(v, n);
-    }; })(val, nombre);
+      seleccionarCliente(this.getAttribute("data-val"), this.getAttribute("data-nombre"));
+    });
     d.onmouseover = function(){ this.style.background="rgba(59,138,199,0.15)"; };
     d.onmouseout = function(){ this.style.background=""; };
     lista.appendChild(d);
