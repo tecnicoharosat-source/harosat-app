@@ -185,9 +185,12 @@ select.fc option{background:var(--card2);}
   <div class="modal">
     <div class="mhandle"></div>
     <div class="mtitle" id="mtitle">NUEVO AVISO</div>
-    <div class="fg">
+    <div class="fg" id="fg-lista">
       <label class="fl">Cliente *</label>
-      <select class="fc" id="fcli" onchange="onCliChange()"><option value="">Seleccionar cliente...</option></select>
+      <input type="text" class="fc" id="cli-search" placeholder="Buscar cliente..." oninput="poblarClientes(this.value)" style="margin-bottom:6px">
+      <select class="fc" id="fcli" onchange="onCliChange()" size="4" style="height:auto;padding:4px 0;">
+        <option value="">Seleccionar cliente...</option>
+      </select>
     </div>
     <div class="fg" id="fg-manual" style="display:none">
       <label class="fl">Nombre del cliente (manual)</label>
@@ -275,16 +278,18 @@ async function sbReq(path, opts) {
 
 async function loadClientes() {
   try {
-    var cli = await sbReq("clientes?select=id,nombre,direccion&order=nombre.asc");
-    var rev = await sbReq("revisiones?select=nombre,direccion&order=nombre.asc");
-    // Merge: clientes with id, revisiones as manual (id=null)
+    var cli = await sbReq("clientes?select=id,nombre,direccion");
+    var rev = [];
+    try { rev = await sbReq("revisiones?select=nombre,direccion"); } catch(e2) { console.warn("revisiones:", e2); }
     var nombres = {};
     var lista = [];
     for (var i=0; i<cli.length; i++) {
+      if (!cli[i].nombre) continue;
       nombres[cli[i].nombre.toLowerCase()] = true;
       lista.push({id: cli[i].id, nombre: cli[i].nombre, direccion: cli[i].direccion||"", fuente:"cli"});
     }
     for (var i=0; i<rev.length; i++) {
+      if (!rev[i].nombre) continue;
       if (!nombres[rev[i].nombre.toLowerCase()]) {
         nombres[rev[i].nombre.toLowerCase()] = true;
         lista.push({id: null, nombre: rev[i].nombre, direccion: rev[i].direccion||"", fuente:"rev"});
@@ -292,16 +297,22 @@ async function loadClientes() {
     }
     lista.sort(function(a,b){ return a.nombre.localeCompare(b.nombre,"es"); });
     clientes = lista;
-    var sel = document.getElementById("fcli");
-    sel.innerHTML = '<option value="">Seleccionar cliente...</option>';
-    for (var i=0; i<lista.length; i++) {
-      var c = lista[i];
-      var o = document.createElement("option");
-      o.value = c.id !== null ? c.id : "rev:"+c.nombre;
-      o.textContent = c.nombre + (c.direccion ? " - " + c.direccion : "") + (c.fuente==="rev" ? " [Rev]" : "");
-      sel.appendChild(o);
-    }
+    poblarClientes("");
   } catch(e) { console.error("loadClientes:", e); }
+}
+
+function poblarClientes(filtro) {
+  var sel = document.getElementById("fcli");
+  var f = filtro.toLowerCase();
+  sel.innerHTML = '<option value="">Seleccionar cliente...</option>';
+  for (var i=0; i<clientes.length; i++) {
+    var c = clientes[i];
+    if (f && c.nombre.toLowerCase().indexOf(f) === -1) continue;
+    var o = document.createElement("option");
+    o.value = c.id !== null ? c.id : "rev:"+c.nombre;
+    o.textContent = c.nombre + (c.direccion ? " - " + c.direccion : "") + (c.fuente==="rev" ? " [Rev]" : "");
+    sel.appendChild(o);
+  }
 }
 
 async function loadAvisos() {
@@ -420,8 +431,10 @@ function abrirModal(a) {
   document.getElementById("fnotas").value = "";
   document.getElementById("chk-manual").checked = false;
   document.getElementById("fg-manual").style.display = "none";
-  document.getElementById("fcli").style.display = "block";
+  document.getElementById("fg-lista").style.display = "block";
   document.getElementById("fcli-manual").value = "";
+  document.getElementById("cli-search").value = "";
+  poblarClientes("");
   recsOn = {"1h": true};
   var rbs = document.querySelectorAll(".rb");
   rbs[0].classList.add("on"); rbs[1].classList.remove("on"); rbs[2].classList.remove("on");
@@ -510,7 +523,7 @@ function onCliChange() {
 function toggleManual() {
   var chk = document.getElementById("chk-manual").checked;
   document.getElementById("fg-manual").style.display = chk ? "block" : "none";
-  document.getElementById("fcli").style.display = chk ? "none" : "block";
+  document.getElementById("fg-lista").style.display = chk ? "none" : "block";
   if (!chk) document.getElementById("fcli-manual").value = "";
 }
 
