@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT · Calendario de Pagos</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060910;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--border:#30363d;--blue:#1f6feb;--blue2:#388bfd;--green:#3fb950;--red:#f85149;--orange:#d29922;--text:#e6edf3;--muted:#7d8590;--light:#b1bac4;--r:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.topbar{height:52px;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.logo{font-weight:800;font-size:16px;letter-spacing:.08em;}
+.logo span{color:var(--blue2);}
+.logo small{font-weight:300;color:var(--muted);font-size:13px;margin-left:6px;}
+.sync{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);background:var(--s2);border:1px solid var(--border);padding:5px 12px;border-radius:20px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.dot.syncing{background:var(--orange);animation:pulse 1s infinite;}
+.dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.content{padding:24px;max-width:900px;margin:0 auto;}
+h2{font-size:18px;font-weight:800;color:white;margin-bottom:4px;}
+.sub{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.selector-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;}
+.selector-card label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+select{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:14px;cursor:pointer;}
+select:focus{outline:none;border-color:var(--blue);}
+option{background:var(--s2);}
+.doc-wrapper{display:none;}
+.doc-wrapper.visible{display:block;}
+.actions-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .12s;}
+.btn-blue{background:var(--blue);color:white;}
+.btn-blue:hover{background:var(--blue2);}
+.btn-ghost{background:var(--s2);color:var(--light);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--s3);color:white;}
+.btn-wa{background:#25D366;color:#000;}
+.btn-wa:hover{background:#1ebe5d;}
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:rgba(63,185,80,.4);color:var(--green);}
+.toast.err{border-color:rgba(248,81,73,.4);color:var(--red);}
+
+/* DOCUMENTO IMPRIMIBLE */
+.documento{background:white;color:#1a1a2e;border-radius:var(–r);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5);}
+.doc-header{background:linear-gradient(135deg,#1a2a4a 0%,#2563a8 100%);padding:28px 32px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+.doc-logo-txt{font-size:28px;font-weight:900;letter-spacing:.12em;color:white;}
+.doc-logo-txt span{color:#FDB913;}
+.doc-logo-sub{font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+.doc-empresa{text-align:right;font-size:11px;color:rgba(255,255,255,.8);line-height:1.8;}
+.doc-empresa strong{color:white;font-size:12px;}
+.doc-title-bar{background:#FDB913;padding:12px 32px;display:flex;justify-content:space-between;align-items:center;}
+.doc-title-bar h1{font-size:16px;font-weight:900;color:#1a1a2e;letter-spacing:.05em;text-transform:uppercase;}
+.doc-ref{font-size:12px;font-weight:700;color:#1a1a2e;font-family:‘JetBrains Mono’,monospace;}
+.doc-body{padding:28px 32px;}
+.doc-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.doc-info-box{background:#f4f6fb;border-radius:8px;padding:16px;}
+.doc-info-box h3{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#2563a8;margin-bottom:10px;}
+.doc-info-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #e8ecf4;}
+.doc-info-row:last-child{border-bottom:none;}
+.doc-info-row .lbl{color:#666;}
+.doc-info-row .val{font-weight:600;color:#1a1a2e;}
+.doc-total-banner{background:linear-gradient(135deg,#1a2a4a,#2563a8);border-radius:10px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.doc-total-banner .lbl{color:rgba(255,255,255,.7);font-size:13px;}
+.doc-total-banner .val{color:#FDB913;font-size:28px;font-weight:900;font-family:‘JetBrains Mono’,monospace;}
+.pagos-titulo{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#2563a8;margin-bottom:12px;}
+.pagos-table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+.pagos-table thead tr{background:#1a2a4a;}
+.pagos-table thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:white;}
+.pagos-table thead th:last-child{text-align:right;}
+.pagos-table tbody tr:nth-child(odd){background:#f4f6fb;}
+.pagos-table tbody tr:nth-child(even){background:#eef1f8;}
+.pagos-table tbody td{padding:13px 14px;font-size:13px;vertical-align:middle;}
+.pagos-table tbody td:last-child{text-align:right;font-weight:800;font-family:‘JetBrains Mono’,monospace;font-size:15px;color:#1a1a2e;}
+.pago-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#2563a8;color:white;font-size:11px;font-weight:800;margin-right:8px;}
+.pago-pct{display:inline-block;background:#e8ecf4;color:#2563a8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;}
+.doc-nota{background:#fff8e6;border:1px solid #FDB913;border-left:4px solid #FDB913;border-radius:8px;padding:16px 20px;margin-bottom:24px;}
+.doc-nota h4{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#c47f00;margin-bottom:8px;}
+.doc-nota p{font-size:11.5px;color:#4a3800;line-height:1.8;}
+.doc-nota .hl{font-weight:700;color:#c47f00;}
+.doc-banco{background:#f0f7ff;border:1px solid #c3d9f5;border-radius:8px;padding:16px 20px;margin-bottom:24px;}
+.doc-banco h4{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#2563a8;margin-bottom:12px;}
+.doc-banco-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;font-size:12px;}
+.doc-banco-grid .lbl{color:#555;}
+.doc-banco-grid .val{font-weight:700;color:#1a1a2e;font-family:‘JetBrains Mono’,monospace;}
+.doc-footer{background:#1a2a4a;padding:14px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.doc-footer-l{font-size:10px;color:rgba(255,255,255,.5);line-height:1.7;}
+.doc-footer-r{font-size:10px;color:rgba(255,255,255,.5);text-align:right;line-height:1.7;}
+
+@media print{
+body{background:white !important;}
+.topbar,.actions-bar,.selector-card,h2,.sub{display:none !important;}
+.content{padding:0;max-width:100%;}
+.documento{box-shadow:none;border-radius:0;}
+.doc-header,.doc-title-bar,.doc-total-banner,.pagos-table thead tr,.doc-footer,
+.pagos-table tbody tr:nth-child(odd),.pagos-table tbody tr:nth-child(even),
+.doc-nota,.doc-banco{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.toast{display:none !important;}
+}
+</style>
+
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">HARO<span>SAT</span><small>· Calendario de Pagos</small></div>
+  <div class="sync"><div class="dot syncing" id="sync-dot"></div><span id="sync-txt">Conectando...</span></div>
+</div>
+
+<div class="content">
+  <h2>Documento de Pagos</h2>
+  <p class="sub">Selecciona un presupuesto aceptado para generar el calendario de pagos.</p>
+
+  <div class="selector-card">
+    <label>Presupuesto aceptado</label>
+    <select id="sel" onchange="cargarDoc()">
+      <option value="">— Cargando... —</option>
+    </select>
+  </div>
+
+  <div class="doc-wrapper" id="doc-wrapper">
+    <div class="actions-bar">
+      <button class="btn btn-blue" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+      <button class="btn btn-wa" id="btn-wa">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Enviar por WhatsApp
+      </button>
+      <button class="btn btn-ghost" onclick="cargar()">↺ Actualizar</button>
+    </div>
+
+```
+<div class="documento">
+  <div class="doc-header">
+    <div>
+      <div class="doc-logo-txt">HARO<span>SAT</span></div>
+      <div class="doc-logo-sub">Ecotechnical · Instalaciones Térmicas</div>
+    </div>
+    <div class="doc-empresa">
+      <strong>Jesús Garzón Martín</strong><br>
+      C/ Santa Lucía 66 BJ · Haro, La Rioja<br>
+      Tel.: 640 05 64 84 · 616 68 49 79<br>
+      harosatecnicos@gmail.com
+    </div>
+  </div>
+
+  <div class="doc-title-bar">
+    <h1>📋 Calendario de Pagos</h1>
+    <span class="doc-ref" id="d-ref">—</span>
+  </div>
+
+  <div class="doc-body">
+    <div class="doc-info-grid">
+      <div class="doc-info-box">
+        <h3>👤 Datos del cliente</h3>
+        <div class="doc-info-row"><span class="lbl">Nombre</span><span class="val" id="d-cliente">—</span></div>
+        <div class="doc-info-row" id="row-tel" style="display:none"><span class="lbl">Teléfono</span><span class="val" id="d-tel">—</span></div>
+      </div>
+      <div class="doc-info-box">
+        <h3>📄 Presupuesto</h3>
+        <div class="doc-info-row"><span class="lbl">Número</span><span class="val" id="d-num">—</span></div>
+        <div class="doc-info-row"><span class="lbl">Fecha emisión</span><span class="val" id="d-fecha">—</span></div>
+        <div class="doc-info-row"><span class="lbl">Estado</span><span class="val" style="color:#3fb950">✅ Aceptado</span></div>
+      </div>
+    </div>
+
+    <div class="doc-total-banner">
+      <span class="lbl">Importe total del presupuesto (IVA incluido)</span>
+      <span class="val" id="d-total">0,00 €</span>
+    </div>
+
+    <div class="pagos-titulo">Fraccionamiento de pagos</div>
+    <table class="pagos-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Concepto</th>
+          <th>Momento del pago</th>
+          <th style="text-align:right">Importe</th>
+        </tr>
+      </thead>
+      <tbody id="pagos-tbody"></tbody>
+    </table>
+
+    <div class="doc-nota">
+      <h4>⚠️ Nota importante sobre las transferencias</h4>
+      <p>
+        Las transferencias se realizarán <span class="hl">exclusivamente por orden expresa de nuestras oficinas</span>,
+        indicándole el día y la forma en cada momento.<br><br>
+        Le rogamos que realice las transferencias con <span class="hl">carácter inmediato</span>
+        en el momento en que reciba nuestra comunicación.
+        Este tipo de transferencia <span class="hl">no le supone ningún coste adicional</span> como cliente,
+        mientras que para nosotros facilita enormemente la gestión administrativa y financiera de su instalación.<br><br>
+        Le agradecemos de antemano su colaboración y confianza en <strong>HAROSAT Ecotechnical</strong>.
+      </p>
+    </div>
+
+    <div class="doc-banco">
+      <h4>🏦 Datos bancarios para la transferencia</h4>
+      <div class="doc-banco-grid">
+        <span class="lbl">Titular</span><span class="val">Jesús Garzón Martín</span>
+        <span class="lbl">IBAN</span><span class="val">ES25 3008 0234 4533 5004 5310</span>
+        <span class="lbl">Entidad</span><span class="val">Caja Rural de Navarra</span>
+        <span class="lbl">Concepto</span><span class="val" id="d-concepto-banco">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-l">
+      HAROSAT Ecotechnical · Jesús Garzón Martín<br>
+      C/ Santa Lucía 66 BJ · Haro, La Rioja
+    </div>
+    <div class="doc-footer-r">
+      Tel.: 640 05 64 84 · 616 68 49 79<br>
+      harosatecnicos@gmail.com
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+var H = { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json' };
+
+var PAGOS_DEF = [
+  { pct: 60, concepto: 'Primer pago — Inicio de trabajos',      momento: 'A la confirmación del inicio de la instalación' },
+  { pct: 30, concepto: 'Segundo pago — Avance de obra',         momento: 'Durante la ejecución de la instalación, a indicación de HAROSAT' },
+  { pct: 10, concepto: 'Tercer pago — Entrega y puesta en marcha', momento: 'A la finalización y entrega de la instalación' }
+];
+
+function setSync(s, msg) {
+  var d = document.getElementById('sync-dot');
+  d.className = 'dot' + (s === 'syncing' ? ' syncing' : s === 'error' ? ' error' : '');
+  document.getElementById('sync-txt').textContent = msg;
+}
+
+function cargar() {
+  setSync('syncing', 'Cargando...');
+  fetch(SUPA_URL + '/rest/v1/presupuestos?estado_firma=eq.aceptado&select=id,numero,cliente,telefono,total,fecha_emision,descripcion&order=fecha_emision.desc&limit=200', { headers: H })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      setSync('ok', 'Sincronizado');
+      var sel = document.getElementById('sel');
+      sel.innerHTML = '<option value="">— Selecciona un presupuesto aceptado —</option>';
+      if (!data || !data.length) {
+        sel.innerHTML = '<option value="">— No hay presupuestos aceptados —</option>';
+        return;
+      }
+      data.forEach(function(p) {
+        var opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.numero + ' · ' + p.cliente + ' · ' + fn(p.total) + ' €';
+        opt.dataset.json = JSON.stringify(p);
+        sel.appendChild(opt);
+      });
+    })
+    .catch(function(e) {
+      setSync('error', 'Error conexión');
+      toast('Error al cargar: ' + e.message, 'err');
+    });
+}
+
+function cargarDoc() {
+  var sel = document.getElementById('sel');
+  var opt = sel.options[sel.selectedIndex];
+  var wrapper = document.getElementById('doc-wrapper');
+  if (!opt || !opt.dataset.json) { wrapper.classList.remove('visible'); return; }
+
+  var p = JSON.parse(opt.dataset.json);
+  var total = parseFloat(p.total) || 0;
+
+  document.getElementById('d-ref').textContent     = 'Ref. ' + (p.numero || '—') + ' · ' + fd(p.fecha_emision);
+  document.getElementById('d-cliente').textContent  = p.cliente || '—';
+  document.getElementById('d-num').textContent      = p.numero  || '—';
+  document.getElementById('d-fecha').textContent    = fd(p.fecha_emision);
+  document.getElementById('d-total').textContent    = fn(total) + ' €';
+  document.getElementById('d-concepto-banco').textContent = 'Presupuesto ' + (p.numero || '');
+
+  if (p.telefono) {
+    document.getElementById('d-tel').textContent = p.telefono;
+    document.getElementById('row-tel').style.display = 'flex';
+  } else {
+    document.getElementById('row-tel').style.display = 'none';
+  }
+
+  // Tabla de pagos
+  var tbody = document.getElementById('pagos-tbody');
+  tbody.innerHTML = '';
+  PAGOS_DEF.forEach(function(pg, i) {
+    var importe = total * pg.pct / 100;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><span class="pago-num">' + (i+1) + '</span></td>' +
+      '<td><span style="font-weight:600;color:#1a1a2e">' + pg.concepto + '</span><span class="pago-pct">' + pg.pct + '%</span></td>' +
+      '<td style="font-size:12px;color:#555">' + pg.momento + '</td>' +
+      '<td>' + fn(importe) + ' €</td>';
+    tbody.appendChild(tr);
+  });
+
+  // WhatsApp
+  var tel = (p.telefono || '').replace(/\D/g, '');
+  var msg = encodeURIComponent(
+    '📋 *Calendario de Pagos — HAROSAT Ecotechnical*\n\n' +
+    'Estimado/a *' + p.cliente + '*,\n\n' +
+    'Le comunicamos el fraccionamiento de pagos acordado para su instalación (Presupuesto *' + p.numero + '*, importe total *' + fn(total) + ' €*):\n\n' +
+    '1️⃣  *' + fn(total * 0.60) + ' €* (60%) — A la confirmación del inicio de la instalación\n' +
+    '2️⃣  *' + fn(total * 0.30) + ' €* (30%) — Durante la ejecución, a nuestra indicación\n' +
+    '3️⃣  *' + fn(total * 0.10) + ' €* (10%) — A la finalización y entrega\n\n' +
+    '⚠️ *Importante:* Las transferencias se realizarán exclusivamente por orden expresa de nuestras oficinas, indicándole el día y la forma. Le rogamos que las efectúe con *carácter inmediato* en el momento de nuestra comunicación.\n\n' +
+    '🏦 *Datos bancarios:*\n' +
+    'Titular: Jesús Garzón Martín\n' +
+    'IBAN: ES25 3008 0234 4533 5004 5310\n' +
+    'Entidad: Caja Rural de Navarra\n' +
+    'Concepto: Presupuesto ' + p.numero + '\n\n' +
+    'Muchas gracias por su confianza 🙏\n' +
+    'HAROSAT Ecotechnical · 640 05 64 84'
+  );
+  document.getElementById('btn-wa').onclick = function() {
+    var url = tel ? 'https://wa.me/34' + tel + '?text=' + msg : 'https://wa.me/?text=' + msg;
+    window.open(url, '_blank');
+  };
+
+  wrapper.classList.add('visible');
+}
+
+function fn(n) {
+  return Number(n || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fd(d) {
+  if (!d) return '—';
+  var p = (d + '').split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : d;
+}
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (type || 'ok');
+  setTimeout(function() { el.classList.remove('show'); }, 3000);
+}
+
+cargar();
+</script>
+
+</body>
+</html>
