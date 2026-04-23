@@ -534,16 +534,19 @@ function showToast(msg,type){
   setTimeout(function(){t.className="toast";},3000);
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  tick(); setInterval(tick,1000);
+document.addEventListener("DOMContentLoaded", async function() {
+  tick();
+  setInterval(tick, 1000);
   setHoy();
-  document.getElementById("lista").innerHTML='<div class="loading"><div class="spinner"></div> Cargando...</div>';
-  loadClientes().then(function(){return loadAvisos();}).then(function(){
-    render();
-    if(Notification.permission==="default") document.getElementById("notif-bar").classList.add("show");
-    setInterval(checkRecs,60000);
-    checkRecs();
-  });
+  document.getElementById("lista").innerHTML = '<div class="loading"><div class="spinner"></div> Cargando...</div>';
+  await loadClientes();
+  await loadAvisos();
+  render();
+  if (Notification.permission === "default") {
+    document.getElementById("notif-bar").classList.add("show");
+  }
+  setInterval(checkRecs, 60000);
+  checkRecs();
 });
 
 </script>
