@@ -179,7 +179,7 @@ select.fc option{background:var(--card2);}
     <span id="cli-sel-name"></span>
     <button onclick="limpiarCli()">&#10005;</button>
   </div>
-  <input type="text" class="fc" id="cli-q" placeholder="Buscar cliente..." autocomplete="off" oninput="filtrarCli(this.value)" style="margin-bottom:4px">
+  <input type="text" class="fc" id="cli-q" placeholder="Tocar para ver clientes..." autocomplete="off" oninput="filtrarCli(this.value)" onfocus="filtrarCli(this.value)" style="margin-bottom:4px">
   <div class="cli-drop" id="cli-drop"></div>
 </div>
 
@@ -394,7 +394,7 @@ function fmtRec(dt){
 function filtrarCli(val){
   var drop=document.getElementById("cli-drop");
   var f=val.toLowerCase().trim();
-  if(!f){drop.style.display="none";return;}
+  if(!f && clientes.length===0){drop.style.display="none";return;}
   var html="";
   for(var i=0;i<clientes.length;i++){
     var c=clientes[i];
