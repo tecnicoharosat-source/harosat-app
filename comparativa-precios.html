@@ -57,6 +57,11 @@ tbody tr:hover { background: #2e3447; }
 td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
 
 .price-cell { text-align: right; font-weight: 500; min-width: 80px; }
+.frozen-col { position: sticky; left: 0; background: #242938; z-index: 5; }
+.frozen-col-2 { position: sticky; left: 180px; background: #242938; z-index: 5; }
+.frozen-header { position: sticky; top: 0; background: #2e3447; z-index: 15; }
+.frozen-header-col { position: sticky; top: 0; left: 0; background: #2e3447; z-index: 20; }
+.frozen-header-col-2 { position: sticky; top: 0; left: 180px; background: #2e3447; z-index: 20; }
 .price-best { background: #1a3d1a !important; color: #7dd87d; font-weight: 700; border-left: 3px solid #5A9F3E; }
 .price-worst { background: #3d1a1a !important; color: #e88080; }
 .price-empty { color: #3a4158; font-style: italic; font-size: 11px; }
@@ -148,9 +153,9 @@ td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
   <div id="comparador-loading" class="loading"><span class="spinner"></span>Cargando...</div>
   <div id="comparador-content" style="display:none;">
     <div class="stats-row" id="stats-row"></div>
-    <div id="comp-scroll-wrap" style="overflow-x:auto;overflow-y:auto;max-height:70vh;border:1px solid #3a4158;border-radius:8px;">
-      <table id="comparador-table" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead id="comp-thead" style="position:sticky;top:0;z-index:10;"></thead>
+    <div id="comp-scroll-wrap" style="overflow:auto;max-height:70vh;border:1px solid #3a4158;border-radius:8px;position:relative;">
+      <table id="comparador-table" style="border-collapse:collapse;font-size:13px;">
+        <thead id="comp-thead"></thead>
         <tbody id="comp-tbody"></tbody>
       </table>
     </div>
@@ -534,7 +539,7 @@ function renderComparador(){
   const thead=document.getElementById('comp-thead');
   const tbody=document.getElementById('comp-tbody');
   if(!arts.length){thead.innerHTML='';tbody.innerHTML='<tr><td class="empty" colspan="20">No hay artículos para mostrar.</td></tr>';document.getElementById('stats-row').innerHTML='';return;}
-  thead.innerHTML='<tr><th>Artículo</th><th>Cat.</th>'+distribuidores.map(d=>`<th style="text-align:right">${d.nombre}</th>`).join('')+'<th style="text-align:center;color:#5A9F3E">💰 Ahorro</th><th style="color:#5A9F3E">Más barato</th></tr>';
+  thead.innerHTML='<tr><th class="frozen-header-col" style="min-width:180px">Artículo</th><th class="frozen-header-col-2" style="min-width:80px">Cat.</th>'+distribuidores.map(d=>`<th class="frozen-header" style="text-align:right;min-width:90px">${d.nombre}</th>`).join('')+'<th class="frozen-header" style="text-align:center;color:#5A9F3E;min-width:80px">💰 Ahorro</th><th class="frozen-header" style="color:#5A9F3E;min-width:90px">Más barato</th></tr>';
   let totalAhorro=0,artConPrecio=0;
   const distWins={};distribuidores.forEach(d=>distWins[d.id]=0);
   tbody.innerHTML=arts.map(art=>{
@@ -551,7 +556,7 @@ function renderComparador(){
     const cells=distribuidores.map(d=>{const v=precioMap[d.id];if(v===undefined)return`<td class="price-cell price-empty">—</td>`;const isBest=v===minVal&&vals.length>1;const isWorst=v===maxVal&&vals.length>1;return`<td class="price-cell ${isBest?'price-best':isWorst?'price-worst':''}">${v.toFixed(2)} €</td>`;}).join('');
     const ahorroCell=ahorro>0?`<td style="text-align:center"><span class="saving-badge">-${ahorro.toFixed(2)} €</span></td>`:`<td style="text-align:center"><span class="saving-zero">—</span></td>`;
     const mejorCell=bestDist&&vals.length>0?`<td style="color:#5A9F3E;font-weight:700;font-size:12px">${bestDist.nombre}</td>`:`<td class="price-empty">—</td>`;
-    return`<tr><td><strong style="color:#e8ecf4">${art.nombre}</strong>${art.referencia?`<br><span style="font-size:11px;color:#8891aa">${art.referencia}</span>`:''}</td><td>${catBadge(art.categoria)}</td>${cells}${ahorroCell}${mejorCell}</tr>`;
+    return`<tr><td class="frozen-col" style="min-width:180px"><strong style="color:#e8ecf4">${art.nombre}</strong>${art.referencia?`<br><span style="font-size:11px;color:#8891aa">${art.referencia}</span>`:''}</td><td class="frozen-col-2" style="min-width:80px">${catBadge(art.categoria)}</td>${cells}${ahorroCell}${mejorCell}</tr>`;
   }).join('');
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-value">${arts.length}</div><div class="stat-label">Artículos</div></div>
