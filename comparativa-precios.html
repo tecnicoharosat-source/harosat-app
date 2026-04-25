@@ -309,430 +309,302 @@ td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
 const SUPABASE_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 
-async function sbFetch(path, opts = {}) {
+async function sbFetch(path, opts={}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || 'return=representation',
-      ...opts.headers
-    },
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...opts.headers},
     ...opts
   });
-  if (!res.ok) { const err = await res.text(); throw new Error(err); }
-  return opts.method === 'DELETE' ? null : res.json();
+  if(!res.ok){const err=await res.text();throw new Error(err);}
+  return opts.method==='DELETE'?null:res.json();
 }
 
-let articulos = [], distribuidores = [], precios = [], catalogoArticulos = [];
-let currentCat = '';
+let articulos=[],distribuidores=[],precios=[],catalogoArticulos=[];
+let currentCat='';
 
-function showTab(t, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + t).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (t === 'ranking') renderRanking();
+function showTab(t,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(t==='ranking')renderRanking();
 }
 
-function toast(msg, err = false) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'show' + (err ? ' error' : '');
-  setTimeout(() => el.className = '', 3000);
+function toast(msg,err=false){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='show'+(err?' error':'');
+  setTimeout(()=>el.className='',3000);
 }
 
-async function loadAll() {
-  try {
-    [articulos, distribuidores, precios] = await Promise.all([
+async function loadAll(){
+  try{
+    [articulos,distribuidores,precios]=await Promise.all([
       sbFetch('precio_articulos?order=nombre.asc'),
       sbFetch('precio_distribuidores?order=nombre.asc'),
       sbFetch('precios?order=fecha.desc')
     ]);
     renderAll();
-  } catch(e) {
-    toast('Error cargando datos: ' + e.message, true);
-  }
+  }catch(e){toast('Error cargando datos: '+e.message,true);}
 }
 
-function renderAll() {
-  renderArticulos();
-  renderDistribuidores();
-  renderComparador();
-  renderPreciosLog();
-  populateSelects();
+function renderAll(){renderArticulos();renderDistribuidores();renderComparador();renderPreciosLog();populateSelects();}
+
+function catBadge(c){
+  const labels={fontaneria:'Fontanería',calefaccion:'Calefacción',climatizacion:'Climatización',frio:'Frío',otros:'Otros'};
+  return `<span class="categoria-badge cat-${c||'otros'}">${labels[c]||'Otros'}</span>`;
 }
 
-function catBadge(c) {
-  const labels = { fontaneria: 'Fontanería', calefaccion: 'Calefacción', climatizacion: 'Climatización', frio: 'Frío', otros: 'Otros' };
-  return `<span class="categoria-badge cat-${c || 'otros'}">${labels[c] || 'Otros'}</span>`;
+function renderArticulos(){
+  const tbody=document.getElementById('art-tbody');
+  if(!articulos.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No hay artículos. Añade el primero o importa del catálogo.</td></tr>';return;}
+  tbody.innerHTML=articulos.map(a=>`<tr><td><strong>${a.nombre}</strong></td><td style="color:#8891aa">${a.referencia||'—'}</td><td style="color:#8891aa">${a.unidad||'—'}</td><td>${catBadge(a.categoria)}</td><td><button class="btn btn-danger" onclick="delArticulo(${a.id})">✕</button></td></tr>`).join('');
 }
 
-// ── ARTÍCULOS ──
-function renderArticulos() {
-  const tbody = document.getElementById('art-tbody');
-  if (!articulos.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay artículos. Añade el primero o importa del catálogo.</td></tr>'; return; }
-  tbody.innerHTML = articulos.map(a => `
-    <tr>
-      <td><strong>${a.nombre}</strong></td>
-      <td style="color:#8891aa">${a.referencia || '—'}</td>
-      <td style="color:#8891aa">${a.unidad || '—'}</td>
-      <td>${catBadge(a.categoria)}</td>
-      <td><button class="btn btn-danger" onclick="delArticulo(${a.id})">✕</button></td>
-    </tr>
-  `).join('');
+async function addArticulo(){
+  const nombre=document.getElementById('art-nombre').value.trim();
+  if(!nombre){toast('Introduce un nombre',true);return;}
+  try{
+    const[r]=await sbFetch('precio_articulos',{method:'POST',body:JSON.stringify({nombre,referencia:document.getElementById('art-ref').value.trim()||null,unidad:document.getElementById('art-unidad').value.trim()||null,categoria:document.getElementById('art-cat').value})});
+    articulos.push(r);articulos.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+    ['art-nombre','art-ref','art-unidad'].forEach(id=>document.getElementById(id).value='');
+    renderArticulos();populateSelects();renderComparador();toast('Artículo añadido');
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-async function addArticulo() {
-  const nombre = document.getElementById('art-nombre').value.trim();
-  if (!nombre) { toast('Introduce un nombre', true); return; }
-  try {
-    const [r] = await sbFetch('precio_articulos', {
-      method: 'POST',
-      body: JSON.stringify({ nombre, referencia: document.getElementById('art-ref').value.trim() || null, unidad: document.getElementById('art-unidad').value.trim() || null, categoria: document.getElementById('art-cat').value })
-    });
-    articulos.push(r);
-    articulos.sort((a,b) => a.nombre.localeCompare(b.nombre));
-    ['art-nombre','art-ref','art-unidad'].forEach(id => document.getElementById(id).value = '');
-    renderArticulos(); populateSelects(); renderComparador();
-    toast('Artículo añadido');
-  } catch(e) { toast('Error: ' + e.message, true); }
+async function delArticulo(id){
+  if(!confirm('¿Eliminar artículo y todos sus precios?'))return;
+  try{
+    await sbFetch(`precio_articulos?id=eq.${id}`,{method:'DELETE',prefer:''});
+    articulos=articulos.filter(a=>a.id!==id);precios=precios.filter(p=>p.articulo_id!==id);
+    renderArticulos();renderComparador();renderPreciosLog();populateSelects();toast('Artículo eliminado');
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-async function delArticulo(id) {
-  if (!confirm('¿Eliminar artículo y todos sus precios?')) return;
-  try {
-    await sbFetch(`precio_articulos?id=eq.${id}`, { method: 'DELETE', prefer: '' });
-    articulos = articulos.filter(a => a.id !== id);
-    precios = precios.filter(p => p.articulo_id !== id);
-    renderArticulos(); renderComparador(); renderPreciosLog(); populateSelects();
-    toast('Artículo eliminado');
-  } catch(e) { toast('Error: ' + e.message, true); }
-}
-
-// ── IMPORTAR DEL CATÁLOGO ──
-async function openImport() {
-  try {
-    // Carga artículos del catálogo principal
-    catalogoArticulos = await sbFetch('articulos?order=descripcion.asc&select=id,referencia,descripcion,categoria,proveedor');
-    // Filtra los que ya están importados (por referencia)
-    const yaImportados = new Set(articulos.map(a => a.referencia).filter(Boolean));
-
-    const list = document.getElementById('import-list');
-    if (!catalogoArticulos.length) { list.innerHTML = '<p style="color:#8891aa;font-size:13px">No hay artículos en el catálogo.</p>'; }
-    else {
-      list.innerHTML = catalogoArticulos.map(a => {
-        const yaEsta = yaImportados.has(a.referencia);
-        return `<label class="import-item" style="${yaEsta ? 'opacity:.45;pointer-events:none' : ''}">
-          <input type="checkbox" class="imp-chk" value="${a.id}" data-nombre="${(a.descripcion||'').replace(/"/g,'&quot;')}" data-ref="${a.referencia||''}" data-cat="${mapCat(a.categoria)}" ${yaEsta ? 'disabled' : ''}>
+// ── IMPORTAR — PATCH 1a: precio_coste en select ──
+async function openImport(){
+  try{
+    catalogoArticulos=await sbFetch('articulos?order=descripcion.asc&select=id,referencia,descripcion,categoria,proveedor,precio_coste');
+    const yaImportados=new Set(articulos.map(a=>a.referencia).filter(Boolean));
+    const list=document.getElementById('import-list');
+    if(!catalogoArticulos.length){list.innerHTML='<p style="color:#8891aa;font-size:13px">No hay artículos en el catálogo.</p>';}
+    else{
+      list.innerHTML=catalogoArticulos.map(a=>{
+        const yaEsta=yaImportados.has(a.referencia);
+        const coste=parseFloat(a.precio_coste)||0;
+        // PATCH 1b: data-coste y data-prov
+        return `<label class="import-item" style="${yaEsta?'opacity:.45;pointer-events:none':''}">
+          <input type="checkbox" class="imp-chk" value="${a.id}"
+            data-nombre="${(a.descripcion||'').replace(/"/g,'&quot;')}"
+            data-ref="${a.referencia||''}"
+            data-cat="${mapCat(a.categoria)}"
+            data-coste="${coste}"
+            data-prov="${(a.proveedor||'').replace(/"/g,'&quot;')}"
+            ${yaEsta?'disabled':''}>
           <div style="flex:1">
-            <div class="import-item-name">${a.descripcion || '—'}</div>
-            <div class="import-item-ref">${a.referencia || ''} ${a.proveedor ? '· ' + a.proveedor : ''}</div>
+            <div class="import-item-name">${a.descripcion||'—'}</div>
+            <div class="import-item-ref">${a.referencia||''} ${a.proveedor?'· '+a.proveedor:''}${coste>0?' · <strong style="color:#FDB913">'+coste.toFixed(2)+' €</strong>':''}</div>
           </div>
-          ${yaEsta ? '<span style="font-size:11px;color:#5A9F3E">✔ Ya importado</span>' : ''}
+          ${yaEsta?'<span style="font-size:11px;color:#5A9F3E">✔ Ya importado</span>':''}
         </label>`;
       }).join('');
     }
     updateImportCount();
-    document.querySelectorAll('.imp-chk').forEach(c => c.addEventListener('change', updateImportCount));
+    document.querySelectorAll('.imp-chk').forEach(c=>c.addEventListener('change',updateImportCount));
     document.getElementById('ov-import').classList.add('open');
-  } catch(e) { toast('Error cargando catálogo: ' + e.message, true); }
+  }catch(e){toast('Error cargando catálogo: '+e.message,true);}
 }
 
-function mapCat(cat) {
-  if (!cat) return 'otros';
-  const c = cat.toLowerCase();
-  if (c.includes('caldera') || c.includes('calefac') || c.includes('radiador') || c.includes('suelo')) return 'calefaccion';
-  if (c.includes('bomba') || c.includes('clima') || c.includes('aire')) return 'climatizacion';
-  if (c.includes('frio') || c.includes('frío') || c.includes('frigor')) return 'frio';
-  if (c.includes('tuber') || c.includes('válvula') || c.includes('valvula') || c.includes('fontaner')) return 'fontaneria';
+function mapCat(cat){
+  if(!cat)return 'otros';
+  const c=cat.toLowerCase();
+  if(c.includes('caldera')||c.includes('calefac')||c.includes('radiador')||c.includes('suelo'))return 'calefaccion';
+  if(c.includes('bomba')||c.includes('clima')||c.includes('aire'))return 'climatizacion';
+  if(c.includes('frio')||c.includes('frío')||c.includes('frigor'))return 'frio';
+  if(c.includes('tuber')||c.includes('válvula')||c.includes('valvula')||c.includes('fontaner'))return 'fontaneria';
   return 'otros';
 }
 
-function updateImportCount() {
-  const n = document.querySelectorAll('.imp-chk:checked').length;
-  document.getElementById('import-count').textContent = n + ' seleccionados';
+function updateImportCount(){
+  const n=document.querySelectorAll('.imp-chk:checked').length;
+  document.getElementById('import-count').textContent=n+' seleccionados';
 }
 
-function selectAll(v) {
-  document.querySelectorAll('.imp-chk:not(:disabled)').forEach(c => { c.checked = v; });
-  updateImportCount();
-}
+function selectAll(v){document.querySelectorAll('.imp-chk:not(:disabled)').forEach(c=>{c.checked=v;});updateImportCount();}
+function closeImport(){document.getElementById('ov-import').classList.remove('open');}
 
-function closeImport() { document.getElementById('ov-import').classList.remove('open'); }
-
-async function doImport() {
-  const checked = [...document.querySelectorAll('.imp-chk:checked')];
-  if (!checked.length) { toast('Selecciona al menos un artículo', true); return; }
-  try {
-    let importados = 0;
-    for (const chk of checked) {
-      const [r] = await sbFetch('precio_articulos', {
-        method: 'POST',
-        body: JSON.stringify({ nombre: chk.dataset.nombre, referencia: chk.dataset.ref || null, unidad: 'Ud', categoria: chk.dataset.cat })
-      });
+// PATCH 2: doImport — buscar/crear distribuidor y registrar precio_coste
+async function doImport(){
+  const checked=[...document.querySelectorAll('.imp-chk:checked')];
+  if(!checked.length){toast('Selecciona al menos un artículo',true);return;}
+  try{
+    let importados=0;
+    const hoy=new Date().toISOString().slice(0,10);
+    for(const chk of checked){
+      const[r]=await sbFetch('precio_articulos',{method:'POST',body:JSON.stringify({nombre:chk.dataset.nombre,referencia:chk.dataset.ref||null,unidad:'Ud',categoria:chk.dataset.cat})});
       articulos.push(r);
+      const coste=parseFloat(chk.dataset.coste);
+      const provNombre=chk.dataset.prov;
+      if(coste>0&&provNombre){
+        let dist=distribuidores.find(d=>d.nombre.toLowerCase()===provNombre.toLowerCase());
+        if(!dist){
+          const[nd]=await sbFetch('precio_distribuidores',{method:'POST',body:JSON.stringify({nombre:provNombre})});
+          dist=nd;distribuidores.push(dist);
+          distribuidores.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+        }
+        const[rp]=await sbFetch('precios',{method:'POST',body:JSON.stringify({articulo_id:r.id,distribuidor_id:dist.id,precio:coste,fecha:hoy})});
+        precios.unshift(rp);
+      }
       importados++;
     }
-    articulos.sort((a,b) => a.nombre.localeCompare(b.nombre));
+    articulos.sort((a,b)=>a.nombre.localeCompare(b.nombre));
     closeImport();
-    renderArticulos(); populateSelects(); renderComparador();
-    toast(`✔ ${importados} artículo${importados > 1 ? 's' : ''} importado${importados > 1 ? 's' : ''}`);
-  } catch(e) { toast('Error importando: ' + e.message, true); }
+    renderArticulos();renderDistribuidores();populateSelects();renderComparador();renderPreciosLog();
+    toast(`✔ ${importados} artículo${importados>1?'s':''} importado${importados>1?'s':''} con precio`);
+  }catch(e){toast('Error importando: '+e.message,true);}
 }
 
-// ── SELECTS ──
-function populateSelects() {
-  const artSel = (id) => {
-    const el = document.getElementById(id); if (!el) return;
-    const v = el.value;
-    el.innerHTML = '<option value="">— Seleccionar —</option>' + articulos.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
-    el.value = v;
-  };
-  const distSel = (id) => {
-    const el = document.getElementById(id); if (!el) return;
-    const v = el.value;
-    el.innerHTML = '<option value="">— Seleccionar —</option>' + distribuidores.map(d => `<option value="${d.id}">${d.nombre}</option>`).join('');
-    el.value = v;
-  };
-  artSel('precio-art'); distSel('precio-dist');
-  const fa = document.getElementById('filtro-art-precio');
-  const fd = document.getElementById('filtro-dist-precio');
-  if (fa) { const v = fa.value; fa.innerHTML = '<option value="">Todos los artículos</option>' + articulos.map(a => `<option value="${a.id}">${a.nombre}</option>`).join(''); fa.value = v; }
-  if (fd) { const v = fd.value; fd.innerHTML = '<option value="">Todos los distribuidores</option>' + distribuidores.map(d => `<option value="${d.id}">${d.nombre}</option>`).join(''); fd.value = v; }
+function populateSelects(){
+  const artSel=(id)=>{const el=document.getElementById(id);if(!el)return;const v=el.value;el.innerHTML='<option value="">— Seleccionar —</option>'+articulos.map(a=>`<option value="${a.id}">${a.nombre}</option>`).join('');el.value=v;};
+  const distSel=(id)=>{const el=document.getElementById(id);if(!el)return;const v=el.value;el.innerHTML='<option value="">— Seleccionar —</option>'+distribuidores.map(d=>`<option value="${d.id}">${d.nombre}</option>`).join('');el.value=v;};
+  artSel('precio-art');distSel('precio-dist');
+  const fa=document.getElementById('filtro-art-precio');
+  const fd=document.getElementById('filtro-dist-precio');
+  if(fa){const v=fa.value;fa.innerHTML='<option value="">Todos los artículos</option>'+articulos.map(a=>`<option value="${a.id}">${a.nombre}</option>`).join('');fa.value=v;}
+  if(fd){const v=fd.value;fd.innerHTML='<option value="">Todos los distribuidores</option>'+distribuidores.map(d=>`<option value="${d.id}">${d.nombre}</option>`).join('');fd.value=v;}
 }
 
-// ── PRECIOS LOG ──
-function renderPreciosLog() {
-  const tbody = document.getElementById('precios-tbody');
-  const artF = document.getElementById('filtro-art-precio')?.value;
-  const distF = document.getElementById('filtro-dist-precio')?.value;
-  let rows = precios;
-  if (artF) rows = rows.filter(p => p.articulo_id == artF);
-  if (distF) rows = rows.filter(p => p.distribuidor_id == distF);
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Sin registros.</td></tr>'; return; }
-  tbody.innerHTML = rows.map(p => {
-    const art = articulos.find(a => a.id === p.articulo_id);
-    const dist = distribuidores.find(d => d.id === p.distribuidor_id);
-    return `<tr>
-      <td>${art?.nombre || '—'}</td>
-      <td>${dist?.nombre || '—'}</td>
-      <td style="font-weight:700;color:#FDB913">${parseFloat(p.precio).toFixed(2)} €</td>
-      <td style="color:#8891aa">${p.fecha || '—'}</td>
-      <td><button class="btn btn-danger" onclick="delPrecio(${p.id})">✕</button></td>
-    </tr>`;
+function renderPreciosLog(){
+  const tbody=document.getElementById('precios-tbody');
+  const artF=document.getElementById('filtro-art-precio')?.value;
+  const distF=document.getElementById('filtro-dist-precio')?.value;
+  let rows=precios;
+  if(artF)rows=rows.filter(p=>p.articulo_id==artF);
+  if(distF)rows=rows.filter(p=>p.distribuidor_id==distF);
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="empty">Sin registros.</td></tr>';return;}
+  tbody.innerHTML=rows.map(p=>{
+    const art=articulos.find(a=>a.id===p.articulo_id);
+    const dist=distribuidores.find(d=>d.id===p.distribuidor_id);
+    return `<tr><td>${art?.nombre||'—'}</td><td>${dist?.nombre||'—'}</td><td style="font-weight:700;color:#FDB913">${parseFloat(p.precio).toFixed(2)} €</td><td style="color:#8891aa">${p.fecha||'—'}</td><td><button class="btn btn-danger" onclick="delPrecio(${p.id})">✕</button></td></tr>`;
   }).join('');
 }
 
-async function addPrecio() {
-  const art_id = document.getElementById('precio-art').value;
-  const dist_id = document.getElementById('precio-dist').value;
-  const valor = parseFloat(document.getElementById('precio-valor').value);
-  const fecha = 
-// ── DISTRIBUIDORES ──
-function renderDistribuidores() {
-  const tbody = document.getElementById('dist-tbody');
-  if (!distribuidores.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">No hay distribuidores. Añade el primero.</td></tr>'; return; }
-  tbody.innerHTML = distribuidores.map(d => {
-    const count = precios.filter(p => p.distribuidor_id === d.id).length;
-    return `<tr>
-      <td><strong style="color:#e8ecf4">${d.nombre}</strong></td>
-      <td style="color:#8891aa">${count} precio${count !== 1 ? 's' : ''} registrado${count !== 1 ? 's' : ''}</td>
-      <td><button class="btn btn-danger" onclick="delDistribuidor(${d.id},'${d.nombre.replace(/'/g,"\'")}')">✕</button></td>
-    </tr>`;
-  }).join('');
-}
-
-async function addDistribuidor() {
-  const nombre = document.getElementById('dist-nombre').value.trim();
-  if (!nombre) { toast('Introduce un nombre', true); return; }
-  if (distribuidores.find(d => d.nombre.toLowerCase() === nombre.toLowerCase())) { toast('Ya existe ese distribuidor', true); return; }
-  try {
-    const [r] = await sbFetch('precio_distribuidores', {
-      method: 'POST',
-      body: JSON.stringify({ nombre })
-    });
-    distribuidores.push(r);
-    distribuidores.sort((a,b) => a.nombre.localeCompare(b.nombre));
-    document.getElementById('dist-nombre').value = '';
-    renderDistribuidores(); populateSelects(); renderComparador();
-    toast('Distribuidor añadido ✔');
-  } catch(e) { toast('Error: ' + e.message, true); }
-}
-
-async function delDistribuidor(id, nombre) {
-  if (!confirm('¿Eliminar "' + nombre + '" y todos sus precios?')) return;
-  try {
-    await sbFetch('precios?distribuidor_id=eq.' + id, { method: 'DELETE', prefer: '' });
-    await sbFetch('precio_distribuidores?id=eq.' + id, { method: 'DELETE', prefer: '' });
-    distribuidores = distribuidores.filter(d => d.id !== id);
-    precios = precios.filter(p => p.distribuidor_id !== id);
-    renderDistribuidores(); populateSelects(); renderComparador(); renderPreciosLog();
-    toast('Distribuidor eliminado');
-  } catch(e) { toast('Error: ' + e.message, true); }
-}
-
-document.getElementById('precio-fecha').value || new Date().toISOString().slice(0,10);
-  if (!art_id || !dist_id || isNaN(valor) || valor < 0) { toast('Rellena todos los campos', true); return; }
-  try {
-    const existing = precios.find(p => p.articulo_id == art_id && p.distribuidor_id == dist_id);
+async function addPrecio(){
+  const art_id=document.getElementById('precio-art').value;
+  const dist_id=document.getElementById('precio-dist').value;
+  const valor=parseFloat(document.getElementById('precio-valor').value);
+  const fecha=document.getElementById('precio-fecha').value||new Date().toISOString().slice(0,10);
+  if(!art_id||!dist_id||isNaN(valor)||valor<0){toast('Rellena todos los campos',true);return;}
+  try{
+    const existing=precios.find(p=>p.articulo_id==art_id&&p.distribuidor_id==dist_id);
     let r;
-    if (existing) {
-      [r] = await sbFetch(`precios?id=eq.${existing.id}`, { method: 'PATCH', body: JSON.stringify({ precio: valor, fecha }) });
-      precios = precios.map(p => p.id === existing.id ? r : p);
-      toast('Precio actualizado');
-    } else {
-      [r] = await sbFetch('precios', { method: 'POST', body: JSON.stringify({ articulo_id: parseInt(art_id), distribuidor_id: parseInt(dist_id), precio: valor, fecha }) });
-      precios.unshift(r);
-      toast('Precio guardado');
+    if(existing){
+      [r]=await sbFetch(`precios?id=eq.${existing.id}`,{method:'PATCH',body:JSON.stringify({precio:valor,fecha})});
+      precios=precios.map(p=>p.id===existing.id?r:p);toast('Precio actualizado');
+    }else{
+      [r]=await sbFetch('precios',{method:'POST',body:JSON.stringify({articulo_id:parseInt(art_id),distribuidor_id:parseInt(dist_id),precio:valor,fecha})});
+      precios.unshift(r);toast('Precio guardado');
     }
-    document.getElementById('precio-valor').value = '';
-    renderPreciosLog(); renderComparador();
-  } catch(e) { toast('Error: ' + e.message, true); }
+    document.getElementById('precio-valor').value='';
+    renderPreciosLog();renderComparador();
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-async function delPrecio(id) {
-  try {
-    await sbFetch(`precios?id=eq.${id}`, { method: 'DELETE', prefer: '' });
-    precios = precios.filter(p => p.id !== id);
-    renderPreciosLog(); renderComparador();
-    toast('Precio eliminado');
-  } catch(e) { toast('Error: ' + e.message, true); }
+async function delPrecio(id){
+  try{
+    await sbFetch(`precios?id=eq.${id}`,{method:'DELETE',prefer:''});
+    precios=precios.filter(p=>p.id!==id);
+    renderPreciosLog();renderComparador();toast('Precio eliminado');
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-// ── COMPARADOR ──
-function filterCategoria(cat, btn) {
-  currentCat = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+function filterCategoria(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
   renderComparador();
 }
 
-function renderComparador() {
-  const loading = document.getElementById('comparador-loading');
-  const content = document.getElementById('comparador-content');
-  loading.style.display = 'none';
-  content.style.display = 'block';
-  const buscar = (document.getElementById('buscar-art')?.value || '').toLowerCase();
-  let arts = articulos;
-  if (currentCat) arts = arts.filter(a => a.categoria === currentCat);
-  if (buscar) arts = arts.filter(a => a.nombre.toLowerCase().includes(buscar) || (a.referencia||'').toLowerCase().includes(buscar));
-  const thead = document.getElementById('comp-thead');
-  const tbody = document.getElementById('comp-tbody');
-  if (!arts.length) {
-    thead.innerHTML = ''; tbody.innerHTML = '<tr><td class="empty" colspan="20">No hay artículos para mostrar.</td></tr>';
-    document.getElementById('stats-row').innerHTML = ''; return;
-  }
-  thead.innerHTML = '<tr><th>Artículo</th><th>Cat.</th>' + distribuidores.map(d => `<th style="text-align:right">${d.nombre}</th>`).join('') + '<th style="text-align:center;color:#5A9F3E">💰 Ahorro</th><th style="color:#5A9F3E">Más barato</th></tr>';
-  let totalAhorro = 0, artConPrecio = 0;
-  const distWins = {};
-  distribuidores.forEach(d => distWins[d.id] = 0);
-  tbody.innerHTML = arts.map(art => {
-    const precioMap = {};
-    precios.filter(p => p.articulo_id === art.id).forEach(p => { precioMap[p.distribuidor_id] = parseFloat(p.precio); });
-    const vals = Object.values(precioMap).filter(v => !isNaN(v));
-    const minVal = vals.length ? Math.min(...vals) : null;
-    const maxVal = vals.length ? Math.max(...vals) : null;
-    const ahorro = (minVal !== null && maxVal !== null && vals.length > 1) ? (maxVal - minVal) : 0;
-    if (vals.length > 0) artConPrecio++;
-    totalAhorro += ahorro;
-    const bestDist = distribuidores.find(d => precioMap[d.id] === minVal);
-    if (bestDist && vals.length > 1) distWins[bestDist.id] = (distWins[bestDist.id] || 0) + 1;
-    const cells = distribuidores.map(d => {
-      const v = precioMap[d.id];
-      if (v === undefined) return `<td class="price-cell price-empty">—</td>`;
-      const isBest = v === minVal && vals.length > 1;
-      const isWorst = v === maxVal && vals.length > 1;
-      return `<td class="price-cell ${isBest ? 'price-best' : isWorst ? 'price-worst' : ''}">${v.toFixed(2)} €</td>`;
-    }).join('');
-    const ahorroCell = ahorro > 0 ? `<td style="text-align:center"><span class="saving-badge">-${ahorro.toFixed(2)} €</span></td>` : `<td style="text-align:center"><span class="saving-zero">—</span></td>`;
-    const mejorCell = bestDist && vals.length > 0 ? `<td style="color:#5A9F3E;font-weight:700;font-size:12px">${bestDist.nombre}</td>` : `<td class="price-empty">—</td>`;
-    return `<tr><td><strong style="color:#e8ecf4">${art.nombre}</strong>${art.referencia ? `<br><span style="font-size:11px;color:#8891aa">${art.referencia}</span>` : ''}</td><td>${catBadge(art.categoria)}</td>${cells}${ahorroCell}${mejorCell}</tr>`;
+function renderComparador(){
+  const loading=document.getElementById('comparador-loading');
+  const content=document.getElementById('comparador-content');
+  loading.style.display='none';content.style.display='block';
+  const buscar=(document.getElementById('buscar-art')?.value||'').toLowerCase();
+  let arts=articulos;
+  if(currentCat)arts=arts.filter(a=>a.categoria===currentCat);
+  if(buscar)arts=arts.filter(a=>a.nombre.toLowerCase().includes(buscar)||(a.referencia||'').toLowerCase().includes(buscar));
+  const thead=document.getElementById('comp-thead');
+  const tbody=document.getElementById('comp-tbody');
+  if(!arts.length){thead.innerHTML='';tbody.innerHTML='<tr><td class="empty" colspan="20">No hay artículos para mostrar.</td></tr>';document.getElementById('stats-row').innerHTML='';return;}
+  thead.innerHTML='<tr><th>Artículo</th><th>Cat.</th>'+distribuidores.map(d=>`<th style="text-align:right">${d.nombre}</th>`).join('')+'<th style="text-align:center;color:#5A9F3E">💰 Ahorro</th><th style="color:#5A9F3E">Más barato</th></tr>';
+  let totalAhorro=0,artConPrecio=0;
+  const distWins={};distribuidores.forEach(d=>distWins[d.id]=0);
+  tbody.innerHTML=arts.map(art=>{
+    const precioMap={};
+    precios.filter(p=>p.articulo_id===art.id).forEach(p=>{precioMap[p.distribuidor_id]=parseFloat(p.precio);});
+    const vals=Object.values(precioMap).filter(v=>!isNaN(v));
+    const minVal=vals.length?Math.min(...vals):null;
+    const maxVal=vals.length?Math.max(...vals):null;
+    const ahorro=(minVal!==null&&maxVal!==null&&vals.length>1)?(maxVal-minVal):0;
+    if(vals.length>0)artConPrecio++;
+    totalAhorro+=ahorro;
+    const bestDist=distribuidores.find(d=>precioMap[d.id]===minVal);
+    if(bestDist&&vals.length>1)distWins[bestDist.id]=(distWins[bestDist.id]||0)+1;
+    const cells=distribuidores.map(d=>{const v=precioMap[d.id];if(v===undefined)return`<td class="price-cell price-empty">—</td>`;const isBest=v===minVal&&vals.length>1;const isWorst=v===maxVal&&vals.length>1;return`<td class="price-cell ${isBest?'price-best':isWorst?'price-worst':''}">${v.toFixed(2)} €</td>`;}).join('');
+    const ahorroCell=ahorro>0?`<td style="text-align:center"><span class="saving-badge">-${ahorro.toFixed(2)} €</span></td>`:`<td style="text-align:center"><span class="saving-zero">—</span></td>`;
+    const mejorCell=bestDist&&vals.length>0?`<td style="color:#5A9F3E;font-weight:700;font-size:12px">${bestDist.nombre}</td>`:`<td class="price-empty">—</td>`;
+    return`<tr><td><strong style="color:#e8ecf4">${art.nombre}</strong>${art.referencia?`<br><span style="font-size:11px;color:#8891aa">${art.referencia}</span>`:''}</td><td>${catBadge(art.categoria)}</td>${cells}${ahorroCell}${mejorCell}</tr>`;
   }).join('');
-  document.getElementById('stats-row').innerHTML = `
+  document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-value">${arts.length}</div><div class="stat-label">Artículos</div></div>
     <div class="stat-card"><div class="stat-value">${artConPrecio}</div><div class="stat-label">Con precios</div></div>
     <div class="stat-card"><div class="stat-value" style="color:#5A9F3E">${totalAhorro.toFixed(2)} €</div><div class="stat-label">Ahorro potencial</div></div>
     <div class="stat-card"><div class="stat-value">${distribuidores.length}</div><div class="stat-label">Distribuidores</div></div>
   `;
-  window._distWins = distWins;
+  window._distWins=distWins;
 }
 
-// ── RANKING ──
-function renderRanking() {
-  const wins = window._distWins || {};
-  const content = document.getElementById('ranking-content');
-  const total = Object.values(wins).reduce((s, v) => s + v, 0);
-  if (!total) { content.innerHTML = '<p style="color:#8891aa">Añade precios en varios distribuidores para ver el ranking.</p>'; }
-  else {
-    const sorted = distribuidores.map(d => ({ nombre: d.nombre, wins: wins[d.id] || 0 })).sort((a, b) => b.wins - a.wins);
-    const max = sorted[0].wins || 1;
-    content.innerHTML = sorted.map((d, i) => `
-      <div class="rank-bar">
-        <div class="rank-name">${i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''}${d.nombre}</div>
-        <div class="rank-track"><div class="rank-fill" style="width:${(d.wins/max*100).toFixed(0)}%;background:${i===0?'#FDB913':i===1?'#aaa':i===2?'#cd7f32':'#3B8AC7'}"></div></div>
-        <div class="rank-count">${d.wins} vez${d.wins !== 1 ? 'es' : ''}</div>
-      </div>`).join('');
+function renderRanking(){
+  const wins=window._distWins||{};
+  const content=document.getElementById('ranking-content');
+  const total=Object.values(wins).reduce((s,v)=>s+v,0);
+  if(!total){content.innerHTML='<p style="color:#8891aa">Añade precios en varios distribuidores para ver el ranking.</p>';}
+  else{
+    const sorted=distribuidores.map(d=>({nombre:d.nombre,wins:wins[d.id]||0})).sort((a,b)=>b.wins-a.wins);
+    const max=sorted[0].wins||1;
+    content.innerHTML=sorted.map((d,i)=>`<div class="rank-bar"><div class="rank-name">${i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''}${d.nombre}</div><div class="rank-track"><div class="rank-fill" style="width:${(d.wins/max*100).toFixed(0)}%;background:${i===0?'#FDB913':i===1?'#aaa':i===2?'#cd7f32':'#3B8AC7'}"></div></div><div class="rank-count">${d.wins} vez${d.wins!==1?'es':''}</div></div>`).join('');
   }
-  const totalAh = precios.length ? (() => {
-    let sum = 0;
-    articulos.forEach(art => {
-      const vals = precios.filter(p => p.articulo_id === art.id).map(p => parseFloat(p.precio)).filter(v => !isNaN(v));
-      if (vals.length > 1) sum += Math.max(...vals) - Math.min(...vals);
-    });
-    return sum;
-  })() : 0;
-  document.getElementById('ahorro-total').innerHTML = `
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;color:#5A9F3E">${totalAh.toFixed(2)} €</div>
-    <div style="color:#8891aa;font-size:13px;margin-top:4px">diferencia entre el distribuidor más caro y el más barato por artículo</div>
-  `;
+  const totalAh=precios.length?(()=>{let sum=0;articulos.forEach(art=>{const vals=precios.filter(p=>p.articulo_id===art.id).map(p=>parseFloat(p.precio)).filter(v=>!isNaN(v));if(vals.length>1)sum+=Math.max(...vals)-Math.min(...vals);});return sum;})():0;
+  document.getElementById('ahorro-total').innerHTML=`<div style="font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;color:#5A9F3E">${totalAh.toFixed(2)} €</div><div style="color:#8891aa;font-size:13px;margin-top:4px">diferencia entre el distribuidor más caro y el más barato por artículo</div>`;
 }
 
-
-// ── DISTRIBUIDORES ──
-function renderDistribuidores() {
-  const tbody = document.getElementById('dist-tbody');
-  if (!distribuidores.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty">No hay distribuidores. Añade el primero.</td></tr>'; return; }
-  tbody.innerHTML = distribuidores.map(d => {
-    const count = precios.filter(p => p.distribuidor_id === d.id).length;
-    return `<tr>
-      <td><strong style="color:#e8ecf4">${d.nombre}</strong></td>
-      <td style="color:#8891aa">${count} precio${count !== 1 ? 's' : ''} registrado${count !== 1 ? 's' : ''}</td>
-      <td><button class="btn btn-danger" onclick="delDistribuidor(${d.id},'${d.nombre.replace(/'/g,"\'")}')">✕</button></td>
-    </tr>`;
-  }).join('');
+function renderDistribuidores(){
+  const tbody=document.getElementById('dist-tbody');
+  if(!distribuidores.length){tbody.innerHTML='<tr><td colspan="3" class="empty">No hay distribuidores. Añade el primero.</td></tr>';return;}
+  tbody.innerHTML=distribuidores.map(d=>{const count=precios.filter(p=>p.distribuidor_id===d.id).length;return`<tr><td><strong style="color:#e8ecf4">${d.nombre}</strong></td><td style="color:#8891aa">${count} precio${count!==1?'s':''} registrado${count!==1?'s':''}</td><td><button class="btn btn-danger" onclick="delDistribuidor(${d.id},'${d.nombre.replace(/'/g,"\'")}')">✕</button></td></tr>`;}).join('');
 }
 
-async function addDistribuidor() {
-  const nombre = document.getElementById('dist-nombre').value.trim();
-  if (!nombre) { toast('Introduce un nombre', true); return; }
-  if (distribuidores.find(d => d.nombre.toLowerCase() === nombre.toLowerCase())) { toast('Ya existe ese distribuidor', true); return; }
-  try {
-    const [r] = await sbFetch('precio_distribuidores', {
-      method: 'POST',
-      body: JSON.stringify({ nombre })
-    });
-    distribuidores.push(r);
-    distribuidores.sort((a,b) => a.nombre.localeCompare(b.nombre));
-    document.getElementById('dist-nombre').value = '';
-    renderDistribuidores(); populateSelects(); renderComparador();
-    toast('Distribuidor añadido ✔');
-  } catch(e) { toast('Error: ' + e.message, true); }
+async function addDistribuidor(){
+  const nombre=document.getElementById('dist-nombre').value.trim();
+  if(!nombre){toast('Introduce un nombre',true);return;}
+  if(distribuidores.find(d=>d.nombre.toLowerCase()===nombre.toLowerCase())){toast('Ya existe ese distribuidor',true);return;}
+  try{
+    const[r]=await sbFetch('precio_distribuidores',{method:'POST',body:JSON.stringify({nombre})});
+    distribuidores.push(r);distribuidores.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+    document.getElementById('dist-nombre').value='';
+    renderDistribuidores();populateSelects();renderComparador();toast('Distribuidor añadido ✔');
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-async function delDistribuidor(id, nombre) {
-  if (!confirm('¿Eliminar "' + nombre + '" y todos sus precios?')) return;
-  try {
-    await sbFetch('precios?distribuidor_id=eq.' + id, { method: 'DELETE', prefer: '' });
-    await sbFetch('precio_distribuidores?id=eq.' + id, { method: 'DELETE', prefer: '' });
-    distribuidores = distribuidores.filter(d => d.id !== id);
-    precios = precios.filter(p => p.distribuidor_id !== id);
-    renderDistribuidores(); populateSelects(); renderComparador(); renderPreciosLog();
-    toast('Distribuidor eliminado');
-  } catch(e) { toast('Error: ' + e.message, true); }
+async function delDistribuidor(id,nombre){
+  if(!confirm('¿Eliminar "'+nombre+'" y todos sus precios?'))return;
+  try{
+    await sbFetch('precios?distribuidor_id=eq.'+id,{method:'DELETE',prefer:''});
+    await sbFetch('precio_distribuidores?id=eq.'+id,{method:'DELETE',prefer:''});
+    distribuidores=distribuidores.filter(d=>d.id!==id);precios=precios.filter(p=>p.distribuidor_id!==id);
+    renderDistribuidores();populateSelects();renderComparador();renderPreciosLog();toast('Distribuidor eliminado');
+  }catch(e){toast('Error: '+e.message,true);}
 }
 
-document.getElementById('precio-fecha').value = new Date().toISOString().slice(0,10);
+document.getElementById('precio-fecha').value=new Date().toISOString().slice(0,10);
 loadAll();
 </script>
 
