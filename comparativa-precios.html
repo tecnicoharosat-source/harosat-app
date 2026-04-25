@@ -50,7 +50,7 @@ select option { background: #2e3447; color: #e8ecf4; }
 
 .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #3a4158; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th { background: #2e3447; padding: 10px 14px; text-align: left; font-family: ‘Barlow Condensed’, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8891aa; border-bottom: 2px solid #3a4158; white-space: nowrap; }
+thead th { background: #2e3447; padding: 10px 14px; text-align: left; font-family: ‘Barlow Condensed’, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8891aa; border-bottom: 2px solid #3a4158; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
 tbody tr { border-bottom: 1px solid #3a4158; transition: background .15s; }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: #2e3447; }
@@ -459,7 +459,7 @@ async function doImport(){
     closeImport();
     renderArticulos();renderDistribuidores();populateSelects();renderComparador();renderPreciosLog();
     toast(`✔ ${importados} artículo${importados>1?'s':''} importado${importados>1?'s':''} con precio`);
-  }catch(e){alert('ERROR IMPORT:\n'+e.message);toast('Error importando: '+e.message,true);}
+  }catch(e){toast('Error importando: '+e.message,true);}
 }
 
 function populateSelects(){
