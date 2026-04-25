@@ -148,11 +148,16 @@ td { padding: 10px 14px; vertical-align: middle; color: #e8ecf4; }
   <div id="comparador-loading" class="loading"><span class="spinner"></span>Cargando...</div>
   <div id="comparador-content" style="display:none;">
     <div class="stats-row" id="stats-row"></div>
-    <div class="table-wrap">
-      <table id="comparador-table">
-        <thead id="comp-thead"></thead>
-        <tbody id="comp-tbody"></tbody>
-      </table>
+    <div style="position:relative;border:1px solid #3a4158;border-radius:8px;overflow:hidden;">
+      <div id="comp-thead-sticky" style="overflow-x:hidden;position:sticky;top:0;z-index:20;background:#2e3447;border-bottom:2px solid #3a4158;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;"><thead id="comp-thead-clone"></thead></table>
+      </div>
+      <div id="comp-scroll" style="overflow-x:auto;" onscroll="document.getElementById('comp-thead-sticky').scrollLeft=this.scrollLeft">
+        <table id="comparador-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead id="comp-thead" style="visibility:hidden;position:absolute;"></thead>
+          <tbody id="comp-tbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -532,9 +537,12 @@ function renderComparador(){
   if(currentCat)arts=arts.filter(a=>a.categoria===currentCat);
   if(buscar)arts=arts.filter(a=>a.nombre.toLowerCase().includes(buscar)||(a.referencia||'').toLowerCase().includes(buscar));
   const thead=document.getElementById('comp-thead');
+  const theadClone=document.getElementById('comp-thead-clone');
   const tbody=document.getElementById('comp-tbody');
   if(!arts.length){thead.innerHTML='';tbody.innerHTML='<tr><td class="empty" colspan="20">No hay artículos para mostrar.</td></tr>';document.getElementById('stats-row').innerHTML='';return;}
-  thead.innerHTML='<tr><th>Artículo</th><th>Cat.</th>'+distribuidores.map(d=>`<th style="text-align:right">${d.nombre}</th>`).join('')+'<th style="text-align:center;color:#5A9F3E">💰 Ahorro</th><th style="color:#5A9F3E">Más barato</th></tr>';
+  const theadHTML='<tr><th>Artículo</th><th>Cat.</th>'+distribuidores.map(d=>`<th style="text-align:right">${d.nombre}</th>`).join('')+'<th style="text-align:center;color:#5A9F3E">💰 Ahorro</th><th style="color:#5A9F3E">Más barato</th></tr>';
+  thead.innerHTML=theadHTML;
+  theadClone.innerHTML=theadHTML;
   let totalAhorro=0,artConPrecio=0;
   const distWins={};distribuidores.forEach(d=>distWins[d.id]=0);
   tbody.innerHTML=arts.map(art=>{
