@@ -459,7 +459,7 @@ async function doImport(){
     closeImport();
     renderArticulos();renderDistribuidores();populateSelects();renderComparador();renderPreciosLog();
     toast(`✔ ${importados} artículo${importados>1?'s':''} importado${importados>1?'s':''} con precio`);
-  }catch(e){toast('Error importando: '+e.message,true);}
+  }catch(e){alert('ERROR IMPORT:\n'+e.message);toast('Error importando: '+e.message,true);}
 }
 
 function populateSelects(){
