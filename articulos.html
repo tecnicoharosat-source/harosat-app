@@ -165,7 +165,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="form-section">Identificación</div>
       <div class="field"><label>Referencia</label><input id="f-ref" placeholder="Ref. proveedor"></div>
       <div class="field"><label>Marca</label>
-        <select id="f-marca">
+        <select id="f-marca" onchange="toggleNuevaMarca()">
           <option value="">Sin marca</option>
           <option value="Wolf">Wolf</option>
           <option value="Baxi">Baxi</option>
@@ -177,8 +177,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <option value="Roca">Roca</option>
           <option value="Daikin">Daikin</option>
           <option value="Mitsubishi">Mitsubishi</option>
-          <option value="Otra">Otra</option>
+          <option value="__otra_marca__">✏️ Otra (nueva)...</option>
         </select>
+        <input id="f-marca-nueva" placeholder="Nombre de la nueva marca" style="display:none;margin-top:6px;background:var(--s2);border:1px solid var(--blue);color:var(--text);padding:9px 12px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;width:100%;">
       </div>
       <div class="field full"><label>Descripción *</label><input id="f-desc" placeholder="Descripción completa del artículo"></div>
       <div class="field"><label>Categoría</label>
@@ -248,6 +249,23 @@ let articulos=[],editingId=null;
 function setSyncStatus(state,msg){document.getElementById('sync-dot').className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');document.getElementById('sync-text').textContent=msg;}
 async function cargarArticulos(){setSyncStatus('syncing','Cargando...');try{articulos=await sbGet('select=*&order=descripcion.asc');setSyncStatus('ok','Sincronizado');renderTabla();}catch(e){setSyncStatus('error','Sin conexión');toast('Error: '+e.message,'err');document.getElementById('tabla-articulos').innerHTML='<div class="empty"><div class="icon">⚠️</div><p>'+e.message+'</p></div>';}}
 
+function toggleNuevaMarca(){
+  var sel=document.getElementById("f-marca");
+  var inp=document.getElementById("f-marca-nueva");
+  if(sel.value==="__otra_marca__"){inp.style.display="block";setTimeout(function(){inp.focus();},50);}
+  else{inp.style.display="none";inp.value="";}
+}
+
+function getMarcaValue(){
+  var sel=document.getElementById("f-marca");
+  if(sel.value==="__otra_marca__"){
+    var v=document.getElementById("f-marca-nueva").value.trim();
+    if(!v){toast("Escribe el nombre de la nueva marca","err");return null;}
+    return v;
+  }
+  return sel.value;
+}
+
 function toggleNuevoProv(){
   var sel=document.getElementById('f-prov');
   var inp=document.getElementById('f-prov-nuevo');
@@ -273,7 +291,12 @@ function openModal(id){
     document.getElementById('modal-title').textContent='✏️ Editar artículo';
     document.getElementById('modal-btn').textContent='Guardar cambios';
     document.getElementById('f-ref').value=a.referencia||'';
-    document.getElementById('f-marca').value=a.marca||'';
+    var selMarca=document.getElementById('f-marca');
+    var marcaVal=a.marca||'';
+    var mOptExists=Array.from(selMarca.options).some(function(o){return o.value===marcaVal;});
+    if(marcaVal && !mOptExists){var newMOpt=document.createElement('option');newMOpt.value=marcaVal;newMOpt.text=marcaVal;selMarca.insertBefore(newMOpt,selMarca.lastElementChild);}
+    selMarca.value=marcaVal;
+    document.getElementById('f-marca-nueva').style.display='none';
     document.getElementById('f-desc').value=a.descripcion||'';
     document.getElementById('f-cat').value=a.categoria||'Caldera';
     // Proveedor: si no está en el select, añadirlo temporalmente
@@ -290,7 +313,7 @@ function openModal(id){
     document.getElementById('modal-title').textContent='📦 Nuevo Artículo';
     document.getElementById('modal-btn').textContent='Guardar artículo';
     ['f-ref','f-desc','f-coste','f-venta','f-notas'].forEach(function(id){document.getElementById(id).value='';});
-    document.getElementById('f-marca').value='';
+    document.getElementById('f-marca').value='';document.getElementById('f-marca-nueva').style.display='none';document.getElementById('f-marca-nueva').value='';
     document.getElementById('f-cat').value='Caldera';
     document.getElementById('f-prov').value='Zabaleta';
     document.getElementById('f-prov-nuevo').style.display='none';
@@ -311,7 +334,7 @@ async function guardarArticulo(){
   if(prov===null)return;
   const row={
     referencia:document.getElementById('f-ref').value.trim(),
-    marca:document.getElementById('f-marca').value,
+    marca:(function(){var m=getMarcaValue();if(m===null)throw new Error('marca_missing');return m;})(),
     descripcion:desc,
     categoria:document.getElementById('f-cat').value,
     proveedor:prov,
