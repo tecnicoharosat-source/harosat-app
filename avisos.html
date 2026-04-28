@@ -603,9 +603,9 @@ function confTerminar(id){
     "<h3 style=\"color:var(--green)\">MARCAR TERMINADO</h3>"+
     "<p>"+(a.numero?"<strong>"+a.numero+"</strong> &mdash; ":"")+a.nombre_cliente+"</p>"+
     "<div class=\"fg\" style=\"text-align:left;margin-bottom:10px\"><label class=\"fl\">Cobrado (€)</label>"+
-    "<input type=\"number\" class=\"fc\" id=\"icob\" step=\"0.01\" value=\""+(a.importe||0)+"\"></div>"+
+    "<input type=\"number\" class=\"fc\" id=\"icob\" step=\"0.01\" value=\"0\"></div>"+
     "<div class=\"fg\" style=\"text-align:left;margin-bottom:18px\"><label class=\"fl\">Pendiente de cobro (€)</label>"+
-    "<input type=\"number\" class=\"fc\" id=\"ipen\" step=\"0.01\" value=\"0\"></div>"+
+    "<input type=\"number\" class=\"fc\" id=\"ipen\" step=\"0.01\" value=\""+(a.importe||0)+"\"></div>"+
     "<div class=\"cbtns\"><button class=\"bcc\" onclick=\"cerrarConf()\">Cancelar</button>"+
     "<button class=\"bco green\" onclick=\"terminar("+id+")\">Confirmar</button></div>";
   document.getElementById("cov").classList.add("show");
