@@ -632,7 +632,7 @@ async function terminar(id){
   try{
     await sbReq("avisos?id=eq."+id,{method:"PATCH",body:JSON.stringify({estado:"terminado"})});
     if(a.cliente_id){
-      await sbReq("clientes?id=eq."+a.cliente_id,{method:"PATCH",body:JSON.stringify({trabajo:a.tipo_trabajo,presupuesto:parseFloat(a.importe)||0,cobrado:cob,pendiente:pen,terminado:pen===0,updated_at:new Date().toISOString()})});
+      await sbReq("clientes?id=eq."+a.cliente_id,{method:"PATCH",body:JSON.stringify({trabajo:a.tipo_trabajo,presupuesto:parseFloat(a.importe)||0,cobrado:cob,pendiente:pen,terminado:pen===0?"si":"no".updated_at:new Date().toISOString()})});
     }
     cerrarConf();showToast("Terminado - datos enviados a Clientes","success");
     await loadAvisos();render();
