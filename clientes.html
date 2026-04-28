@@ -178,6 +178,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="nav-item" onclick="goTo('pendientes')"><span class="nav-icon">⏳</span><span>Pendientes cobro</span></div>
       <div class="nav-item" onclick="goTo('terminados')"><span class="nav-icon">✅</span><span>Trabajos terminados</span></div>
       <div class="nav-item" onclick="goTo('archivados')"><span class="nav-icon">📦</span><span>Archivados</span></div>
+      <div class="nav-item" onclick="goTo('estadisticas')"><span class="nav-icon">📊</span><span>Estadísticas</span></div>
     </div>
     <div class="sidebar-bottom"><div class="stat-box" id="sidebar-stats"></div></div>
   </aside>
@@ -211,6 +212,10 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     <div id="page-pendientes" class="page">
       <div class="page-header"><div><div class="page-title">Pendientes de cobro</div></div></div>
       <div class="card"><div id="tabla-pendientes"></div></div>
+    </div>
+    <div id="page-estadisticas" class="page">
+      <div class="page-header"><div><div class="page-title">Estadísticas</div><div class="page-sub">Resumen trimestral y anual</div></div></div>
+      <div id="tabla-estadisticas"></div>
     </div>
     <div id="page-archivados" class="page">
       <div class="page-header"><div><div class="page-title">Archivados</div><div class="page-sub">Trabajos terminados y cobrados</div></div></div>
@@ -264,14 +269,14 @@ async function sbDelete(id){const r=await fetch(`${SUPA_URL}/rest/v1/clientes?id
 let clientes=[],recientes=[],editingId=null;
 function setSyncStatus(state,msg){document.getElementById('sync-dot').className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');document.getElementById('sync-text').textContent=msg;}
 async function cargarClientes(){setSyncStatus('syncing','Cargando...');try{clientes=await sbGet('select=*&order=updated_at.desc');setSyncStatus('ok','Sincronizado');renderAll();}catch(e){setSyncStatus('error','Sin conexión');toast('Error al cargar datos','err');}}
-function goTo(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');const pages=['clientes','cobros','recientes','pendientes','terminados','archivados'];document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');renderAll();}
+function goTo(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');const pages=['clientes','cobros','recientes','pendientes','terminados','archivados','estadisticas'];document.querySelectorAll('.nav-item')[pages.indexOf(page)]?.classList.add('active');renderAll();}
 function openModal(id){editingId=id||null;if(id){const c=clientes.find(x=>x.id===id);if(!c)return;document.getElementById('modal-title').textContent='✏️ Editar cliente';document.getElementById('modal-btn').textContent='Guardar cambios';document.getElementById('f-nombre').value=c.nombre||'';document.getElementById('f-dni').value=c.dni||'';document.getElementById('f-dir').value=c.direccion||'';document.getElementById('f-tel').value=c.telefono||'';document.getElementById('f-email').value=c.email||'';document.getElementById('f-trabajo').value=c.trabajo||'';document.getElementById('f-presup-num').value=c.presupuesto_num||'';document.getElementById('f-fecha').value=c.fecha||'';document.getElementById('f-presup').value=c.presupuesto||'';document.getElementById('f-aceptado').value=c.aceptado||'pendiente';document.getElementById('f-cobrado').value=c.cobrado||'';document.getElementById('f-facturado').value=c.facturado||'no';document.getElementById('f-terminado').value=c.terminado||'no';document.getElementById('f-notas').value=c.notas||'';calcCliente();}else{document.getElementById('modal-title').textContent='👤 Nuevo cliente';document.getElementById('modal-btn').textContent='Guardar cliente';['f-nombre','f-dni','f-dir','f-tel','f-email','f-trabajo','f-presup-num','f-presup','f-pendiente','f-cobrado','f-notas'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];document.getElementById('f-aceptado').value='si';document.getElementById('f-facturado').value='no';document.getElementById('f-terminado').value='no';}document.getElementById('modal-overlay').classList.add('open');setTimeout(()=>document.getElementById('f-nombre').focus(),100);}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
 function calcCliente(){const presup=parseFloat(document.getElementById('f-presup').value)||0;const cobrado=parseFloat(document.getElementById('f-cobrado').value)||0;document.getElementById('f-pendiente').value=Math.max(0,presup-cobrado).toFixed(2);}
 async function saveCliente(){const nombre=document.getElementById('f-nombre').value.trim();if(!nombre){toast('El nombre es obligatorio','err');return;}const presup=parseFloat(document.getElementById('f-presup').value)||null;const cobrado=parseFloat(document.getElementById('f-cobrado').value)||null;const pendiente=presup?Math.max(0,presup-(cobrado||0)):null;const row={nombre,dni:document.getElementById('f-dni').value.trim(),direccion:document.getElementById('f-dir').value.trim(),telefono:document.getElementById('f-tel').value.trim(),email:document.getElementById('f-email').value.trim(),trabajo:document.getElementById('f-trabajo').value.trim(),presupuesto_num:document.getElementById('f-presup-num').value.trim(),fecha:document.getElementById('f-fecha').value,presupuesto:presup,aceptado:document.getElementById('f-aceptado').value,cobrado,pendiente,facturado:document.getElementById('f-facturado').value,terminado:document.getElementById('f-terminado').value,notas:document.getElementById('f-notas').value.trim(),updated_at:new Date().toISOString()};setSyncStatus('syncing','Guardando...');try{if(editingId){await sbUpdate(editingId,row);const idx=clientes.findIndex(x=>x.id===editingId);if(idx>=0)clientes[idx]={...clientes[idx],...row,id:editingId};toast('Cliente actualizado ✓','ok');}else{const res=await sbInsert(row);clientes.unshift(Array.isArray(res)?res[0]:row);toast('Cliente guardado ✓','ok');}addReciente(row.nombre,editingId?'Editado':'Nuevo',row.trabajo);setSyncStatus('ok','Sincronizado');closeModal();renderAll();}catch(e){setSyncStatus('error','Error');toast('Error: '+e.message,'err');}}
 async function deleteCliente(id){if(!confirm('¿Eliminar este cliente?'))return;setSyncStatus('syncing','Eliminando...');try{await sbDelete(id);clientes=clientes.filter(x=>x.id!==id);setSyncStatus('ok','Sincronizado');renderAll();toast('Cliente eliminado','info');}catch(e){setSyncStatus('error','Error');toast('Error al eliminar','err');}}
 function addReciente(nombre,accion,trabajo){recientes.unshift({nombre,accion,trabajo,ts:new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})});if(recientes.length>20)recientes.pop();}
-function renderAll(){renderKPIs();renderTabla();renderCobros();renderRecientes();renderPendientes();renderTerminados();renderArchivados();renderSidebarStats();}
+function renderAll(){renderKPIs();renderTabla();renderCobros();renderRecientes();renderPendientes();renderTerminados();renderArchivados();renderEstadisticas();renderSidebarStats();}
 function renderKPIs(){const total=clientes.length;const pendientes=clientes.filter(x=>x.pendiente>0).length;const totalPendiente=clientes.reduce((a,b)=>a+(+b.pendiente||0),0);const terminados=clientes.filter(x=>x.terminado==='si').length;document.getElementById('kpis').innerHTML=`<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Total clientes</div><div class="kpi-val">${total}</div></div><div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Pendiente cobro</div><div class="kpi-val" style="color:${totalPendiente>0?'var(--red)':'var(--green)'};font-size:18px;">${fmtE(totalPendiente)}</div><div class="kpi-sub">${pendientes} clientes</div></div><div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Trabajos terminados</div><div class="kpi-val" style="color:var(--green)">${terminados}</div><div class="kpi-sub">de ${total} totales</div></div><div class="kpi"><div class="kpi-accent" style="background:var(--gold)"></div><div class="kpi-label">Presupuestado</div><div class="kpi-val" style="font-size:18px;">${fmtE(clientes.reduce((a,b)=>a+(+b.presupuesto||0),0))}</div></div>`;}
 function estadoBadge(c){const p=+c.pendiente||0;if(c.terminado==='si'&&p===0)return'<span class="badge badge-green">✅ Terminado</span>';if(p>0)return`<span class="badge badge-red">💰 Pendiente ${fmtE(p)}</span>`;if(c.aceptado==='no')return'<span class="badge badge-muted">❌ No aceptado</span>';if(c.aceptado==='pendiente')return'<span class="badge badge-orange">⏳ En espera</span>';return'<span class="badge badge-blue">🔧 En curso</span>';}
 function renderTablaClientes(arr,contId){if(!arr.length){document.getElementById(contId).innerHTML=`<div class="empty"><div class="icon">👥</div><p>Sin clientes en esta vista</p></div>`;return;}document.getElementById(contId).innerHTML=`<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Trabajo</th><th>Presup.</th><th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th><th>Facturado</th><th></th></tr></thead><tbody>${arr.map(c=>`<tr><td><div style="font-weight:600;color:white;">${c.nombre}</div><div style="font-size:10px;color:var(--muted)">${c.direccion||''}</div>${c.telefono?`<div style="font-size:10px;color:var(--muted)">${c.telefono}</div>`:''}</td><td><div style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.trabajo||'—'}</div>${c.presupuesto_num?`<div style="font-size:10px;color:var(--muted)">${c.presupuesto_num}</div>`:''}</td><td class="num">${c.presupuesto?fmtE(+c.presupuesto):'—'}</td><td class="num pos">${c.cobrado?fmtE(+c.cobrado):'—'}</td><td class="num ${(+c.pendiente||0)>0?'neg':''}">${(+c.pendiente||0)>0?fmtE(+c.pendiente):'—'}</td><td>${estadoBadge(c)}</td><td>${c.facturado==='si'?'<span class="badge badge-green">Sí</span>':c.facturado==='parcial'?'<span class="badge badge-orange">Parcial</span>':'<span class="badge badge-muted">No</span>'}</td><td style="white-space:nowrap;"><button class="action-btn" onclick="openModal(${c.id})">✏️</button><button class="action-btn del" onclick="deleteCliente(${c.id})">✕</button></td></tr>`).join('')}</tbody></table></div>`;}
@@ -280,6 +285,45 @@ function renderCobros(){const arr=clientes.filter(c=>c.presupuesto>0&&c.aceptado
 function renderRecientes(){const el=document.getElementById('lista-recientes');if(!recientes.length){el.innerHTML=`<div class="empty"><div class="icon">🕐</div><p>Sin actividad reciente</p></div>`;return;}el.innerHTML=recientes.map(r=>`<div class="reciente-item"><div class="reciente-avatar">${r.nombre.charAt(0).toUpperCase()}</div><div class="reciente-info"><div class="reciente-name">${r.nombre}</div><div class="reciente-sub">${r.trabajo||'Sin descripción'}</div></div><div class="reciente-badge"><span class="badge ${r.accion==='Nuevo'?'badge-green':'badge-blue'}">${r.accion} · ${r.ts}</span></div></div>`).join('');}
 function renderPendientes(){const arr=clientes.filter(c=>(+c.pendiente||0)>0).sort((a,b)=>(+b.pendiente||0)-(+a.pendiente||0));renderTablaClientes(arr,'tabla-pendientes');}
 function renderArchivados(){const arr=clientes.filter(c=>c.terminado==='si'&&(+c.pendiente||0)===0&&(+c.cobrado||0)>0);renderTablaClientes(arr,'tabla-archivados');}function renderTerminados(){const arr=clientes.filter(c=>c.terminado==='si'&&!((+c.pendiente||0)===0&&(+c.cobrado||0)>0));renderTablaClientes(arr,'tabla-terminados');}
+function renderEstadisticas(){
+  var el=document.getElementById('tabla-estadisticas');
+  if(!el) return;
+  var year=new Date().getFullYear();
+  var trimestres=[
+    {label:'T1 Ene-Mar',meses:[0,1,2]},
+    {label:'T2 Abr-Jun',meses:[3,4,5]},
+    {label:'T3 Jul-Sep',meses:[6,7,8]},
+    {label:'T4 Oct-Dic',meses:[9,10,11]}
+  ];
+  var totPresup=0,totCob=0,totPend=0;
+  var rows='';
+  for(var t=0;t<trimestres.length;t++){
+    var tPresup=0,tCob=0,tPend=0;
+    for(var i=0;i<clientes.length;i++){
+      var c=clientes[i];
+      if(!c.fecha) continue;
+      var d=new Date(c.fecha);
+      if(d.getFullYear()!==year) continue;
+      if(trimestres[t].meses.indexOf(d.getMonth())===-1) continue;
+      tPresup+=(+c.presupuesto||0);
+      tCob+=(+c.cobrado||0);
+      tPend+=(+c.pendiente||0);
+    }
+    totPresup+=tPresup;totCob+=tCob;totPend+=tPend;
+    rows+='<tr><td style="font-weight:700;color:white">'+trimestres[t].label+'</td>'+
+      '<td class="num">'+fmtE(tPresup)+'</td>'+
+      '<td class="num pos">'+fmtE(tCob)+'</td>'+
+      '<td class="num '+(tPend>0?'neg':'')+'">'+fmtE(tPend)+'</td></tr>';
+  }
+  rows+='<tr style="border-top:2px solid var(--border);background:rgba(31,111,235,0.05)">'+
+    '<td style="font-weight:800;color:white">TOTAL '+year+'</td>'+
+    '<td class="num" style="font-weight:800">'+fmtE(totPresup)+'</td>'+
+    '<td class="num pos" style="font-weight:800">'+fmtE(totCob)+'</td>'+
+    '<td class="num '+(totPend>0?'neg':'')+'" style="font-weight:800">'+fmtE(totPend)+'</td></tr>';
+  el.innerHTML='<div class="table-wrap"><table>'+
+    '<thead><tr><th>Trimestre</th><th class="num">Presupuestado</th><th class="num">Cobrado</th><th class="num">Pendiente</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table></div>';
+}
 function renderSidebarStats(){const total=clientes.reduce((a,b)=>a+(+b.presupuesto||0),0);const pendiente=clientes.reduce((a,b)=>a+(+b.pendiente||0),0);document.getElementById('sidebar-stats').innerHTML=`<div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Resumen</div><div class="stat-row"><span class="lbl">Clientes</span><span class="val">${clientes.length}</span></div><div class="stat-row"><span class="lbl">Facturado</span><span class="val" style="color:var(--green)">${fmtE(total)}</span></div><div class="stat-row"><span class="lbl">Pendiente</span><span class="val" style="color:var(--red)">${fmtE(pendiente)}</span></div>`;}
 function exportarCSV(){let csv='NOMBRE;DNI;DIRECCIÓN;TELÉFONO;TRABAJO;PRESUPUESTO Nº;FECHA;IMPORTE;COBRADO;PENDIENTE;FACTURADO;TERMINADO;NOTAS\n';clientes.forEach(c=>{csv+=`"${c.nombre||''}";"${c.dni||''}";"${c.direccion||''}";"${c.telefono||''}";"${c.trabajo||''}";"${c.presupuesto_num||''}";"${c.fecha||''}";"${c.presupuesto||0}";"${c.cobrado||0}";"${c.pendiente||0}";"${c.facturado||'no'}";"${c.terminado||'no'}";"${c.notas||''}"\n`;});const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`HAROSAT_Clientes_${new Date().toISOString().split('T')[0]}.csv`;a.click();toast('Exportado ✓','ok');}
 function fmt(n){return(+n).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
