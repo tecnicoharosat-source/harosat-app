@@ -3,11 +3,9 @@
 <html lang="es" style="background:#060910;">
 <head>
 <meta charset="UTF-8">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAACN8UlEqVR42uz9d7hlVZH/j79q7XDyzakj3U1o6CYjGQFBxYiKghnHMIZRxzgqOoIYx9ExgGJOYwZRQQFBSYJAk6HppnPuvrdvvvfEHa3knY7bN+enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6f/D8D/B0AAAAASUVORK5CYII=">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
-
-<title>HAROSAT &middot; Zabaleta</title>
+<title>HAROSAT · Zabaleta</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#060910;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--border:#30363d;--blue:#1f6feb;--blue2:#388bfd;--green:#3fb950;--red:#f85149;--orange:#d29922;--gold:#e3b341;--text:#e6edf3;--muted:#7d8590;--light:#b1bac4;--r:10px;}
@@ -87,7 +85,7 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
 .fiscal-row .lbl{color:var(--light);}
 .fiscal-row .val{font-family:'JetBrains Mono',monospace;font-weight:600;}
 .precio-preview{background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
-.precio-preview span{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green);font-size:14px;}
+.precio-preview span.pval{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green);font-size:14px;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -100,9 +98,8 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <div class="logo">HARO<span>SAT</span> <span style="font-weight:300;color:var(--muted);font-size:13px;">&middot; Zabaleta</span></div>
+  <div class="logo">HARO<span>SAT</span> <span style="font-weight:300;color:var(--muted);font-size:13px;">· Zabaleta</span></div>
   <div class="topbar-right">
     <div class="sync-pill"><div class="sync-dot" id="sync-dot"></div><span id="sync-text">Conectando...</span></div>
     <button class="btn btn-primary btn-sm" onclick="openModalCompra()">+ Nueva compra</button>
@@ -110,16 +107,13 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
     <button class="btn btn-ghost btn-sm" onclick="exportarCSV()">&#11015; Exportar</button>
   </div>
 </div>
-
 <div class="tabs">
   <div class="tab active" onclick="goTab('compras')">&#128230; Compras</div>
   <div class="tab" onclick="goTab('pagos')">&#128179; Pagos</div>
   <div class="tab" onclick="goTab('resumen')">&#128202; Resumen</div>
 </div>
-
 <div class="container">
   <div class="kpi-grid" id="kpis"></div>
-
   <div id="tab-compras">
     <div class="search-bar">
       <input class="search-input" id="buscar-compra" placeholder="Buscar por albaran o descripcion..." oninput="renderCompras()">
@@ -129,14 +123,12 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
       <div id="tabla-compras" style="overflow-x:auto;"></div>
     </div>
   </div>
-
   <div id="tab-pagos" style="display:none;">
     <div class="card">
       <div class="card-header"><div class="card-title" id="pagos-title">Pagos realizados</div></div>
       <div id="tabla-pagos" style="overflow-x:auto;"></div>
     </div>
   </div>
-
   <div id="tab-resumen" style="display:none;">
     <div class="resumen-grid">
       <div class="card"><div class="card-header"><div class="card-title">Balance general</div></div><div style="padding:18px;" id="resumen-balance"></div></div>
@@ -145,68 +137,20 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
     <div class="card"><div class="card-header"><div class="card-title">Ultimas compras</div></div><div id="resumen-ultimas" style="overflow-x:auto;"></div></div>
   </div>
 </div>
-
 <div class="overlay" id="modal-compra">
   <div class="modal">
     <div class="modal-title" id="modal-compra-title">&#128230; Nueva compra</div>
     <div class="form-grid">
-      <div class="field">
-        <label>Fecha *</label>
-        <input type="date" id="c-fecha">
-      </div>
-      <div class="field">
-        <label>N Albaran *</label>
-        <input id="c-albaran" placeholder="21/09/26">
-      </div>
-      <div class="field full">
-        <label>Descripcion *</label>
-        <input id="c-descripcion" placeholder="Ej: Caldera Wolf 24kW, termostatos...">
-      </div>
-      <div class="field">
-        <label>Importe (euros) *</label>
-        <input type="number" id="c-importe" step="0.01" placeholder="0.00" oninput="calcCompra()">
-      </div>
-      <div class="field">
-        <label>Pagado (euros)</label>
-        <input type="number" id="c-pagado" step="0.01" placeholder="0.00" oninput="calcCompra()">
-      </div>
-      <div class="field">
-        <label>Pendiente (euros)</label>
-        <input type="number" id="c-pendiente" readonly>
-      </div>
-      <div class="field">
-        <label>Estado</label>
-        <select id="c-estado">
-          <option value="pendiente">Pendiente</option>
-          <option value="parcial">Parcial</option>
-          <option value="pagado">Pagado</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>% Margen venta</label>
-        <select id="c-margen" onchange="calcCompra()">
-          <option value="50" selected>50%</option>
-          <option value="100">100%</option>
-          <option value="150">150%</option>
-          <option value="200">200%</option>
-          <option value="250">250%</option>
-          <option value="300">300%</option>
-          <option value="350">350%</option>
-          <option value="400">400%</option>
-          <option value="450">450%</option>
-          <option value="500">500%</option>
-        </select>
-      </div>
-      <div class="field full">
-        <div class="precio-preview" id="precio-preview" style="display:none;">
-          <span>Precio venta estimado:</span>
-          <span id="preview-venta">0,00 &euro;</span>
-        </div>
-      </div>
-      <div class="field full">
-        <label>Notas</label>
-        <input id="c-notas" placeholder="Observaciones...">
-      </div>
+      <div class="field"><label>Fecha *</label><input type="date" id="c-fecha"></div>
+      <div class="field"><label>N Albaran *</label><input id="c-albaran" placeholder="21/09/26"></div>
+      <div class="field full"><label>Descripcion *</label><input id="c-descripcion" placeholder="Ej: Caldera Wolf 24kW..."></div>
+      <div class="field"><label>Importe (euros) *</label><input type="number" id="c-importe" step="0.01" placeholder="0.00" oninput="calcCompra()"></div>
+      <div class="field"><label>Pagado (euros)</label><input type="number" id="c-pagado" step="0.01" placeholder="0.00" oninput="calcCompra()"></div>
+      <div class="field"><label>Pendiente (euros)</label><input type="number" id="c-pendiente" readonly></div>
+      <div class="field"><label>Estado</label><select id="c-estado"><option value="pendiente">Pendiente</option><option value="parcial">Parcial</option><option value="pagado">Pagado</option></select></div>
+      <div class="field"><label>% Margen venta</label><select id="c-margen" onchange="calcCompra()"><option value="50" selected>50%</option><option value="100">100%</option><option value="150">150%</option><option value="200">200%</option><option value="250">250%</option><option value="300">300%</option><option value="350">350%</option><option value="400">400%</option><option value="450">450%</option><option value="500">500%</option></select></div>
+      <div class="field full"><div class="precio-preview" id="precio-preview" style="display:none;"><span>Precio venta estimado:</span><span class="pval" id="preview-venta">0,00 €</span></div></div>
+      <div class="field full"><label>Notas</label><input id="c-notas" placeholder="Observaciones..."></div>
     </div>
     <div class="form-actions">
       <button class="btn btn-ghost" onclick="closeModals()">Cancelar</button>
@@ -214,27 +158,14 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
     </div>
   </div>
 </div>
-
 <div class="overlay" id="modal-pago">
   <div class="modal">
     <div class="modal-title">&#128179; Registrar pago</div>
     <div class="form-grid">
-      <div class="field">
-        <label>Fecha *</label>
-        <input type="date" id="p-fecha">
-      </div>
-      <div class="field">
-        <label>Importe (euros) *</label>
-        <input type="number" id="p-importe" step="0.01" placeholder="0.00">
-      </div>
-      <div class="field full">
-        <label>Concepto / referencia</label>
-        <input id="p-concepto" placeholder="Ej: Transferencia marzo...">
-      </div>
-      <div class="field full">
-        <label>Notas</label>
-        <input id="p-notas" placeholder="Observaciones...">
-      </div>
+      <div class="field"><label>Fecha *</label><input type="date" id="p-fecha"></div>
+      <div class="field"><label>Importe (euros) *</label><input type="number" id="p-importe" step="0.01" placeholder="0.00"></div>
+      <div class="field full"><label>Concepto / referencia</label><input id="p-concepto" placeholder="Ej: Transferencia marzo..."></div>
+      <div class="field full"><label>Notas</label><input id="p-notas" placeholder="Observaciones..."></div>
     </div>
     <div class="form-actions">
       <button class="btn btn-ghost" onclick="closeModals()">Cancelar</button>
@@ -242,41 +173,28 @@ tfoot td{padding:12px 14px;font-weight:700;border-top:2px solid var(--border);}
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 var SUPA_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 var H = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 
 function sbGet(table, q) {
-  return fetch(SUPA_URL+'/rest/v1/'+table+'?'+( q||''), {headers:H})
-    .then(function(r) {
-      if(!r.ok) return r.text().then(function(t){throw new Error(t);});
-      return r.json();
-    });
+return fetch(SUPA_URL+’/rest/v1/’+table+’?’+(q||’’), {headers:H})
+.then(function(r) { if(!r.ok) return r.text().then(function(t){throw new Error(t);}); return r.json(); });
 }
 function sbPost(table, row) {
-  return fetch(SUPA_URL+'/rest/v1/'+table, {method:'POST',headers:H,body:JSON.stringify(row)})
-    .then(function(r) {
-      if(!r.ok) return r.text().then(function(t){throw new Error(t);});
-      return r.json();
-    });
+return fetch(SUPA_URL+’/rest/v1/’+table, {method:‘POST’,headers:H,body:JSON.stringify(row)})
+.then(function(r) { if(!r.ok) return r.text().then(function(t){throw new Error(t);}); return r.json(); });
 }
 function sbPatch(table, id, row) {
-  return fetch(SUPA_URL+'/rest/v1/'+table+'?id=eq.'+id, {method:'PATCH',headers:H,body:JSON.stringify(row)})
-    .then(function(r) {
-      if(!r.ok) return r.text().then(function(t){throw new Error(t);});
-      return r.json();
-    });
+return fetch(SUPA_URL+’/rest/v1/’+table+’?id=eq.’+id, {method:‘PATCH’,headers:H,body:JSON.stringify(row)})
+.then(function(r) { if(!r.ok) return r.text().then(function(t){throw new Error(t);}); return r.json(); });
 }
 function sbDel(table, id) {
-  var dh = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'};
-  return fetch(SUPA_URL+'/rest/v1/'+table+'?id=eq.'+id, {method:'DELETE',headers:dh})
-    .then(function(r) {
-      if(!r.ok) return r.text().then(function(t){throw new Error(t);});
-    });
+var dh = {‘apikey’:SUPA_KEY,‘Authorization’:‘Bearer ‘+SUPA_KEY,‘Prefer’:‘return=minimal’};
+return fetch(SUPA_URL+’/rest/v1/’+table+’?id=eq.’+id, {method:‘DELETE’,headers:dh})
+.then(function(r) { if(!r.ok) return r.text().then(function(t){throw new Error(t);}); });
 }
 
 var compras = [];
@@ -284,471 +202,410 @@ var pagos = [];
 var editingCompraId = null;
 
 function setSyncStatus(state, msg) {
-  var dot = document.getElementById('sync-dot');
-  dot.className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
-  document.getElementById('sync-text').textContent = msg;
+var dot = document.getElementById(‘sync-dot’);
+dot.className = ‘sync-dot’ + (state===‘syncing’?’ syncing’:state===‘error’?’ error’:’’);
+document.getElementById(‘sync-text’).textContent = msg;
 }
 
 function cargarDatos() {
-  setSyncStatus('syncing', 'Cargando...');
-  sbGet('zab_compras', 'select=*')
-    .then(function(c) {
-      compras = c || [];
-      compras.sort(function(a,b){ return (b.fecha||'').localeCompare(a.fecha||''); });
-      return sbGet('zab_pagos', 'select=*');
-    })
-    .then(function(p) {
-      pagos = p || [];
-      pagos.sort(function(a,b){ return (b.fecha||'').localeCompare(a.fecha||''); });
-      setSyncStatus('ok', 'Sincronizado');
-      renderAll();
-    })
-    .catch(function(e) {
-      setSyncStatus('error', 'Sin conexion');
-      toast('Error al cargar datos', 'err');
-    });
+setSyncStatus(‘syncing’, ‘Cargando…’);
+sbGet(‘zab_compras’, ‘select=*’)
+.then(function(c) {
+compras = c || [];
+compras.sort(function(a,b){ return (b.fecha||’’).localeCompare(a.fecha||’’); });
+return sbGet(‘zab_pagos’, ’select=*’);
+})
+.then(function(p) {
+pagos = p || [];
+pagos.sort(function(a,b){ return (b.fecha||’’).localeCompare(a.fecha||’’); });
+setSyncStatus(‘ok’, ‘Sincronizado’);
+renderAll();
+})
+.catch(function(e) {
+setSyncStatus(‘error’, ‘Sin conexion’);
+toast(‘Error al cargar datos’, ‘err’);
+});
 }
 
 function goTab(tab) {
-  var tabs = ['compras','pagos','resumen'];
-  for(var i=0; i<tabs.length; i++) {
-    document.getElementById('tab-'+tabs[i]).style.display = tabs[i]===tab ? 'block' : 'none';
-  }
-  var btns = document.querySelectorAll('.tab');
-  for(var j=0; j<btns.length; j++) {
-    if(tabs[j]===tab) btns[j].classList.add('active');
-    else btns[j].classList.remove('active');
-  }
+var tabs = [‘compras’,‘pagos’,‘resumen’];
+for(var i=0; i<tabs.length; i++) {
+document.getElementById(‘tab-’+tabs[i]).style.display = tabs[i]===tab ? ‘block’ : ‘none’;
+}
+var btns = document.querySelectorAll(’.tab’);
+for(var j=0; j<btns.length; j++) {
+if(tabs[j]===tab) btns[j].classList.add(‘active’);
+else btns[j].classList.remove(‘active’);
+}
 }
 
 function openModalCompra(id) {
-  editingCompraId = id || null;
-  if(id) {
-    var c = null;
-    for(var i=0; i<compras.length; i++) { if(compras[i].id===id){c=compras[i];break;} }
-    if(!c) return;
-    document.getElementById('modal-compra-title').textContent = 'Editar compra';
-    document.getElementById('btn-guardar-compra').textContent = 'Guardar cambios';
-    document.getElementById('c-fecha').value = c.fecha || '';
-    document.getElementById('c-albaran').value = c.albaran || '';
-    document.getElementById('c-descripcion').value = c.descripcion || '';
-    document.getElementById('c-importe').value = c.importe || '';
-    document.getElementById('c-pagado').value = c.pagado || '';
-    document.getElementById('c-pendiente').value = c.pendiente || '';
-    document.getElementById('c-estado').value = c.estado || 'pendiente';
-    document.getElementById('c-margen').value = c.margen || '50';
-    document.getElementById('c-notas').value = c.notas || '';
-  } else {
-    document.getElementById('modal-compra-title').textContent = 'Nueva compra';
-    document.getElementById('btn-guardar-compra').textContent = 'Guardar compra';
-    document.getElementById('c-fecha').value = new Date().toISOString().split('T')[0];
-    document.getElementById('c-albaran').value = '';
-    document.getElementById('c-descripcion').value = '';
-    document.getElementById('c-importe').value = '';
-    document.getElementById('c-pagado').value = '';
-    document.getElementById('c-pendiente').value = '';
-    document.getElementById('c-estado').value = 'pendiente';
-    document.getElementById('c-margen').value = '50';
-    document.getElementById('c-notas').value = '';
-  }
-  document.getElementById('precio-preview').style.display = 'none';
-  document.getElementById('modal-compra').classList.add('open');
+editingCompraId = id || null;
+if(id) {
+var c = null;
+for(var i=0; i<compras.length; i++) { if(compras[i].id===id){c=compras[i];break;} }
+if(!c) return;
+document.getElementById(‘modal-compra-title’).textContent = ‘Editar compra’;
+document.getElementById(‘btn-guardar-compra’).textContent = ‘Guardar cambios’;
+document.getElementById(‘c-fecha’).value = c.fecha || ‘’;
+document.getElementById(‘c-albaran’).value = c.albaran || ‘’;
+document.getElementById(‘c-descripcion’).value = c.descripcion || ‘’;
+document.getElementById(‘c-importe’).value = c.importe || ‘’;
+document.getElementById(‘c-pagado’).value = c.pagado || ‘’;
+document.getElementById(‘c-pendiente’).value = c.pendiente || ‘’;
+document.getElementById(‘c-estado’).value = c.estado || ‘pendiente’;
+document.getElementById(‘c-margen’).value = c.margen || ‘50’;
+document.getElementById(‘c-notas’).value = c.notas || ‘’;
+} else {
+document.getElementById(‘modal-compra-title’).textContent = ‘Nueva compra’;
+document.getElementById(‘btn-guardar-compra’).textContent = ‘Guardar compra’;
+document.getElementById(‘c-fecha’).value = new Date().toISOString().split(‘T’)[0];
+document.getElementById(‘c-albaran’).value = ‘’;
+document.getElementById(‘c-descripcion’).value = ‘’;
+document.getElementById(‘c-importe’).value = ‘’;
+document.getElementById(‘c-pagado’).value = ‘’;
+document.getElementById(‘c-pendiente’).value = ‘’;
+document.getElementById(‘c-estado’).value = ‘pendiente’;
+document.getElementById(‘c-margen’).value = ‘50’;
+document.getElementById(‘c-notas’).value = ‘’;
+}
+document.getElementById(‘precio-preview’).style.display = ‘none’;
+document.getElementById(‘modal-compra’).classList.add(‘open’);
 }
 
 function openModalPago() {
-  document.getElementById('p-fecha').value = new Date().toISOString().split('T')[0];
-  document.getElementById('p-importe').value = '';
-  document.getElementById('p-concepto').value = '';
-  document.getElementById('p-notas').value = '';
-  document.getElementById('modal-pago').classList.add('open');
+document.getElementById(‘p-fecha’).value = new Date().toISOString().split(‘T’)[0];
+document.getElementById(‘p-importe’).value = ‘’;
+document.getElementById(‘p-concepto’).value = ‘’;
+document.getElementById(‘p-notas’).value = ‘’;
+document.getElementById(‘modal-pago’).classList.add(‘open’);
 }
 
 function closeModals() {
-  var ovs = document.querySelectorAll('.overlay');
-  for(var i=0; i<ovs.length; i++) ovs[i].classList.remove('open');
+var ovs = document.querySelectorAll(’.overlay’);
+for(var i=0; i<ovs.length; i++) ovs[i].classList.remove(‘open’);
 }
 
 function calcCompra() {
-  var imp = parseFloat(document.getElementById('c-importe').value) || 0;
-  var pag = parseFloat(document.getElementById('c-pagado').value) || 0;
-  var pend = imp - pag;
-  if(pend < 0) pend = 0;
-  document.getElementById('c-pendiente').value = pend.toFixed(2);
-  if(imp > 0) {
-    var est = pend === 0 ? 'pagado' : pag > 0 ? 'parcial' : 'pendiente';
-    document.getElementById('c-estado').value = est;
-    var base = imp / 1.21;
-    var margen = parseFloat(document.getElementById('c-margen').value) || 50;
-    var pventa = parseFloat((base + base * margen / 100).toFixed(2));
-    document.getElementById('preview-venta').textContent = fmt(pventa) + ' €';
-    document.getElementById('precio-preview').style.display = 'flex';
-  } else {
-    document.getElementById('precio-preview').style.display = 'none';
-  }
+var imp = parseFloat(document.getElementById(‘c-importe’).value) || 0;
+var pag = parseFloat(document.getElementById(‘c-pagado’).value) || 0;
+var pend = imp - pag;
+if(pend < 0) pend = 0;
+document.getElementById(‘c-pendiente’).value = pend.toFixed(2);
+if(imp > 0) {
+var est = pend === 0 ? ‘pagado’ : pag > 0 ? ‘parcial’ : ‘pendiente’;
+document.getElementById(‘c-estado’).value = est;
+var base = imp / 1.21;
+var margen = parseFloat(document.getElementById(‘c-margen’).value) || 50;
+var pventa = parseFloat((base + base * margen / 100).toFixed(2));
+document.getElementById(‘preview-venta’).textContent = fmt(pventa) + ’ €’;
+document.getElementById(‘precio-preview’).style.display = ‘flex’;
+} else {
+document.getElementById(‘precio-preview’).style.display = ‘none’;
+}
 }
 
 function saveCompra() {
-  var albaran = document.getElementById('c-albaran').value.trim();
-  var descripcion = document.getElementById('c-descripcion').value.trim();
-  var importe = parseFloat(document.getElementById('c-importe').value) || 0;
-  if(!albaran || !descripcion || !importe) { toast('Rellena albaran, descripcion e importe', 'err'); return; }
-
-  var pagado = parseFloat(document.getElementById('c-pagado').value) || 0;
-  var pendiente = importe - pagado;
-  if(pendiente < 0) pendiente = 0;
-  var margen = parseFloat(document.getElementById('c-margen').value) || 50;
-
-  var row = {
-    fecha: document.getElementById('c-fecha').value,
-    albaran: albaran,
-    descripcion: descripcion,
-    importe: importe,
-    pagado: pagado,
-    pendiente: pendiente,
-    estado: document.getElementById('c-estado').value,
-    margen: margen,
-    notas: document.getElementById('c-notas').value.trim()
-  };
-
-  setSyncStatus('syncing', 'Guardando...');
-
-  if(editingCompraId) {
-    sbPatch('zab_compras', editingCompraId, row)
-      .then(function() {
-        for(var i=0; i<compras.length; i++) {
-          if(compras[i].id === editingCompraId) {
-            compras[i].fecha = row.fecha;
-            compras[i].albaran = row.albaran;
-            compras[i].descripcion = row.descripcion;
-            compras[i].importe = row.importe;
-            compras[i].pagado = row.pagado;
-            compras[i].pendiente = row.pendiente;
-            compras[i].estado = row.estado;
-            compras[i].margen = row.margen;
-            compras[i].notas = row.notas;
-            break;
-          }
-        }
-        setSyncStatus('ok', 'Sincronizado');
-        closeModals();
-        renderAll();
-        toast('Compra actualizada', 'ok');
-      })
-      .catch(function(e) {
-        setSyncStatus('error', 'Error');
-        toast('Error: '+e.message, 'err');
-      });
-  } else {
-    var base = parseFloat((importe / 1.21).toFixed(2));
-    var cuotaiva = parseFloat((importe - base).toFixed(2));
-    var precio_coste = base;
-    var precio_venta = parseFloat((base + base * margen / 100).toFixed(2));
-
-    sbPost('zab_compras', row)
-      .then(function(res) {
-        var saved = Array.isArray(res) ? res[0] : res;
-        if(saved) compras.unshift(saved);
-        else compras.unshift(row);
-
-        return sbPost('conta_gastos', {
-          concepto: 'Zabaleta - Alb. '+albaran,
-          fecha: row.fecha,
-          tipo: 'Material',
-          base: base,
-          piva: 21,
-          cuotaiva: cuotaiva,
-          retencion: 0,
-          pret: 0,
-          total: importe,
-          notas: 'Exclusivas Zabaleta - '+descripcion
-        });
-      })
-      .then(function() {
-        return sbPost('articulos', {
-          descripcion: descripcion,
-          proveedor: 'Zabaleta',
-          precio_coste: precio_coste,
-          precio_venta: precio_venta,
-          notas: 'Albaran '+albaran+' - '+row.fecha
-        });
-      })
-      .then(function(artRes) {
-        var art = Array.isArray(artRes) ? artRes[0] : artRes;
-        if(art && art.id && compras.length > 0) {
-          var compraId = compras[0].id;
-          if(compraId) {
-            sbPatch('zab_compras', compraId, {articulo_id: art.id}).catch(function(){});
-            compras[0].articulo_id = art.id;
-          }
-        }
-        setSyncStatus('ok', 'Sincronizado');
-        closeModals();
-        renderAll();
-        toast('Compra guardada y sincronizada con Contable y Articulos', 'ok');
-      })
-      .catch(function(e) {
-        setSyncStatus('error', 'Error');
-        toast('Error: '+e.message, 'err');
-      });
-  }
+var albaran = document.getElementById(‘c-albaran’).value.trim();
+var descripcion = document.getElementById(‘c-descripcion’).value.trim();
+var importe = parseFloat(document.getElementById(‘c-importe’).value) || 0;
+if(!albaran || !descripcion || !importe) { toast(‘Rellena albaran, descripcion e importe’, ‘err’); return; }
+var pagado = parseFloat(document.getElementById(‘c-pagado’).value) || 0;
+var pendiente = importe - pagado;
+if(pendiente < 0) pendiente = 0;
+var margen = parseFloat(document.getElementById(‘c-margen’).value) || 50;
+var row = {
+fecha: document.getElementById(‘c-fecha’).value,
+albaran: albaran,
+descripcion: descripcion,
+importe: importe,
+pagado: pagado,
+pendiente: pendiente,
+estado: document.getElementById(‘c-estado’).value,
+margen: margen,
+notas: document.getElementById(‘c-notas’).value.trim()
+};
+setSyncStatus(‘syncing’, ‘Guardando…’);
+if(editingCompraId) {
+sbPatch(‘zab_compras’, editingCompraId, row)
+.then(function() {
+for(var i=0; i<compras.length; i++) {
+if(compras[i].id === editingCompraId) {
+compras[i].fecha = row.fecha; compras[i].albaran = row.albaran;
+compras[i].descripcion = row.descripcion; compras[i].importe = row.importe;
+compras[i].pagado = row.pagado; compras[i].pendiente = row.pendiente;
+compras[i].estado = row.estado; compras[i].margen = row.margen;
+compras[i].notas = row.notas; break;
+}
+}
+setSyncStatus(‘ok’, ‘Sincronizado’); closeModals(); renderAll();
+toast(‘Compra actualizada’, ‘ok’);
+})
+.catch(function(e) { setSyncStatus(‘error’, ‘Error’); toast(’Error: ’+e.message, ‘err’); });
+} else {
+var base = parseFloat((importe / 1.21).toFixed(2));
+var cuotaiva = parseFloat((importe - base).toFixed(2));
+var precio_coste = base;
+var precio_venta = parseFloat((base + base * margen / 100).toFixed(2));
+sbPost(‘zab_compras’, row)
+.then(function(res) {
+var saved = Array.isArray(res) ? res[0] : res;
+if(saved) compras.unshift(saved); else compras.unshift(row);
+return sbPost(‘conta_gastos’, {
+concepto: ’Zabaleta - Alb. ’+albaran,
+fecha: row.fecha, tipo: ‘Material’,
+base: base, piva: 21, cuotaiva: cuotaiva,
+retencion: 0, pret: 0, total: importe,
+notas: ’Exclusivas Zabaleta - ’+descripcion
+});
+})
+.then(function() {
+return sbPost(‘articulos’, {
+descripcion: descripcion,
+proveedor: ‘Zabaleta’,
+precio_coste: precio_coste,
+precio_venta: precio_venta,
+notas: ’Albaran ‘+albaran+’ - ’+row.fecha
+});
+})
+.then(function(artRes) {
+var art = Array.isArray(artRes) ? artRes[0] : artRes;
+if(art && art.id && compras.length > 0) {
+var compraId = compras[0].id;
+if(compraId) { sbPatch(‘zab_compras’, compraId, {articulo_id: art.id}).catch(function(){}); compras[0].articulo_id = art.id; }
+}
+setSyncStatus(‘ok’, ‘Sincronizado’); closeModals(); renderAll();
+toast(‘Compra guardada y sincronizada con Contable y Articulos’, ‘ok’);
+})
+.catch(function(e) { setSyncStatus(‘error’, ‘Error’); toast(’Error: ’+e.message, ‘err’); });
+}
 }
 
 function savePago() {
-  var importe = parseFloat(document.getElementById('p-importe').value) || 0;
-  if(!importe) { toast('El importe es obligatorio', 'err'); return; }
-
-  var row = {
-    fecha: document.getElementById('p-fecha').value,
-    importe: importe,
-    concepto: document.getElementById('p-concepto').value.trim(),
-    notas: document.getElementById('p-notas').value.trim()
-  };
-
-  setSyncStatus('syncing', 'Guardando...');
-  sbPost('zab_pagos', row)
-    .then(function(res) {
-      var saved = Array.isArray(res) ? res[0] : res;
-      if(saved) pagos.unshift(saved);
-      else pagos.unshift(row);
-      setSyncStatus('ok', 'Sincronizado');
-      closeModals();
-      renderAll();
-      toast('Pago registrado', 'ok');
-    })
-    .catch(function(e) {
-      setSyncStatus('error', 'Error');
-      toast('Error: '+e.message, 'err');
-    });
+var importe = parseFloat(document.getElementById(‘p-importe’).value) || 0;
+if(!importe) { toast(‘El importe es obligatorio’, ‘err’); return; }
+var row = { fecha: document.getElementById(‘p-fecha’).value, importe: importe,
+concepto: document.getElementById(‘p-concepto’).value.trim(),
+notas: document.getElementById(‘p-notas’).value.trim() };
+setSyncStatus(‘syncing’, ‘Guardando…’);
+sbPost(‘zab_pagos’, row)
+.then(function(res) {
+var saved = Array.isArray(res) ? res[0] : res;
+if(saved) pagos.unshift(saved); else pagos.unshift(row);
+setSyncStatus(‘ok’, ‘Sincronizado’); closeModals(); renderAll();
+toast(‘Pago registrado’, ‘ok’);
+})
+.catch(function(e) { setSyncStatus(‘error’, ‘Error’); toast(’Error: ’+e.message, ‘err’); });
 }
 
 function deleteCompra(id) {
-  if(!confirm('Eliminar esta compra? Se borrara tambien de Articulos.')) return;
-  var articuloId = null;
-  for(var i=0; i<compras.length; i++) { if(compras[i].id===id){ articuloId=compras[i].articulo_id||null; break; } }
-  setSyncStatus('syncing', 'Eliminando...');
-  sbDel('zab_compras', id)
-    .then(function() {
-      var arr = [];
-      for(var i=0; i<compras.length; i++) { if(compras[i].id!==id) arr.push(compras[i]); }
-      compras = arr;
-      if(articuloId) {
-        return sbDel('articulos', articuloId);
-      }
-    })
-    .then(function() {
-      setSyncStatus('ok', 'Sincronizado');
-      renderAll();
-      toast('Compra eliminada y borrada de Articulos', 'info');
-    })
-    .catch(function(e) { toast('Error al eliminar', 'err'); });
+if(!confirm(‘Eliminar esta compra? Se borrara tambien de Articulos.’)) return;
+var articuloId = null;
+for(var i=0; i<compras.length; i++) { if(compras[i].id===id){ articuloId=compras[i].articulo_id||null; break; } }
+setSyncStatus(‘syncing’, ‘Eliminando…’);
+sbDel(‘zab_compras’, id)
+.then(function() {
+var arr = [];
+for(var i=0; i<compras.length; i++) { if(compras[i].id!==id) arr.push(compras[i]); }
+compras = arr;
+if(articuloId) { return sbDel(‘articulos’, articuloId); }
+})
+.then(function() {
+setSyncStatus(‘ok’, ‘Sincronizado’); renderAll();
+toast(‘Compra eliminada y borrada de Articulos’, ‘info’);
+})
+.catch(function(e) { toast(‘Error al eliminar’, ‘err’); });
 }
 
 function deletePago(id) {
-  if(!confirm('Eliminar este pago?')) return;
-  setSyncStatus('syncing', 'Eliminando...');
-  sbDel('zab_pagos', id)
-    .then(function() {
-      var arr = [];
-      for(var i=0; i<pagos.length; i++) { if(pagos[i].id!==id) arr.push(pagos[i]); }
-      pagos = arr;
-      setSyncStatus('ok', 'Sincronizado');
-      renderAll();
-      toast('Pago eliminado', 'info');
-    })
-    .catch(function(e) { toast('Error al eliminar', 'err'); });
+if(!confirm(‘Eliminar este pago?’)) return;
+setSyncStatus(‘syncing’, ‘Eliminando…’);
+sbDel(‘zab_pagos’, id)
+.then(function() {
+var arr = [];
+for(var i=0; i<pagos.length; i++) { if(pagos[i].id!==id) arr.push(pagos[i]); }
+pagos = arr;
+setSyncStatus(‘ok’, ‘Sincronizado’); renderAll();
+toast(‘Pago eliminado’, ‘info’);
+})
+.catch(function(e) { toast(‘Error al eliminar’, ‘err’); });
 }
 
-function renderAll() {
-  renderKPIs();
-  renderCompras();
-  renderPagos();
-  renderResumen();
-}
+function renderAll() { renderKPIs(); renderCompras(); renderPagos(); renderResumen(); }
 
 function renderKPIs() {
-  var totalComp = 0, totalPag = 0, pendiente = 0, nPend = 0;
-  for(var i=0; i<compras.length; i++) {
-    totalComp += (+compras[i].importe||0);
-    pendiente += (+compras[i].pendiente||0);
-    if((+compras[i].pendiente||0)>0) nPend++;
-  }
-  for(var j=0; j<pagos.length; j++) totalPag += (+pagos[j].importe||0);
-
-  document.getElementById('kpis').innerHTML =
-    '<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>' +
-    '<div class="kpi-label">Total comprado</div>' +
-    '<div class="kpi-val">'+fmtE(totalComp)+'</div>' +
-    '<div class="kpi-sub">'+compras.length+' compras</div></div>' +
-    '<div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div>' +
-    '<div class="kpi-label">Total pagado</div>' +
-    '<div class="kpi-val" style="color:var(--green)">'+fmtE(totalPag)+'</div>' +
-    '<div class="kpi-sub">'+pagos.length+' pagos</div></div>' +
-    '<div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>' +
-    '<div class="kpi-label">Saldo pendiente</div>' +
-    '<div class="kpi-val" style="color:'+(pendiente>0?'var(--red)":'var(--green)')+'">'+fmtE(pendiente)+'</div>' +
-    '<div class="kpi-sub">Deuda con Zabaleta</div></div>' +
-    '<div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div>' +
-    '<div class="kpi-label">Compras pendientes</div>' +
-    '<div class="kpi-val" style="color:'+(nPend>0?'var(--orange)":'var(--green)')+'">'+nPend+'</div>' +
-    '<div class="kpi-sub">Total o parcialmente</div></div>';
+var totalComp=0, totalPag=0, pendiente=0, nPend=0;
+for(var i=0; i<compras.length; i++) {
+totalComp += (+compras[i].importe||0);
+pendiente += (+compras[i].pendiente||0);
+if((+compras[i].pendiente||0)>0) nPend++;
+}
+for(var j=0; j<pagos.length; j++) totalPag += (+pagos[j].importe||0);
+var cp = pendiente>0 ? ‘var(–red)’ : ‘var(–green)’;
+var cn = nPend>0 ? ‘var(–orange)’ : ‘var(–green)’;
+document.getElementById(‘kpis’).innerHTML =
+‘<div class="kpi"><div class="kpi-accent" style="background:var(--blue)"></div>’
++’<div class="kpi-label">Total comprado</div>’
++’<div class="kpi-val">’+fmtE(totalComp)+’</div>’
++’<div class="kpi-sub">’+compras.length+’ compras</div></div>’
++’<div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div>’
++’<div class="kpi-label">Total pagado</div>’
++’<div class="kpi-val" style="color:var(--green)">’+fmtE(totalPag)+’</div>’
++’<div class="kpi-sub">’+pagos.length+’ pagos</div></div>’
++’<div class="kpi"><div class="kpi-accent" style="background:var(--red)"></div>’
++’<div class="kpi-label">Saldo pendiente</div>’
++’<div class="kpi-val" style="color:'+cp+'">’+fmtE(pendiente)+’</div>’
++’<div class="kpi-sub">Deuda con Zabaleta</div></div>’
++’<div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div>’
++’<div class="kpi-label">Compras pendientes</div>’
++’<div class="kpi-val" style="color:'+cn+'">’+nPend+’</div>’
++’<div class="kpi-sub">Total o parcialmente</div></div>’;
 }
 
 function estadoBadge(estado) {
-  if(estado==='pagado') return '<span class="badge badge-green">Pagado</span>';
-  if(estado==='parcial') return '<span class="badge badge-orange">Parcial</span>';
-  return '<span class="badge badge-red">Pendiente</span>';
+if(estado===‘pagado’) return ‘<span class="badge badge-green">Pagado</span>’;
+if(estado===‘parcial’) return ‘<span class="badge badge-orange">Parcial</span>’;
+return ‘<span class="badge badge-red">Pendiente</span>’;
 }
 
 function renderCompras() {
-  var busq = (document.getElementById('buscar-compra').value || '').toLowerCase();
-  var arr = [];
-  for(var i=0; i<compras.length; i++) {
-    var c = compras[i];
-    var txt = ((c.albaran||'')+' '+(c.descripcion||'')+' '+(c.notas||'')).toLowerCase();
-    if(!busq || txt.indexOf(busq)>=0) arr.push(c);
-  }
-  document.getElementById('compras-title').textContent = arr.length+' compra'+(arr.length!==1?'s':'');
-
-  if(!arr.length) {
-    document.getElementById('tabla-compras').innerHTML = '<div class="empty"><div class="icon">&#128230;</div><p>Sin compras registradas</p></div>';
-    return;
-  }
-
-  var tImp=0, tPag=0, tPend=0;
-  var rows = '';
-  for(var j=0; j<arr.length; j++) {
-    var c = arr[j];
-    tImp += (+c.importe||0); tPag += (+c.pagado||0); tPend += (+c.pendiente||0);
-    var desc = (c.descripcion||'');
-    if(desc.length>40) desc = desc.substring(0,40)+'...';
-    rows += '<tr>' +
-      '<td style="color:var(--muted);white-space:nowrap;">'+(c.fecha||'')+'</td>' +
-      '<td style="font-weight:700;">'+(c.albaran||'')+'</td>' +
-      '<td>'+desc+'</td>' +
-      '<td class="num">'+fmtE(+c.importe||0)+'</td>' +
-      '<td class="num pos">'+ ((+c.pagado||0)>0?fmtE(+c.pagado):'&mdash;')+'</td>' +
-      '<td class="num '+ ((+c.pendiente||0)>0?'neg':'') +'">'+ ((+c.pendiente||0)>0?fmtE(+c.pendiente):'&#10003;')+'</td>' +
-      '<td>'+estadoBadge(c.estado)+'</td>' +
-      '<td style="white-space:nowrap;">' +
-      '<button class="action-btn" onclick="openModalCompra('+c.id+')">&#9999;</button>' +
-      '<button class="action-btn del" onclick="deleteCompra('+c.id+')">&#10005;</button>' +
-      '</td></tr>';
-  }
-
-  document.getElementById('tabla-compras').innerHTML =
-    '<table><thead><tr>' +
-    '<th>Fecha</th><th>N Albaran</th><th>Descripcion</th>' +
-    '<th class="num">Importe</th><th class="num">Pagado</th><th class="num">Pendiente</th>' +
-    '<th>Estado</th><th></th>' +
-    '</tr></thead><tbody>'+rows+'</tbody>' +
-    '<tfoot><tr>' +
-    '<td colspan="3" style="color:var(--muted);font-size:11px;">TOTALES</td>' +
-    '<td class="num">'+fmtE(tImp)+'</td>' +
-    '<td class="num pos">'+fmtE(tPag)+'</td>' +
-    '<td class="num neg">'+fmtE(tPend)+'</td>' +
-    '<td colspan="2"></td></tr></tfoot></table>';
+var busq = (document.getElementById(‘buscar-compra’).value || ‘’).toLowerCase();
+var arr = [];
+for(var i=0; i<compras.length; i++) {
+var c = compras[i];
+var txt = ((c.albaran||’’)+’ ‘+(c.descripcion||’’)+’ ‘+(c.notas||’’)).toLowerCase();
+if(!busq || txt.indexOf(busq)>=0) arr.push(c);
+}
+document.getElementById(‘compras-title’).textContent = arr.length+’ compra’+(arr.length!==1?‘s’:’’);
+if(!arr.length) {
+document.getElementById(‘tabla-compras’).innerHTML = ‘<div class="empty"><div class="icon">📦</div><p>Sin compras registradas</p></div>’;
+return;
+}
+var tImp=0, tPag=0, tPend=0;
+var rows = ‘’;
+for(var j=0; j<arr.length; j++) {
+var c = arr[j];
+tImp += (+c.importe||0); tPag += (+c.pagado||0); tPend += (+c.pendiente||0);
+var desc = (c.descripcion||’’);
+if(desc.length>40) desc = desc.substring(0,40)+’…’;
+rows += ‘<tr>’
++’<td style="color:var(--muted);white-space:nowrap;">’+(c.fecha||’’)+’</td>’
++’<td style="font-weight:700;">’+(c.albaran||’’)+’</td>’
++’<td>’+desc+’</td>’
++’<td class="num">’+fmtE(+c.importe||0)+’</td>’
++’<td class="num pos">’+((+c.pagado||0)>0?fmtE(+c.pagado):’—’)+’</td>’
++’<td class="num '+((+c.pendiente||0)>0?'neg':'')+'">’+((+c.pendiente||0)>0?fmtE(+c.pendiente):’✓’)+’</td>’
++’<td>’+estadoBadge(c.estado)+’</td>’
++’<td style="white-space:nowrap;">’
++’<button class="action-btn" onclick="openModalCompra('+c.id+')">✏</button>’
++’<button class="action-btn del" onclick="deleteCompra('+c.id+')">✕</button>’
++’</td></tr>’;
+}
+document.getElementById(‘tabla-compras’).innerHTML =
+‘<table><thead><tr>’
++’<th>Fecha</th><th>N Albaran</th><th>Descripcion</th>’
++’<th class="num">Importe</th><th class="num">Pagado</th><th class="num">Pendiente</th>’
++’<th>Estado</th><th></th>’
++’</tr></thead><tbody>’+rows+’</tbody>’
++’<tfoot><tr>’
++’<td colspan="3" style="color:var(--muted);font-size:11px;">TOTALES</td>’
++’<td class="num">’+fmtE(tImp)+’</td>’
++’<td class="num pos">’+fmtE(tPag)+’</td>’
++’<td class="num neg">’+fmtE(tPend)+’</td>’
++’<td colspan="2"></td></tr></tfoot></table>’;
 }
 
 function renderPagos() {
-  document.getElementById('pagos-title').textContent = pagos.length+' pago'+(pagos.length!==1?'s':'');
-  if(!pagos.length) {
-    document.getElementById('tabla-pagos').innerHTML = '<div class="empty"><div class="icon">&#128179;</div><p>Sin pagos registrados</p></div>';
-    return;
-  }
-  var total = 0;
-  var rows = '';
-  for(var i=0; i<pagos.length; i++) {
-    var p = pagos[i];
-    total += (+p.importe||0);
-    rows += '<tr>' +
-      '<td style="color:var(--muted);white-space:nowrap;">'+(p.fecha||'')+'</td>' +
-      '<td>'+(p.concepto||'&mdash;')+'</td>' +
-      '<td style="color:var(--muted);font-size:11px;">'+(p.notas||'')+'</td>' +
-      '<td class="num pos">'+fmtE(+p.importe||0)+'</td>' +
-      '<td><button class="action-btn del" onclick="deletePago('+p.id+')">&#10005;</button></td></tr>';
-  }
-  document.getElementById('tabla-pagos').innerHTML =
-    '<table><thead><tr><th>Fecha</th><th>Concepto</th><th>Notas</th><th class="num">Importe</th><th></th></tr></thead>' +
-    '<tbody>'+rows+'</tbody>' +
-    '<tfoot><tr><td colspan="3" style="color:var(--muted);font-size:11px;">TOTAL PAGADO</td>' +
-    '<td class="num pos">'+fmtE(total)+'</td><td></td></tr></tfoot></table>';
+document.getElementById(‘pagos-title’).textContent = pagos.length+’ pago’+(pagos.length!==1?‘s’:’’);
+if(!pagos.length) {
+document.getElementById(‘tabla-pagos’).innerHTML = ‘<div class="empty"><div class="icon">💳</div><p>Sin pagos registrados</p></div>’;
+return;
+}
+var total=0, rows=’’;
+for(var i=0; i<pagos.length; i++) {
+var p = pagos[i];
+total += (+p.importe||0);
+rows += ‘<tr>’
++’<td style="color:var(--muted);white-space:nowrap;">’+(p.fecha||’’)+’</td>’
++’<td>’+(p.concepto||’—’)+’</td>’
++’<td style="color:var(--muted);font-size:11px;">’+(p.notas||’’)+’</td>’
++’<td class="num pos">’+fmtE(+p.importe||0)+’</td>’
++’<td><button class="action-btn del" onclick="deletePago('+p.id+')">✕</button></td></tr>’;
+}
+document.getElementById(‘tabla-pagos’).innerHTML =
+‘<table><thead><tr><th>Fecha</th><th>Concepto</th><th>Notas</th><th class="num">Importe</th><th></th></tr></thead>’
++’<tbody>’+rows+’</tbody>’
++’<tfoot><tr><td colspan="3" style="color:var(--muted);font-size:11px;">TOTAL PAGADO</td>’
++’<td class="num pos">’+fmtE(total)+’</td><td></td></tr></tfoot></table>’;
 }
 
 function renderResumen() {
-  var totalComp=0, totalPag=0, pendiente=0, nPagado=0, nParcial=0, nPend=0;
-  for(var i=0; i<compras.length; i++) {
-    totalComp += (+compras[i].importe||0);
-    pendiente += (+compras[i].pendiente||0);
-    if(compras[i].estado==='pagado') nPagado++;
-    else if(compras[i].estado==='parcial') nParcial++;
-    else nPend++;
-  }
-  for(var j=0; j<pagos.length; j++) totalPag += (+pagos[j].importe||0);
-
-  document.getElementById('resumen-balance').innerHTML =
-    '<div class="fiscal-row"><span class="lbl">Total comprado</span><span class="val">'+fmtE(totalComp)+'</span></div>' +
-    '<div class="fiscal-row"><span class="lbl">Total pagado</span><span class="val" style="color:var(--green)">'+fmtE(totalPag)+'</span></div>' +
-    '<div class="fiscal-row total"><span class="lbl">Saldo pendiente</span><span class="val" style="color:'+(pendiente>0?'var(--red)":'var(--green)')+'">'+fmtE(pendiente)+'</span></div>';
-
-  document.getElementById('resumen-estado').innerHTML =
-    '<div class="fiscal-row"><span class="lbl">Pagadas</span><span class="val" style="color:var(--green)">'+nPagado+'</span></div>' +
-    '<div class="fiscal-row"><span class="lbl">Parciales</span><span class="val" style="color:var(--gold)">'+nParcial+'</span></div>' +
-    '<div class="fiscal-row"><span class="lbl">Pendientes</span><span class="val" style="color:var(--red)">'+nPend+'</span></div>' +
-    '<div class="fiscal-row total"><span class="lbl">Total compras</span><span class="val">'+compras.length+'</span></div>';
-
-  var ultimas = compras.slice(0,5);
-  if(!ultimas.length) {
-    document.getElementById('resumen-ultimas').innerHTML = '<div class="empty"><p>Sin compras</p></div>';
-    return;
-  }
-  var rows = '';
-  for(var k=0; k<ultimas.length; k++) {
-    var c = ultimas[k];
-    rows += '<tr>' +
-      '<td style="color:var(--muted)">'+(c.fecha||'')+'</td>' +
-      '<td style="font-weight:700;">'+(c.albaran||'')+'</td>' +
-      '<td>'+ ((c.descripcion||'').substring(0,35))+'</td>' +
-      '<td class="num">'+fmtE(+c.importe||0)+'</td>' +
-      '<td>'+estadoBadge(c.estado)+'</td></tr>';
-  }
-  document.getElementById('resumen-ultimas').innerHTML =
-    '<table><thead><tr><th>Fecha</th><th>Albaran</th><th>Descripcion</th><th class="num">Importe</th><th>Estado</th></tr></thead>' +
-    '<tbody>'+rows+'</tbody></table>';
+var totalComp=0, totalPag=0, pendiente=0, nPagado=0, nParcial=0, nPend=0;
+for(var i=0; i<compras.length; i++) {
+totalComp += (+compras[i].importe||0);
+pendiente += (+compras[i].pendiente||0);
+if(compras[i].estado===‘pagado’) nPagado++;
+else if(compras[i].estado===‘parcial’) nParcial++;
+else nPend++;
+}
+for(var j=0; j<pagos.length; j++) totalPag += (+pagos[j].importe||0);
+var cp = pendiente>0 ? ‘var(–red)’ : ‘var(–green)’;
+document.getElementById(‘resumen-balance’).innerHTML =
+‘<div class="fiscal-row"><span class="lbl">Total comprado</span><span class="val">’+fmtE(totalComp)+’</span></div>’
++’<div class="fiscal-row"><span class="lbl">Total pagado</span><span class="val" style="color:var(--green)">’+fmtE(totalPag)+’</span></div>’
++’<div class="fiscal-row total"><span class="lbl">Saldo pendiente</span><span class="val" style="color:'+cp+'">’+fmtE(pendiente)+’</span></div>’;
+document.getElementById(‘resumen-estado’).innerHTML =
+‘<div class="fiscal-row"><span class="lbl">Pagadas</span><span class="val" style="color:var(--green)">’+nPagado+’</span></div>’
++’<div class="fiscal-row"><span class="lbl">Parciales</span><span class="val" style="color:var(--gold)">’+nParcial+’</span></div>’
++’<div class="fiscal-row"><span class="lbl">Pendientes</span><span class="val" style="color:var(--red)">’+nPend+’</span></div>’
++’<div class="fiscal-row total"><span class="lbl">Total compras</span><span class="val">’+compras.length+’</span></div>’;
+var ultimas = compras.slice(0,5);
+if(!ultimas.length) { document.getElementById(‘resumen-ultimas’).innerHTML = ‘<div class="empty"><p>Sin compras</p></div>’; return; }
+var rows = ‘’;
+for(var k=0; k<ultimas.length; k++) {
+var c = ultimas[k];
+rows += ‘<tr>’
++’<td style="color:var(--muted)">’+(c.fecha||’’)+’</td>’
++’<td style="font-weight:700;">’+(c.albaran||’’)+’</td>’
++’<td>’+((c.descripcion||’’).substring(0,35))+’</td>’
++’<td class="num">’+fmtE(+c.importe||0)+’</td>’
++’<td>’+estadoBadge(c.estado)+’</td></tr>’;
+}
+document.getElementById(‘resumen-ultimas’).innerHTML =
+‘<table><thead><tr><th>Fecha</th><th>Albaran</th><th>Descripcion</th><th class="num">Importe</th><th>Estado</th></tr></thead>’
++’<tbody>’+rows+’</tbody></table>’;
 }
 
 function exportarCSV() {
-  var csv = 'TIPO;FECHA;ALBARAN/CONCEPTO;DESCRIPCION;IMPORTE;PAGADO;PENDIENTE;ESTADO
-';
-  for(var i=0; i<compras.length; i++) {
-    var c = compras[i];
-    csv += 'COMPRA;'+(c.fecha||'')+';'+(c.albaran||'')+';"'+(c.descripcion||'')+'";'+(c.importe||0)+';'+(c.pagado||0)+';'+(c.pendiente||0)+';'+(c.estado||'')+'
-';
-  }
-  for(var j=0; j<pagos.length; j++) {
-    var p = pagos[j];
-    csv += 'PAGO;'+(p.fecha||'')+';'+(p.concepto||'')+';;'+(p.importe||0)+';;;
-';
-  }
-  var blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'HAROSAT_Zabaleta_'+new Date().toISOString().split('T')[0]+'.csv';
-  a.click();
-  toast('Exportado', 'ok');
+var csv = ‘TIPO;FECHA;ALBARAN;DESCRIPCION;IMPORTE;PAGADO;PENDIENTE;ESTADO\n’;
+for(var i=0; i<compras.length; i++) {
+var c = compras[i];
+csv += ‘COMPRA;’+(c.fecha||’’)+’;’+(c.albaran||’’)+’;'”’+(c.descripcion||’’)+’”'’+’;’+(c.importe||0)+’;’+(c.pagado||0)+’;’+(c.pendiente||0)+’;’+(c.estado||’’)+’\n’;
+}
+for(var j=0; j<pagos.length; j++) {
+var p = pagos[j];
+csv += ‘PAGO;’+(p.fecha||’’)+’;’+(p.concepto||’’)+’;;;’+(p.importe||0)+’;;;\n’;
+}
+var blob = new Blob([’\ufeff’+csv], {type:‘text/csv;charset=utf-8’});
+var a = document.createElement(‘a’);
+a.href = URL.createObjectURL(blob);
+a.download = ‘HAROSAT_Zabaleta_’+new Date().toISOString().split(‘T’)[0]+’.csv’;
+a.click();
+toast(‘Exportado’, ‘ok’);
 }
 
-function fmt(n) { return (+n).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function fmtE(n) { return fmt(n)+' €'; }
+function fmt(n) { return (+n).toLocaleString(‘es-ES’,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtE(n) { return fmt(n)+’ €’; }
 function toast(msg, type) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show '+(type||'ok');
-  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+var el = document.getElementById(‘toast’);
+el.textContent = msg;
+el.className = ’toast show ’+(type||‘ok’);
+setTimeout(function(){ el.classList.remove(‘show’); }, 3000);
 }
 
-var ovs = document.querySelectorAll('.overlay');
+var ovs = document.querySelectorAll(’.overlay’);
 for(var i=0; i<ovs.length; i++) {
-  ovs[i].addEventListener('click', function(e){ if(e.target===this) closeModals(); });
+ovs[i].addEventListener(‘click’, function(e){ if(e.target===this) closeModals(); });
 }
 
 window.onload = function() { cargarDatos(); };
