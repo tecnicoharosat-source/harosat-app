@@ -580,7 +580,7 @@ function exportarCSV() {
 var csv = ‘TIPO;FECHA;ALBARAN;DESCRIPCION;IMPORTE;PAGADO;PENDIENTE;ESTADO\n’;
 for(var i=0; i<compras.length; i++) {
 var c = compras[i];
-csv += ‘COMPRA;’+(c.fecha||’’)+’;’+(c.albaran||’’)+’;'”’+(c.descripcion||’’)+’”'’+’;’+(c.importe||0)+’;’+(c.pagado||0)+’;’+(c.pendiente||0)+’;’+(c.estado||’’)+’\n’;
+csv += ‘COMPRA;’+(c.fecha||’’)+’;’+(c.albaran||’’)+’;’+(c.descripcion||’’)+’;’+(c.importe||0)+’;’+(c.pagado||0)+’;’+(c.pendiente||0)+’;’+(c.estado||’’)+’\n’;
 }
 for(var j=0; j<pagos.length; j++) {
 var p = pagos[j];
