@@ -348,7 +348,7 @@ document.getElementById(‘tot-il’).textContent=‘IVA ‘+ivp+’%’;
 document.getElementById(‘tot-i’).textContent=fn(iva)+’ €’;
 document.getElementById(‘tot-t’).textContent=fn(base+iva)+’ €’;
 var coste=0;for(var j=0;j<LINES.length;j++){if(LINES[j]._coste)coste+=(LINES[j].qty||0)*(LINES[j]._coste||0);}
-var bel=document.getElementById(‘tot-ben’);if(bel){bel.textContent=fn(base-coste)+’ €’;bel.style.color=base-coste>=0?‘var(–green)’:‘var(–red)’;}
+var bel=document.getElementById(‘tot-ben’);if(bel){bel.textContent=fn(base-coste)+’ €’;bel.style.color=base-coste>=0?‘var(–-green)’:‘var(–-red)’;}
 }
 
 function openTemplateModal(){
