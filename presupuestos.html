@@ -348,7 +348,7 @@ document.getElementById(‘tot-il’).textContent=‘IVA ‘+ivp+’%’;
 document.getElementById(‘tot-i’).textContent=fn(iva)+’ €’;
 document.getElementById(‘tot-t’).textContent=fn(base+iva)+’ €’;
 var coste=0;for(var j=0;j<LINES.length;j++){if(LINES[j]._coste)coste+=(LINES[j].qty||0)*(LINES[j]._coste||0);}
-var bel=document.getElementById(‘tot-ben’);if(bel){bel.textContent=fn(base-coste)+’ €’;bel.style.color=base-coste>=0?‘var(–-green)’:‘var(–-red)’;}
+var bel=document.getElementById(‘tot-ben’);if(bel){bel.textContent=fn(base-coste)+’ €’;bel.style.color=base-coste>=0?‘var(–green)’:‘var(–red)’;}
 }
 
 function openTemplateModal(){
@@ -474,14 +474,13 @@ function toast(msg,type){var el=document.getElementById(‘toast’);el.textCont
 function fn(n){return Number(n||0).toLocaleString(‘es-ES’,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtE(n){return fn(n)+’ €’;}
 function fd(d){if(!d||d===’—’)return’—’;var p=d.split(’-’);return p.length===3?p[2]+’/’+p[1]+’/’+p[0]:d;}
-function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’”’);}
+function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
 function bpres(e){var m={pendiente:‘b-orange’,aceptado:‘b-green’,rechazado:‘b-red’};var l={pendiente:‘Pendiente’,aceptado:‘Aceptado’,rechazado:‘Rechazado’};return’<span class="badge '+(m[e]||'b-muted')+'">’+(l[e]||e)+’</span>’;}
 function btrab(e){var m={pendiente:‘b-orange’,en_curso:‘b-blue’,terminado:‘b-purple’};var l={pendiente:‘Pendiente’,en_curso:‘En Curso’,terminado:‘Terminado’};return’<span class="badge '+(m[e]||'b-muted')+'">’+(l[e]||e)+’</span>’;}
 
 document.getElementById(‘modal-p’).addEventListener(‘click’,function(e){if(e.target===this)closeModalP();});
 document.getElementById(‘modal-t’).addEventListener(‘click’,function(e){if(e.target===this)closeModalT();});
 
-// PDF - cliente ve SOLO descripcion + importe total por linea (sin cant ni precio unit)
 function genPDF(id){
 var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;
 var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc||l.price;});
@@ -509,13 +508,13 @@ var html=’<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Pr
 +’<div class="notas-box"><div class="notas-tit">Notas</div><div style="display:flex;gap:8px;margin-bottom:10px;font-size:11px;color:#374151;line-height:1.65"><span style="font-weight:700;flex-shrink:0;min-width:14px">1.</span><div>Todos los materiales pertenecen a la empresa instaladora hasta que se realice el pago total de las cantidades recogidas en este presupuesto.</div></div>’+notaTec+’</div>’
 +’<div class="foot">Sta. Luc\xeda, 66, BJ \u2013 26200 Haro \u2013 La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H<br>Seg\xfan el Reglamento General de Protecci\xf3n de Datos (RGPD), Reglamento UE 2016/679, sus datos ser\xe1n tratados con total confidencialidad.</div>’
 +’</div>’
-+’<div class="page page-break"><div class="p2-hdr"><div style="font-size:20px;font-weight:800;color:#1e3a5f">HAROSAT ECOTECHNICAL</div><div style="font-size:10px;color:#555;text-align:right;line-height:1.6">Presupuesto ‘+escH(p.numero)+’ — ‘+fd(p.fecha_emision)+’<br>’+escH(p.cliente)+’</div></div>’
++’<div class="page page-break"><div class="p2-hdr"><div style="font-size:20px;font-weight:800;color:#1e3a5f">HAROSAT ECOTECHNICAL</div><div style="font-size:10px;color:#555;text-align:right;line-height:1.6">Presupuesto ‘+escH(p.numero)+’ \u2014 ‘+fd(p.fecha_emision)+’<br>’+escH(p.cliente)+’</div></div>’
 +’<div class="firmas"><div class="fbox"><div class="flbl">Sello de la empresa</div><div class="finfo">NIF: 09302345H<br>HAROSAT Ecotechnical</div></div><div class="fbox"><div class="flbl">Firma del cliente</div><div class="finfo">DNI: ___________________<br>Cliente: ‘+escH(p.cliente)+’</div></div></div>’
 +’<div class="foot" style="margin-top:16px">Sta. Luc\xeda, 66, BJ \u2013 26200 Haro \u2013 La Rioja | Tel.: 640 05 64 84 | harosatecnicos@gmail.com | C.I.F.: 09302345H</div>’
 +’</div></body></html>’;
 win.document.write(html);win.document.close();win.focus();
 }
-function escH(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’”’);}
+function escH(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
 
 function shareWA(id){var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});var lineas=’’;ls.forEach(function(l){lineas+=’• ‘+l.desc+(l.qty!=1?’ (x’+l.qty+’)’:’’)+’ - ‘+fn((l.qty||0)*(l.price||0))+’ €\n’;});var txt=’*PRESUPUESTO ‘+p.numero+’ - HAROSAT ECOTECHNICAL*\n\n*Cliente:* ‘+p.cliente+’\n’+(p.direccion?’*Direcci\xf3n:* ‘+p.direccion+’\n’:’’)+(p.telefono?’*Tel.:* ‘+p.telefono+’\n’:’’)+’ *Fecha:* ‘+fd(p.fecha_emision)+’\n\n*DESCRIPCI\xd3N:*\n’+lineas+’\n*Base imponible:* ‘+fn(p.base_imponible||0)+’ €\n*IVA ‘+(p.iva_pct||21)+’%:* ‘+fn(p.iva_importe||0)+’ €\n*TOTAL: ‘+fn(p.total||0)+’ €*\n\n_HAROSAT Ecotechnical - Tel.: 640 05 64 84_’;window.open(‘https://wa.me/?text=’+encodeURIComponent(txt),’_blank’);}
 function shareEmail(id){var p=PRES.filter(function(x){return x.id===id;})[0];if(!p)return;var ls=(p.lineas?JSON.parse(p.lineas):[]).filter(function(l){return l.desc;});var lineas=’’;ls.forEach(function(l){lineas+=’  • ‘+l.desc+(l.qty!=1?’ (x’+l.qty+’)’:’’)+’ - ‘+fn((l.qty||0)*(l.price||0))+’ €\n’;});var asunto=‘Presupuesto ‘+p.numero+’ - HAROSAT Ecotechnical’;var body=‘Estimado/a ‘+p.cliente+’,\n\nLe enviamos el presupuesto ‘+p.numero+’ de fecha ‘+fd(p.fecha_emision)+’.\n\nDESCRIPCI\xd3N DEL TRABAJO:\n’+lineas+’\n  Base imponible: ‘+fn(p.base_imponible||0)+’ €\n  IVA ‘+(p.iva_pct||21)+’%: ‘+fn(p.iva_importe||0)+’ €\n  TOTAL: ‘+fn(p.total||0)+’ €\n\nForma de pago: 60% al pedido, 30% a mitad de obra, 10% al finalizar.\n\nUn saludo,\nJes\xfas\nHAROSAT Ecotechnical\nTel.: 640 05 64 84’;window.open(‘https://mail.google.com/mail/?view=cm&fs=1&su=’+encodeURIComponent(asunto)+’&body=’+encodeURIComponent(body),’_blank’);}
