@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Contrato Mantenimiento — HAROSAT</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#060910;--surface:#0d1117;--card:#111827;--border:#1f2937;--blue:#2563a8;--blue-light:#3B8AC7;--yellow:#FDB913;--text:#f0f4f8;--muted:#6b7280;--ok:#10b981;--err:#ef4444;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+header{background:var(--surface);border-bottom:2px solid var(--blue);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-sq{width:30px;height:30px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;}
+.logo-txt{font-size:13px;font-weight:700;}
+.logo-sub{font-size:9px;color:var(--muted);}
+.hdr-title{font-size:12px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:600;}
+.badge-warn{background:rgba(253,185,19,.15);color:var(--yellow);}
+.badge-ok{background:rgba(16,185,129,.15);color:var(--ok);}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+.tabs{display:flex;background:var(–surface);border-bottom:1px solid var(–border);}
+.tab{flex:1;padding:11px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(–muted);font-family:‘Outfit’,sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap;}
+.tab.on{color:var(–blue-light);border-bottom-color:var(–blue-light);}
+
+.sec{display:none;padding:14px;}
+.sec.on{display:block;}
+
+.card{background:var(–card);border:1px solid var(–border);border-radius:8px;padding:14px;margin-bottom:11px;}
+.ctitle{font-size:10px;font-weight:600;color:var(–muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.ctitle::before{content:’’;width:3px;height:11px;background:var(–blue-light);border-radius:2px;}
+
+.f{margin-bottom:10px;}
+.f label{display:block;font-size:10px;color:var(–muted);margin-bottom:3px;font-weight:500;}
+.f input,.f select,.f textarea{width:100%;background:var(–surface);border:1px solid var(–border);border-radius:6px;padding:9px 11px;color:var(–text);font-family:‘Outfit’,sans-serif;font-size:13px;outline:none;transition:.2s;}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(–blue-light);}
+.f textarea{resize:vertical;min-height:70px;}
+.f select option{background:var(–card);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;border-radius:7px;border:none;font-family:‘Outfit’,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;text-decoration:none;width:100%;margin-bottom:8px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn-blue{background:var(–blue);color:#fff;}
+.btn-blue:hover:not(:disabled){background:var(–blue-light);}
+.btn-yellow{background:var(–yellow);color:#111;}
+.btn-ghost{background:transparent;border:1px solid var(–border);color:var(–muted);}
+.btn-ghost:hover{border-color:var(–blue-light);color:var(–text);}
+.btn-ok{background:var(–ok);color:#fff;}
+.btn-wa{background:#25d366;color:#fff;}
+.btn-gm{background:#ea4335;color:#fff;}
+.btn-dl{background:#6366f1;color:#fff;}
+.btn-sm{padding:7px 12px;font-size:11px;margin-bottom:0;}
+.g2btn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+
+.ir{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.ir span:first-child{color:var(–muted);}
+.ir span:last-child{font-weight:500;}
+.div{height:1px;background:var(–border);margin:12px 0;}
+
+#canvas-f{width:100%;height:170px;background:#fff;border-radius:7px;border:2px dashed var(–border);display:block;touch-action:none;cursor:crosshair;}
+.sig-opts{display:flex;gap:7px;margin-bottom:12px;}
+.sopt{flex:1;padding:9px;border:1px solid var(–border);background:var(–surface);color:var(–muted);border-radius:6px;font-family:‘Outfit’,sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:.2s;}
+.sopt.on{border-color:var(–blue-light);background:rgba(59,138,199,.1);color:var(–blue-light);}
+.sig-ctrl{display:flex;gap:7px;margin-top:8px;}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:var(–card);border:1px solid var(–border);border-radius:7px;padding:10px 18px;font-size:12px;font-weight:500;z-index:9999;transition:.3s;white-space:nowrap;max-width:92vw;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.ok{border-color:var(–ok);color:var(–ok);}
+#toast.err{border-color:var(–err);color:var(–err);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{display:inline-block;animation:spin .7s linear infinite;}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-sq">HS</div>
+    <div><div class="logo-txt">HAROSAT</div><div class="logo-sub">Ecotechnical</div></div>
+  </div>
+  <div class="hdr-title">Contrato Mant.</div>
+  <div id="badge" class="badge badge-warn"><span class="dot"></span>Borrador</div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" onclick="tab('datos')">📋 Datos</button>
+  <button class="tab" onclick="tab('firma')">✍️ Firma</button>
+  <button class="tab" onclick="tab('enviar')">📤 Enviar</button>
+</div>
+
+<!-- ══ TAB DATOS ══ -->
+
+<div id="sec-datos" class="sec on">
+
+  <div class="card">
+    <div class="ctitle">Datos del Aparato</div>
+    <div class="g2">
+      <div class="f"><label>Nº Contrato</label><input id="d-numcont" placeholder="CM/26/001"></div>
+      <div class="f"><label>Entrada en Vigor</label><input id="d-vigor" type="date"></div>
+    </div>
+    <div class="f"><label>Tipo Elemento</label>
+      <select id="d-tipo">
+        <option>Caldera de gas</option>
+        <option>Caldera de gasoil</option>
+        <option>Bomba de calor</option>
+        <option>Aerotermia</option>
+        <option>Climatización (splits)</option>
+        <option>Suelo radiante</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="g2">
+      <div class="f"><label>Marca</label><input id="d-marca" placeholder="Thermor"></div>
+      <div class="f"><label>Modelo</label><input id="d-modelo" placeholder="Logic Micro 30kW"></div>
+    </div>
+    <div class="f"><label>Número de Serie</label><input id="d-serie" placeholder="opcional"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Datos del Usuario</div>
+    <div class="f"><label>Nombre completo *</label><input id="u-nombre" placeholder="Nombre y apellidos"></div>
+    <div class="f"><label>Domicilio</label><input id="u-dir" placeholder="Calle, nº, piso"></div>
+    <div class="g3">
+      <div class="f"><label>CP</label><input id="u-cp" placeholder="26200"></div>
+      <div class="f" style="grid-column:span 2"><label>Localidad</label><input id="u-loc" placeholder="Haro"></div>
+    </div>
+    <div class="f"><label>Provincia</label><input id="u-prov" placeholder="La Rioja" value="La Rioja"></div>
+    <div class="g2">
+      <div class="f"><label>NIF/DNI</label><input id="u-nif" placeholder="00000000X"></div>
+      <div class="f"><label>Teléfono</label><input id="u-tel" type="tel" placeholder="600 000 000"></div>
+    </div>
+    <div class="f"><label>Email</label><input id="u-email" type="email" placeholder="cliente@email.com"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Domicilio de Cobro</div>
+    <div class="f"><label>Domicilio de cobro (si difiere)</label><input id="u-cobro" placeholder="Igual que domicilio si está vacío"></div>
+    <div class="f"><label>Número de cuenta (IBAN)</label><input id="u-iban" placeholder="ES00 0000 0000 00 0000000000"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Importes</div>
+    <div class="g2">
+      <div class="f"><label>Base Imponible (€)</label><input id="i-base" type="number" placeholder="148.76" oninput="calcIva()"></div>
+      <div class="f"><label>IVA 21% (€)</label><input id="i-iva" placeholder="31.24" readonly style="color:var(--muted)"></div>
+    </div>
+    <div class="f"><label>Total (€)</label><input id="i-total" placeholder="180.00" readonly style="color:var(--yellow);font-weight:600;"></div>
+  </div>
+
+<button class="btn btn-blue" onclick="tab('firma')">Pasar a firma →</button>
+
+</div>
+
+<!-- ══ TAB FIRMA ══ -->
+
+<div id="sec-firma" class="sec">
+  <div class="card">
+    <div class="ctitle">Tipo de firma del cliente</div>
+    <div class="sig-opts">
+      <button class="sopt on" id="sopt-m" onclick="modoFirma('manual')">✍️ Con el dedo</button>
+      <button class="sopt" id="sopt-a" onclick="modoFirma('auto')">🤖 Automática</button>
+    </div>
+
+```
+<div id="wrap-manual">
+  <p style="font-size:11px;color:var(--muted);margin-bottom:7px;">Firme con el dedo en el recuadro blanco:</p>
+  <canvas id="canvas-f"></canvas>
+  <div class="sig-ctrl">
+    <button class="btn btn-ghost btn-sm" style="flex:1" onclick="borrarFirma()">🗑 Borrar</button>
+    <button class="btn btn-ok btn-sm" style="flex:2" onclick="aceptarFirmaManual()">✓ Aceptar firma</button>
+  </div>
+</div>
+
+<div id="wrap-auto" style="display:none;">
+  <p style="font-size:11px;color:var(--muted);margin-bottom:7px;">Se generará la firma automática con el nombre del cliente:</p>
+  <canvas id="canvas-auto" height="110" style="width:100%;background:#fff;border-radius:7px;border:1px solid var(--border);display:block;"></canvas>
+  <button class="btn btn-ok" style="margin-top:8px;" onclick="aceptarFirmaAuto()">✓ Generar y aceptar</button>
+</div>
+```
+
+  </div>
+
+  <div class="card" id="card-firmado" style="display:none;">
+    <div class="ctitle">Firma del cliente ✓</div>
+    <div style="text-align:center;padding:10px 0;">
+      <img id="prev-firma" style="max-height:85px;max-width:100%;background:#fff;border-radius:6px;padding:6px;">
+    </div>
+    <div id="ts-firma" style="font-size:10px;color:var(--muted);text-align:center;"></div>
+    <div class="div"></div>
+    <button class="btn btn-ghost btn-sm" onclick="rehacerFirma()">↺ Volver a firmar</button>
+  </div>
+
+<button class="btn btn-yellow" onclick="tab('enviar')">Preparar envío →</button>
+
+</div>
+
+<!-- ══ TAB ENVIAR ══ -->
+
+<div id="sec-enviar" class="sec">
+  <div class="card">
+    <div class="ctitle">Resumen</div>
+    <div id="resumen"></div>
+    <div class="div"></div>
+    <div class="ir"><span>Datos</span><span id="st-d">—</span></div>
+    <div class="ir"><span>Firma cliente</span><span id="st-f">—</span></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Generar PDF</div>
+    <button class="btn btn-dl" id="btn-pdf" onclick="generarPDF()">📄 Generar PDF del contrato</button>
+    <p id="pdf-info" style="font-size:11px;color:var(--muted);text-align:center;display:none;margin-top:4px;"></p>
+  </div>
+
+  <div class="card" id="card-envio" style="display:none;">
+    <div class="ctitle">Descargar / Enviar</div>
+    <button class="btn btn-dl" onclick="descargar()">⬇️ Descargar PDF</button>
+    <div class="g2btn">
+      <button class="btn btn-wa" onclick="envWA()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </button>
+      <button class="btn btn-gm" onclick="envGmail()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+        Gmail
+      </button>
+    </div>
+    <button class="btn btn-ghost" id="btn-share" style="display:none;" onclick="compartir()">🔗 Compartir…</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════
+let firmaImg = null, firmaTipo = null, firmaTs = null;
+let pdfBlob = null, pdfNombre = 'contrato.pdf';
+let canvasInited = false;
+let cvs, cctx, drawing = false;
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+function tab(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('sec-' + id).classList.add('on');
+  const tabs = ['datos','firma','enviar'];
+  document.querySelectorAll('.tab')[tabs.indexOf(id)].classList.add('on');
+  if (id === 'firma' && !canvasInited) { setTimeout(initCanvas, 80); canvasInited = true; }
+  if (id === 'enviar') actualizarResumen();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function v(id, fb) { const e = document.getElementById(id); return e && e.value.trim() ? e.value.trim() : (fb||''); }
+function calcIva() {
+  const base = parseFloat(document.getElementById('i-base').value) || 0;
+  const iva  = base * 0.21;
+  const tot  = base + iva;
+  document.getElementById('i-iva').value   = iva  ? iva.toFixed(2)  : '';
+  document.getElementById('i-total').value = tot  ? tot.toFixed(2)  : '';
+}
+function fmtFecha(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+// ═══════════════════════════════════════════
+// CANVAS FIRMA MANUAL
+// ═══════════════════════════════════════════
+function initCanvas() {
+  cvs = document.getElementById('canvas-f');
+  cctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cvs.offsetWidth;
+  cvs.width = w * dpr; cvs.height = 170 * dpr;
+  cctx.scale(dpr, dpr);
+  cctx.strokeStyle = '#1a1a2e'; cctx.lineWidth = 2.5;
+  cctx.lineCap = 'round'; cctx.lineJoin = 'round';
+
+  cvs.addEventListener('touchstart', e => {
+    e.preventDefault(); drawing = true;
+    const r = cvs.getBoundingClientRect();
+    cctx.beginPath();
+    cctx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top);
+  }, {passive:false});
+  cvs.addEventListener('touchmove', e => {
+    e.preventDefault(); if (!drawing) return;
+    const r = cvs.getBoundingClientRect();
+    cctx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top);
+    cctx.stroke();
+  }, {passive:false});
+  cvs.addEventListener('touchend', () => drawing = false);
+  cvs.addEventListener('mousedown', e => {
+    drawing = true;
+    const r = cvs.getBoundingClientRect();
+    cctx.beginPath(); cctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+  });
+  cvs.addEventListener('mousemove', e => {
+    if (!drawing) return;
+    const r = cvs.getBoundingClientRect();
+    cctx.lineTo(e.clientX - r.left, e.clientY - r.top); cctx.stroke();
+  });
+  cvs.addEventListener('mouseup', () => drawing = false);
+  cvs.addEventListener('mouseleave', () => drawing = false);
+}
+
+function borrarFirma() {
+  if (cctx) cctx.clearRect(0, 0, cvs.width, cvs.height);
+}
+
+function aceptarFirmaManual() {
+  const data = cctx.getImageData(0, 0, cvs.width, cvs.height).data;
+  if (!Array.from(data).some((v, i) => i % 4 === 3 && v > 0)) { toast('Firme en el recuadro primero', 'err'); return; }
+  const tmp = document.createElement('canvas');
+  tmp.width = cvs.width; tmp.height = cvs.height;
+  const tc = tmp.getContext('2d');
+  tc.fillStyle = '#fff'; tc.fillRect(0, 0, tmp.width, tmp.height);
+  tc.drawImage(cvs, 0, 0);
+  firmaImg = tmp.toDataURL('image/png');
+  firmaTipo = 'manual';
+  firmaTs = new Date().toLocaleString('es-ES');
+  mostrarFirmada();
+}
+
+function aceptarFirmaAuto() {
+  const nombre = v('u-nombre');
+  if (!nombre) { toast('Introduce el nombre del cliente primero', 'err'); return; }
+  const c = document.getElementById('canvas-auto');
+  const dpr = window.devicePixelRatio || 1;
+  c.width = c.offsetWidth * dpr; c.height = 110 * dpr;
+  const cx = c.getContext('2d');
+  cx.scale(dpr, dpr);
+  const W = c.offsetWidth;
+  cx.fillStyle = '#fff'; cx.fillRect(0, 0, W, 110);
+  cx.font = 'italic 300 36px Georgia, serif';
+  cx.fillStyle = '#1a2a4a'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  cx.fillText(nombre, W/2, 44);
+  cx.strokeStyle = '#bbb'; cx.lineWidth = 1;
+  cx.beginPath(); cx.moveTo(W*0.08, 72); cx.lineTo(W*0.92, 72); cx.stroke();
+  firmaTs = new Date().toLocaleString('es-ES');
+  cx.font = '9px monospace'; cx.fillStyle = '#999';
+  cx.fillText(firmaTs, W/2, 88);
+  firmaImg = c.toDataURL('image/png');
+  firmaTipo = 'auto';
+  mostrarFirmada();
+}
+
+function mostrarFirmada() {
+  document.getElementById('card-firmado').style.display = '';
+  document.getElementById('prev-firma').src = firmaImg;
+  document.getElementById('ts-firma').textContent = '✓ Firmado: ' + firmaTs;
+  document.getElementById('badge').className = 'badge badge-ok';
+  document.getElementById('badge').innerHTML = '<span class="dot"></span>Firmado';
+  pdfBlob = null;
+  document.getElementById('card-envio').style.display = 'none';
+  toast('Firma guardada correctamente', 'ok');
+}
+
+function rehacerFirma() {
+  firmaImg = null; firmaTs = null; pdfBlob = null;
+  document.getElementById('card-firmado').style.display = 'none';
+  document.getElementById('card-envio').style.display = 'none';
+  document.getElementById('badge').className = 'badge badge-warn';
+  document.getElementById('badge').innerHTML = '<span class="dot"></span>Borrador';
+  if (cctx) cctx.clearRect(0, 0, cvs.width, cvs.height);
+}
+
+function modoFirma(m) {
+  document.getElementById('sopt-m').classList.toggle('on', m==='manual');
+  document.getElementById('sopt-a').classList.toggle('on', m==='auto');
+  document.getElementById('wrap-manual').style.display = m==='manual' ? '' : 'none';
+  document.getElementById('wrap-auto').style.display   = m==='auto'   ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════
+// RESUMEN
+// ═══════════════════════════════════════════
+function badge2(t,l) { return `<span class="badge badge-${t}"><span class="dot"></span>${l}</span>`; }
+function actualizarResumen() {
+  const n = v('u-nombre','—'), nc = v('d-numcont','—'), tipo = v('d-tipo','—');
+  const tot = v('i-total','—');
+  document.getElementById('resumen').innerHTML = `
+    <div class="ir"><span>Contrato nº</span><span>${nc}</span></div>
+    <div class="ir"><span>Cliente</span><span>${n}</span></div>
+    <div class="ir"><span>Equipo</span><span>${tipo}</span></div>
+    <div class="ir"><span>Total</span><span>${tot !== '—' ? tot+' €' : '—'}</span></div>
+  `;
+  const hayD = v('u-nombre') && v('d-numcont');
+  document.getElementById('st-d').innerHTML = hayD ? badge2('ok','OK') : badge2('warn','Incompleto');
+  document.getElementById('st-f').innerHTML = firmaImg ? badge2('ok','Firmado') : badge2('warn','Pendiente');
+  if (navigator.share) document.getElementById('btn-share').style.display = '';
+}
+
+// ═══════════════════════════════════════════
+// GENERAR PDF — replica fiel al contrato original
+// ═══════════════════════════════════════════
+async function generarPDF() {
+  const btn = document.getElementById('btn-pdf');
+  const info = document.getElementById('pdf-info');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Generando…';
+  info.style.display = 'block'; info.textContent = 'Construyendo documento…';
+
+  await new Promise(r => setTimeout(r, 80)); // permite repaint
+
+  try {
+    const { jsPDF } = window.jspdf;
+
+    // ── datos ──
+    const numCont = v('d-numcont','____________');
+    const vigor   = fmtFecha(document.getElementById('d-vigor').value) || '___/___/______';
+    const tipoEl  = v('d-tipo','________________________');
+    const marca   = v('d-marca','________________');
+    const modelo  = v('d-modelo','________________');
+    const serie   = v('d-serie','________________');
+    const uNombre = v('u-nombre','________________________________________________');
+    const uDir    = v('u-dir','_________________________________________________');
+    const uCp     = v('u-cp','_____');
+    const uLoc    = v('u-loc','______________________');
+    const uProv   = v('u-prov','______________');
+    const uNif    = v('u-nif','________________');
+    const uTel    = v('u-tel','________________');
+    const uEmail  = v('u-email','__________________________');
+    const uCobro  = v('u-cobro', uDir || '_________________________________________________');
+    const uIban   = v('u-iban','ES__ ____ ____ __ __________ ');
+    const base    = v('i-base','__________');
+    const iva     = v('i-iva','__________');
+    const total   = v('i-total','__________');
+
+    const hoy = new Date();
+    const diaStr  = hoy.getDate().toString();
+    const mesStr  = hoy.toLocaleDateString('es-ES',{month:'long'});
+    const anioStr = hoy.getFullYear().toString();
+
+    // ════════════════════════════════════════
+    // PÁGINA 1
+    // ════════════════════════════════════════
+    const doc = new jsPDF({ unit:'mm', format:'a4', orientation:'portrait' });
+    const PW = 210, PH = 297;
+    const ML = 12, MR = 12, MT = 8;
+
+    // ── CABECERA: fondo blanco, texto negro como el original ──
+    // Nombre empresa negrita grande (título)
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.setTextColor(10,10,10);
+    doc.text('HAROSAT ECOTECHNICAL', ML + 22, MT + 8);
+
+    // Columna derecha cabecera
+    doc.setFontSize(8);
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(10,10,10);
+    const cdrX = 135;
+    doc.text('EMPRESA INSTALADORA Y MANTENEDORA DE', cdrX, MT + 4, {align:'left'});
+    doc.text('CLIMATIZACION Y GAS IG-II HOMOLOGADA', cdrX, MT + 9, {align:'left'});
+    doc.text('POR LA DEL. DE INDUSTRIA DE LA RIOJA', cdrX, MT + 14, {align:'left'});
+    doc.setFontSize(9);
+    doc.text('CIF/NIF 09302345H', cdrX, MT + 20, {align:'left'});
+
+    // Datos empresa izquierda
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(50,50,50);
+    const dirY = MT + 14;
+    doc.text('STA. LUCIA 66, BJ', ML + 22, dirY);
+    doc.text('26200 HARO', ML + 22, dirY + 4.5);
+    doc.text('LA RIOJA', ML + 22, dirY + 9);
+    doc.setFont('helvetica','bold');
+    doc.text('Tfno  640 05 64 84', ML + 22, dirY + 14);
+    doc.setFont('helvetica','normal');
+    doc.text('harosatecnicos@gmail.com    harosat.es', ML + 22, dirY + 19);
+
+    // LUNES A VIERNES (esquina derecha)
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(10,10,10);
+    doc.text('LUNES A VIERNES', 148, MT + 28);
+    // caja check
+    doc.setDrawColor(0); doc.setLineWidth(0.4);
+    doc.rect(192, MT + 24, 5, 5);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(10);
+    doc.text('X', 193.5, MT + 28.5);
+
+    // Separador doble
+    const sepY = MT + 36;
+    doc.setDrawColor(0); doc.setLineWidth(0.8);
+    doc.line(ML, sepY, PW - MR, sepY);
+    doc.setLineWidth(0.3);
+    doc.line(ML, sepY + 1.5, PW - MR, sepY + 1.5);
+
+    // Título principal en recuadro
+    const titY = sepY + 5;
+    doc.setFillColor(255,255,255);
+    doc.setDrawColor(0); doc.setLineWidth(0.5);
+    doc.rect(ML + 20, titY, 140, 8, 'S');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.setTextColor(10,10,10);
+    doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS', ML + 90, titY + 5.5, {align:'center'});
+
+    // Página X de 2
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.text('Página  1  de  2', PW - MR - 2, titY + 5.5, {align:'right'});
+
+    // ── DOBLE COLUMNA: Datos del Aparato | Datos del Usuario ──
+    const colY = titY + 12;
+    const col1X = ML, col1W = 86, col2X = ML + 90, col2W = 108;
+    const boxH = 40;
+
+    // Cajas
+    doc.setDrawColor(0); doc.setLineWidth(0.4);
+    doc.rect(col1X, colY, col1W, boxH);
+    doc.rect(col2X, colY, col2W, boxH);
+
+    // Cabeceras columnas
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(10,10,10);
+    doc.text('Datos del Aparato', col1X + col1W/2, colY + 4, {align:'center'});
+    doc.text('Datos del Usuario', col2X + col2W/2, colY + 4, {align:'center'});
+    doc.text('(Propietario o arrendatario)', col2X + col2W/2, colY + 8, {align:'center'});
+
+    // Líneas separadoras internas
+    doc.setLineWidth(0.2);
+    doc.line(col1X, colY + 6, col1X + col1W, colY + 6);
+    doc.line(col2X, colY + 10, col2X + col2W, colY + 10);
+
+    // Contenido col1
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    const f1 = (label, valor, y) => {
+      doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.text(label, col1X + 2, colY + y);
+      doc.setFont('helvetica','normal');
+      doc.text(valor, col1X + 30, colY + y);
+    };
+    f1('Número Contrato:', numCont,  12);
+    f1('Entrada en Vigor:', vigor,   17);
+    f1('Tipo Elemento:',   tipoEl,   22);
+    f1('Marca:',           marca,    27);
+    f1('Modelo:',          modelo,   32);
+    f1('Número Serie:',    serie,    37);
+
+    // Contenido col2
+    const f2 = (label, valor, y) => {
+      doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.text(label, col2X + 2, colY + y);
+      doc.setFont('helvetica','normal');
+      doc.text(valor, col2X + 24, colY + y);
+    };
+    f2('Nombre',     uNombre, 14);
+    f2('Domicilio',  uDir,    19);
+    f2('DP- Local.', uCp + '  ' + uLoc, 24);
+    f2('Provincia',  uProv,   29);
+    f2('NIF/Tfnos.', uNif + '  ' + uTel, 34);
+    f2('Email:',     uEmail,  39);
+
+    // ── Domicilio de cobro + importes ──
+    const cobroY = colY + boxH + 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.setTextColor(10,10,10);
+    doc.text('Domicilio de Cobro:', col1X, cobroY + 4);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text(uCobro, col1X + 36, cobroY + 4);
+    doc.setFont('helvetica','bold');
+    doc.text('N. Cta.:', col1X, cobroY + 9);
+    doc.setFont('helvetica','normal');
+    doc.text(uIban, col1X + 18, cobroY + 9);
+
+    // Importes (derecha)
+    const impX = 130;
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('Base Imponible:', impX, cobroY + 2);
+    doc.text('Importe IVA 21%', impX, cobroY + 6);
+    doc.text('Total ...:', impX, cobroY + 10);
+    doc.setFont('helvetica','normal');
+    doc.text(base ? base + ' €' : '', PW - MR - 2, cobroY + 2, {align:'right'});
+    doc.text(iva  ? iva  + ' €' : '', PW - MR - 2, cobroY + 6, {align:'right'});
+    doc.text(total? total+ ' €' : '', PW - MR - 2, cobroY + 10,{align:'right'});
+
+    // ── TEXTO DEL CONTRATO ──
+    const textY = cobroY + 16;
+    doc.setDrawColor(0); doc.setLineWidth(0.3);
+    doc.line(ML, textY - 1, PW - MR, textY - 1);
+
+    // Título sección
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.setTextColor(10,10,10);
+    doc.text('CONTRATO DE MANTENIMIENTO DE INSTALACION TÉRMICA', ML, textY + 4);
+
+    // Apartados A,B,C
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.2);
+    const clausH = (txt, x, y, maxW) => {
+      const lines = doc.splitTextToSize(txt, maxW);
+      doc.text(lines, x, y);
+      return lines.length * 3.5;
+    };
+
+    let cy = textY + 9;
+    const TW = PW - ML - MR;
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.2);
+    doc.text('A.', ML + 2, cy);
+    doc.setFont('helvetica','normal');
+    cy += clausH('El presente contrato se refiere al aparato de producción o transmisión de calor instalado en el domicilio indicado.', ML + 8, cy, TW - 8);
+    doc.setFont('helvetica','bold');
+    doc.text('B.', ML + 2, cy);
+    doc.setFont('helvetica','normal');
+    cy += clausH('Está suscrito de una parte por el usuario cuyos datos figuran en este contrato, por la otra parte HAROSAT ECOTECHNICAL, denominada en este contrato y en adelante "la empresa mantenedora".', ML + 8, cy, TW - 8);
+    doc.setFont('helvetica','bold');
+    doc.text('C.', ML + 2, cy);
+    doc.setFont('helvetica','normal');
+    cy += clausH('Se ampara en el Reglamento de Instalaciones Térmicas en Edificios (RITE) aprobado en el Real Decreto 1027/2007, de Julio, en el que se regulan las exigencias de eficiencia energética y de seguridad que deben cumplir dichas instalaciones para atender la demanda de bienestar e higiene de las personas.', ML + 8, cy, TW - 8);
+
+    // CONDICIONES GENERALES
+    cy += 1;
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.text('CONDICIONES GENERALES', ML, cy); cy += 4.5;
+
+    const clausulas = [
+      '1. El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.',
+      '2. La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.',
+      '3. En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.',
+      '4. Será por cuenta del usuario el valor de las piezas averiadas sustituidas.',
+      '5. Quedan expresamente excluidas de este contrato:\n   - Las averías producidas por fuerza mayor (inundación, congelación, revocos, incendios, aguas duras o alcalinas).\n   - Las máquinas y componentes conectados al aparato de producción o transmisión de calor objeto de contrato.\n   - Las averías o anomalías provocadas por falta de suministro de combustible.\n   - Las reparaciones fuera del horario laboral.',
+      '6. Los aparatos de producción o transmisión de calor estarán accesibles para su mantenimiento y poder realizar las reparaciones que fueran necesarias. En caso contrario los costes derivados del desmontaje o retirada de muebles u otros objetos que obstruyan su acceso correrán a cargo del cliente.',
+      '7. Este contrato quedará automáticamente rescindido si el aparato descrito fuera manipulado por personal ajeno a la empresa mantenedora.',
+      '8. En ningún caso la rescisión del contrato por parte del usuario dará derecho a la devolución de importe alguno. Si la rescisión fuera por parte de la empresa mantenedora, esta devolverá al usuario la parte proporcional de la última cuota satisfecha que corresponda, con arreglo al tiempo transcurrido desde su fecha de cobro.',
+      '9. La empresa mantenedora asume la cualidad de empresario respecto de los empleados que exclusivamente realicen las tareas necesarias derivadas del cumplimiento de este contrato, declarando estar al corriente del pago de los seguros sociales de los mismos y eximiendo al usuario de toda responsabilidad por accidente que los mismos pudieran sufrir con ocasión de realizar exclusivamente las tareas derivadas de este contrato.',
+      `10. El importe anual de este contrato es de ${total ? '[_'+total+'_]' : '[___]'} euros + IVA y será revisado anualmente en el momento de la renovación. Deberá ser satisfecho en una sola vez al momento de la firma, en metálico o mediante domiciliación bancaria. Las posteriores cuotas por las sucesivas renovaciones serán satisfechas por domiciliación bancaria.`,
+    ];
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.2);
+    for (let i = 0; i < clausulas.length; i++) {
+      const lineas = doc.splitTextToSize('- ' + clausulas[i], TW);
+      if (cy + lineas.length * 3.5 > PH - 14) break; // no salirse de la página
+      doc.text(lineas, ML, cy);
+      cy += lineas.length * 3.5 + 0.5;
+    }
+
+    // Pie pág 1
+    const pie1Y = PH - 10;
+    doc.setDrawColor(0); doc.setLineWidth(0.4);
+    doc.line(ML, pie1Y - 4, PW - MR, pie1Y - 4);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(10,10,10);
+    doc.text('HAROSAT ECOTECHNICAL', ML, pie1Y);
+    doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS', PW/2, pie1Y, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(7);
+    doc.text('STA. LUCIA 66, BJ  |  26200 HARO  |  LA RIOJA  |  640 05 64 84  |  harosatecnicos@gmail.com', PW/2, pie1Y + 3.5, {align:'center'});
+
+    // ════════════════════════════════════════
+    // PÁGINA 2
+    // ════════════════════════════════════════
+    doc.addPage();
+
+    // Cabecera idéntica
+    doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(10,10,10);
+    doc.text('HAROSAT ECOTECHNICAL', ML + 22, MT + 8);
+    doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text('EMPRESA INSTALADORA Y MANTENEDORA DE', cdrX, MT + 4);
+    doc.text('CLIMATIZACION Y GAS IG-II HOMOLOGADA', cdrX, MT + 9);
+    doc.text('POR LA DEL. DE INDUSTRIA DE LA RIOJA', cdrX, MT + 14);
+    doc.setFontSize(9);
+    doc.text('CIF/NIF 09302345H', cdrX, MT + 20);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(50,50,50);
+    doc.text('STA. LUCIA 66, BJ', ML + 22, dirY);
+    doc.text('26200 HARO', ML + 22, dirY + 4.5);
+    doc.text('LA RIOJA', ML + 22, dirY + 9);
+    doc.setFont('helvetica','bold');
+    doc.text('Tfno  640 05 64 84', ML + 22, dirY + 14);
+    doc.setFont('helvetica','normal');
+    doc.text('harosatecnicos@gmail.com    harosat.es', ML + 22, dirY + 19);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(10,10,10);
+    doc.text('LUNES A VIERNES', 148, MT + 28);
+    doc.setDrawColor(0); doc.setLineWidth(0.4); doc.rect(192, MT + 24, 5, 5);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('X', 193.5, MT + 28.5);
+
+    doc.setLineWidth(0.8); doc.line(ML, sepY, PW - MR, sepY);
+    doc.setLineWidth(0.3); doc.line(ML, sepY + 1.5, PW - MR, sepY + 1.5);
+
+    doc.setFillColor(255,255,255); doc.setDrawColor(0); doc.setLineWidth(0.5);
+    doc.rect(ML + 20, titY, 140, 8, 'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(10,10,10);
+    doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS', ML + 90, titY + 5.5, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text('Página  2  de  2', PW - MR - 2, titY + 5.5, {align:'right'});
+
+    // Cláusulas 11-18
+    let cy2 = titY + 14;
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.2); doc.setTextColor(10,10,10);
+
+    const clausulas2 = [
+      '11. El pago del presente contrato deberá ser abonado dentro del primer mes de la entrada en vigor o de cualquiera de sus prórrogas, reservándose la empresa mantenedora el derecho a prestar servicio después de esa fecha si el importe no ha sido satisfecho.',
+      '12. Este contrato no acredita por sí solo que el pago haya sido satisfecho, para su justificación se deberá presentar el recibo bancario correspondiente o resguardo de cobro en efectivo.',
+      '13. Al hacerse cargo del mantenimiento, el titular de la instalación entregará al representante de la empresa mantenedora copia de la siguiente documentación:\n   . Proyecto o memoria técnica de la instalación realmente ejecutada\n   . Certificado de la instalación\n   . Certificado de inspección inicial con calificación aceptable, cuando sea preceptivo',
+      '14. El titular o usuario de las instalaciones térmicas es responsable del cumplimiento del RITE desde el momento en que se realiza su recepción provisional, de acuerdo con lo dispuesto en el articulado de la Ley 21/1992, de 16 de julio de Industria, en lo que se refiere al uso, mantenimiento y seguridad; y sin que este mantenimiento pueda ser sustituido por la garantía.',
+      '15. Ambas partes renuncian expresamente al fuero que ahora o en el futuro pudiera corresponderle, y se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora para cualquier cuestión que pudiera derivarse de este contrato.',
+      '16. Los firmantes del presente contrato declaran que los datos indicados anteriormente son ciertos y de conformidad con lo establecido sobre tratamiento automatizado de los datos de carácter personal, otorgan consentimiento expreso para ser tratados automatizadamente, a fin de facilitar una mejor gestión en la prestación de los servicios, pudiendo ceder los mismos con idéntica finalidad a empresa autorizada.',
+      '17. De conformidad con lo dispuesto por la Ley Orgánica 15/1999 de 13 de diciembre, de Protección de Datos de carácter personal, se informa que estos datos serán incorporados a un fichero responsabilidad de la empresa mantenedora y serán tratados con la finalidad de contactar con el usuario e informarle sobre nuestros servicios.',
+      '18. La atención se realizará de lunes a viernes; el horario de atención será de 8:00 a 16:00 de manera ininterrumpida, siempre con cita previa y por orden de aviso. Los meses de junio, julio y septiembre el horario de atención será de 8:00 a 15:00. Los días 24, 25 y 31 de diciembre, así como los días 1 y 6 de enero, no habrá servicio.',
+    ];
+
+    for (let i = 0; i < clausulas2.length; i++) {
+      const lineas = doc.splitTextToSize('- ' + clausulas2[i], TW);
+      doc.text(lineas, ML, cy2);
+      cy2 += lineas.length * 3.5 + 1;
+    }
+
+    // Bloque RGPD
+    cy2 += 2;
+    const rgpd = 'Asimismo, informamos que el usuario podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición dirigiéndose al domicilio de la empresa mantenedora o bien remitiendo un mensaje a la dirección de correo electrónico harosatecnicos@gmail.com';
+    const rgpdLines = doc.splitTextToSize(rgpd, TW - 16);
+    doc.setFont('helvetica','italic'); doc.setFontSize(7);
+    doc.text(rgpdLines, ML + 8, cy2);
+    cy2 += rgpdLines.length * 3.5 + 4;
+
+    // Texto cierre
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    const cierre = 'Y en prueba de conformidad y a su más exacto cumplimiento ambas partes firman por duplicado el presente contrato en';
+    doc.text(doc.splitTextToSize(cierre, TW), ML, cy2); cy2 += 9;
+
+    // ── ZONA FIRMAS ──
+    const fY = cy2 + 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(10,10,10);
+    doc.text('USUARIO/A', ML + 20, fY, {align:'center'});
+    doc.text('Por la Empresa Mantenedora', PW - ML - 30, fY, {align:'center'});
+
+    // Fecha
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text('Haro a', ML + 4, fY + 10);
+    doc.setFont('helvetica','normal');
+    doc.text(diaStr, ML + 20, fY + 10);
+    doc.text('de', ML + 28, fY + 10);
+    doc.text(mesStr, ML + 34, fY + 10);
+    doc.text('de', ML + 52, fY + 10);
+    doc.text(anioStr, ML + 58, fY + 10);
+
+    // Líneas de firma
+    doc.setLineWidth(0.3);
+    doc.line(ML + 2, fY + 30, ML + 60, fY + 30);
+    doc.setFont('helvetica','italic'); doc.setFontSize(8);
+    doc.text('(Firma del Cliente)', ML + 2, fY + 34);
+
+    // Firma del cliente (imagen si existe)
+    if (firmaImg) {
+      try {
+        doc.addImage(firmaImg, 'PNG', ML + 2, fY + 10, 55, 18);
+      } catch(e) {}
+    }
+
+    // Firma empresa (recuadro derecha)
+    const empX = PW - ML - 65;
+    doc.setFont('helvetica','normal'); doc.setFontSize(7);
+    doc.text('Fdo.:', empX, fY + 22);
+    // Sello empresa texto
+    doc.setFont('helvetica','bold'); doc.setFontSize(7);
+    doc.text('HAROSAT ECOTECHNICAL', empX + 8, fY + 28);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5);
+    doc.text('STA. LUCIA 66, BJ · 26200 HARO', empX + 8, fY + 32);
+    doc.text('CIF 09302345H · 640 05 64 84', empX + 8, fY + 36);
+    doc.setFont('helvetica','italic');
+    doc.text('Empresa Instaladora y Mantenedora', empX + 8, fY + 40);
+    doc.text('Gas IG-II Homologada', empX + 8, fY + 44);
+
+    // Pie pág 2
+    doc.setDrawColor(0); doc.setLineWidth(0.4);
+    doc.line(ML, pie1Y - 4, PW - MR, pie1Y - 4);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(10,10,10);
+    doc.text('HAROSAT ECOTECHNICAL', ML, pie1Y);
+    doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS', PW/2, pie1Y, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(7);
+    doc.text('STA. LUCIA 66, BJ  |  26200 HARO  |  LA RIOJA  |  640 05 64 84  |  harosatecnicos@gmail.com', PW/2, pie1Y + 3.5, {align:'center'});
+
+    // ── Guardar ──
+    pdfNombre = 'CM_' + numCont.replace(/\//g,'-') + '_' + (uNombre.split(' ')[0] || 'cliente') + '.pdf';
+    pdfBlob = doc.output('blob');
+    document.getElementById('card-envio').style.display = '';
+    btn.disabled = false;
+    btn.innerHTML = '✓ PDF generado';
+    info.textContent = '✓ Listo: ' + pdfNombre;
+    if (navigator.share) document.getElementById('btn-share').style.display = '';
+    toast('PDF generado correctamente', 'ok');
+
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '📄 Generar PDF del contrato';
+    info.textContent = 'Error: ' + err.message;
+    toast('Error al generar PDF', 'err');
+    console.error(err);
+  }
+}
+
+// ═══════════════════════════════════════════
+// DESCARGA / ENVÍO
+// ═══════════════════════════════════════════
+function descargar() {
+  if (!pdfBlob) { toast('Genera el PDF primero', 'err'); return; }
+  const url = URL.createObjectURL(pdfBlob);
+  const a = document.createElement('a');
+  a.href = url; a.download = pdfNombre;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+  toast('Descargando…', 'ok');
+}
+
+function envWA() {
+  const tel = v('u-tel').replace(/\s/g,'');
+  const nc  = v('d-numcont','contrato');
+  const nom = v('u-nombre','cliente');
+  const msg = encodeURIComponent(
+    `*Contrato de Mantenimiento HAROSAT*\nRef: ${nc}\n\nEstimado/a ${nom},\n\n` +
+    `Le remitimos el contrato de mantenimiento para su revisión.\n` +
+    `Por favor, descargue el PDF adjunto, fírmelo y devuélvanos una copia.\n\n` +
+    `Un saludo,\nHAROSAT Ecotechnical\nTfno: 640 05 64 84`
+  );
+  const url = tel
+    ? `https://wa.me/${tel.startsWith('+') ? tel.slice(1) : '34'+tel}?text=${msg}`
+    : `https://wa.me/?text=${msg}`;
+  // Intentar compartir el PDF primero (Web Share API)
+  if (pdfBlob && navigator.share && navigator.canShare) {
+    const file = new File([pdfBlob], pdfNombre, {type:'application/pdf'});
+    if (navigator.canShare({files:[file]})) {
+      navigator.share({files:[file], title:'Contrato HAROSAT '+nc, text:'Contrato de mantenimiento'});
+      return;
+    }
+  }
+  window.open(url, '_blank');
+  toast('Abriendo WhatsApp…', 'ok');
+}
+
+function envGmail() {
+  const email = v('u-email');
+  const nc    = v('d-numcont','contrato');
+  const nom   = v('u-nombre','cliente');
+  const asunto = encodeURIComponent(`Contrato Mantenimiento HAROSAT — Ref. ${nc}`);
+  const cuerpo = encodeURIComponent(
+    `Estimado/a ${nom},\n\n` +
+    `Le remitimos adjunto el contrato de mantenimiento HAROSAT con referencia ${nc}.\n\n` +
+    `Por favor, revíselo, fírmelo y devuélvanos una copia firmada.\n\n` +
+    `Para cualquier consulta puede contactarnos en:\n` +
+    `📞 640 05 64 84\n📧 harosatecnicos@gmail.com\n🌐 harosat.es\n\n` +
+    `Un saludo,\nHAROSAT Ecotechnical\nSta. Lucía 66 BJ · 26200 Haro (La Rioja)`
+  );
+  const url = email
+    ? `mailto:${email}?subject=${asunto}&body=${cuerpo}`
+    : `mailto:?subject=${asunto}&body=${cuerpo}`;
+  window.location.href = url;
+  toast('Abriendo correo…', 'ok');
+}
+
+async function compartir() {
+  if (!pdfBlob) { toast('Genera el PDF primero', 'err'); return; }
+  const file = new File([pdfBlob], pdfNombre, {type:'application/pdf'});
+  const nc = v('d-numcont','contrato');
+  try {
+    await navigator.share({files:[file], title:'Contrato HAROSAT '+nc, text:'Contrato de mantenimiento HAROSAT'});
+  } catch(e) { if (e.name !== 'AbortError') toast('No se pudo compartir', 'err'); }
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+let tt;
+function toast(msg, t) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + (t||'');
+  clearTimeout(tt);
+  tt = setTimeout(() => el.className = '', 3000);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+(function() {
+  const yr = new Date().getFullYear().toString().slice(-2);
+  document.getElementById('d-numcont').value = `CM/${yr}/001`;
+  document.getElementById('d-vigor').value   = new Date().toISOString().slice(0,10);
+})();
+</script>
+
+</body>
+</html>
