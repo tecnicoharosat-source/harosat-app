@@ -1141,43 +1141,32 @@ function filaRes(label, val) {
 /* ============================================================
    CLÁUSULAS — 18 estándar RITE
 ============================================================ */
+/* ---- PREÁMBULO (se imprime antes de las condiciones generales) ---- */
+var PREAMBULO = [
+  'A. El presente contrato se refiere al aparato de producción o transmisión de calor instalado en el domicilio indicado.',
+  'B. Está suscrito de una parte por el usuario cuyos datos figuran en este contrato, por la otra parte HAROSAT ECOTECHNICAL, denominada en este contrato y en adelante "la empresa mantenedora".',
+  'C. Se ampara en el Reglamento de Instalaciones Térmicas en Edificios (RITE) aprobado en el Real Decreto 1027/2007, de Julio, en el que se regulan las exigencias de eficiencia energética y de seguridad que deben cumplir dichas instalaciones para atender la demanda de bienestar e higiene de las personas.'
+];
+
 var CLAUSULAS = [
-  { n:1,  t:'Objeto del contrato',
-    c:'El presente contrato tiene por objeto la prestación por parte de HAROSAT Ecotechnical (en adelante, EL INSTALADOR) de los servicios de mantenimiento preventivo y correctivo de la instalación térmica descrita en el encabezado, conforme al Reglamento de Instalaciones Térmicas en Edificios (RITE) y demás normativa aplicable.' },
-  { n:2,  t:'Duración',
-    c:'El contrato tendrá la duración indicada en las condiciones particulares, con inicio en la fecha de firma. Se prorrogará automáticamente por períodos iguales salvo denuncia escrita por cualquiera de las partes con un mínimo de 30 días de antelación.' },
-  { n:3,  t:'Prestaciones incluidas',
-    c:'EL INSTALADOR realizará una revisión anual completa que comprende: comprobación de la combustión, limpieza del intercambiador y quemador, verificación de presiones y temperaturas, control de seguridades, análisis del rendimiento estacional y emisión del correspondiente certificado de mantenimiento.' },
-  { n:4,  t:'Prestaciones excluidas',
-    c:'No se incluyen: sustitución de piezas fungibles o averiadas por uso, reparaciones derivadas de mal uso o negligencia del cliente, modificaciones o ampliaciones de la instalación, ni daños causados por terceros o catástrofes naturales.' },
-  { n:5,  t:'Tiempo de respuesta',
-    c:'EL INSTALADOR atenderá los avisos de avería en el plazo máximo de 48 horas hábiles desde la comunicación del cliente. En situaciones de emergencia (sin calefacción ni ACS en meses de invierno), el plazo será de 24 horas hábiles.' },
-  { n:6,  t:'Precio y forma de pago',
-    c:'El importe del contrato es el estipulado en las condiciones particulares, IVA incluido. El cobro se realizará mediante la forma de pago indicada, en los plazos acordados. El impago faculta a EL INSTALADOR para suspender el servicio previo aviso de 15 días.' },
-  { n:7,  t:'Revisión de precios',
-    c:'El precio del contrato podrá revisarse anualmente en función del IPC publicado por el INE. EL INSTALADOR notificará al cliente la nueva tarifa con al menos 30 días de antelación al inicio de cada período.' },
-  { n:8,  t:'Obligaciones del cliente',
-    c:'El cliente se obliga a: facilitar el acceso a la instalación en los horarios acordados, comunicar cualquier anomalía de forma inmediata, no manipular los equipos sin autorización, y mantener libre el acceso a los elementos de la instalación.' },
-  { n:9,  t:'Responsabilidad de EL INSTALADOR',
-    c:'EL INSTALADOR responde de los daños causados por negligencia propia en la ejecución de los trabajos, hasta el límite de la cobertura de su seguro de responsabilidad civil. Queda excluida la responsabilidad por daños indirectos o lucro cesante.' },
-  { n:10, t:'Responsabilidad del cliente',
-    c:'El cliente es responsable de los daños que se produzcan en la instalación por no comunicar averías, por obstaculizar el acceso al técnico o por manipulaciones no autorizadas. El cliente mantendrá vigente el seguro del hogar o del inmueble.' },
-  { n:11, t:'Subcontratación',
-    c:'EL INSTALADOR podrá subcontratar total o parcialmente la ejecución de los servicios, manteniendo en todo caso la responsabilidad frente al cliente y garantizando que el personal subcontratado cumple los requisitos técnicos y de seguridad exigibles.' },
-  { n:12, t:'Materiales y repuestos',
-    c:'Los repuestos necesarios para las reparaciones no incluidas en la cuota serán facturados aparte con el precio vigente en el momento de la intervención. EL INSTALADOR utilizará únicamente piezas originales o de equivalente calidad certificada.' },
-  { n:13, t:'Garantías',
-    c:'Las intervenciones de mantenimiento incluidas en el contrato tienen una garantía de 3 meses sobre la mano de obra. Los repuestos se rigen por la garantía del fabricante, que en ningún caso será inferior a 6 meses.' },
-  { n:14, t:'Protección de datos',
-    c:'Los datos personales facilitados por el cliente serán tratados conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018. Se utilizarán exclusivamente para la gestión del contrato y la prestación del servicio, sin cederlos a terceros salvo obligación legal.' },
-  { n:15, t:'Comunicaciones',
-    c:'Las comunicaciones entre las partes se realizarán preferentemente por correo electrónico o mediante la aplicación de avisos de HAROSAT. Se considera como domicilio del cliente el indicado en el contrato, y como domicilio de EL INSTALADOR el de su sede social.' },
-  { n:16, t:'Modificaciones del contrato',
-    c:'Cualquier modificación del presente contrato deberá constar por escrito y ser firmada por ambas partes. Las condiciones verbales o acuerdos no documentados no tendrán validez contractual.' },
-  { n:17, t:'Resolución anticipada',
-    c:'Cualquiera de las partes podrá resolver el contrato anticipadamente en caso de incumplimiento grave de la otra parte, previo requerimiento escrito con un plazo de subsanación de 15 días. La resolución imputable al cliente no dará derecho a la devolución de la cuota pagada.' },
-  { n:18, t:'Legislación aplicable y jurisdicción',
-    c:'El presente contrato se rige por la legislación española. Para la resolución de conflictos, las partes se someten a los juzgados y tribunales de Logroño (La Rioja), con renuncia expresa a cualquier otro fuero que pudiera corresponderles.' }
+  { n:1,  c:'El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.' },
+  { n:2,  c:'La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.' },
+  { n:3,  c:'En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.' },
+  { n:4,  c:'Será por cuenta del usuario el valor de las piezas averiadas sustituidas.' },
+  { n:5,  c:'Quedan expresamente excluidas de este contrato:\n- Las averías producidas por fuerza mayor (inundación, congelación, revocos, incendios, aguas duras o alcalinas).\n- Las máquinas y componentes conectados al aparato de producción o transmisión de calor objeto de contrato.\n- Las averías o anomalías provocadas por falta de suministro de combustible.\n- Las reparaciones fuera del horario laboral.' },
+  { n:6,  c:'Los aparatos de producción o transmisión de calor estarán accesibles para su mantenimiento y poder realizar las reparaciones que fueran necesarias. En caso contrario los costes derivados del desmontaje o retirada de muebles u otros objetos que obstruyan su acceso correrán a cargo del cliente.' },
+  { n:7,  c:'Este contrato quedará automáticamente rescindido si el aparato descrito fuera manipulado por personal ajeno a la empresa mantenedora.' },
+  { n:8,  c:'En ningún caso la rescisión del contrato por parte del usuario dará derecho a la devolución de importe alguno. Si la rescisión fuera por parte de la empresa mantenedora, esta devolverá al usuario la parte proporcional de la última cuota satisfecha que corresponda, con arreglo al tiempo transcurrido desde su fecha de cobro.' },
+  { n:9,  c:'La empresa mantenedora asume la cualidad de empresario respecto de los empleados que exclusivamente realicen las tareas necesarias derivadas del cumplimiento de este contrato, declarando estar al corriente del pago de los seguros sociales de los mismos y eximiendo al usuario de toda responsabilidad por accidente que los mismos pudieran sufrir con ocasión de realizar exclusivamente las tareas derivadas de este contrato.' },
+  { n:10, c:'El importe anual de este contrato es de [_____] euros + IVA y será revisado anualmente en el momento de la renovación. Deberá ser satisfecho en una sola vez al momento de la firma, en metálico o mediante domiciliación bancaria. Las posteriores cuotas por las sucesivas renovaciones serán satisfechas por domiciliación bancaria.' },
+  { n:11, c:'El pago del presente contrato deberá ser abonado dentro del primer mes de la entrada en vigor o de cualquiera de sus prorrogas, reservándose la empresa mantenedora el derecho a prestar servicio después de esa fecha si el importe no ha sido satisfecho.' },
+  { n:12, c:'Este contrato no acredita por si solo que el pago haya sido satisfecho, para su justificación se deberá presentar el recibo bancario correspondiente o resguardo de cobro en efectivo.' },
+  { n:13, c:'Al hacerse cargo del mantenimiento, el titular de la instalación entregará al representante de la empresa mantenedora copia la siguiente documentación:\n. Proyecto o memoria técnica de la instalación realmente ejecutada\n. Certificado de la instalación\n. Certificado de inspección inicial con calificación aceptable, cuando sea preceptivo.' },
+  { n:14, c:'El titular o usuario de las instalaciones térmicas es responsable del cumplimiento del RITE desde el momento en que se realiza su recepción provisional, de acuerdo con lo dispuesto en el articulado de la Ley 21/1992, de 16 de julio de Industria, en lo que se refiere al uso, mantenimiento y seguridad; y sin que este mantenimiento pueda ser sustituido por la garantía.' },
+  { n:15, c:'Ambas partes renuncian expresamente al fuero que ahora o en el futuro pudiera corresponderle, y se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora para cualquier cuestión que pudiera derivarse de este contrato.' },
+  { n:16, c:'Los firmantes del presente contrato declaran que los datos indicados anteriormente son ciertos y de conformidad con lo establecido sobre tratamiento automatizado de los datos de carácter personal, otorgan consentimiento expreso par ser tratados automatizadamente, a fin de facilitar una mejor gestión en la prestación de los servicios, pudiendo ceder los mismos con idéntica finalidad a empresa autorizada.' },
+  { n:17, c:'De conformidad con lo dispuesto por la Ley Orgánica 15/1999 de 13 de diciembre, de Protección de Datos de carácter personal, se informa que estos datos serán incorporados a un fichero responsabilidad de la empresa mantenedora y serán tratados con la finalidad de contactar con el usuario e informarle sobre nuestros servicios.' },
+  { n:18, c:'La atención al cliente se realizará de lunes a viernes, el horario de atención será de 8:00 a 15:00, siempre con cita previa y por orden de aviso. Asimismo, informamos que el usuario podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición dirigiéndose al domicilio de la empresa mantenedora o bien remitiendo un mensaje a la dirección de correo electrónico harosatecnicos@gmail.com' }
 ];
 
 /* ============================================================
@@ -1360,35 +1349,51 @@ function generarPDF(silencioso) {
       }
       y += 5;
 
-      // ---- CLÁUSULAS 1-10 ----
-      doc.setFillColor.apply(doc, AZUL);
-      doc.rect(mg, y, anchoUtil, 6, 'F');
+      // ---- TÍTULO CONTRATO MANTENIMIENTO ----
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      doc.text('CONTRATO DE MANTENIMIENTO DE INSTALACION TÉRMICA', mg, y);
+      y += 6;
+
+      // ---- PREÁMBULO A / B / C ----
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6);
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      for (var pa = 0; pa < PREAMBULO.length; pa++) {
+        var lineasP = doc.splitTextToSize(PREAMBULO[pa], anchoUtil);
+        for (var lp = 0; lp < lineasP.length; lp++) {
+          if (y > H - 24) break;
+          doc.text(lineasP[lp], mg, y);
+          y += 3.5;
+        }
+        y += 1.5;
+      }
+      y += 2;
+
+      // ---- CONDICIONES GENERALES (cabecera) ----
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7);
-      doc.setTextColor(255, 255, 255);
-      doc.text('CONDICIONES GENERALES DEL CONTRATO', mg + 3, y + 4);
-      y += 8;
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      doc.text('CONDICIONES GENERALES', mg, y);
+      y += 5;
 
+      // ---- CLÁUSULAS 1-10 ----
       for (var c = 0; c < 10; c++) {
         var cl = CLAUSULAS[c];
-        // Título cláusula
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.5);
-        doc.setTextColor.apply(doc, AZUL);
-        var titulo = cl.n + '. ' + cl.t.toUpperCase();
-        doc.text(titulo, mg, y);
-        y += 4;
-        // Texto
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6);
         doc.setTextColor.apply(doc, BLANCOSUAVE);
-        var lineas = doc.splitTextToSize(cl.c, anchoUtil);
-        for (var li = 0; li < lineas.length; li++) {
-          if (y > H - 24) break; // protección margen
-          doc.text(lineas[li], mg, y);
-          y += 3.5;
+        var sublineas = ('- ' + cl.n + '. ' + cl.c).split('\n');
+        for (var si = 0; si < sublineas.length; si++) {
+          var lineas = doc.splitTextToSize(sublineas[si], si > 0 ? anchoUtil - 6 : anchoUtil);
+          for (var li = 0; li < lineas.length; li++) {
+            if (y > H - 24) break;
+            doc.text(lineas[li], si > 0 ? mg + 6 : mg, y);
+            y += 3.5;
+          }
         }
-        y += 2;
+        y += 1.5;
       }
 
       // ---- IMAGEN PUBLICITARIA P1 ----
@@ -1408,32 +1413,35 @@ function generarPDF(silencioso) {
       y = 34;
 
       // ---- CLÁUSULAS 11-18 ----
-      doc.setFillColor.apply(doc, AZUL);
-      doc.rect(mg, y, anchoUtil, 6, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(255, 255, 255);
-      doc.text('CONDICIONES GENERALES DEL CONTRATO (continuación)', mg + 3, y + 4);
-      y += 8;
-
       for (var c2 = 10; c2 < 18; c2++) {
         var cl2 = CLAUSULAS[c2];
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.5);
-        doc.setTextColor.apply(doc, AZUL);
-        doc.text(cl2.n + '. ' + cl2.t.toUpperCase(), mg, y);
-        y += 4;
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6);
         doc.setTextColor.apply(doc, BLANCOSUAVE);
-        var lineas2 = doc.splitTextToSize(cl2.c, anchoUtil);
-        for (var li2 = 0; li2 < lineas2.length; li2++) {
-          if (y > 230) break;
-          doc.text(lineas2[li2], mg, y);
-          y += 3.5;
+        var sublineas2 = ('- ' + cl2.n + '. ' + cl2.c).split('\n');
+        for (var si2 = 0; si2 < sublineas2.length; si2++) {
+          var lineas2 = doc.splitTextToSize(sublineas2[si2], si2 > 0 ? anchoUtil - 6 : anchoUtil);
+          for (var li2 = 0; li2 < lineas2.length; li2++) {
+            if (y > 230) break;
+            doc.text(lineas2[li2], si2 > 0 ? mg + 6 : mg, y);
+            y += 3.5;
+          }
         }
-        y += 2;
+        y += 1.5;
       }
+
+      // ---- CIERRE DEL CONTRATO ----
+      y += 3;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6.5);
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      var cierreTexto = 'Y en prueba de conformidad y a su más exacto cumplimiento ambas partes firman por duplicado el presente contrato en';
+      var lineasCierre = doc.splitTextToSize(cierreTexto, anchoUtil);
+      for (var lc = 0; lc < lineasCierre.length; lc++) {
+        doc.text(lineasCierre[lc], mg, y);
+        y += 3.5;
+      }
+      y += 3;
 
       // ---- IMAGEN PUBLICITARIA P2 ----
       if (window.IMG_PUB1 && y < 220) {
@@ -1441,64 +1449,52 @@ function generarPDF(silencioso) {
       }
 
       // ---- BLOQUE FIRMAS ----
-      var yFirmas = 232;
-
-      // Línea separadora
-      doc.setFillColor.apply(doc, GRIS3);
-      doc.rect(mg, yFirmas, anchoUtil, 0.3, 'F');
-      yFirmas += 4;
+      var yFirmas = 240;
 
       var mitad = mg + anchoUtil / 2 - 4;
 
-      // Firma cliente (izquierda)
+      // Etiquetas igual que el documento original
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7);
-      doc.setTextColor.apply(doc, AZUL);
-      doc.text('EL CLIENTE', mg + (mitad - mg) / 2, yFirmas, { align: 'center' });
-      yFirmas += 2;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6);
-      doc.setTextColor.apply(doc, TEXTGRIS);
-      doc.text(g('cliente-nombre') || '—', mg + (mitad - mg) / 2, yFirmas + 3, { align: 'center' });
-      doc.text('DNI: ' + (g('cliente-dni') || '—'), mg + (mitad - mg) / 2, yFirmas + 6.5, { align: 'center' });
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      doc.text('USUARIO/A', mg, yFirmas);
+      doc.text('Por la Empresa Mantenedora', W - mg, yFirmas, { align: 'right' });
+      yFirmas += 4;
 
-      // Insertar firma cliente
+      // Firma cliente (izquierda)
       if (_firmaDataURL) {
         try {
-          doc.addImage(_firmaDataURL, 'PNG', mg + 4, yFirmas + 9, mitad - mg - 8, 22);
+          doc.addImage(_firmaDataURL, 'PNG', mg, yFirmas, mitad - mg - 4, 22);
         } catch(e) {}
       }
 
-      // Línea firma cliente
-      doc.setDrawColor.apply(doc, GRIS3);
-      doc.setLineWidth(0.3);
-      doc.line(mg + 4, yFirmas + 32, mitad - 4, yFirmas + 32);
-      doc.setFontSize(6);
-      doc.setTextColor.apply(doc, TEXTGRIS);
-      doc.text('Firma y fecha: ' + fechaStr, mg + (mitad - mg) / 2, yFirmas + 35, { align: 'center' });
-
-      // Firma empresa (derecha)
+      // Firma + sello empresa (derecha)
       var xD = mitad + 8;
       var anchoD = mg + anchoUtil - xD;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor.apply(doc, AZUL);
-      doc.text('HAROSAT ECOTECHNICAL', xD + anchoD / 2, yFirmas - 2, { align: 'center' });
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6);
-      doc.setTextColor.apply(doc, TEXTGRIS);
-      doc.text('Jesús Garzón Martín · NIF 09302345H', xD + anchoD / 2, yFirmas + 1, { align: 'center' });
-
-      // Firma + sello empresa
       if (window.IMG_FIRMA) {
-        try { doc.addImage(window.IMG_FIRMA, 'PNG', xD + 4, yFirmas + 4, anchoD - 8, 18); } catch(e) {}
+        try { doc.addImage(window.IMG_FIRMA, 'PNG', xD, yFirmas, anchoD - 26, 20); } catch(e) {}
       }
       if (window.IMG_SELLO) {
-        try { doc.addImage(window.IMG_SELLO, 'PNG', xD + anchoD - 26, yFirmas + 4, 22, 22); } catch(e) {}
+        try { doc.addImage(window.IMG_SELLO, 'PNG', mg + anchoUtil - 22, yFirmas, 22, 22); } catch(e) {}
       }
+      yFirmas += 24;
 
-      doc.line(xD + 4, yFirmas + 32, mg + anchoUtil - 4, yFirmas + 32);
-      doc.text('Firma y sello · En Haro, a ' + fechaStr, xD + anchoD / 2, yFirmas + 35, { align: 'center' });
+      // Líneas de firma
+      doc.setDrawColor.apply(doc, GRIS3);
+      doc.setLineWidth(0.3);
+      doc.line(mg, yFirmas, mitad - 4, yFirmas);
+      doc.line(xD, yFirmas, mg + anchoUtil, yFirmas);
+      yFirmas += 4;
+
+      // "Fdo.:" derecha
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6.5);
+      doc.setTextColor.apply(doc, BLANCOSUAVE);
+      doc.text('Fdo.:', W - mg, yFirmas, { align: 'right' });
+      yFirmas += 8;
+
+      // "Haro a de de"
+      doc.text('Haro a          de                          de', mg, yFirmas);
 
       // =========================================================
       // GUARDAR / DEVOLVER
