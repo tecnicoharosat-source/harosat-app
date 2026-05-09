@@ -139,7 +139,7 @@ header{background:var(--surface);border-bottom:2px solid var(--blue);padding:0 1
     <div class="g2">
       <div class="f">
         <label>Base Imponible (EUR)</label>
-        <input id="i-base" type="number" step="0.01" min="0" placeholder="0.00">
+        <input id="i-base" type="tel" placeholder="0.00" oninput="calcIva(this.value)" onchange="calcIva(this.value)">
       </div>
       <div class="f">
         <label>IVA 21% (EUR)</label>
@@ -227,23 +227,17 @@ document.addEventListener('DOMContentLoaded', function() {
   var l2=document.createElement('link'); l2.rel='icon'; l2.type='image/png'; l2.href='data:image/png;base64,'+icon; document.head.appendChild(l2);
 });
 
-// ── IVA POLLING ──
-var _baseAnterior = null;
-setInterval(function() {
-  var el = document.getElementById('i-base');
-  if (!el) return;
-  var v = el.value;
-  if (v === _baseAnterior) return;
-  _baseAnterior = v;
-  var b = parseFloat(v);
-  if (isNaN(b) || v === '') {
+// ── IVA ──
+function calcIva(v) {
+  var b = parseFloat((v||'').replace(',','.'));
+  if (isNaN(b) || (v||'').trim()==='') {
     document.getElementById('i-iva').textContent = '—';
     document.getElementById('i-total').textContent = '—';
   } else {
     document.getElementById('i-iva').textContent = (b * 0.21).toFixed(2);
     document.getElementById('i-total').textContent = (b * 1.21).toFixed(2);
   }
-}, 200);
+}
 
 // ── ESTADO ──
 var firmaImg=null, firmaTs=null, pdfBlob=null, pdfNombre='contrato.pdf';
