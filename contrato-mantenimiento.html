@@ -279,13 +279,27 @@ function cambiarTab(id,btn){
 }
 
 function calcularIVA(){
-  var el=document.getElementById('base-imponible'),val=el.value;
-  if(val===_baseAnterior)return;_baseAnterior=val;
+  var el=document.getElementById('base-imponible');
+  if(!el)return;
+  var val=el.value;
+  if(val===_baseAnterior)return;
+  _baseAnterior=val;
   var base=parseFloat(val);
-  if(isNaN(base)||base<0){document.getElementById('iva-calc').textContent='—';document.getElementById('total-calc').textContent='—';return;}
-  document.getElementById('iva-calc').textContent=(base*0.21).toFixed(2)+' €';
-  document.getElementById('total-calc').textContent=(base*1.21).toFixed(2)+' €';
+  var ei=document.getElementById('iva-calc'),et=document.getElementById('total-calc');
+  if(!ei||!et)return;
+  if(isNaN(base)||base<0){ei.textContent='—';et.textContent='—';return;}
+  ei.textContent=(base*0.21).toFixed(2)+' €';
+  et.textContent=(base*1.21).toFixed(2)+' €';
 }
+/* Asegurar que el campo dispara calcularIVA en iPad Chrome */
+document.addEventListener('DOMContentLoaded',function(){
+  var el=document.getElementById('base-imponible');
+  if(el){
+    el.addEventListener('input',calcularIVA);
+    el.addEventListener('keyup',calcularIVA);
+    el.addEventListener('change',calcularIVA);
+  }
+});
 
 function iniciarCanvas(){
   var canvas=document.getElementById('firma-canvas'),ctx=canvas.getContext('2d'),dibujando=false,hint=document.getElementById('canvas-hint');
@@ -704,3 +718,4 @@ function toast(msg,err){var t=document.getElementById('toast');t.textContent=msg
 
 </body>
 </html>
+
