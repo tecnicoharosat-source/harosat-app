@@ -243,7 +243,7 @@ var _firmaModo='manual',_firmaConfirmada=false,_firmaDataURL='',_baseAnterior=''
 document.addEventListener('DOMContentLoaded',function(){
   if(window.IMG_ICON)document.getElementById('apple-icon').href=window.IMG_ICON;
   if(window.IMG_LOGO_APP){var w=document.getElementById('header-logo-wrap');var im=document.createElement('img');im.src=window.IMG_LOGO_APP;im.className='header-logo';im.alt='HAROSAT';w.parentNode.replaceChild(im,w);}
-  document.getElementById('fecha-inicio').value=new Date().toISOString().split('T')[0];
+  /* fecha-inicio vacía por defecto — la rellena el técnico */
   document.getElementById('forma-pago').addEventListener('change',function(){document.getElementById('iban-field').style.display=this.value==='Efectivo'?'none':'block';});
   iniciarCanvas();
   document.getElementById('cliente-nombre').addEventListener('input',actualizarPreviewAuto);
@@ -395,7 +395,7 @@ function generarPDF(silencioso){
         doc.text('CIF/NIF 09302345H',W/2,32,{align:'center'});
         /* LUNES A VIERNES derecha */
         doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
-        doc.text('LUNES A VIERNES',W-mg-8,27);
+        doc.text('LUNES A VIERNES',W-mg,27,{align:'right'});
         /* Línea separadora */
         doc.setLineWidth(0.5);doc.line(mg,42,W-mg,42);
         /* Título contrato + página */
@@ -551,9 +551,9 @@ function generarPDF(silencioso){
       /* Firma cliente izquierda */
       if(_firmaDataURL){try{doc.addImage(_firmaDataURL,'PNG',mg,y,mitad-mg-10,22);}catch(e){}}
       /* Firma encima del sello, ambos a la derecha */
-      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',mitad+4,y,36,16);}catch(e){}}
-      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',mitad+4,y+14,32,18);}catch(e){}}
-      y+=34;
+      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',mitad+4,y,38,18);}catch(e){}}
+      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',mitad+4,y+20,32,18);}catch(e){}}
+      y+=40;
 
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
       doc.text('Fdo.:',W-mg,y,{align:'right'});
@@ -614,7 +614,7 @@ function resetearTodo(){
   document.getElementById('iva-calc').textContent='—';document.getElementById('total-calc').textContent='—';
   limpiarCanvas();_firmaConfirmada=false;_firmaDataURL='';_pdfBlob=null;_baseAnterior='';
   actualizarStatusFirma();
-  document.getElementById('fecha-inicio').value=new Date().toISOString().split('T')[0];
+  /* fecha-inicio vacía por defecto — la rellena el técnico */
   cambiarTab('datos',document.querySelectorAll('.tab-btn')[0]);
   toast('✓ Formulario limpiado');
 }
