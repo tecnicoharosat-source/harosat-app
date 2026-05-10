@@ -221,12 +221,32 @@ input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-ou
     <div class="form-section-header"><div class="section-bar" style="background:var(--green)"></div><div class="form-section-title" style="color:var(--green2)">📄 Generar y Enviar</div></div>
     <div class="form-section-body">
       <button class="btn btn-yellow" onclick="generarPDF(false)">⬇️ Descargar PDF</button>
+      <button class="btn" style="background:#7c3aed;color:#fff;" onclick="guardarYEnviar()">✍️ Enviar para firmar</button>
       <button class="btn btn-green" onclick="compartirWhatsApp()">📲 WhatsApp</button>
       <button class="btn btn-primary" onclick="compartirGmail()">📧 Gmail</button>
       <button class="btn btn-outline" onclick="compartirNativo()">🔗 Compartir</button>
       <div class="divider"></div>
       <button class="btn btn-danger" onclick="resetearTodo()">🗑️ Nuevo contrato</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL ENVÍO FIRMA -->
+
+<div id="modal-envio-firma" style="visibility:hidden;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9990;display:flex;align-items:center;justify-content:center;padding:16px;transition:opacity .2s;">
+  <div style="background:#111827;border:1px solid #1f2937;border-radius:14px;padding:24px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;">
+    <div style="font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:4px;">✍️ Enviar para firmar</div>
+    <div id="ef-sub" style="font-size:12px;color:#64748b;margin-bottom:16px;"></div>
+    <div style="background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:10px 14px;margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;margin-bottom:5px;">Enlace de firma</div>
+      <div id="ef-link" style="font-size:11px;color:#60a5fa;word-break:break-all;font-family:'JetBrains Mono',monospace;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+      <button id="ef-wa" style="width:100%;padding:13px;border:none;border-radius:10px;background:#25D366;color:#000;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">📲 Enviar por WhatsApp</button>
+      <button id="ef-gmail" style="width:100%;padding:13px;border:none;border-radius:10px;background:#fff;color:#374151;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">📧 Enviar por Gmail</button>
+      <button id="ef-copy" style="width:100%;padding:13px;border:1px solid #1f2937;border-radius:10px;background:#1a2233;color:#f1f5f9;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">📋 Copiar enlace</button>
+    </div>
+    <button onclick="document.getElementById('modal-envio-firma').style.visibility='hidden';document.getElementById('modal-envio-firma').style.opacity=0;" style="width:100%;padding:10px;border:1px solid #1f2937;border-radius:8px;background:transparent;color:#64748b;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cerrar</button>
   </div>
 </div>
 
@@ -592,7 +612,55 @@ function generarPDF(silencioso){
   },100);
 }
 
-function compartirWhatsApp(){
+function guardarYEnviar(){
+  var nombre=g('cliente-nombre');
+  if(!nombre){toast('Rellena al menos el nombre del cliente',true);return;}
+  mostrarLoading(true);
+  var base=parseFloat(document.getElementById('base-imponible').value)||0;
+  var fi=document.getElementById('fecha-inicio').value;
+  var anyo=fi?fi.split('-')[0]:new Date().getFullYear();
+  var numC=g('num-contrato')||('CONT-'+anyo+'-'+Date.now().toString().slice(-4));
+  var row={
+    numero:numC,
+    fecha_inicio:fi||null,
+    tipo_instalacion:g('tipo-instalacion'),
+    marca:g('marca'),modelo:g('modelo'),
+    num_serie:g('num-serie'),potencia:g('potencia'),
+    ubicacion:g('ubicacion'),anyo_instalacion:g('anyo-instalacion'),
+    cliente_nombre:nombre,cliente_dni:g('cliente-dni'),
+    cliente_dir:g('cliente-dir'),cliente_pob:g('cliente-pob'),
+    cliente_cp:g('cliente-cp'),cliente_tel:g('cliente-tel'),
+    cliente_email:g('cliente-email'),cliente_iban:g('cliente-iban'),
+    forma_pago:g('forma-pago'),
+    base_imponible:base,iva:parseFloat((base*0.21).toFixed(2)),
+    total:parseFloat((base*1.21).toFixed(2)),
+    observaciones:g('observaciones'),
+    estado_firma:'pendiente'
+  };
+  var SURL='https://sobiyfyzalynxcpfoldc.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+  var SH={apikey:SKEY,Authorization:'Bearer '+SKEY,'Content-Type':'application/json',Prefer:'return=representation'};
+  fetch(SURL+'/rest/v1/contratos',{method:'POST',headers:SH,body:JSON.stringify(row)})
+    .then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error(t);});return r.json();})
+    .then(function(d){
+      mostrarLoading(false);
+      var id=Array.isArray(d)?d[0].id:d.id;
+      var enlace='https://tecnicoharosat-source.github.io/harosat-app/cliente-contrato-firma.html?id='+id;
+      var tel=g('cliente-tel').replace(/\D/g,'');
+      var txtWA=encodeURIComponent('✍️ *Contrato de Mantenimiento — HAROSAT Ecotechnical*\n\nEstimado/a '+nombre+',\n\nLe enviamos el enlace para firmar su contrato de mantenimiento.\n\n👉 '+enlace+'\n\n_Pulse el enlace y fírmelo desde su móvil._\n\nHAROSAT Ecotechnical · 640 05 64 84');
+      var asunto=encodeURIComponent('Contrato de mantenimiento para firmar — HAROSAT');
+      var cuerpo=encodeURIComponent('Estimado/a '+nombre+',\n\nLe enviamos el enlace para firmar su contrato de mantenimiento.\n\n'+enlace+'\n\nGracias,\nHAROSAT Ecotechnical\n640 05 64 84');
+      /* Mostrar modal de envío */
+      document.getElementById('ef-link').textContent=enlace;
+      document.getElementById('ef-sub').textContent=numC+' · '+nombre;
+      document.getElementById('ef-wa').onclick=function(){window.open(tel?'https://wa.me/34'+tel+'?text='+txtWA:'https://wa.me/?text='+txtWA,'_blank');};
+      document.getElementById('ef-gmail').onclick=function(){window.open('https://mail.google.com/mail/?view=cm&su='+asunto+'&body='+cuerpo,'_blank');};
+      document.getElementById('ef-copy').onclick=function(){navigator.clipboard.writeText(enlace).then(function(){toast('Enlace copiado ✓');}).catch(function(){toast('No se pudo copiar',true);});};
+      document.getElementById('modal-envio-firma').style.visibility='visible';
+      document.getElementById('modal-envio-firma').style.opacity='1';
+    })
+    .catch(function(e){mostrarLoading(false);toast('Error al guardar: '+e.message,true);});
+}
   var total=((parseFloat(document.getElementById('base-imponible').value)||0)*1.21).toFixed(2);
   var tel=g('cliente-tel').replace(/\D/g,'');
   var msg=encodeURIComponent('Hola, '+g('cliente-nombre')+'.\n\nTe envío el contrato de mantenimiento de tu instalación térmica.\nImporte total: '+total+' €\n\nHAROSAT Ecotechnical · www.harosat.es');
