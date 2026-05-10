@@ -263,10 +263,15 @@ var _firmaModo='manual',_firmaConfirmada=false,_firmaDataURL='',_baseAnterior=''
 document.addEventListener('DOMContentLoaded',function(){
   if(window.IMG_ICON)document.getElementById('apple-icon').href=window.IMG_ICON;
   if(window.IMG_LOGO_APP){var w=document.getElementById('header-logo-wrap');var im=document.createElement('img');im.src=window.IMG_LOGO_APP;im.className='header-logo';im.alt='HAROSAT';w.parentNode.replaceChild(im,w);}
-  /* fecha-inicio vacía por defecto — la rellena el técnico */
   document.getElementById('forma-pago').addEventListener('change',function(){document.getElementById('iban-field').style.display=this.value==='Efectivo'?'none':'block';});
   iniciarCanvas();
   document.getElementById('cliente-nombre').addEventListener('input',actualizarPreviewAuto);
+  var elBase=document.getElementById('base-imponible');
+  if(elBase){
+    elBase.addEventListener('input',calcularIVA);
+    elBase.addEventListener('keyup',calcularIVA);
+    elBase.addEventListener('change',calcularIVA);
+  }
   setInterval(calcularIVA,200);
 });
 
@@ -291,15 +296,7 @@ function calcularIVA(){
   ei.textContent=(base*0.21).toFixed(2)+' €';
   et.textContent=(base*1.21).toFixed(2)+' €';
 }
-/* Asegurar que el campo dispara calcularIVA en iPad Chrome */
-document.addEventListener('DOMContentLoaded',function(){
-  var el=document.getElementById('base-imponible');
-  if(el){
-    el.addEventListener('input',calcularIVA);
-    el.addEventListener('keyup',calcularIVA);
-    el.addEventListener('change',calcularIVA);
-  }
-});
+
 
 function iniciarCanvas(){
   var canvas=document.getElementById('firma-canvas'),ctx=canvas.getContext('2d'),dibujando=false,hint=document.getElementById('canvas-hint');
@@ -718,4 +715,3 @@ function toast(msg,err){var t=document.getElementById('toast');t.textContent=msg
 
 </body>
 </html>
-
