@@ -173,8 +173,8 @@ input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-ou
       <div class="divider"></div>
       <div class="field"><label>Base Imponible (€)</label><input type="number" inputmode="decimal" id="base-imponible" placeholder="0.00" step="0.01" min="0" oninput="calcularIVA()" onkeyup="calcularIVA()" onchange="calcularIVA()" onblur="calcularIVA()" ontouchend="setTimeout(calcularIVA,100)"></div>
       <div class="grid-2">
-        <div class="field"><label>Importe IVA 21%</label><div class="campo-calc" id="iva-calc">—</div></div>
-        <div class="field"><label>Total</label><div class="campo-calc" id="total-calc">—</div></div>
+        <div class="field"><label>Importe IVA 21%</label><input type="text" readonly id="iva-calc" class="campo-calc" value="—" style="cursor:default;"></div>
+        <div class="field"><label>Total</label><input type="text" readonly id="total-calc" class="campo-calc" value="—" style="cursor:default;"></div>
       </div>
       <div class="field"><label>Observaciones</label><textarea id="observaciones" placeholder="Notas adicionales…"></textarea></div>
     </div>
@@ -291,9 +291,9 @@ function calcularIVA(){
   if(isNaN(base))base=el.valueAsNumber;
   var ei=document.getElementById('iva-calc'),et=document.getElementById('total-calc');
   if(!ei||!et)return;
-  if(isNaN(base)||base<=0){ei.textContent='—';et.textContent='—';return;}
-  ei.textContent=(base*0.21).toFixed(2)+' €';
-  et.textContent=(base*1.21).toFixed(2)+' €';
+  if(isNaN(base)||base<=0){ei.value='—';et.value='—';return;}
+  ei.value=(base*0.21).toFixed(2)+' €';
+  et.value=(base*1.21).toFixed(2)+' €';
 }
 
 
@@ -700,7 +700,7 @@ function resetearTodo(){
   if(!confirm('¿Borrar todos los datos y empezar un contrato nuevo?'))return;
   var ids=['tipo-instalacion','marca','modelo','num-serie','potencia','ubicacion','anyo-instalacion','cliente-nombre','cliente-dni','cliente-dir','cliente-pob','cliente-cp','cliente-tel','cliente-email','forma-pago','cliente-iban','base-imponible','num-contrato','observaciones'];
   for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.value=el.tagName==='SELECT'?el.options[0].value:'';}
-  document.getElementById('iva-calc').textContent='—';document.getElementById('total-calc').textContent='—';
+  document.getElementById('iva-calc').value='—';document.getElementById('total-calc').value='—';
   limpiarCanvas();_firmaConfirmada=false;_firmaDataURL='';_pdfBlob=null;_baseAnterior='';
   actualizarStatusFirma();
   /* fecha-inicio vacía por defecto — la rellena el técnico */
