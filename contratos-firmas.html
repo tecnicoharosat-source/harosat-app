@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT · Firmar Contrato</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f8fafc;--s1:#fff;--border:#e2e8f0;--blue:#2563a8;--blue2:#3B8AC7;--green:#16a34a;--red:#dc2626;--txt:#1e293b;--muted:#64748b;--r:12px;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+.header{background:var(--blue);color:#fff;padding:16px 20px;text-align:center;}
+.header h1{font-size:18px;font-weight:800;letter-spacing:.05em;}
+.header p{font-size:12px;opacity:.8;margin-top:2px;}
+.container{max-width:600px;margin:0 auto;padding:20px 16px 40px;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
+.card-hdr{background:#f1f5f9;border-bottom:1px solid var(--border);padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.card-body{padding:14px 16px;}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.04);}
+.row:last-child{border-bottom:none;}
+.row-lbl{font-size:12px;color:var(--muted);}
+.row-val{font-size:13px;font-weight:600;color:var(--txt);text-align:right;}
+.row-val.total{font-size:18px;color:var(--blue);font-weight:800;}
+.clausulas{font-size:11.5px;line-height:1.7;color:#374151;white-space:pre-wrap;word-break:break-word;}
+.firma-section{text-align:center;}
+.firma-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ftab{padding:9px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+.ftab.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.canvas-wrap{position:relative;border:2px dashed var(--border);border-radius:10px;overflow:hidden;background:#fff;}
+#firma-canvas{display:block;width:100%;height:180px;touch-action:none;cursor:crosshair;}
+.canvas-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:var(--muted);pointer-events:none;text-align:center;}
+.auto-block{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;margin-bottom:10px;}
+#auto-preview{font-size:28px;font-style:italic;font-weight:300;color:var(--muted);min-height:44px;}
+.firma-status{margin:10px 0;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;text-align:center;}
+.ok{background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.3);}
+.empty{background:rgba(220,38,38,.06);color:var(--red);border:1px solid rgba(220,38,38,.2);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:all .15s;}
+.btn:active{transform:scale(.98);}
+.btn-clear{background:#f1f5f9;color:var(--muted);border:1px solid var(--border);}
+.btn-sign{background:var(--blue);color:#fff;}
+.btn-sign:disabled{background:#94a3b8;cursor:not-allowed;}
+.btn-submit{background:var(--green);color:#fff;font-size:16px;margin-top:16px;}
+.btn-submit:disabled{background:#94a3b8;cursor:not-allowed;}
+.loading{text-align:center;padding:60px 20px;color:var(--muted);}
+.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.result-ok{text-align:center;padding:60px 20px;}
+.result-ok .icon{font-size:64px;margin-bottom:16px;}
+.result-ok h2{font-size:22px;font-weight:800;color:var(--green);margin-bottom:8px;}
+.result-ok p{font-size:14px;color:var(--muted);}
+.error-box{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2);border-radius:10px;padding:16px;color:var(--red);text-align:center;margin:20px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>HAROSAT ECOTECHNICAL</h1>
+  <p>Contrato de Mantenimiento · Firma digital</p>
+</div>
+
+<div class="container" id="app">
+  <div class="loading"><div class="spinner"></div>Cargando contrato...</div>
+</div>
+
+<script>
+var SUPA_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
+var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+var H={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json',Prefer:'return=representation'};
+
+var contratoId=null;
+var contrato=null;
+var firmaModo='manual';
+var firmaConfirmada=false;
+var firmaDataURL='';
+
+function getParam(n){return new URLSearchParams(window.location.search).get(n);}
+
+function cargar(){
+  contratoId=getParam('id');
+  if(!contratoId){mostrarError('Enlace no válido. Falta el identificador del contrato.');return;}
+  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+contratoId+'&select=*',{headers:H})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||!d.length){mostrarError('Contrato no encontrado.');return;}
+      contrato=d[0];
+      if(contrato.estado_firma==='firmado'||contrato.estado_firma==='aceptado'){
+        mostrarYaFirmado();return;
+      }
+      renderContrato();
+    })
+    .catch(function(){mostrarError('Error de conexión. Inténtelo de nuevo.');});
+}
+
+function mostrarError(msg){
+  document.getElementById('app').innerHTML='<div class="error-box">⚠️ '+msg+'</div>';
+}
+
+function mostrarYaFirmado(){
+  document.getElementById('app').innerHTML='<div class="result-ok"><div class="icon">✅</div><h2>Ya firmado</h2><p>Este contrato ya ha sido firmado anteriormente. Gracias.</p></div>';
+}
+
+function fn(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function renderContrato(){
+  var c=contrato;
+  var fd=c.fecha_inicio?c.fecha_inicio.split('-').reverse().join('/'):'—';
+
+  var html=
+    '<div class="card"><div class="card-hdr">Datos del aparato</div><div class="card-body">'+
+    row('Tipo',c.tipo_instalacion)+row('Marca / Modelo',(c.marca||'')+(c.modelo?' '+c.modelo:''))+
+    row('Nº Serie',c.num_serie)+row('Potencia',c.potencia?c.potencia+' kW':'')+
+    row('Ubicación',c.ubicacion)+
+    '</div></div>'+
+    '<div class="card"><div class="card-hdr">Datos del cliente</div><div class="card-body">'+
+    row('Nombre',c.cliente_nombre)+row('NIF/DNI',c.cliente_dni)+
+    row('Dirección',c.cliente_dir+(c.cliente_pob?', '+c.cliente_pob:'')+( c.cliente_cp?' '+c.cliente_cp:''))+
+    row('Teléfono',c.cliente_tel)+
+    '</div></div>'+
+    '<div class="card"><div class="card-hdr">Condiciones económicas</div><div class="card-body">'+
+    row('Entrada en vigor',fd)+row('Forma de pago',c.forma_pago)+
+    row('Base imponible',fn(c.base_imponible)+' €')+row('IVA 21%',fn(c.iva)+' €')+
+    '<div class="row"><span class="row-lbl">Total</span><span class="row-val total">'+fn(c.total)+' €</span></div>'+
+    '</div></div>'+
+    '<div class="card"><div class="card-hdr">Condiciones generales del contrato</div><div class="card-body">'+
+    '<div class="clausulas">'+clausulasTexto()+'</div></div></div>'+
+    '<div class="card"><div class="card-hdr">Firma del cliente</div><div class="card-body firma-section">'+
+    '<div class="firma-tabs">'+
+    '<button class="ftab active" id="tab-manual" onclick="setModo(\'manual\')">✋ Manual</button>'+
+    '<button class="ftab" id="tab-auto" onclick="setModo(\'auto\')">🖊️ Automática</button>'+
+    '</div>'+
+    '<div id="bloque-manual">'+
+    '<div class="canvas-wrap"><canvas id="firma-canvas"></canvas><div class="canvas-hint" id="canvas-hint">Firme aquí con el dedo</div></div>'+
+    '<button class="btn btn-clear" style="margin-top:8px" onclick="limpiar()">🗑️ Borrar</button>'+
+    '<button class="btn btn-sign" onclick="confirmarManual()">✓ Confirmar firma</button>'+
+    '</div>'+
+    '<div id="bloque-auto" style="display:none">'+
+    '<div class="auto-block"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Vista previa</div><div id="auto-preview">'+esc(c.cliente_nombre||'—')+'</div></div>'+
+    '<button class="btn btn-sign" onclick="confirmarAuto()">✓ Usar firma automática</button>'+
+    '</div>'+
+    '<div id="firma-status" class="firma-status empty">Sin firma</div>'+
+    '</div></div>'+
+    '<button class="btn btn-submit" id="btn-enviar" onclick="enviarFirma()" disabled>✅ Firmar contrato</button>';
+
+  document.getElementById('app').innerHTML=html;
+  iniciarCanvas();
+}
+
+function row(l,v){if(!v)return '';return '<div class="row"><span class="row-lbl">'+l+'</span><span class="row-val">'+esc(v)+'</span></div>';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function clausulasTexto(){
+  return [
+    '- 1. El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.',
+    '- 2. La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.',
+    '- 3. En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.',
+    '- 4. Será por cuenta del usuario el valor de las piezas averiadas sustituidas.',
+    '- 5. Quedan expresamente excluidas de este contrato:\n    - Las averías producidas por fuerza mayor.\n    - Las máquinas y componentes conectados al aparato objeto de contrato.\n    - Las averías provocadas por falta de suministro de combustible.\n    - Las reparaciones fuera del horario laboral.',
+    '- 6. Los aparatos estarán accesibles para su mantenimiento. En caso contrario los costes de desmontaje correrán a cargo del cliente.',
+    '- 7. Este contrato quedará automáticamente rescindido si el aparato fuera manipulado por personal ajeno a la empresa mantenedora.',
+    '- 8. En ningún caso la rescisión por parte del usuario dará derecho a la devolución de importe alguno.',
+    '- 9. La empresa mantenedora asume la cualidad de empresario respecto de los empleados que realicen las tareas derivadas de este contrato.',
+    '- 10. El importe será revisado anualmente en el momento de la renovación.',
+    '- 11. El pago deberá ser abonado dentro del primer mes de la entrada en vigor.',
+    '- 12. Este contrato no acredita por sí solo que el pago haya sido satisfecho.',
+    '- 13. Al hacerse cargo del mantenimiento, el titular entregará: proyecto o memoria técnica, certificado de la instalación y certificado de inspección inicial.',
+    '- 14. El titular es responsable del cumplimiento del RITE desde la recepción provisional.',
+    '- 15. Ambas partes se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora.',
+    '- 16. Los firmantes declaran que los datos indicados son ciertos y otorgan consentimiento para su tratamiento automatizado.',
+    '- 17. Los datos serán incorporados a un fichero responsabilidad de la empresa mantenedora.',
+    '- 18. La atención al cliente se realizará de lunes a viernes de 8:00 a 15:00, siempre con cita previa.'
+  ].join('\n\n');
+}
+
+function iniciarCanvas(){
+  var canvas=document.getElementById('firma-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var dibujando=false;
+  function ajustar(){var r=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=r.width*dpr;canvas.height=r.height*dpr;ctx.scale(dpr,dpr);ctx.strokeStyle='#1e293b';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';}
+  ajustar();
+  function pos(e){var r=canvas.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+  canvas.addEventListener('mousedown',function(e){e.preventDefault();dibujando=true;document.getElementById('canvas-hint').style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener('mouseup',function(){dibujando=false;});
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();dibujando=true;document.getElementById('canvas-hint').style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',function(){dibujando=false;});
+}
+
+function setModo(m){
+  firmaModo=m;
+  document.getElementById('tab-manual').classList.toggle('active',m==='manual');
+  document.getElementById('tab-auto').classList.toggle('active',m==='auto');
+  document.getElementById('bloque-manual').style.display=m==='manual'?'block':'none';
+  document.getElementById('bloque-auto').style.display=m==='auto'?'block':'none';
+  firmaConfirmada=false;firmaDataURL='';actualizarStatus();
+}
+
+function limpiar(){
+  var c=document.getElementById('firma-canvas');
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+  document.getElementById('canvas-hint').style.display='block';
+  firmaConfirmada=false;firmaDataURL='';actualizarStatus();
+}
+
+function confirmarManual(){
+  var c=document.getElementById('firma-canvas'),ctx=c.getContext('2d'),d=ctx.getImageData(0,0,c.width,c.height).data,vacio=true;
+  for(var i=3;i<d.length;i+=4){if(d[i]>0){vacio=false;break;}}
+  if(vacio){alert('Por favor, dibuje su firma primero.');return;}
+  firmaDataURL=c.toDataURL('image/png');firmaConfirmada=true;actualizarStatus();
+}
+
+function confirmarAuto(){
+  var nombre=contrato.cliente_nombre||'';
+  if(!nombre){alert('No hay nombre de cliente.');return;}
+  var c=document.createElement('canvas');c.width=400;c.height=120;
+  var ctx=c.getContext('2d');ctx.clearRect(0,0,400,120);
+  ctx.font='italic 300 48px Georgia,serif';ctx.fillStyle='#1e293b';ctx.textBaseline='middle';ctx.fillText(nombre,20,60);
+  firmaDataURL=c.toDataURL('image/png');firmaConfirmada=true;actualizarStatus();
+}
+
+function actualizarStatus(){
+  var el=document.getElementById('firma-status');
+  var btn=document.getElementById('btn-enviar');
+  if(firmaConfirmada){
+    el.className='firma-status ok';el.textContent='✓ Firma lista';
+    btn.disabled=false;
+  }else{
+    el.className='firma-status empty';el.textContent='Sin firma';
+    btn.disabled=true;
+  }
+}
+
+function enviarFirma(){
+  if(!firmaConfirmada){alert('Por favor confirme su firma primero.');return;}
+  var btn=document.getElementById('btn-enviar');
+  btn.disabled=true;btn.textContent='Enviando...';
+  var row={estado_firma:'firmado',firma_img:firmaDataURL,fecha_firma:new Date().toISOString()};
+  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+contratoId,{method:'PATCH',headers:H,body:JSON.stringify(row)})
+    .then(function(r){if(!r.ok)throw new Error('Error '+r.status);return r;})
+    .then(function(){
+      document.getElementById('app').innerHTML=
+        '<div class="result-ok"><div class="icon">✅</div>'+
+        '<h2>¡Contrato firmado!</h2>'+
+        '<p>Su firma ha sido registrada correctamente.<br>HAROSAT Ecotechnical se pondrá en contacto con usted.</p>'+
+        '<p style="margin-top:16px;font-size:12px;color:var(--muted)">Puede cerrar esta ventana.</p></div>';
+    })
+    .catch(function(e){
+      btn.disabled=false;btn.textContent='✅ Firmar contrato';
+      alert('Error al enviar la firma: '+e.message+'. Inténtelo de nuevo.');
+    });
+}
+
+cargar();
+</script>
+
+</body>
+</html>
