@@ -552,11 +552,11 @@ function generarPDF(silencioso){
       if(_firmaDataURL){try{doc.addImage(_firmaDataURL,'PNG',mg,y,mitad-mg-10,22);}catch(e){}}
 
       /* Firma encima del sello — ambos bajo "Por la Empresa Mantenedora" a la derecha */
-      var xEmp=mitad+4;
-      var anchoEmp=W-mg-xEmp;
-      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',xEmp,y,anchoEmp,16);}catch(e){}}
-      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',xEmp,y+18,anchoEmp,16);}catch(e){}}
-      y+=36;
+      /* Ancho fijo proporcional como en la plantilla original */
+      var xEmp=W-mg-50;
+      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',xEmp,y,46,14);}catch(e){}}
+      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',xEmp,y+16,46,14);}catch(e){}}
+      y+=34;
 
       /* Líneas de firma */
       doc.setDrawColor.apply(doc,NK);doc.setLineWidth(0.3);
