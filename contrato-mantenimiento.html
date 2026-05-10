@@ -546,18 +546,27 @@ function generarPDF(silencioso){
       doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
       doc.text('USUARIO/A',mg,y);
       doc.text('Por la Empresa Mantenedora',W-mg,y,{align:'right'});
-      y+=4;
+      y+=5;
 
       /* Firma cliente izquierda */
       if(_firmaDataURL){try{doc.addImage(_firmaDataURL,'PNG',mg,y,mitad-mg-10,22);}catch(e){}}
-      /* Firma encima del sello, ambos a la derecha */
-      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',mitad+4,y,38,18);}catch(e){}}
-      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',mitad+4,y+20,32,18);}catch(e){}}
-      y+=40;
+
+      /* Firma encima del sello — ambos bajo "Por la Empresa Mantenedora" a la derecha */
+      var xEmp=mitad+4;
+      var anchoEmp=W-mg-xEmp;
+      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',xEmp,y,anchoEmp,16);}catch(e){}}
+      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',xEmp,y+18,anchoEmp,16);}catch(e){}}
+      y+=36;
+
+      /* Líneas de firma */
+      doc.setDrawColor.apply(doc,NK);doc.setLineWidth(0.3);
+      doc.line(mg,y,mitad-4,y);
+      doc.line(mitad+4,y,W-mg,y);
+      y+=5;
 
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
       doc.text('Fdo.:',W-mg,y,{align:'right'});
-      y+=12;
+      y+=10;
       doc.text('Haro a          de                          de',mg,y);
 
       /* ---- GUARDAR ---- */
