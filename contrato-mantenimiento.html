@@ -553,9 +553,9 @@ function generarPDF(silencioso){
 
       /* Firma encima del sello — proporciones reales calculadas de los píxeles */
       /* Firma 375x390px → 40x42mm  |  Sello 233x159px → 55x37mm */
-      /* Ambos alineados a la derecha, centrados entre sí */
       var fW=40, fH=42, sW=55, sH=37;
       var xFirma=W-mg-fW, xSello=W-mg-sW;
+      var xEmp=xSello;
       if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',xFirma,y,fW,fH);}catch(e){}}
       if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',xSello,y+fH+2,sW,sH);}catch(e){}}
       y+=fH+sH+6;
