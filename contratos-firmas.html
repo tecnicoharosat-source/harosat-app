@@ -4,256 +4,327 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAROSAT · Firmar Contrato</title>
+<title>HAROSAT · Contratos de Mantenimiento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#f8fafc;--s1:#fff;--border:#e2e8f0;--blue:#2563a8;--blue2:#3B8AC7;--green:#16a34a;--red:#dc2626;--txt:#1e293b;--muted:#64748b;--r:12px;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
-.header{background:var(--blue);color:#fff;padding:16px 20px;text-align:center;}
-.header h1{font-size:18px;font-weight:800;letter-spacing:.05em;}
-.header p{font-size:12px;opacity:.8;margin-top:2px;}
-.container{max-width:600px;margin:0 auto;padding:20px 16px 40px;}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
-.card-hdr{background:#f1f5f9;border-bottom:1px solid var(--border);padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
-.card-body{padding:14px 16px;}
-.row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.04);}
-.row:last-child{border-bottom:none;}
-.row-lbl{font-size:12px;color:var(--muted);}
-.row-val{font-size:13px;font-weight:600;color:var(--txt);text-align:right;}
-.row-val.total{font-size:18px;color:var(--blue);font-weight:800;}
-.clausulas{font-size:11.5px;line-height:1.7;color:#374151;white-space:pre-wrap;word-break:break-word;}
-.firma-section{text-align:center;}
-.firma-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.ftab{padding:9px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
-.ftab.active{background:var(--blue);border-color:var(--blue);color:#fff;}
-.canvas-wrap{position:relative;border:2px dashed var(--border);border-radius:10px;overflow:hidden;background:#fff;}
-#firma-canvas{display:block;width:100%;height:180px;touch-action:none;cursor:crosshair;}
-.canvas-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:var(--muted);pointer-events:none;text-align:center;}
-.auto-block{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;margin-bottom:10px;}
-#auto-preview{font-size:28px;font-style:italic;font-weight:300;color:var(--muted);min-height:44px;}
-.firma-status{margin:10px 0;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;text-align:center;}
-.ok{background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.3);}
-.empty{background:rgba(220,38,38,.06);color:var(--red);border:1px solid rgba(220,38,38,.2);}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:all .15s;}
-.btn:active{transform:scale(.98);}
-.btn-clear{background:#f1f5f9;color:var(--muted);border:1px solid var(--border);}
-.btn-sign{background:var(--blue);color:#fff;}
-.btn-sign:disabled{background:#94a3b8;cursor:not-allowed;}
-.btn-submit{background:var(--green);color:#fff;font-size:16px;margin-top:16px;}
-.btn-submit:disabled{background:#94a3b8;cursor:not-allowed;}
-.loading{text-align:center;padding:60px 20px;color:var(--muted);}
-.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.result-ok{text-align:center;padding:60px 20px;}
-.result-ok .icon{font-size:64px;margin-bottom:16px;}
-.result-ok h2{font-size:22px;font-weight:800;color:var(--green);margin-bottom:8px;}
-.result-ok p{font-size:14px;color:var(--muted);}
-.error-box{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2);border-radius:10px;padding:16px;color:var(--red);text-align:center;margin:20px 0;}
+:root{--bg:#060910;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--border:#30363d;--blue:#1f6feb;--blue2:#388bfd;--green:#3fb950;--red:#f85149;--orange:#d29922;--gold:#e3b341;--purple:#a371f7;--text:#e6edf3;--muted:#7d8590;--light:#b1bac4;--r:10px;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.topbar{height:52px;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.logo{font-weight:800;font-size:16px;letter-spacing:.08em;}
+.logo span{color:var(--blue2);}
+.logo small{font-weight:300;color:var(--muted);font-size:13px;margin-left:6px;}
+.sync{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);background:var(--s2);border:1px solid var(--border);padding:5px 12px;border-radius:20px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.dot.syncing{background:var(--orange);animation:pulse 1s infinite;}
+.dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.content{padding:24px;max-width:1100px;margin:0 auto;}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.kpi-val{font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;color:white;}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.fbtn{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s2);color:var(--muted);transition:all .12s;white-space:nowrap;}
+.fbtn.active{background:var(--blue);color:white;border-color:var(--blue);}
+.fbtn:hover:not(.active){color:var(--text);border-color:var(--blue2);}
+.search{flex:1;min-width:200px;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;}
+.search:focus{outline:none;border-color:var(--blue);}
+.search::placeholder{color:var(--muted);}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.card-title{font-size:13px;font-weight:700;color:white;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:10px 14px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:11px 14px;border-bottom:1px solid rgba(48,54,61,.5);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.mono{font-family:'JetBrains Mono',monospace;}
+.num{text-align:right;font-family:'JetBrains Mono',monospace;}
+.empty{text-align:center;padding:48px 20px;color:var(--muted);}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+.b-pendiente{background:rgba(48,54,61,.6);color:var(--muted);}
+.b-enviado{background:rgba(56,139,253,.15);color:#79c0ff;}
+.b-firmado{background:rgba(163,113,247,.15);color:var(--purple);}
+.b-aceptado{background:rgba(63,185,80,.15);color:var(--green);}
+.b-rechazado{background:rgba(248,81,73,.15);color:#ff7b72;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .12s;white-space:nowrap;}
+.btn-blue{background:var(--blue);color:white;}
+.btn-blue:hover{background:var(--blue2);}
+.btn-ghost{background:var(--s2);color:var(--light);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--s3);color:white;}
+.btn-green{background:var(--green);color:#000;}
+.btn-green:hover{opacity:.85;}
+.btn-red{background:transparent;color:var(--red);border:1px solid var(--red);}
+.btn-red:hover{background:var(--red);color:white;}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.overlay{visibility:hidden;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;transition:opacity .2s;}
+.overlay.open{visibility:visible;opacity:1;}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+.modal-title{font-size:17px;font-weight:800;color:white;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
+.link-box{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:16px;}
+.link-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:5px;}
+.link-url{font-size:11px;color:#79c0ff;word-break:break-all;font-family:'JetBrains Mono',monospace;}
+.send-btns{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.send-btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .12s;}
+.send-btn:active{transform:scale(.98);}
+.send-wa{background:#25D366;color:#000;}
+.send-wa:hover{background:#1ebe5d;}
+.send-gmail{background:white;color:#374151;}
+.send-gmail:hover{background:#f3f4f6;}
+.send-copy{background:var(--s3);color:var(--text);border:1px solid var(--border);}
+.send-copy:hover{background:var(--s2);}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
+.side-bg{visibility:hidden;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;transition:opacity .2s;}
+.side-bg.open{visibility:visible;opacity:1;}
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--s1);border-left:1px solid var(--border);overflow-y:auto;z-index:301;transform:translateX(100%);transition:transform .25s ease;}
+.side-panel.open{transform:translateX(0);}
+.side-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--s1);z-index:5;}
+.side-num{font-size:17px;font-weight:800;color:var(--blue2);}
+.side-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 6px;}
+.side-close:hover{color:var(--text);}
+.side-bd{padding:20px;}
+.s-sec{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.8rem 0 .4rem;}
+.s-sec:first-child{margin-top:0;}
+.s-blk{background:var(--s2);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.s-row{display:flex;justify-content:space-between;align-items:flex-start;padding:3px 0;font-size:12px;}
+.s-lbl{color:var(--muted);flex-shrink:0;margin-right:8px;}
+.s-val{color:var(--text);font-weight:500;text-align:right;}
+.s-actions{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-bottom:24px;}
+.firma-img{width:100%;border:1px solid var(--border);border-radius:8px;background:#f8fafc;margin-top:4px;}
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:rgba(63,185,80,.4);color:var(--green);}
+.toast.err{border-color:rgba(248,81,73,.4);color:var(--red);}
+.toast.info{border-color:rgba(56,139,253,.4);color:var(--blue2);}
+@media(max-width:800px){.kpis{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:540px){.kpis{grid-template-columns:repeat(2,1fr);}.content{padding:14px;}}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>HAROSAT ECOTECHNICAL</h1>
-  <p>Contrato de Mantenimiento · Firma digital</p>
+<div class="topbar">
+  <div class="logo">HARO<span>SAT</span><small>· Contratos de Mantenimiento</small></div>
+  <div class="sync"><div class="dot syncing" id="sync-dot"></div><span id="sync-txt">Conectando...</span></div>
 </div>
 
-<div class="container" id="app">
-  <div class="loading"><div class="spinner"></div>Cargando contrato...</div>
+<div class="content">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--muted)"></div><div class="kpi-label">Total</div><div class="kpi-val" id="k-total">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--muted)"></div><div class="kpi-label">Pendientes</div><div class="kpi-val" id="k-pendiente">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue2)"></div><div class="kpi-label">Enviados</div><div class="kpi-val" id="k-enviado">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--purple)"></div><div class="kpi-label">Firmados</div><div class="kpi-val" id="k-firmado">0</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Aceptados</div><div class="kpi-val" id="k-aceptado">0</div></div>
+  </div>
+  <div class="filters">
+    <button class="fbtn active" id="f-todos" onclick="setFiltro('todos')">Todos</button>
+    <button class="fbtn" id="f-pendiente" onclick="setFiltro('pendiente')">⏳ Pendiente</button>
+    <button class="fbtn" id="f-enviado" onclick="setFiltro('enviado')">📤 Enviado</button>
+    <button class="fbtn" id="f-firmado" onclick="setFiltro('firmado')">✍️ Firmado</button>
+    <button class="fbtn" id="f-aceptado" onclick="setFiltro('aceptado')">✅ Aceptado</button>
+    <button class="fbtn" id="f-rechazado" onclick="setFiltro('rechazado')">❌ Rechazado</button>
+    <input class="search" id="buscar" placeholder="🔍  Buscar cliente o número..." oninput="render()">
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-title" id="card-tit">Contratos</span>
+      <button class="btn btn-ghost btn-sm" onclick="cargar()">↺ Actualizar</button>
+    </div>
+    <div id="tabla"></div>
+  </div>
 </div>
+
+<!-- MODAL ENVÍO -->
+
+<div class="overlay" id="modal-envio">
+  <div class="modal">
+    <div class="modal-title">📤 Enviar para firmar</div>
+    <div class="modal-sub" id="me-sub"></div>
+    <div class="link-box"><div class="link-lbl">Enlace de firma del cliente</div><div class="link-url" id="me-link"></div></div>
+    <div class="send-btns">
+      <button class="send-btn send-wa" id="me-wa">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Enviar por WhatsApp
+      </button>
+      <button class="send-btn send-gmail" id="me-gmail">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>
+        Enviar por Gmail
+      </button>
+      <button class="send-btn send-copy" id="me-copy">📋 Copiar enlace</button>
+    </div>
+    <div class="form-actions"><button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button></div>
+  </div>
+</div>
+
+<!-- PANEL LATERAL -->
+
+<div class="side-bg" id="side-bg" onclick="closeSide()"></div>
+<div class="side-panel" id="side-panel">
+  <div class="side-hd"><span class="side-num" id="side-num"></span><button class="side-close" onclick="closeSide()">✕</button></div>
+  <div class="side-bd" id="side-bd"></div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 var SUPA_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
+var FIRMA_BASE='https://tecnicoharosat-source.github.io/harosat-app/cliente-contrato-firma.html';
 var H={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json',Prefer:'return=representation'};
 
-var contratoId=null;
-var contrato=null;
-var firmaModo='manual';
-var firmaConfirmada=false;
-var firmaDataURL='';
+var CONTRATOS=[];
+var filtroActivo='todos';
 
-function getParam(n){return new URLSearchParams(window.location.search).get(n);}
+function setSync(s,msg){
+  var d=document.getElementById('sync-dot');
+  d.className='dot'+(s==='syncing'?' syncing':s==='error'?' error':'');
+  document.getElementById('sync-txt').textContent=msg;
+}
 
 function cargar(){
-  contratoId=getParam('id');
-  if(!contratoId){mostrarError('Enlace no válido. Falta el identificador del contrato.');return;}
-  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+contratoId+'&select=*',{headers:H})
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(!d||!d.length){mostrarError('Contrato no encontrado.');return;}
-      contrato=d[0];
-      if(contrato.estado_firma==='firmado'||contrato.estado_firma==='aceptado'){
-        mostrarYaFirmado();return;
-      }
-      renderContrato();
-    })
-    .catch(function(){mostrarError('Error de conexión. Inténtelo de nuevo.');});
+  setSync('syncing','Cargando...');
+  fetch(SUPA_URL+'/rest/v1/contratos?select=*&order=created_at.desc&limit=200',{headers:H})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(d){CONTRATOS=d||[];setSync('ok','Sincronizado');render();})
+    .catch(function(e){setSync('error','Error');document.getElementById('tabla').innerHTML='<div class="empty">⚠️ '+e.message+'</div>';});
 }
 
-function mostrarError(msg){
-  document.getElementById('app').innerHTML='<div class="error-box">⚠️ '+msg+'</div>';
+function setFiltro(f){
+  filtroActivo=f;
+  document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('f-'+f).classList.add('active');
+  render();
 }
 
-function mostrarYaFirmado(){
-  document.getElementById('app').innerHTML='<div class="result-ok"><div class="icon">✅</div><h2>Ya firmado</h2><p>Este contrato ya ha sido firmado anteriormente. Gracias.</p></div>';
+function render(){
+  var sr=(document.getElementById('buscar').value||'').toLowerCase();
+  var fil=CONTRATOS.filter(function(c){
+    if(filtroActivo!=='todos'&&c.estado_firma!==filtroActivo)return false;
+    if(sr&&((c.numero||'')+' '+(c.cliente_nombre||'')).toLowerCase().indexOf(sr)===-1)return false;
+    return true;
+  });
+  var cnt={pendiente:0,enviado:0,firmado:0,aceptado:0,rechazado:0};
+  CONTRATOS.forEach(function(c){if(cnt[c.estado_firma]!==undefined)cnt[c.estado_firma]++;});
+  document.getElementById('k-total').textContent=CONTRATOS.length;
+  document.getElementById('k-pendiente').textContent=cnt.pendiente;
+  document.getElementById('k-enviado').textContent=cnt.enviado;
+  document.getElementById('k-firmado').textContent=cnt.firmado;
+  document.getElementById('k-aceptado').textContent=cnt.aceptado;
+  document.getElementById('card-tit').textContent=fil.length+' contrato'+(fil.length!==1?'s':'');
+  var el=document.getElementById('tabla');
+  if(!fil.length){el.innerHTML='<div class="empty">Sin resultados</div>';return;}
+  var html='<div class="table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Aparato</th><th>Fecha</th><th class="num">Total</th><th>Estado</th><th>Acción</th></tr></thead><tbody>';
+  fil.forEach(function(c){
+    var ef=c.estado_firma||'pendiente';
+    var accion='';
+    if(ef==='pendiente'||ef==='enviado'){accion='<button class="btn btn-blue btn-sm" onclick="event.stopPropagation();abrirEnvio('+c.id+')">📤 Enviar</button>';}
+    else if(ef==='firmado'){accion='<button class="btn btn-green btn-sm" onclick="event.stopPropagation();cambiarEstado('+c.id+',\'aceptado\')" style="margin-right:4px">✅</button><button class="btn btn-red btn-sm" onclick="event.stopPropagation();cambiarEstado('+c.id+',\'rechazado\')">❌</button>';}
+    else if(ef==='aceptado'){accion='<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();abrirEnvio('+c.id+')">↺ Reenviar</button>';}
+    var aparato=(c.marca||'')+(c.modelo?' '+c.modelo:'')+(c.tipo_instalacion?' · '+c.tipo_instalacion:'');
+    html+='<tr onclick="abrirDetalle('+c.id+')" style="cursor:pointer">'+
+      '<td class="mono" style="color:var(--blue2);font-weight:700">'+esc(c.numero||'—')+'</td>'+
+      '<td style="font-weight:600;color:white">'+esc(c.cliente_nombre||'—')+'</td>'+
+      '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">'+esc(aparato)+'</td>'+
+      '<td style="color:var(--muted)">'+fd(c.fecha_inicio||c.created_at)+'</td>'+
+      '<td class="num" style="font-weight:700;color:white">'+fn(c.total||0)+' €</td>'+
+      '<td>'+badgeFirma(ef)+'</td>'+
+      '<td onclick="event.stopPropagation()">'+accion+'</td>'+
+      '</tr>';
+  });
+  html+='</tbody></table></div>';
+  el.innerHTML=html;
 }
 
-function fn(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function badgeFirma(e){
+  var map={pendiente:'⏳ Pendiente',enviado:'📤 Enviado',firmado:'✍️ Firmado',aceptado:'✅ Aceptado',rechazado:'❌ Rechazado'};
+  return '<span class="badge b-'+e+'">'+(map[e]||e)+'</span>';
+}
 
-function renderContrato(){
-  var c=contrato;
-  var fd=c.fecha_inicio?c.fecha_inicio.split('-').reverse().join('/'):'—';
+function abrirEnvio(id){
+  var c=CONTRATOS.filter(function(x){return x.id===id;})[0];
+  if(!c)return;
+  var enlace=FIRMA_BASE+'?id='+c.id;
+  document.getElementById('me-sub').textContent=(c.numero||'')+(c.cliente_nombre?' · '+c.cliente_nombre:'')+' · '+fn(c.total||0)+' €';
+  document.getElementById('me-link').textContent=enlace;
+  var tel=(c.cliente_tel||'').replace(/\s/g,'');
+  var txtWA=encodeURIComponent('✍️ *Contrato de Mantenimiento — HAROSAT Ecotechnical*\n\nEstimado/a '+(c.cliente_nombre||'')+',\n\nLe enviamos el enlace para firmar su contrato de mantenimiento por importe de *'+fn(c.total||0)+' €*\n\n👉 '+enlace+'\n\n_Pulse el enlace y fírmelo desde su móvil._\n\nHAROSAT Ecotechnical · 640 05 64 84');
+  document.getElementById('me-wa').onclick=function(){window.open(tel?'https://wa.me/34'+tel+'?text='+txtWA:'https://wa.me/?text='+txtWA,'_blank');marcarEnviado(id);cerrarModal();};
+  var asunto=encodeURIComponent('Contrato de mantenimiento para firmar — HAROSAT');
+  var cuerpo=encodeURIComponent('Estimado/a '+(c.cliente_nombre||'')+',\n\nLe enviamos el enlace para firmar su contrato de mantenimiento por importe de '+fn(c.total||0)+' €.\n\n'+enlace+'\n\nGracias,\nHAROSAT Ecotechnical\nTel.: 640 05 64 84\nharosatecnicos@gmail.com');
+  document.getElementById('me-gmail').onclick=function(){window.open('https://mail.google.com/mail/?view=cm&su='+asunto+'&body='+cuerpo,'_blank');marcarEnviado(id);cerrarModal();};
+  document.getElementById('me-copy').onclick=function(){navigator.clipboard.writeText(enlace).then(function(){toast('Enlace copiado ✓','ok');}).catch(function(){toast('No se pudo copiar','err');});};
+  document.getElementById('modal-envio').classList.add('open');
+}
 
+function cerrarModal(){document.getElementById('modal-envio').classList.remove('open');}
+document.getElementById('modal-envio').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
+
+function marcarEnviado(id){
+  var c=CONTRATOS.filter(function(x){return x.id===id;})[0];
+  if(!c||c.estado_firma==='firmado'||c.estado_firma==='aceptado')return;
+  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({estado_firma:'enviado',fecha_envio:new Date().toISOString()})})
+    .then(function(){var idx=CONTRATOS.findIndex(function(x){return x.id===id;});if(idx>=0){CONTRATOS[idx].estado_firma='enviado';CONTRATOS[idx].fecha_envio=new Date().toISOString();}render();toast('Marcado como enviado ✓','ok');})
+    .catch(function(e){toast('Error: '+e.message,'err');});
+}
+
+function cambiarEstado(id,estado){
+  var row={estado_firma:estado};
+  if(estado==='aceptado'||estado==='rechazado')row.fecha_firma=new Date().toISOString();
+  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify(row)})
+    .then(function(){var idx=CONTRATOS.findIndex(function(x){return x.id===id;});if(idx>=0)Object.assign(CONTRATOS[idx],row);render();closeSide();toast('Estado actualizado ✓','ok');})
+    .catch(function(e){toast('Error: '+e.message,'err');});
+}
+
+function abrirDetalle(id){
+  var c=CONTRATOS.filter(function(x){return x.id===id;})[0];
+  if(!c)return;
+  var ef=c.estado_firma||'pendiente';
+  document.getElementById('side-num').textContent=c.numero||'Contrato';
   var html=
-    '<div class="card"><div class="card-hdr">Datos del aparato</div><div class="card-body">'+
-    row('Tipo',c.tipo_instalacion)+row('Marca / Modelo',(c.marca||'')+(c.modelo?' '+c.modelo:''))+
-    row('Nº Serie',c.num_serie)+row('Potencia',c.potencia?c.potencia+' kW':'')+
-    row('Ubicación',c.ubicacion)+
-    '</div></div>'+
-    '<div class="card"><div class="card-hdr">Datos del cliente</div><div class="card-body">'+
-    row('Nombre',c.cliente_nombre)+row('NIF/DNI',c.cliente_dni)+
-    row('Dirección',c.cliente_dir+(c.cliente_pob?', '+c.cliente_pob:'')+( c.cliente_cp?' '+c.cliente_cp:''))+
-    row('Teléfono',c.cliente_tel)+
-    '</div></div>'+
-    '<div class="card"><div class="card-hdr">Condiciones económicas</div><div class="card-body">'+
-    row('Entrada en vigor',fd)+row('Forma de pago',c.forma_pago)+
-    row('Base imponible',fn(c.base_imponible)+' €')+row('IVA 21%',fn(c.iva)+' €')+
-    '<div class="row"><span class="row-lbl">Total</span><span class="row-val total">'+fn(c.total)+' €</span></div>'+
-    '</div></div>'+
-    '<div class="card"><div class="card-hdr">Condiciones generales del contrato</div><div class="card-body">'+
-    '<div class="clausulas">'+clausulasTexto()+'</div></div></div>'+
-    '<div class="card"><div class="card-hdr">Firma del cliente</div><div class="card-body firma-section">'+
-    '<div class="firma-tabs">'+
-    '<button class="ftab active" id="tab-manual" onclick="setModo(\'manual\')">✋ Manual</button>'+
-    '<button class="ftab" id="tab-auto" onclick="setModo(\'auto\')">🖊️ Automática</button>'+
-    '</div>'+
-    '<div id="bloque-manual">'+
-    '<div class="canvas-wrap"><canvas id="firma-canvas"></canvas><div class="canvas-hint" id="canvas-hint">Firme aquí con el dedo</div></div>'+
-    '<button class="btn btn-clear" style="margin-top:8px" onclick="limpiar()">🗑️ Borrar</button>'+
-    '<button class="btn btn-sign" onclick="confirmarManual()">✓ Confirmar firma</button>'+
-    '</div>'+
-    '<div id="bloque-auto" style="display:none">'+
-    '<div class="auto-block"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Vista previa</div><div id="auto-preview">'+esc(c.cliente_nombre||'—')+'</div></div>'+
-    '<button class="btn btn-sign" onclick="confirmarAuto()">✓ Usar firma automática</button>'+
-    '</div>'+
-    '<div id="firma-status" class="firma-status empty">Sin firma</div>'+
-    '</div></div>'+
-    '<button class="btn btn-submit" id="btn-enviar" onclick="enviarFirma()" disabled>✅ Firmar contrato</button>';
-
-  document.getElementById('app').innerHTML=html;
-  iniciarCanvas();
+    '<div class="s-sec">Aparato</div><div class="s-blk">'+
+    sr('Tipo',c.tipo_instalacion)+sr('Marca',c.marca)+sr('Modelo',c.modelo)+
+    sr('Nº Serie',c.num_serie)+sr('Potencia',c.potencia?c.potencia+' kW':'')+sr('Ubicación',c.ubicacion)+
+    '</div><div class="s-sec">Cliente</div><div class="s-blk">'+
+    sr('Nombre',c.cliente_nombre)+sr('NIF/DNI',c.cliente_dni)+
+    sr('Dirección',c.cliente_dir+(c.cliente_pob?', '+c.cliente_pob:'')+( c.cliente_cp?' '+c.cliente_cp:''))+
+    sr('Teléfono',c.cliente_tel)+sr('Email',c.cliente_email)+
+    '</div><div class="s-sec">Económico</div><div class="s-blk">'+
+    sr('Forma pago',c.forma_pago)+sr('Base',fn(c.base_imponible||0)+' €')+
+    sr('IVA 21%',fn(c.iva||0)+' €')+
+    '<div class="s-row"><span class="s-lbl">Total</span><span class="s-val" style="font-size:16px;font-weight:800;color:var(--blue2)">'+fn(c.total||0)+' €</span></div>'+
+    '</div><div class="s-sec">Estado firma</div><div class="s-blk">'+
+    '<div class="s-row"><span class="s-lbl">Estado</span><span class="s-val">'+badgeFirma(ef)+'</span></div>'+
+    (c.fecha_envio?'<div class="s-row"><span class="s-lbl">Enviado</span><span class="s-val">'+fdt(c.fecha_envio)+'</span></div>':'')+
+    (c.fecha_firma?'<div class="s-row"><span class="s-lbl">Firmado</span><span class="s-val">'+fdt(c.fecha_firma)+'</span></div>':'')+
+    '</div>';
+  if(c.firma_img){html+='<div class="s-sec">Firma del cliente</div><img src="'+c.firma_img+'" class="firma-img" alt="Firma">';}
+  html+='<div class="s-actions">';
+  if(ef==='pendiente'||ef==='enviado'){html+='<button class="btn btn-blue" style="width:100%" onclick="abrirEnvio('+c.id+');closeSide()">📤 Enviar enlace de firma</button>';}
+  if(ef==='firmado'){html+='<button class="btn btn-green" style="width:100%" onclick="cambiarEstado('+c.id+',\'aceptado\')">✅ Aceptar contrato</button><button class="btn btn-red" style="width:100%" onclick="cambiarEstado('+c.id+',\'rechazado\')">❌ Rechazar</button>';}
+  if(ef==='aceptado'||ef==='rechazado'){html+='<button class="btn btn-ghost" style="width:100%" onclick="abrirEnvio('+c.id+');closeSide()">↺ Reenviar enlace</button>';}
+  html+='</div>';
+  document.getElementById('side-bd').innerHTML=html;
+  document.getElementById('side-bg').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
 }
 
-function row(l,v){if(!v)return '';return '<div class="row"><span class="row-lbl">'+l+'</span><span class="row-val">'+esc(v)+'</span></div>';}
+function closeSide(){document.getElementById('side-bg').classList.remove('open');document.getElementById('side-panel').classList.remove('open');}
+function sr(l,v){if(!v)return '';return '<div class="s-row"><span class="s-lbl">'+l+'</span><span class="s-val">'+esc(v)+'</span></div>';}
+function fn(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fd(d){if(!d)return '—';var p=(d||'').split('T')[0].split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:d;}
+function fdt(d){if(!d)return '—';var dt=new Date(d);return dt.toLocaleDateString('es-ES')+' '+dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function clausulasTexto(){
-  return [
-    '- 1. El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.',
-    '- 2. La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.',
-    '- 3. En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.',
-    '- 4. Será por cuenta del usuario el valor de las piezas averiadas sustituidas.',
-    '- 5. Quedan expresamente excluidas de este contrato:\n    - Las averías producidas por fuerza mayor.\n    - Las máquinas y componentes conectados al aparato objeto de contrato.\n    - Las averías provocadas por falta de suministro de combustible.\n    - Las reparaciones fuera del horario laboral.',
-    '- 6. Los aparatos estarán accesibles para su mantenimiento. En caso contrario los costes de desmontaje correrán a cargo del cliente.',
-    '- 7. Este contrato quedará automáticamente rescindido si el aparato fuera manipulado por personal ajeno a la empresa mantenedora.',
-    '- 8. En ningún caso la rescisión por parte del usuario dará derecho a la devolución de importe alguno.',
-    '- 9. La empresa mantenedora asume la cualidad de empresario respecto de los empleados que realicen las tareas derivadas de este contrato.',
-    '- 10. El importe será revisado anualmente en el momento de la renovación.',
-    '- 11. El pago deberá ser abonado dentro del primer mes de la entrada en vigor.',
-    '- 12. Este contrato no acredita por sí solo que el pago haya sido satisfecho.',
-    '- 13. Al hacerse cargo del mantenimiento, el titular entregará: proyecto o memoria técnica, certificado de la instalación y certificado de inspección inicial.',
-    '- 14. El titular es responsable del cumplimiento del RITE desde la recepción provisional.',
-    '- 15. Ambas partes se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora.',
-    '- 16. Los firmantes declaran que los datos indicados son ciertos y otorgan consentimiento para su tratamiento automatizado.',
-    '- 17. Los datos serán incorporados a un fichero responsabilidad de la empresa mantenedora.',
-    '- 18. La atención al cliente se realizará de lunes a viernes de 8:00 a 15:00, siempre con cita previa.'
-  ].join('\n\n');
-}
-
-function iniciarCanvas(){
-  var canvas=document.getElementById('firma-canvas');
-  if(!canvas)return;
-  var ctx=canvas.getContext('2d');
-  var dibujando=false;
-  function ajustar(){var r=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=r.width*dpr;canvas.height=r.height*dpr;ctx.scale(dpr,dpr);ctx.strokeStyle='#1e293b';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';}
-  ajustar();
-  function pos(e){var r=canvas.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
-  canvas.addEventListener('mousedown',function(e){e.preventDefault();dibujando=true;document.getElementById('canvas-hint').style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
-  canvas.addEventListener('mousemove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
-  canvas.addEventListener('mouseup',function(){dibujando=false;});
-  canvas.addEventListener('touchstart',function(e){e.preventDefault();dibujando=true;document.getElementById('canvas-hint').style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
-  canvas.addEventListener('touchmove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
-  canvas.addEventListener('touchend',function(){dibujando=false;});
-}
-
-function setModo(m){
-  firmaModo=m;
-  document.getElementById('tab-manual').classList.toggle('active',m==='manual');
-  document.getElementById('tab-auto').classList.toggle('active',m==='auto');
-  document.getElementById('bloque-manual').style.display=m==='manual'?'block':'none';
-  document.getElementById('bloque-auto').style.display=m==='auto'?'block':'none';
-  firmaConfirmada=false;firmaDataURL='';actualizarStatus();
-}
-
-function limpiar(){
-  var c=document.getElementById('firma-canvas');
-  c.getContext('2d').clearRect(0,0,c.width,c.height);
-  document.getElementById('canvas-hint').style.display='block';
-  firmaConfirmada=false;firmaDataURL='';actualizarStatus();
-}
-
-function confirmarManual(){
-  var c=document.getElementById('firma-canvas'),ctx=c.getContext('2d'),d=ctx.getImageData(0,0,c.width,c.height).data,vacio=true;
-  for(var i=3;i<d.length;i+=4){if(d[i]>0){vacio=false;break;}}
-  if(vacio){alert('Por favor, dibuje su firma primero.');return;}
-  firmaDataURL=c.toDataURL('image/png');firmaConfirmada=true;actualizarStatus();
-}
-
-function confirmarAuto(){
-  var nombre=contrato.cliente_nombre||'';
-  if(!nombre){alert('No hay nombre de cliente.');return;}
-  var c=document.createElement('canvas');c.width=400;c.height=120;
-  var ctx=c.getContext('2d');ctx.clearRect(0,0,400,120);
-  ctx.font='italic 300 48px Georgia,serif';ctx.fillStyle='#1e293b';ctx.textBaseline='middle';ctx.fillText(nombre,20,60);
-  firmaDataURL=c.toDataURL('image/png');firmaConfirmada=true;actualizarStatus();
-}
-
-function actualizarStatus(){
-  var el=document.getElementById('firma-status');
-  var btn=document.getElementById('btn-enviar');
-  if(firmaConfirmada){
-    el.className='firma-status ok';el.textContent='✓ Firma lista';
-    btn.disabled=false;
-  }else{
-    el.className='firma-status empty';el.textContent='Sin firma';
-    btn.disabled=true;
-  }
-}
-
-function enviarFirma(){
-  if(!firmaConfirmada){alert('Por favor confirme su firma primero.');return;}
-  var btn=document.getElementById('btn-enviar');
-  btn.disabled=true;btn.textContent='Enviando...';
-  var row={estado_firma:'firmado',firma_img:firmaDataURL,fecha_firma:new Date().toISOString()};
-  fetch(SUPA_URL+'/rest/v1/contratos?id=eq.'+contratoId,{method:'PATCH',headers:H,body:JSON.stringify(row)})
-    .then(function(r){if(!r.ok)throw new Error('Error '+r.status);return r;})
-    .then(function(){
-      document.getElementById('app').innerHTML=
-        '<div class="result-ok"><div class="icon">✅</div>'+
-        '<h2>¡Contrato firmado!</h2>'+
-        '<p>Su firma ha sido registrada correctamente.<br>HAROSAT Ecotechnical se pondrá en contacto con usted.</p>'+
-        '<p style="margin-top:16px;font-size:12px;color:var(--muted)">Puede cerrar esta ventana.</p></div>';
-    })
-    .catch(function(e){
-      btn.disabled=false;btn.textContent='✅ Firmar contrato';
-      alert('Error al enviar la firma: '+e.message+'. Inténtelo de nuevo.');
-    });
-}
+function toast(msg,type){var el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+(type||'info');setTimeout(function(){el.classList.remove('show');},3000);}
 
 cargar();
+setInterval(cargar,30000);
 </script>
 
 </body>
