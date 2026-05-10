@@ -369,7 +369,7 @@ function generarPDF(silencioso){
       var NK=[0,0,0]; /* negro */
       var GR=[100,100,100]; /* gris */
       var fi=document.getElementById('fecha-inicio').value;
-      var fechaStr=fi?fi.split('-').reverse().join('/'):'';
+      var fechaStr=fi?fi.split('-').reverse().join('/'):'    /    /        ';
 
       var anyo=fi?fi.split('-')[0]:new Date().getFullYear();
       var numC=g('num-contrato');
@@ -395,12 +395,7 @@ function generarPDF(silencioso){
         doc.text('CIF/NIF 09302345H',W/2,32,{align:'center'});
         /* LUNES A VIERNES derecha */
         doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
-        doc.text('LUNES A VIERNES',W-mg-24,27);
-        /* Recuadro X */
-        doc.setDrawColor.apply(doc,NK);doc.setLineWidth(0.4);
-        doc.rect(W-mg-5,23.5,5,5);
-        doc.setFont('helvetica','bold');doc.setFontSize(9);
-        doc.text('X',W-mg-3.8,27.5);
+        doc.text('LUNES A VIERNES',W-mg-8,27);
         /* Línea separadora */
         doc.setLineWidth(0.5);doc.line(mg,42,W-mg,42);
         /* Título contrato + página */
@@ -555,10 +550,10 @@ function generarPDF(silencioso){
 
       /* Firma cliente izquierda */
       if(_firmaDataURL){try{doc.addImage(_firmaDataURL,'PNG',mg,y,mitad-mg-10,22);}catch(e){}}
-      /* Firma + sello empresa derecha */
-      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',mitad+4,y,38,22);}catch(e){}}
-      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',W-mg-28,y,26,26);}catch(e){}}
-      y+=28;
+      /* Firma encima del sello, ambos a la derecha */
+      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',mitad+4,y,36,16);}catch(e){}}
+      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',mitad+4,y+14,32,18);}catch(e){}}
+      y+=34;
 
       doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor.apply(doc,NK);
       doc.text('Fdo.:',W-mg,y,{align:'right'});
