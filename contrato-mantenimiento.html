@@ -7,664 +7,159 @@
 <title>Contrato Mantenimiento · HAROSAT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<!-- ============================================================
-  IMÁGENES BASE64 — SUSTITUIR CONTENIDO DE CADA SCRIPT TAG
-  Pega el base64 de cada imagen entre las comillas de window.IMG_xxx
-  El formato es: data:image/png;base64,AQUI_EL_BASE64
-============================================================ -->
-
-<script id="d-logo-pdf">
-/* LOGO PDF — pega aquí el base64 */
-window.IMG_LOGO_PDF = '';
-</script>
-
-<script id="d-logo-app">
-/* LOGO APP HEADER — pega aquí el base64 */
-window.IMG_LOGO_APP = '';
-</script>
-
-<script id="d-logo-icon">
-/* APPLE TOUCH ICON — pega aquí el base64 */
-window.IMG_ICON = '';
-</script>
-
-<script id="d-firma">
-/* FIRMA MANUSCRITA JESÚS GARZÓN — pega aquí el base64 */
-window.IMG_FIRMA = '';
-</script>
-
-<script id="d-sello">
-/* SELLO HAROSAT ECOTECHNICAL — pega aquí el base64 */
-window.IMG_SELLO = '';
-</script>
-
-<script id="d-pub1">
-/* IMAGEN PUBLICITARIA (Samsung/Wolf/Baxi) — pega aquí el base64 */
-window.IMG_PUB1 = '';
-</script>
-
+<script id="d-logo-pdf">window.IMG_LOGO_PDF='';</script>
+<script id="d-logo-app">window.IMG_LOGO_APP='';</script>
+<script id="d-logo-icon">window.IMG_ICON='';</script>
+<script id="d-firma">window.IMG_FIRMA='';</script>
+<script id="d-sello">window.IMG_SELLO='';</script>
+<script id="d-pub1">window.IMG_PUB1='';</script>
 <link rel="apple-touch-icon" id="apple-icon" href="">
-
 <style>
-/* =========================================================
-   RESET & BASE
-========================================================= */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:       #060910;
-  --bg2:      #0d1117;
-  --bg3:      #111827;
-  --bg4:      #1a2233;
-  --border:   #1f2937;
-  --border2:  #2d3748;
-  --blue:     #2563a8;
-  --blue2:    #3B8AC7;
-  --blue3:    #60a5d4;
-  --yellow:   #FDB913;
-  --green:    #5A9F3E;
-  --green2:   #10b981;
-  --red:      #ef4444;
-  --txt1:     #f1f5f9;
-  --txt2:     #cbd5e1;
-  --txt3:     #94a3b8;
-  --txt4:     #64748b;
-  --radius:   10px;
-  --shadow:   0 4px 24px rgba(0,0,0,.4);
-}
-
-html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-
-body {
-  font-family: 'Outfit', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--txt1);
-  min-height: 100vh;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-.app-header {
-  background: var(--bg2);
-  border-bottom: 2px solid var(--blue);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.header-logo {
-  height: 36px;
-  width: auto;
-  display: block;
-}
-.header-logo-placeholder {
-  height: 36px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.header-logo-placeholder .dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--yellow);
-}
-.header-logo-placeholder span {
-  font-size: 15px; font-weight: 700; color: var(--yellow); letter-spacing: .5px;
-}
-.header-info { flex: 1; }
-.header-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--txt1);
-  letter-spacing: .3px;
-}
-.header-sub {
-  font-size: 10px;
-  color: var(--txt4);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* =========================================================
-   TABS
-========================================================= */
-.tabs-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 58px;
-  z-index: 99;
-}
-.tab-btn {
-  padding: 11px 4px;
-  border: none;
-  background: none;
-  color: var(--txt4);
-  font-family: 'Outfit', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  border-bottom: 2px solid transparent;
-  transition: all .2s;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-}
-.tab-btn .tab-icon { font-size: 16px; }
-.tab-btn.active {
-  color: var(--yellow);
-  border-bottom-color: var(--yellow);
-}
-.tab-btn:hover:not(.active) { color: var(--txt2); }
-
-/* =========================================================
-   PANELS
-========================================================= */
-.panel { display: none; padding: 16px; }
-.panel.active { display: block; }
-
-/* =========================================================
-   SECCIONES DE FORMULARIO
-========================================================= */
-.form-section {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin-bottom: 14px;
-}
-.form-section-header {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 9px 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-bar {
-  width: 3px; height: 14px;
-  background: var(--blue2);
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.form-section-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--blue3);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.form-section-body { padding: 14px; }
-
-/* =========================================================
-   CAMPOS
-========================================================= */
-.field { margin-bottom: 12px; }
-.field:last-child { margin-bottom: 0; }
-.field label {
-  display: block;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--txt3);
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  margin-bottom: 5px;
-}
-.field input,
-.field select,
-.field textarea {
-  width: 100%;
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  border-radius: 7px;
-  color: var(--txt1);
-  font-family: 'Outfit', system-ui, sans-serif;
-  font-size: 14px;
-  padding: 9px 12px;
-  outline: none;
-  transition: border-color .2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-  border-color: var(--blue2);
-}
-.field textarea { resize: vertical; min-height: 70px; }
-.field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-/* Campo calculado (no editable) */
-.campo-calc {
-  width: 100%;
-  background: var(--bg4);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  color: var(--yellow);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 9px 12px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-/* Grid 2 columnas */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 360px) { .grid-2 { grid-template-columns: 1fr; } }
-
-/* =========================================================
-   TAB FIRMA
-========================================================= */
-.firma-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.firma-toggle-btn {
-  padding: 10px;
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  background: var(--bg3);
-  color: var(--txt3);
-  font-family: 'Outfit', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  transition: all .2s;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-}
-.firma-toggle-btn.active {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: #fff;
-}
-
-.canvas-wrapper {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-#firma-canvas {
-  display: block;
-  width: 100%;
-  height: 200px;
-  touch-action: none;
-  cursor: crosshair;
-}
-.canvas-hint {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  color: var(--txt4);
-  pointer-events: none;
-  text-align: center;
-}
-.canvas-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.firma-auto-block {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-}
-#firma-auto-preview {
-  font-size: 26px;
-  color: var(--txt3);
-  font-style: italic;
-  font-weight: 300;
-  margin: 8px 0;
-  min-height: 40px;
-  letter-spacing: 1px;
-}
-.firma-status {
-  margin-top: 10px;
-  font-size: 11px;
-  padding: 6px 12px;
-  border-radius: 5px;
-  text-align: center;
-}
-.firma-status.ok { background: rgba(16,185,129,.12); color: var(--green2); border: 1px solid rgba(16,185,129,.3); }
-.firma-status.empty { background: rgba(239,68,68,.08); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
-
-/* =========================================================
-   TAB ENVIAR — RESUMEN
-========================================================= */
-.resumen-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 14px;
-  overflow: hidden;
-}
-.resumen-header {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 9px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.resumen-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--blue3);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.resumen-body { padding: 12px 14px; }
-.resumen-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(255,255,255,.04);
-}
-.resumen-row:last-child { border-bottom: none; }
-.resumen-label { font-size: 11px; color: var(--txt4); }
-.resumen-val { font-size: 12px; color: var(--txt2); font-weight: 500; text-align: right; max-width: 60%; }
-.resumen-val.total { color: var(--yellow); font-size: 16px; font-family: 'JetBrains Mono', monospace; }
-
-/* Indicadores de completitud */
-.check-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-}
-.check-icon { font-size: 14px; width: 18px; text-align: center; }
-.check-label { font-size: 12px; color: var(--txt2); }
-.check-icon.ok { color: var(--green2); }
-.check-icon.ko { color: var(--red); }
-
-/* =========================================================
-   BOTONES
-========================================================= */
-.btn {
-  width: 100%;
-  padding: 13px 16px;
-  border: none;
-  border-radius: 9px;
-  font-family: 'Outfit', system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all .2s;
-  margin-bottom: 8px;
-  letter-spacing: .2px;
-}
-.btn:last-child { margin-bottom: 0; }
-.btn:active { transform: scale(.98); }
-
-.btn-primary { background: var(--blue); color: #fff; }
-.btn-primary:hover { background: var(--blue2); }
-
-.btn-yellow { background: var(--yellow); color: #060910; }
-.btn-yellow:hover { background: #ffc94d; }
-
-.btn-green { background: var(--green); color: #fff; }
-.btn-green:hover { background: #6ab84a; }
-
-.btn-outline {
-  background: transparent;
-  color: var(--txt2);
-  border: 1px solid var(--border2);
-}
-.btn-outline:hover { background: var(--bg4); }
-
-.btn-sm {
-  padding: 8px 14px;
-  font-size: 12px;
-  border-radius: 7px;
-  flex: 1;
-}
-
-.btn-danger { background: rgba(239,68,68,.12); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
-.btn-danger:hover { background: rgba(239,68,68,.2); }
-
-/* =========================================================
-   TOAST
-========================================================= */
-#toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--bg3);
-  border: 1px solid var(--green2);
-  color: var(--green2);
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 9999;
-  transition: transform .3s ease;
-  white-space: nowrap;
-  box-shadow: var(--shadow);
-}
-#toast.show { transform: translateX(-50%) translateY(0); }
-#toast.err { border-color: var(--red); color: var(--red); }
-
-/* =========================================================
-   LOADING OVERLAY
-========================================================= */
-#loading {
-  position: fixed;
-  inset: 0;
-  background: rgba(6,9,16,.8);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9998;
-  flex-direction: column;
-  gap: 14px;
-}
-#loading.show { display: flex; }
-.spinner {
-  width: 36px; height: 36px;
-  border: 3px solid var(--border2);
-  border-top-color: var(--blue2);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-txt { font-size: 13px; color: var(--txt3); }
-
-/* =========================================================
-   UTILIDADES
-========================================================= */
-.mt-8 { margin-top: 8px; }
-.mt-12 { margin-top: 12px; }
-.divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-input[type="number"] { -moz-appearance: textfield; }
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
-::placeholder { color: var(--txt4); }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#060910;--bg2:#0d1117;--bg3:#111827;--bg4:#1a2233;--border:#1f2937;--border2:#2d3748;--blue:#2563a8;--blue2:#3B8AC7;--blue3:#60a5d4;--yellow:#FDB913;--green:#5A9F3E;--green2:#10b981;--red:#ef4444;--txt1:#f1f5f9;--txt2:#cbd5e1;--txt3:#94a3b8;--txt4:#64748b;--radius:10px;--shadow:0 4px 24px rgba(0,0,0,.4);}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--txt1);min-height:100vh;padding:0;overflow-x:hidden;}
+.app-header{background:var(--bg2);border-bottom:2px solid var(--blue);padding:10px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.header-logo{height:36px;width:auto;display:block;}
+.header-logo-placeholder{height:36px;display:flex;align-items:center;gap:8px;}
+.header-logo-placeholder .dot{width:10px;height:10px;border-radius:50%;background:var(--yellow);}
+.header-logo-placeholder span{font-size:15px;font-weight:700;color:var(--yellow);letter-spacing:.5px;}
+.header-info{flex:1;}
+.header-title{font-size:13px;font-weight:700;color:var(--txt1);}
+.header-sub{font-size:10px;color:var(--txt4);font-family:'JetBrains Mono',monospace;}
+.tabs-bar{display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:99;}
+.tab-btn{padding:11px 4px;border:none;background:none;color:var(--txt4);font-family:'Outfit',system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;}
+.tab-btn .tab-icon{font-size:16px;}
+.tab-btn.active{color:var(--yellow);border-bottom-color:var(--yellow);}
+.panel{display:none;padding:16px;}
+.panel.active{display:block;}
+.form-section{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.form-section-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px;}
+.section-bar{width:3px;height:14px;background:var(--blue2);border-radius:2px;flex-shrink:0;}
+.form-section-title{font-size:10px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;}
+.form-section-body{padding:14px;}
+.field{margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:7px;color:var(--txt1);font-family:'Outfit',system-ui,sans-serif;font-size:14px;padding:9px 12px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue2);}
+.field textarea{resize:vertical;min-height:70px;}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.campo-calc{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:7px;color:var(--yellow);font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;padding:9px 12px;min-height:40px;display:flex;align-items:center;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:360px){.grid-2{grid-template-columns:1fr;}}
+.firma-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.firma-toggle-btn{padding:10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--txt3);font-family:'Outfit',system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;}
+.firma-toggle-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.canvas-wrapper{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;overflow:hidden;position:relative;}
+#firma-canvas{display:block;width:100%;height:200px;touch-action:none;cursor:crosshair;}
+.canvas-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:var(--txt4);pointer-events:none;text-align:center;}
+.canvas-actions{display:flex;gap:8px;margin-top:10px;}
+.firma-auto-block{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:20px;text-align:center;}
+#firma-auto-preview{font-size:26px;color:var(--txt3);font-style:italic;font-weight:300;margin:8px 0;min-height:40px;letter-spacing:1px;}
+.firma-status{margin-top:10px;font-size:11px;padding:6px 12px;border-radius:5px;text-align:center;}
+.firma-status.ok{background:rgba(16,185,129,.12);color:var(--green2);border:1px solid rgba(16,185,129,.3);}
+.firma-status.empty{background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.resumen-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;}
+.resumen-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 14px;}
+.resumen-title{font-size:10px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;}
+.resumen-body{padding:12px 14px;}
+.resumen-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.resumen-row:last-child{border-bottom:none;}
+.resumen-label{font-size:11px;color:var(--txt4);}
+.resumen-val{font-size:12px;color:var(--txt2);font-weight:500;text-align:right;max-width:60%;}
+.resumen-val.total{color:var(--yellow);font-size:16px;font-family:'JetBrains Mono',monospace;}
+.check-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
+.check-icon{font-size:14px;width:18px;text-align:center;}
+.check-label{font-size:12px;color:var(--txt2);}
+.check-icon.ok{color:var(--green2);}
+.check-icon.ko{color:var(--red);}
+.btn{width:100%;padding:13px 16px;border:none;border-radius:9px;font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;margin-bottom:8px;}
+.btn:last-child{margin-bottom:0;}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-yellow{background:var(--yellow);color:#060910;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-outline{background:transparent;color:var(--txt2);border:1px solid var(--border2);}
+.btn-sm{padding:8px 14px;font-size:12px;border-radius:7px;flex:1;}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--green2);color:var(--green2);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s ease;white-space:nowrap;box-shadow:var(--shadow);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);color:var(--red);}
+#loading{position:fixed;inset:0;background:rgba(6,9,16,.8);display:none;align-items:center;justify-content:center;z-index:9998;flex-direction:column;gap:14px;}
+#loading.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--blue2);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{font-size:13px;color:var(--txt3);}
+.mt-8{margin-top:8px;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+input[type="number"]{-moz-appearance:textfield;}
+input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+::placeholder{color:var(--txt4);}
 </style>
-
 </head>
 <body>
 
-<!-- HEADER -->
-
 <header class="app-header">
-  <div class="header-logo-placeholder" id="header-logo-wrap">
-    <div class="dot"></div>
-    <span>HAROSAT</span>
-  </div>
+  <div class="header-logo-placeholder" id="header-logo-wrap"><div class="dot"></div><span>HAROSAT</span></div>
   <div class="header-info">
     <div class="header-title">Contrato de Mantenimiento</div>
     <div class="header-sub">HAROSAT Ecotechnical</div>
   </div>
 </header>
 
-<!-- TABS -->
-
 <nav class="tabs-bar">
-  <button class="tab-btn active" onclick="cambiarTab('datos', this)">
-    <span class="tab-icon">📋</span>Datos
-  </button>
-  <button class="tab-btn" onclick="cambiarTab('firma', this)">
-    <span class="tab-icon">✍️</span>Firma
-  </button>
-  <button class="tab-btn" onclick="cambiarTab('enviar', this)">
-    <span class="tab-icon">📤</span>Enviar
-  </button>
+  <button class="tab-btn active" onclick="cambiarTab('datos',this)"><span class="tab-icon">📋</span>Datos</button>
+  <button class="tab-btn" onclick="cambiarTab('firma',this)"><span class="tab-icon">✍️</span>Firma</button>
+  <button class="tab-btn" onclick="cambiarTab('enviar',this)"><span class="tab-icon">📤</span>Enviar</button>
 </nav>
 
-<!-- ============================================================
-   PANEL 1 — DATOS
-============================================================ -->
-
 <div id="panel-datos" class="panel active">
-
-  <!-- Datos del aparato -->
-
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar"></div>
-      <div class="form-section-title">🔧 Datos del Aparato</div>
-    </div>
+    <div class="form-section-header"><div class="section-bar"></div><div class="form-section-title">🔧 Datos del Aparato</div></div>
     <div class="form-section-body">
-      <div class="field">
-        <label>Tipo de instalación</label>
+      <div class="field"><label>Tipo de instalación</label>
         <select id="tipo-instalacion">
           <option value="">— Seleccionar —</option>
-          <option value="Caldera de gas">Caldera de gas</option>
-          <option value="Caldera de gasoil">Caldera de gasoil</option>
-          <option value="Caldera de biomasa">Caldera de biomasa</option>
-          <option value="Bomba de calor">Bomba de calor</option>
-          <option value="Aire acondicionado">Aire acondicionado</option>
-          <option value="Suelo radiante">Suelo radiante</option>
-          <option value="Calefacción central">Calefacción central</option>
-          <option value="ACS solar">ACS solar</option>
-          <option value="Otro">Otro</option>
+          <option>Caldera de gas</option><option>Caldera de gasoil</option><option>Caldera de biomasa</option>
+          <option>Bomba de calor</option><option>Aire acondicionado</option><option>Suelo radiante</option>
+          <option>Calefacción central</option><option>ACS solar</option><option>Otro</option>
         </select>
       </div>
       <div class="grid-2">
-        <div class="field">
-          <label>Marca</label>
-          <input type="text" id="marca" placeholder="Ej: Baxi, Ferroli…">
-        </div>
-        <div class="field">
-          <label>Modelo</label>
-          <input type="text" id="modelo" placeholder="Ej: Luna Clima 24">
-        </div>
+        <div class="field"><label>Marca</label><input type="text" id="marca" placeholder="Ej: Baxi…"></div>
+        <div class="field"><label>Modelo</label><input type="text" id="modelo" placeholder="Ej: Luna 24"></div>
       </div>
       <div class="grid-2">
-        <div class="field">
-          <label>Nº Serie</label>
-          <input type="text" id="num-serie" placeholder="Opcional">
-        </div>
-        <div class="field">
-          <label>Potencia (kW)</label>
-          <input type="number" id="potencia" placeholder="Ej: 24">
-        </div>
+        <div class="field"><label>Nº Serie</label><input type="text" id="num-serie" placeholder="Opcional"></div>
+        <div class="field"><label>Potencia (kW)</label><input type="number" id="potencia" placeholder="24"></div>
       </div>
-      <div class="field">
-        <label>Ubicación del aparato</label>
-        <input type="text" id="ubicacion" placeholder="Ej: Cuarto técnico, sótano…">
-      </div>
-      <div class="field">
-        <label>Año de instalación</label>
-        <input type="number" id="anyo-instalacion" placeholder="Ej: 2018" min="1980" max="2099">
-      </div>
+      <div class="field"><label>Ubicación</label><input type="text" id="ubicacion" placeholder="Cuarto técnico…"></div>
+      <div class="field"><label>Año instalación</label><input type="number" id="anyo-instalacion" placeholder="2018" min="1980" max="2099"></div>
     </div>
   </div>
-
-  <!-- Datos del cliente -->
-
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar" style="background:var(--yellow)"></div>
-      <div class="form-section-title" style="color:var(--yellow)">👤 Datos del Cliente</div>
-    </div>
+    <div class="form-section-header"><div class="section-bar" style="background:var(--yellow)"></div><div class="form-section-title" style="color:var(--yellow)">👤 Datos del Cliente</div></div>
     <div class="form-section-body">
-      <div class="field">
-        <label>Nombre completo</label>
-        <input type="text" id="cliente-nombre" placeholder="Nombre y apellidos">
-      </div>
-      <div class="field">
-        <label>DNI / NIF</label>
-        <input type="text" id="cliente-dni" placeholder="Ej: 12345678A">
-      </div>
-      <div class="field">
-        <label>Dirección</label>
-        <input type="text" id="cliente-dir" placeholder="Calle, número, piso…">
-      </div>
+      <div class="field"><label>Nombre completo</label><input type="text" id="cliente-nombre" placeholder="Nombre y apellidos"></div>
+      <div class="field"><label>NIF / DNI</label><input type="text" id="cliente-dni" placeholder="12345678A"></div>
+      <div class="field"><label>Domicilio</label><input type="text" id="cliente-dir" placeholder="Calle, número, piso…"></div>
       <div class="grid-2">
-        <div class="field">
-          <label>Población</label>
-          <input type="text" id="cliente-pob" placeholder="Ej: Haro">
-        </div>
-        <div class="field">
-          <label>C.P.</label>
-          <input type="text" id="cliente-cp" placeholder="Ej: 26200" maxlength="5">
-        </div>
+        <div class="field"><label>Localidad</label><input type="text" id="cliente-pob" placeholder="Haro"></div>
+        <div class="field"><label>C.P.</label><input type="text" id="cliente-cp" placeholder="26200" maxlength="5"></div>
       </div>
-      <div class="field">
-        <label>Teléfono</label>
-        <input type="tel" id="cliente-tel" placeholder="Ej: 600 000 000">
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="cliente-email" placeholder="cliente@email.com">
-      </div>
+      <div class="field"><label>Teléfono</label><input type="tel" id="cliente-tel" placeholder="600 000 000"></div>
+      <div class="field"><label>Email</label><input type="email" id="cliente-email" placeholder="cliente@email.com"></div>
     </div>
   </div>
-
-  <!-- Cobro y contrato -->
-
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar" style="background:var(--green)"></div>
-      <div class="form-section-title" style="color:var(--green2)">💳 Cobro y Contrato</div>
-    </div>
+    <div class="form-section-header"><div class="section-bar" style="background:var(--green)"></div><div class="form-section-title" style="color:var(--green2)">💳 Cobro y Contrato</div></div>
     <div class="form-section-body">
-      <div class="field">
-        <label>Tipo de contrato</label>
-        <select id="tipo-contrato">
-          <option value="Anual">Anual</option>
-          <option value="Bianual">Bianual</option>
-          <option value="Trimestral">Trimestral</option>
-        </select>
+      <div class="grid-2">
+        <div class="field"><label>Nº Contrato</label><input type="text" id="num-contrato" placeholder="2026/001"></div>
+        <div class="field"><label>Entrada en Vigor</label><input type="date" id="fecha-inicio"></div>
       </div>
-      <div class="field">
-        <label>Forma de pago</label>
+      <div class="field"><label>Forma de pago</label>
         <select id="forma-pago">
           <option value="Domiciliación bancaria">Domiciliación bancaria</option>
           <option value="Transferencia bancaria">Transferencia bancaria</option>
@@ -672,142 +167,58 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
         </select>
       </div>
       <div class="field" id="iban-field">
-        <label>IBAN del cliente</label>
-        <input type="text" id="cliente-iban" placeholder="ES00 0000 0000 0000 0000 0000" maxlength="29">
+        <label>N. Cta. (IBAN)</label>
+        <input type="text" id="cliente-iban" placeholder="ES__ ____ ____ __ __________" maxlength="29">
       </div>
       <div class="divider"></div>
-      <div class="field">
-        <label>Base Imponible (€)</label>
-        <input type="number" id="base-imponible" placeholder="0.00" step="0.01" min="0" oninput="calcularIVA()">
-      </div>
+      <div class="field"><label>Base Imponible (€)</label><input type="number" id="base-imponible" placeholder="0.00" step="0.01" min="0" oninput="calcularIVA()"></div>
       <div class="grid-2">
-        <div class="field">
-          <label>IVA 21%</label>
-          <div class="campo-calc" id="iva-calc">—</div>
-        </div>
-        <div class="field">
-          <label>Total</label>
-          <div class="campo-calc" id="total-calc">—</div>
-        </div>
+        <div class="field"><label>Importe IVA 21%</label><div class="campo-calc" id="iva-calc">—</div></div>
+        <div class="field"><label>Total</label><div class="campo-calc" id="total-calc">—</div></div>
       </div>
-      <div class="field">
-        <label>Fecha de inicio del contrato</label>
-        <input type="date" id="fecha-inicio">
-      </div>
-      <div class="field">
-        <label>Observaciones</label>
-        <textarea id="observaciones" placeholder="Notas adicionales…"></textarea>
-      </div>
+      <div class="field"><label>Observaciones</label><textarea id="observaciones" placeholder="Notas adicionales…"></textarea></div>
     </div>
   </div>
-
-</div><!-- /panel-datos -->
-
-<!-- ============================================================
-   PANEL 2 — FIRMA
-============================================================ -->
+</div>
 
 <div id="panel-firma" class="panel">
-
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar" style="background:var(--yellow)"></div>
-      <div class="form-section-title" style="color:var(--yellow)">✍️ Firma del Cliente</div>
-    </div>
+    <div class="form-section-header"><div class="section-bar" style="background:var(--yellow)"></div><div class="form-section-title" style="color:var(--yellow)">✍️ Firma del Cliente</div></div>
     <div class="form-section-body">
-
-```
-  <div class="firma-toggle">
-    <button class="firma-toggle-btn active" id="btn-firma-manual" onclick="setFirmaModo('manual')">
-      ✋ Manual
-    </button>
-    <button class="firma-toggle-btn" id="btn-firma-auto" onclick="setFirmaModo('auto')">
-      🖊️ Automática
-    </button>
-  </div>
-
-  <!-- Firma manual -->
-  <div id="bloque-firma-manual">
-    <div class="canvas-wrapper">
-      <canvas id="firma-canvas"></canvas>
-      <div class="canvas-hint" id="canvas-hint">Firme aquí con el dedo</div>
-    </div>
-    <div class="canvas-actions">
-      <button class="btn btn-outline btn-sm" onclick="limpiarCanvas()">🗑️ Borrar</button>
-      <button class="btn btn-primary btn-sm" onclick="confirmarFirmaManual()">✓ Confirmar firma</button>
-    </div>
-  </div>
-
-  <!-- Firma automática -->
-  <div id="bloque-firma-auto" style="display:none;">
-    <div class="firma-auto-block">
-      <div style="font-size:11px; color:var(--txt4); margin-bottom:8px;">Vista previa de la firma automática</div>
-      <div id="firma-auto-preview">—</div>
-      <div style="font-size:10px; color:var(--txt4); margin-top:8px;">
-        Se usa el nombre del cliente.<br>Rellena primero el campo Nombre en la pestaña Datos.
+      <div class="firma-toggle">
+        <button class="firma-toggle-btn active" id="btn-firma-manual" onclick="setFirmaModo('manual')">✋ Manual</button>
+        <button class="firma-toggle-btn" id="btn-firma-auto" onclick="setFirmaModo('auto')">🖊️ Automática</button>
       </div>
+      <div id="bloque-firma-manual">
+        <div class="canvas-wrapper"><canvas id="firma-canvas"></canvas><div class="canvas-hint" id="canvas-hint">Firme aquí con el dedo</div></div>
+        <div class="canvas-actions">
+          <button class="btn btn-outline btn-sm" onclick="limpiarCanvas()">🗑️ Borrar</button>
+          <button class="btn btn-primary btn-sm" onclick="confirmarFirmaManual()">✓ Confirmar firma</button>
+        </div>
+      </div>
+      <div id="bloque-firma-auto" style="display:none;">
+        <div class="firma-auto-block">
+          <div style="font-size:11px;color:var(--txt4);margin-bottom:8px;">Vista previa</div>
+          <div id="firma-auto-preview">—</div>
+          <div style="font-size:10px;color:var(--txt4);margin-top:8px;">Se usa el nombre del cliente.</div>
+        </div>
+        <button class="btn btn-primary mt-8" onclick="confirmarFirmaAuto()">✓ Usar firma automática</button>
+      </div>
+      <div id="firma-status" class="firma-status empty mt-8">Sin firma</div>
     </div>
-    <button class="btn btn-primary mt-8" onclick="confirmarFirmaAuto()">✓ Usar firma automática</button>
   </div>
-
-  <!-- Estado -->
-  <div id="firma-status" class="firma-status empty mt-8">Sin firma</div>
-
 </div>
-```
-
-  </div>
-
-</div><!-- /panel-firma -->
-
-<!-- ============================================================
-   PANEL 3 — ENVIAR
-============================================================ -->
 
 <div id="panel-enviar" class="panel">
-
-  <!-- Verificación -->
-
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar"></div>
-      <div class="form-section-title">✅ Verificación</div>
-    </div>
-    <div class="resumen-body" id="verificacion-lista">
-      <!-- se rellena por JS -->
-    </div>
+    <div class="form-section-header"><div class="section-bar"></div><div class="form-section-title">✅ Verificación</div></div>
+    <div class="resumen-body" id="verificacion-lista"></div>
   </div>
-
-  <!-- Resumen -->
-
-  <div class="resumen-card">
-    <div class="resumen-header">
-      <span class="resumen-title">👤 Cliente</span>
-    </div>
-    <div class="resumen-body" id="resumen-cliente"></div>
-  </div>
-
-  <div class="resumen-card">
-    <div class="resumen-header">
-      <span class="resumen-title">🔧 Aparato</span>
-    </div>
-    <div class="resumen-body" id="resumen-aparato"></div>
-  </div>
-
-  <div class="resumen-card">
-    <div class="resumen-header">
-      <span class="resumen-title">💳 Importe</span>
-    </div>
-    <div class="resumen-body" id="resumen-importe"></div>
-  </div>
-
-  <!-- Acciones -->
-
+  <div class="resumen-card"><div class="resumen-header"><span class="resumen-title">👤 Cliente</span></div><div class="resumen-body" id="resumen-cliente"></div></div>
+  <div class="resumen-card"><div class="resumen-header"><span class="resumen-title">🔧 Aparato</span></div><div class="resumen-body" id="resumen-aparato"></div></div>
+  <div class="resumen-card"><div class="resumen-header"><span class="resumen-title">💳 Importe</span></div><div class="resumen-body" id="resumen-importe"></div></div>
   <div class="form-section">
-    <div class="form-section-header">
-      <div class="section-bar" style="background:var(--green)"></div>
-      <div class="form-section-title" style="color:var(--green2)">📄 Generar y Enviar</div>
-    </div>
+    <div class="form-section-header"><div class="section-bar" style="background:var(--green)"></div><div class="form-section-title" style="color:var(--green2)">📄 Generar y Enviar</div></div>
     <div class="form-section-body">
       <button class="btn btn-yellow" onclick="generarPDF(false)">⬇️ Descargar PDF</button>
       <button class="btn btn-green" onclick="compartirWhatsApp()">📲 WhatsApp</button>
@@ -817,816 +228,368 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
       <button class="btn btn-danger" onclick="resetearTodo()">🗑️ Nuevo contrato</button>
     </div>
   </div>
-
-</div><!-- /panel-enviar -->
-
-<!-- TOAST -->
-
-<div id="toast"></div>
-
-<!-- LOADING -->
-
-<div id="loading">
-  <div class="spinner"></div>
-  <div class="loading-txt">Generando PDF…</div>
 </div>
 
-<!-- jsPDF -->
+<div id="toast"></div>
+<div id="loading"><div class="spinner"></div><div class="loading-txt">Generando PDF…</div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-/* ============================================================
-   ESTADO GLOBAL
-============================================================ */
-var _firmaModo = 'manual';
-var _firmaConfirmada = false;
-var _firmaDataURL = '';
-var _baseAnterior = '';
-var _pdfBlob = null;
-var _ivaInterval = null;
+var _firmaModo='manual',_firmaConfirmada=false,_firmaDataURL='',_baseAnterior='',_pdfBlob=null;
 
-/* ============================================================
-   INICIALIZACIÓN
-============================================================ */
-document.addEventListener('DOMContentLoaded', function() {
-  // Apple icon
-  if (window.IMG_ICON) {
-    document.getElementById('apple-icon').href = window.IMG_ICON;
-  }
-
-  // Logo header
-  if (window.IMG_LOGO_APP) {
-    var wrap = document.getElementById('header-logo-wrap');
-    var img = document.createElement('img');
-    img.src = window.IMG_LOGO_APP;
-    img.className = 'header-logo';
-    img.alt = 'HAROSAT';
-    wrap.parentNode.replaceChild(img, wrap);
-  }
-
-  // Fecha inicio: hoy por defecto
-  var hoy = new Date();
-  var yyyy = hoy.getFullYear();
-  var mm = String(hoy.getMonth()+1).padStart(2,'0');
-  var dd = String(hoy.getDate()).padStart(2,'0');
-  document.getElementById('fecha-inicio').value = yyyy + '-' + mm + '-' + dd;
-
-  // IBAN visible/oculto según pago
-  document.getElementById('forma-pago').addEventListener('change', function() {
-    document.getElementById('iban-field').style.display =
-      (this.value === 'Domiciliación bancaria' || this.value === 'Transferencia bancaria') ? 'block' : 'none';
-  });
-
-  // Canvas firma
+document.addEventListener('DOMContentLoaded',function(){
+  if(window.IMG_ICON)document.getElementById('apple-icon').href=window.IMG_ICON;
+  if(window.IMG_LOGO_APP){var w=document.getElementById('header-logo-wrap');var im=document.createElement('img');im.src=window.IMG_LOGO_APP;im.className='header-logo';im.alt='HAROSAT';w.parentNode.replaceChild(im,w);}
+  document.getElementById('fecha-inicio').value=new Date().toISOString().split('T')[0];
+  document.getElementById('forma-pago').addEventListener('change',function(){document.getElementById('iban-field').style.display=this.value==='Efectivo'?'none':'block';});
   iniciarCanvas();
-
-  // Preview firma automática: actualizar cuando cambia nombre
-  document.getElementById('cliente-nombre').addEventListener('input', actualizarPreviewAuto);
-
-  // IVA — polling cada 200ms para compatibilidad iPad
-  _ivaInterval = setInterval(calcularIVA, 200);
+  document.getElementById('cliente-nombre').addEventListener('input',actualizarPreviewAuto);
+  setInterval(calcularIVA,200);
 });
 
-/* ============================================================
-   TABS
-============================================================ */
-function cambiarTab(id, btn) {
-  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('panel-' + id).classList.add('active');
-  btn.classList.add('active');
-
-  if (id === 'firma') actualizarPreviewAuto();
-  if (id === 'enviar') actualizarResumen();
+function cambiarTab(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');btn.classList.add('active');
+  if(id==='firma')actualizarPreviewAuto();
+  if(id==='enviar')actualizarResumen();
 }
 
-/* ============================================================
-   IVA
-============================================================ */
-function calcularIVA() {
-  var el = document.getElementById('base-imponible');
-  var val = el.value;
-  if (val === _baseAnterior) return;
-  _baseAnterior = val;
-
-  var base = parseFloat(val);
-  if (isNaN(base) || base < 0) {
-    document.getElementById('iva-calc').textContent = '—';
-    document.getElementById('total-calc').textContent = '—';
-    return;
-  }
-  var iva = base * 0.21;
-  var total = base + iva;
-  document.getElementById('iva-calc').textContent = iva.toFixed(2) + ' €';
-  document.getElementById('total-calc').textContent = total.toFixed(2) + ' €';
+function calcularIVA(){
+  var el=document.getElementById('base-imponible'),val=el.value;
+  if(val===_baseAnterior)return;_baseAnterior=val;
+  var base=parseFloat(val);
+  if(isNaN(base)||base<0){document.getElementById('iva-calc').textContent='—';document.getElementById('total-calc').textContent='—';return;}
+  document.getElementById('iva-calc').textContent=(base*0.21).toFixed(2)+' €';
+  document.getElementById('total-calc').textContent=(base*1.21).toFixed(2)+' €';
 }
 
-/* ============================================================
-   CANVAS FIRMA
-============================================================ */
-function iniciarCanvas() {
-  var canvas = document.getElementById('firma-canvas');
-  var ctx = canvas.getContext('2d');
-  var dibujando = false;
-  var hint = document.getElementById('canvas-hint');
-
-  // Ajustar resolución
-  function ajustarCanvas() {
-    var rect = canvas.getBoundingClientRect();
-    var dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    ctx.strokeStyle = '#f1f5f9';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }
-  ajustarCanvas();
-
-  function getPos(e) {
-    var rect = canvas.getBoundingClientRect();
-    var src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
-  }
-
-  function iniciar(e) {
-    e.preventDefault();
-    dibujando = true;
-    hint.style.display = 'none';
-    var p = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-  }
-  function dibujar(e) {
-    e.preventDefault();
-    if (!dibujando) return;
-    var p = getPos(e);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-  }
-  function parar(e) {
-    dibujando = false;
-  }
-
-  canvas.addEventListener('mousedown', iniciar);
-  canvas.addEventListener('mousemove', dibujar);
-  canvas.addEventListener('mouseup', parar);
-  canvas.addEventListener('touchstart', iniciar, { passive: false });
-  canvas.addEventListener('touchmove', dibujar, { passive: false });
-  canvas.addEventListener('touchend', parar);
+function iniciarCanvas(){
+  var canvas=document.getElementById('firma-canvas'),ctx=canvas.getContext('2d'),dibujando=false,hint=document.getElementById('canvas-hint');
+  function ajustar(){var r=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=r.width*dpr;canvas.height=r.height*dpr;ctx.scale(dpr,dpr);ctx.strokeStyle='#f1f5f9';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';}
+  ajustar();
+  function pos(e){var r=canvas.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+  canvas.addEventListener('mousedown',function(e){e.preventDefault();dibujando=true;hint.style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener('mouseup',function(){dibujando=false;});
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();dibujando=true;hint.style.display='none';var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove',function(e){e.preventDefault();if(!dibujando)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',function(){dibujando=false;});
 }
 
-function limpiarCanvas() {
-  var canvas = document.getElementById('firma-canvas');
-  var ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  document.getElementById('canvas-hint').style.display = 'block';
-  _firmaConfirmada = false;
-  _firmaDataURL = '';
-  actualizarStatusFirma();
+function limpiarCanvas(){var c=document.getElementById('firma-canvas');c.getContext('2d').clearRect(0,0,c.width,c.height);document.getElementById('canvas-hint').style.display='block';_firmaConfirmada=false;_firmaDataURL='';actualizarStatusFirma();}
+
+function confirmarFirmaManual(){
+  var c=document.getElementById('firma-canvas'),ctx=c.getContext('2d'),d=ctx.getImageData(0,0,c.width,c.height).data,vacio=true;
+  for(var i=3;i<d.length;i+=4){if(d[i]>0){vacio=false;break;}}
+  if(vacio){toast('Dibuja la firma primero',true);return;}
+  _firmaDataURL=c.toDataURL('image/png');_firmaConfirmada=true;actualizarStatusFirma();toast('✓ Firma guardada');
 }
 
-function confirmarFirmaManual() {
-  var canvas = document.getElementById('firma-canvas');
-  var ctx = canvas.getContext('2d');
-  // Comprobar si el canvas está vacío
-  var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  var vacio = true;
-  for (var i = 3; i < data.length; i += 4) {
-    if (data[i] > 0) { vacio = false; break; }
-  }
-  if (vacio) {
-    toast('Dibuja la firma primero', true);
-    return;
-  }
-  _firmaDataURL = canvas.toDataURL('image/png');
-  _firmaConfirmada = true;
-  actualizarStatusFirma();
-  toast('✓ Firma guardada');
+function setFirmaModo(modo){
+  _firmaModo=modo;
+  document.getElementById('btn-firma-manual').classList.toggle('active',modo==='manual');
+  document.getElementById('btn-firma-auto').classList.toggle('active',modo==='auto');
+  document.getElementById('bloque-firma-manual').style.display=modo==='manual'?'block':'none';
+  document.getElementById('bloque-firma-auto').style.display=modo==='auto'?'block':'none';
+  _firmaConfirmada=false;_firmaDataURL='';actualizarStatusFirma();
+  if(modo==='auto')actualizarPreviewAuto();
 }
 
-/* ============================================================
-   FIRMA AUTOMÁTICA
-============================================================ */
-function setFirmaModo(modo) {
-  _firmaModo = modo;
-  document.getElementById('btn-firma-manual').classList.toggle('active', modo === 'manual');
-  document.getElementById('btn-firma-auto').classList.toggle('active', modo === 'auto');
-  document.getElementById('bloque-firma-manual').style.display = modo === 'manual' ? 'block' : 'none';
-  document.getElementById('bloque-firma-auto').style.display = modo === 'auto' ? 'block' : 'none';
-  _firmaConfirmada = false;
-  _firmaDataURL = '';
-  actualizarStatusFirma();
-  if (modo === 'auto') actualizarPreviewAuto();
+function actualizarPreviewAuto(){document.getElementById('firma-auto-preview').textContent=document.getElementById('cliente-nombre').value.trim()||'—';}
+
+function confirmarFirmaAuto(){
+  var nombre=document.getElementById('cliente-nombre').value.trim();
+  if(!nombre){toast('Rellena el nombre primero',true);return;}
+  var c=document.createElement('canvas');c.width=400;c.height=120;
+  var ctx=c.getContext('2d');ctx.clearRect(0,0,400,120);
+  ctx.font='italic 300 48px Georgia,serif';ctx.fillStyle='#1a1a1a';ctx.textBaseline='middle';ctx.fillText(nombre,20,60);
+  _firmaDataURL=c.toDataURL('image/png');_firmaConfirmada=true;actualizarStatusFirma();toast('✓ Firma automática confirmada');
 }
 
-function actualizarPreviewAuto() {
-  var nombre = document.getElementById('cliente-nombre').value.trim();
-  document.getElementById('firma-auto-preview').textContent = nombre || '—';
+function actualizarStatusFirma(){
+  var el=document.getElementById('firma-status');
+  el.className=_firmaConfirmada?'firma-status ok mt-8':'firma-status empty mt-8';
+  el.textContent=_firmaConfirmada?'✓ Firma lista para el PDF':'Sin firma';
 }
 
-function confirmarFirmaAuto() {
-  var nombre = document.getElementById('cliente-nombre').value.trim();
-  if (!nombre) {
-    toast('Rellena el nombre del cliente primero', true);
-    return;
-  }
-  // Generar firma automática en canvas oculto
-  var c = document.createElement('canvas');
-  c.width = 400; c.height = 120;
-  var ctx = c.getContext('2d');
-  ctx.fillStyle = 'rgba(0,0,0,0)';
-  ctx.clearRect(0,0,400,120);
-  ctx.font = 'italic 300 48px Georgia, serif';
-  ctx.fillStyle = '#f1f5f9';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(nombre, 20, 60);
-  _firmaDataURL = c.toDataURL('image/png');
-  _firmaConfirmada = true;
-  actualizarStatusFirma();
-  toast('✓ Firma automática confirmada');
+function g(id){var el=document.getElementById(id);return el?(el.value||'').trim():'';}
+function fR(l,v){if(!v)return '';return '<div class="resumen-row"><span class="resumen-label">'+l+'</span><span class="resumen-val">'+v+'</span></div>';}
+
+function actualizarResumen(){
+  var campos=[{id:'tipo-instalacion',label:'Tipo'},{id:'marca',label:'Marca'},{id:'modelo',label:'Modelo'},{id:'cliente-nombre',label:'Nombre'},{id:'cliente-dni',label:'NIF'},{id:'cliente-dir',label:'Dirección'},{id:'base-imponible',label:'Base imponible'}];
+  var html='';
+  for(var i=0;i<campos.length;i++){var ok=document.getElementById(campos[i].id)&&document.getElementById(campos[i].id).value.trim()!=='';html+='<div class="check-row"><span class="check-icon '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+'</span><span class="check-label">'+campos[i].label+(ok?'':' <span style="color:var(--txt4)">(vacío)</span>')+'</span></div>';}
+  html+='<div class="check-row"><span class="check-icon '+(_firmaConfirmada?'ok':'ko')+'">'+(_firmaConfirmada?'✓':'✗')+'</span><span class="check-label">Firma'+(_firmaConfirmada?'':' <span style="color:var(--txt4)">(pendiente)</span>')+'</span></div>';
+  document.getElementById('verificacion-lista').innerHTML=html;
+  document.getElementById('resumen-cliente').innerHTML=fR('Nombre',g('cliente-nombre'))+fR('NIF',g('cliente-dni'))+fR('Dirección',g('cliente-dir')+(g('cliente-pob')?', '+g('cliente-pob'):'')+( g('cliente-cp')?' '+g('cliente-cp'):''))+fR('Teléfono',g('cliente-tel'))+fR('Email',g('cliente-email'));
+  document.getElementById('resumen-aparato').innerHTML=fR('Tipo',g('tipo-instalacion'))+fR('Marca/Modelo',g('marca')+(g('modelo')?' '+g('modelo'):''))+fR('Potencia',g('potencia')?g('potencia')+' kW':'')+fR('Nº Serie',g('num-serie'))+fR('Año',g('anyo-instalacion'))+fR('Ubicación',g('ubicacion'));
+  var base=parseFloat(document.getElementById('base-imponible').value),ri=document.getElementById('resumen-importe');
+  if(!isNaN(base)&&base>0){ri.innerHTML=fR('Pago',g('forma-pago'))+fR('IBAN',g('cliente-iban'))+fR('Base',base.toFixed(2)+' €')+fR('IVA 21%',(base*0.21).toFixed(2)+' €')+'<div class="resumen-row"><span class="resumen-label">Total</span><span class="resumen-val total">'+(base*1.21).toFixed(2)+' €</span></div>';}
+  else ri.innerHTML='<div class="resumen-row"><span class="resumen-label" style="color:var(--txt4)">Sin importe</span></div>';
 }
 
-function actualizarStatusFirma() {
-  var el = document.getElementById('firma-status');
-  if (_firmaConfirmada) {
-    el.className = 'firma-status ok mt-8';
-    el.textContent = '✓ Firma lista para el PDF';
-  } else {
-    el.className = 'firma-status empty mt-8';
-    el.textContent = 'Sin firma';
-  }
-}
-
-/* ============================================================
-   RESUMEN (panel enviar)
-============================================================ */
-function actualizarResumen() {
-  // Verificación
-  var lista = document.getElementById('verificacion-lista');
-  var campos = [
-    { id: 'tipo-instalacion', label: 'Tipo de instalación', tipo: 'select' },
-    { id: 'marca',            label: 'Marca' },
-    { id: 'modelo',           label: 'Modelo' },
-    { id: 'cliente-nombre',   label: 'Nombre del cliente' },
-    { id: 'cliente-dni',      label: 'DNI / NIF' },
-    { id: 'cliente-dir',      label: 'Dirección' },
-    { id: 'base-imponible',   label: 'Base imponible' },
-  ];
-  var html = '';
-  for (var i = 0; i < campos.length; i++) {
-    var c = campos[i];
-    var el = document.getElementById(c.id);
-    var ok = el && el.value.trim() !== '';
-    html += '<div class="check-row">';
-    html += '<span class="check-icon ' + (ok ? 'ok' : 'ko') + '">' + (ok ? '✓' : '✗') + '</span>';
-    html += '<span class="check-label">' + c.label + (ok ? '' : ' <span style="color:var(--txt4)">(vacío)</span>') + '</span>';
-    html += '</div>';
-  }
-  // Firma
-  html += '<div class="check-row">';
-  html += '<span class="check-icon ' + (_firmaConfirmada ? 'ok' : 'ko') + '">' + (_firmaConfirmada ? '✓' : '✗') + '</span>';
-  html += '<span class="check-label">Firma del cliente' + (_firmaConfirmada ? '' : ' <span style="color:var(--txt4)">(pendiente)</span>') + '</span>';
-  html += '</div>';
-  lista.innerHTML = html;
-
-  // Resumen cliente
-  var resCliente = document.getElementById('resumen-cliente');
-  resCliente.innerHTML = filaRes('Nombre', g('cliente-nombre')) +
-    filaRes('DNI', g('cliente-dni')) +
-    filaRes('Dirección', g('cliente-dir') + (g('cliente-pob') ? ', ' + g('cliente-pob') : '') + (g('cliente-cp') ? ' ' + g('cliente-cp') : '')) +
-    filaRes('Teléfono', g('cliente-tel')) +
-    filaRes('Email', g('cliente-email'));
-
-  // Resumen aparato
-  var resAparato = document.getElementById('resumen-aparato');
-  resAparato.innerHTML = filaRes('Tipo', g('tipo-instalacion')) +
-    filaRes('Marca / Modelo', g('marca') + (g('modelo') ? ' ' + g('modelo') : '')) +
-    filaRes('Potencia', g('potencia') ? g('potencia') + ' kW' : '') +
-    filaRes('Nº Serie', g('num-serie')) +
-    filaRes('Año instal.', g('anyo-instalacion')) +
-    filaRes('Ubicación', g('ubicacion'));
-
-  // Resumen importe
-  var base = parseFloat(document.getElementById('base-imponible').value);
-  var resImporte = document.getElementById('resumen-importe');
-  if (!isNaN(base) && base > 0) {
-    var iva = base * 0.21;
-    var total = base + iva;
-    resImporte.innerHTML = filaRes('Contrato', g('tipo-contrato')) +
-      filaRes('Pago', g('forma-pago')) +
-      filaRes('IBAN', g('cliente-iban')) +
-      filaRes('Base imponible', base.toFixed(2) + ' €') +
-      filaRes('IVA 21%', iva.toFixed(2) + ' €') +
-      '<div class="resumen-row"><span class="resumen-label">Total</span><span class="resumen-val total">' + total.toFixed(2) + ' €</span></div>';
-  } else {
-    resImporte.innerHTML = '<div class="resumen-row"><span class="resumen-label" style="color:var(--txt4)">Sin importe</span></div>';
-  }
-}
-
-function g(id) {
-  var el = document.getElementById(id);
-  return el ? (el.value || '').trim() : '';
-}
-
-function filaRes(label, val) {
-  if (!val) return '';
-  return '<div class="resumen-row"><span class="resumen-label">' + label + '</span><span class="resumen-val">' + val + '</span></div>';
-}
-
-/* ============================================================
-   CLÁUSULAS — 18 estándar RITE
-============================================================ */
-/* ---- PREÁMBULO (se imprime antes de las condiciones generales) ---- */
-var PREAMBULO = [
+var PREAMBULO=[
   'A. El presente contrato se refiere al aparato de producción o transmisión de calor instalado en el domicilio indicado.',
   'B. Está suscrito de una parte por el usuario cuyos datos figuran en este contrato, por la otra parte HAROSAT ECOTECHNICAL, denominada en este contrato y en adelante "la empresa mantenedora".',
   'C. Se ampara en el Reglamento de Instalaciones Térmicas en Edificios (RITE) aprobado en el Real Decreto 1027/2007, de Julio, en el que se regulan las exigencias de eficiencia energética y de seguridad que deben cumplir dichas instalaciones para atender la demanda de bienestar e higiene de las personas.'
 ];
-
-var CLAUSULAS = [
-  { n:1,  c:'El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.' },
-  { n:2,  c:'La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.' },
-  { n:3,  c:'En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.' },
-  { n:4,  c:'Será por cuenta del usuario el valor de las piezas averiadas sustituidas.' },
-  { n:5,  c:'Quedan expresamente excluidas de este contrato:\n- Las averías producidas por fuerza mayor (inundación, congelación, revocos, incendios, aguas duras o alcalinas).\n- Las máquinas y componentes conectados al aparato de producción o transmisión de calor objeto de contrato.\n- Las averías o anomalías provocadas por falta de suministro de combustible.\n- Las reparaciones fuera del horario laboral.' },
-  { n:6,  c:'Los aparatos de producción o transmisión de calor estarán accesibles para su mantenimiento y poder realizar las reparaciones que fueran necesarias. En caso contrario los costes derivados del desmontaje o retirada de muebles u otros objetos que obstruyan su acceso correrán a cargo del cliente.' },
-  { n:7,  c:'Este contrato quedará automáticamente rescindido si el aparato descrito fuera manipulado por personal ajeno a la empresa mantenedora.' },
-  { n:8,  c:'En ningún caso la rescisión del contrato por parte del usuario dará derecho a la devolución de importe alguno. Si la rescisión fuera por parte de la empresa mantenedora, esta devolverá al usuario la parte proporcional de la última cuota satisfecha que corresponda, con arreglo al tiempo transcurrido desde su fecha de cobro.' },
-  { n:9,  c:'La empresa mantenedora asume la cualidad de empresario respecto de los empleados que exclusivamente realicen las tareas necesarias derivadas del cumplimiento de este contrato, declarando estar al corriente del pago de los seguros sociales de los mismos y eximiendo al usuario de toda responsabilidad por accidente que los mismos pudieran sufrir con ocasión de realizar exclusivamente las tareas derivadas de este contrato.' },
-  { n:10, c:'El importe anual de este contrato es de [_____] euros + IVA y será revisado anualmente en el momento de la renovación. Deberá ser satisfecho en una sola vez al momento de la firma, en metálico o mediante domiciliación bancaria. Las posteriores cuotas por las sucesivas renovaciones serán satisfechas por domiciliación bancaria.' },
-  { n:11, c:'El pago del presente contrato deberá ser abonado dentro del primer mes de la entrada en vigor o de cualquiera de sus prorrogas, reservándose la empresa mantenedora el derecho a prestar servicio después de esa fecha si el importe no ha sido satisfecho.' },
-  { n:12, c:'Este contrato no acredita por si solo que el pago haya sido satisfecho, para su justificación se deberá presentar el recibo bancario correspondiente o resguardo de cobro en efectivo.' },
-  { n:13, c:'Al hacerse cargo del mantenimiento, el titular de la instalación entregará al representante de la empresa mantenedora copia la siguiente documentación:\n. Proyecto o memoria técnica de la instalación realmente ejecutada\n. Certificado de la instalación\n. Certificado de inspección inicial con calificación aceptable, cuando sea preceptivo.' },
-  { n:14, c:'El titular o usuario de las instalaciones térmicas es responsable del cumplimiento del RITE desde el momento en que se realiza su recepción provisional, de acuerdo con lo dispuesto en el articulado de la Ley 21/1992, de 16 de julio de Industria, en lo que se refiere al uso, mantenimiento y seguridad; y sin que este mantenimiento pueda ser sustituido por la garantía.' },
-  { n:15, c:'Ambas partes renuncian expresamente al fuero que ahora o en el futuro pudiera corresponderle, y se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora para cualquier cuestión que pudiera derivarse de este contrato.' },
-  { n:16, c:'Los firmantes del presente contrato declaran que los datos indicados anteriormente son ciertos y de conformidad con lo establecido sobre tratamiento automatizado de los datos de carácter personal, otorgan consentimiento expreso par ser tratados automatizadamente, a fin de facilitar una mejor gestión en la prestación de los servicios, pudiendo ceder los mismos con idéntica finalidad a empresa autorizada.' },
-  { n:17, c:'De conformidad con lo dispuesto por la Ley Orgánica 15/1999 de 13 de diciembre, de Protección de Datos de carácter personal, se informa que estos datos serán incorporados a un fichero responsabilidad de la empresa mantenedora y serán tratados con la finalidad de contactar con el usuario e informarle sobre nuestros servicios.' },
-  { n:18, c:'La atención al cliente se realizará de lunes a viernes, el horario de atención será de 8:00 a 15:00, siempre con cita previa y por orden de aviso. Asimismo, informamos que el usuario podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición dirigiéndose al domicilio de la empresa mantenedora o bien remitiendo un mensaje a la dirección de correo electrónico harosatecnicos@gmail.com' }
+var CLAUSULAS=[
+  {n:1,c:'El contrato tiene un año de duración, renovable automática e indefinidamente por plazos anuales, salvo renuncia de algunas de las partes contratantes, en cuyo caso se deberá comunicar a la empresa.'},
+  {n:2,c:'La empresa mantenedora, durante su horario de jornada laboral, se compromete a realizar una revisión preventiva anual obligatoria de los aparatos descritos en este contrato.'},
+  {n:3,c:'En la revisión preventiva anual se incluyen los gastos por mano de obra y desplazamiento.'},
+  {n:4,c:'Será por cuenta del usuario el valor de las piezas averiadas sustituidas.'},
+  {n:5,c:'Quedan expresamente excluidas de este contrato:\n    - Las averías producidas por fuerza mayor (inundación, congelación, revocos, incendios, aguas duras o alcalinas).\n    - Las máquinas y componentes conectados al aparato de producción o transmisión de calor objeto de contrato.\n    - Las averías o anomalías provocadas por falta de suministro de combustible.\n    - Las reparaciones fuera del horario laboral.'},
+  {n:6,c:'Los aparatos de producción o transmisión de calor estarán accesibles para su mantenimiento y poder realizar las reparaciones que fueran necesarias. En caso contrario los costes derivados del desmontaje o retirada de muebles u otros objetos que obstruyan su acceso correrán a cargo del cliente.'},
+  {n:7,c:'Este contrato quedará automáticamente rescindido si el aparato descrito fuera manipulado por personal ajeno a la empresa mantenedora.'},
+  {n:8,c:'En ningún caso la rescisión del contrato por parte del usuario dará derecho a la devolución de importe alguno. Si la rescisión fuera por parte de la empresa mantenedora, esta devolverá al usuario la parte proporcional de la última cuota satisfecha que corresponda, con arreglo al tiempo transcurrido desde su fecha de cobro.'},
+  {n:9,c:'La empresa mantenedora asume la cualidad de empresario respecto de los empleados que exclusivamente realicen las tareas necesarias derivadas del cumplimiento de este contrato, declarando estar al corriente del pago de los seguros sociales de los mismos y eximiendo al usuario de toda responsabilidad por accidente que los mismos pudieran sufrir con ocasión de realizar exclusivamente las tareas derivadas de este contrato.'},
+  {n:10,c:'El importe anual de este contrato es de [_____] euros + IVA y será revisado anualmente en el momento de la renovación. Deberá ser satisfecho en una sola vez al momento de la firma, en metálico o mediante domiciliación bancaria. Las posteriores cuotas por las sucesivas renovaciones serán satisfechas por domiciliación bancaria.'},
+  {n:11,c:'El pago del presente contrato deberá ser abonado dentro del primer mes de la entrada en vigor o de cualquiera de sus prorrogas, reservándose la empresa mantenedora el derecho a prestar servicio después de esa fecha si el importe no ha sido satisfecho.'},
+  {n:12,c:'Este contrato no acredita por si solo que el pago haya sido satisfecho, para su justificación se deberá presentar el recibo bancario correspondiente o resguardo de cobro en efectivo.'},
+  {n:13,c:'Al hacerse cargo del mantenimiento, el titular de la instalación entregará al representante de la empresa mantenedora copia la siguiente documentación:\n    . Proyecto o memoria técnica de la instalación realmente ejecutada\n    . Certificado de la instalación\n    . Certificado de inspección inicial con calificación aceptable, cuando sea preceptivo.'},
+  {n:14,c:'El titular o usuario de las instalaciones térmicas es responsable del cumplimiento del RITE desde el momento en que se realiza su recepción provisional, de acuerdo con lo dispuesto en el articulado de la Ley 21/1992, de 16 de julio de Industria, en lo que se refiere al uso, mantenimiento y seguridad; y sin que este mantenimiento pueda ser sustituido por la garantía.'},
+  {n:15,c:'Ambas partes renuncian expresamente al fuero que ahora o en el futuro pudiera corresponderle, y se someten a los Tribunales de Justicia de la provincia del domicilio fiscal de la empresa mantenedora para cualquier cuestión que pudiera derivarse de este contrato.'},
+  {n:16,c:'Los firmantes del presente contrato declaran que los datos indicados anteriormente son ciertos y de conformidad con lo establecido sobre tratamiento automatizado de los datos de carácter personal, otorgan consentimiento expreso par ser tratados automatizadamente, a fin de facilitar una mejor gestión en la prestación de los servicios, pudiendo ceder los mismos con idéntica finalidad a empresa autorizada.'},
+  {n:17,c:'De conformidad con lo dispuesto por la Ley Orgánica 15/1999 de 13 de diciembre, de Protección de Datos de carácter personal, se informa que estos datos serán incorporados a un fichero responsabilidad de la empresa mantenedora y serán tratados con la finalidad de contactar con el usuario e informarle sobre nuestros servicios.'},
+  {n:18,c:'La atención al cliente se realizará de lunes a viernes, el horario de atención será de 8:00 a 15:00, siempre con cita previa y por orden de aviso. Asimismo, informamos que el usuario podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición dirigiéndose al domicilio de la empresa mantenedora o bien remitiendo un mensaje a la dirección de correo electrónico harosatecnicos@gmail.com'}
 ];
 
-/* ============================================================
-   GENERACIÓN PDF — jsPDF
-============================================================ */
-function generarPDF(silencioso) {
-  if (!silencioso) mostrarLoading(true);
+function generarPDF(silencioso){
+  if(!silencioso)mostrarLoading(true);
+  setTimeout(function(){
+    try{
+      var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+      var W=210,H=297,mg=14,aU=W-mg*2;
+      var base=parseFloat(document.getElementById('base-imponible').value)||0;
+      var iva=base*0.21,total=base+iva;
+      var AZ=[37,99,168],AM=[253,185,19],G1=[17,24,39],G2=[31,41,55],G3=[55,65,81],BL=[241,245,249],GT=[100,116,139];
+      var fi=document.getElementById('fecha-inicio').value;
+      var fechaStr=fi?fi.split('-').reverse().join('/'):new Date().toLocaleDateString('es-ES');
+      var anyo=fi?fi.split('-')[0]:new Date().getFullYear();
+      var numC=g('num-contrato');
 
-  setTimeout(function() {
-    try {
-      var doc = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      var W = 210, H = 297;
-      var mg = 14; // margen lateral
-      var anchoUtil = W - mg * 2;
+      function cab(pag){
+        doc.setFillColor.apply(doc,G1);doc.rect(0,0,W,28,'F');
+        doc.setFillColor.apply(doc,AZ);doc.rect(0,26,W,2,'F');
+        if(window.IMG_LOGO_PDF){try{doc.addImage(window.IMG_LOGO_PDF,'PNG',mg,3,38,20);}catch(e){}}
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor.apply(doc,BL);
+        doc.text('HAROSAT ECOTECHNICAL',window.IMG_LOGO_PDF?mg+40:mg,11);
+        doc.setFont('helvetica','normal');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+        doc.text('Instaladora de climatizacion, gas, calefaccion y aire acondicionado. Agente de puesta en marcha, mantenimiento, reparaciones y adecuacion de aparatos a gas. Categoria RITE, IGIII.',window.IMG_LOGO_PDF?mg+40:mg,16,{maxWidth:110});
+        doc.text('CIF/NIF 09302345H',window.IMG_LOGO_PDF?mg+40:mg,23);
+        doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor.apply(doc,BL);
+        doc.text('LUNES A VIERNES  [X]',W-mg,10,{align:'right'});
+        doc.setFont('helvetica','normal');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+        doc.text('STA. LUCIA 66, BJ · 26200 HARO · Tfno 640 05 64 84 · harosatecnicos@gmail.com · harosat.es',mg,23);
+        doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor.apply(doc,GT);
+        doc.text('Página '+pag+' de 2',W-mg,17,{align:'right'});
+      }
 
-      var base = parseFloat(document.getElementById('base-imponible').value) || 0;
-      var iva = base * 0.21;
-      var total = base + iva;
+      function pie(){
+        doc.setFillColor.apply(doc,G2);doc.rect(0,H-8,W,8,'F');
+        doc.setFont('helvetica','normal');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+        doc.text('HAROSAT ECOTECHNICAL · STA. LUCIA 66, BJ · HARO · LA RIOJA · 26200 · harosatecnicos@gmail.com · Tfno 640 05 64 84',W/2,H-3,{align:'center'});
+      }
 
-      // ---- COLORES ----
-      var AZUL    = [37, 99, 168];
-      var AMARILLO= [253, 185, 19];
-      var VERDE   = [90, 159, 62];
-      var GRIS1   = [17, 24, 39];
-      var GRIS2   = [31, 41, 55];
-      var GRIS3   = [55, 65, 81];
-      var BLANCOSUAVE = [241, 245, 249];
-      var TEXTGRIS = [100, 116, 139];
+      /* PÁGINA 1 */
+      cab(1);pie();
+      var y=30;
 
-      // Fecha contrato
-      var fi = document.getElementById('fecha-inicio').value;
-      var fechaStr = fi ? fi.split('-').reverse().join('/') : new Date().toLocaleDateString('es-ES');
-      var anyo = fi ? fi.split('-')[0] : new Date().getFullYear();
+      /* Título principal */
+      doc.setFillColor.apply(doc,AZ);doc.rect(mg,y,aU,7,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);
+      doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS',W/2,y+5,{align:'center'});
+      y+=9;
 
-      // ---- FUNCIÓN: CABECERA PDF (usada en ambas páginas) ----
-      function cabecera(pagina) {
-        // Fondo cabecera
-        doc.setFillColor.apply(doc, GRIS1);
-        doc.rect(0, 0, W, 28, 'F');
-        // Línea azul inferior
-        doc.setFillColor.apply(doc, AZUL);
-        doc.rect(0, 26, W, 2, 'F');
+      /* Tabla datos */
+      var cW=(aU-2)/2;
+      doc.setFillColor.apply(doc,G2);doc.rect(mg,y,cW,5,'F');doc.rect(mg+cW+2,y,cW,5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor.apply(doc,BL);
+      doc.text('Datos del Aparato',mg+2,y+3.5);
+      doc.text('Datos del Usuario (Propietario o arrendatario)',mg+cW+4,y+3.5);
+      y+=6;
 
-        // Logo o texto
-        if (window.IMG_LOGO_PDF) {
-          try { doc.addImage(window.IMG_LOGO_PDF, 'PNG', mg, 4, 40, 20); } catch(e) {}
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(6);
-          doc.setTextColor.apply(doc, TEXTGRIS);
-          doc.text('C/ Santa Lucía 66 BJ · 26200 Haro, La Rioja · NIF 09302345H', mg + 42, 12);
-          doc.text('Tel. 941 000 000 · www.harosat.es', mg + 42, 17);
-        } else {
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(14);
-          doc.setTextColor.apply(doc, AMARILLO);
-          doc.text('HAROSAT', mg, 13);
-          doc.setFontSize(6);
-          doc.setTextColor.apply(doc, TEXTGRIS);
-          doc.text('Ecotechnical', mg, 18);
-          doc.setFontSize(6);
-          doc.text('C/ Santa Lucía 66 BJ · 26200 Haro, La Rioja · NIF 09302345H · www.harosat.es', mg + 22, 13);
+      var aRows=[['Número Contrato:',numC],['Entrada en Vigor:',fechaStr],['Tipo Elemento:',g('tipo-instalacion')],['Marca:',g('marca')],['Modelo:',g('modelo')],['Número Serie:',g('num-serie')]];
+      var uRows=[['Nombre',g('cliente-nombre')],['Domicilio',g('cliente-dir')],['DP- Localidad',(g('cliente-cp')?g('cliente-cp')+' ':'')+g('cliente-pob')],['Provincia','La Rioja'],['NIF/Tfnos.:',g('cliente-dni')+(g('cliente-tel')?' / '+g('cliente-tel'):'')]];
+      var nF=Math.max(aRows.length,uRows.length);
+      for(var i=0;i<nF;i++){
+        doc.setFillColor.apply(doc,i%2===0?G1:G2);
+        doc.rect(mg,y+i*5.5,cW,5.5,'F');doc.rect(mg+cW+2,y+i*5.5,cW,5.5,'F');
+        doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+        if(aRows[i]){doc.text(aRows[i][0],mg+1.5,y+i*5.5+3.8);doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);doc.text(aRows[i][1]||'',mg+27,y+i*5.5+3.8);}
+        if(uRows[i]){doc.setFont('helvetica','bold');doc.setTextColor.apply(doc,GT);doc.text(uRows[i][0],mg+cW+3.5,y+i*5.5+3.8);doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);doc.text(uRows[i][1]||'',mg+cW+27,y+i*5.5+3.8);}
+      }
+      y+=nF*5.5+2;
+
+      /* Cobro e importes */
+      doc.setFillColor.apply(doc,G1);doc.rect(mg,y,aU,5.5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+      doc.text('Domicilio de Cobro:',mg+1.5,y+3.8);
+      doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);
+      doc.text(g('cliente-dir')+(g('cliente-pob')?' - '+g('cliente-pob'):''),mg+30,y+3.8);
+      doc.setFont('helvetica','bold');doc.setTextColor.apply(doc,GT);doc.text('Base Imponible:',W-mg-55,y+3.8);
+      doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);doc.text(base.toFixed(2)+' \u20ac',W-mg-2,y+3.8,{align:'right'});
+      y+=5.5;
+      doc.setFillColor.apply(doc,G2);doc.rect(mg,y,aU,5.5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor.apply(doc,GT);
+      doc.text('N. Cta.: ES__',mg+1.5,y+3.8);
+      doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);doc.text(g('cliente-iban')||'',mg+18,y+3.8);
+      doc.setFont('helvetica','bold');doc.setTextColor.apply(doc,GT);doc.text('Importe IVA 21%',W-mg-55,y+3.8);
+      doc.setFont('helvetica','normal');doc.setTextColor.apply(doc,BL);doc.text(iva.toFixed(2)+' \u20ac',W-mg-2,y+3.8,{align:'right'});
+      y+=5.5;
+      doc.setFillColor.apply(doc,AZ);doc.rect(mg,y,aU,5.5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor.apply(doc,AM);
+      doc.text('Total ...:',W-mg-55,y+3.8);doc.text(total.toFixed(2)+' \u20ac',W-mg-2,y+3.8,{align:'right'});
+      y+=8;
+
+      /* Título contrato mantenimiento */
+      doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor.apply(doc,BL);
+      doc.text('CONTRATO DE MANTENIMIENTO DE INSTALACION TÉRMICA',mg,y);y+=5;
+
+      /* Preámbulo */
+      doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor.apply(doc,BL);
+      for(var pa=0;pa<PREAMBULO.length;pa++){
+        var lp=doc.splitTextToSize(PREAMBULO[pa],aU);
+        for(var lpi=0;lpi<lp.length;lpi++){if(y>H-20)break;doc.text(lp[lpi],mg,y);y+=3.4;}
+        y+=1;
+      }
+      y+=2;
+
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor.apply(doc,BL);
+      doc.text('CONDICIONES GENERALES',mg,y);y+=4;
+
+      /* Cláusulas 1-10 */
+      doc.setFont('helvetica','normal');doc.setFontSize(5.8);doc.setTextColor.apply(doc,BL);
+      for(var c=0;c<10;c++){
+        var cl=CLAUSULAS[c];
+        var pts=('- '+cl.n+'. '+cl.c).split('\n');
+        for(var pi=0;pi<pts.length;pi++){
+          var ll=doc.splitTextToSize(pts[pi],pi>0?aU-5:aU);
+          for(var li=0;li<ll.length;li++){if(y>H-18)break;doc.text(ll[li],pi>0?mg+5:mg,y);y+=3.3;}
         }
-
-        // Título contrato (derecha)
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor.apply(doc, BLANCOSUAVE);
-        doc.text('CONTRATO DE MANTENIMIENTO', W - mg, 11, { align: 'right' });
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor.apply(doc, AMARILLO);
-        doc.text('Ejercicio ' + anyo + ' · Hoja ' + pagina + '/2', W - mg, 17, { align: 'right' });
+        y+=0.8;
       }
 
-      // ---- FUNCIÓN: PIE PDF ----
-      function pie() {
-        doc.setFillColor.apply(doc, GRIS2);
-        doc.rect(0, H - 10, W, 10, 'F');
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
-        doc.setTextColor.apply(doc, TEXTGRIS);
-        doc.text('HAROSAT Ecotechnical · C/ Santa Lucía 66 BJ · 26200 Haro, La Rioja · NIF 09302345H · www.harosat.es', W / 2, H - 4.5, { align: 'center' });
-      }
+      if(window.IMG_PUB1&&y<H-22){var esp=H-18-y;if(esp>10){try{doc.addImage(window.IMG_PUB1,'PNG',mg,y,aU,Math.min(esp,28));}catch(e){}}}
 
-      // =========================================================
-      // PÁGINA 1
-      // =========================================================
-      cabecera(1);
-      pie();
+      /* PÁGINA 2 */
+      doc.addPage();cab(2);pie();y=30;
 
-      var y = 34;
+      doc.setFillColor.apply(doc,G2);doc.rect(mg,y,aU,5,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor.apply(doc,BL);
+      doc.text('HAROSAT ECOTECHNICAL',mg+2,y+3.5);
+      doc.text('CONTRATO DE CONSERVACION Y PREVENCION DE AVERIAS',W/2,y+3.5,{align:'center'});
+      y+=8;
 
-      // ---- DATOS APARATO + CLIENTE (tabla) ----
-      var datosCliente = [
-        ['Cliente', g('cliente-nombre') || '—'],
-        ['DNI / NIF', g('cliente-dni') || '—'],
-        ['Dirección', (g('cliente-dir') + (g('cliente-pob') ? ', ' + g('cliente-pob') : '') + (g('cliente-cp') ? ' ' + g('cliente-cp') : '')) || '—'],
-        ['Teléfono', g('cliente-tel') || '—'],
-        ['Email', g('cliente-email') || '—'],
-      ];
-      var datosAparato = [
-        ['Tipo', g('tipo-instalacion') || '—'],
-        ['Marca / Modelo', (g('marca') + (g('modelo') ? ' ' + g('modelo') : '')) || '—'],
-        ['Potencia', g('potencia') ? g('potencia') + ' kW' : '—'],
-        ['Nº Serie', g('num-serie') || '—'],
-        ['Año instal.', g('anyo-instalacion') || '—'],
-        ['Ubicación', g('ubicacion') || '—'],
-      ];
-
-      // Título sección
-      doc.setFillColor.apply(doc, AZUL);
-      doc.rect(mg, y, anchoUtil, 6, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(255, 255, 255);
-      doc.text('DATOS DEL CONTRATO', mg + 3, y + 4);
-      y += 8;
-
-      // Dos columnas: cliente | aparato
-      var colW = (anchoUtil - 4) / 2;
-
-      // Fondo filas cliente
-      for (var i = 0; i < datosCliente.length; i++) {
-        doc.setFillColor.apply(doc, i % 2 === 0 ? GRIS1 : GRIS2);
-        doc.rect(mg, y + i * 6, colW, 6, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6);
-        doc.setTextColor.apply(doc, TEXTGRIS);
-        doc.text(datosCliente[i][0], mg + 2, y + i * 6 + 4);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor.apply(doc, BLANCOSUAVE);
-        doc.text(datosCliente[i][1], mg + 28, y + i * 6 + 4);
-      }
-      // Fondo filas aparato
-      for (var j = 0; j < datosAparato.length; j++) {
-        doc.setFillColor.apply(doc, j % 2 === 0 ? GRIS1 : GRIS2);
-        doc.rect(mg + colW + 4, y + j * 6, colW, 6, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6);
-        doc.setTextColor.apply(doc, TEXTGRIS);
-        doc.text(datosAparato[j][0], mg + colW + 4 + 2, y + j * 6 + 4);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor.apply(doc, BLANCOSUAVE);
-        doc.text(datosAparato[j][1], mg + colW + 4 + 25, y + j * 6 + 4);
-      }
-      y += Math.max(datosCliente.length, datosAparato.length) * 6 + 4;
-
-      // ---- IMPORTES ----
-      doc.setFillColor.apply(doc, AZUL);
-      doc.rect(mg, y, anchoUtil, 6, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(255, 255, 255);
-      doc.text('CONDICIONES ECONÓMICAS', mg + 3, y + 4);
-      y += 8;
-
-      var filaImportes = [
-        ['Tipo de contrato', g('tipo-contrato') || '—', '', ''],
-        ['Forma de pago', g('forma-pago') || '—', '', ''],
-        ['IBAN', g('cliente-iban') || '—', '', ''],
-        ['Fecha inicio', fechaStr, '', ''],
-        ['Base Imponible', '', base.toFixed(2) + ' \u20ac', ''],
-        ['IVA 21%', '', iva.toFixed(2) + ' \u20ac', ''],
-        ['TOTAL', '', total.toFixed(2) + ' \u20ac', 'TOTAL'],
-      ];
-
-      for (var k = 0; k < filaImportes.length; k++) {
-        var fila = filaImportes[k];
-        var esTotal = fila[3] === 'TOTAL';
-        doc.setFillColor.apply(doc, esTotal ? AZUL : (k % 2 === 0 ? GRIS1 : GRIS2));
-        doc.rect(mg, y, anchoUtil, 6, 'F');
-        doc.setFont('helvetica', esTotal ? 'bold' : 'normal');
-        doc.setFontSize(6.5);
-        doc.setTextColor.apply(doc, esTotal ? AMARILLO : TEXTGRIS);
-        doc.text(fila[0], mg + 2, y + 4);
-        doc.setTextColor.apply(doc, esTotal ? AMARILLO : BLANCOSUAVE);
-        if (fila[1]) doc.text(fila[1], mg + 50, y + 4);
-        if (fila[2]) doc.text(fila[2], W - mg - 2, y + 4, { align: 'right' });
-        y += 6;
-      }
-      y += 5;
-
-      // ---- TÍTULO CONTRATO MANTENIMIENTO ----
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      doc.text('CONTRATO DE MANTENIMIENTO DE INSTALACION TÉRMICA', mg, y);
-      y += 6;
-
-      // ---- PREÁMBULO A / B / C ----
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      for (var pa = 0; pa < PREAMBULO.length; pa++) {
-        var lineasP = doc.splitTextToSize(PREAMBULO[pa], anchoUtil);
-        for (var lp = 0; lp < lineasP.length; lp++) {
-          if (y > H - 24) break;
-          doc.text(lineasP[lp], mg, y);
-          y += 3.5;
+      /* Cláusulas 11-18 */
+      doc.setFont('helvetica','normal');doc.setFontSize(5.8);doc.setTextColor.apply(doc,BL);
+      for(var c2=10;c2<18;c2++){
+        var cl2=CLAUSULAS[c2];
+        var pts2=('- '+cl2.n+'. '+cl2.c).split('\n');
+        for(var pi2=0;pi2<pts2.length;pi2++){
+          var ll2=doc.splitTextToSize(pts2[pi2],pi2>0?aU-5:aU);
+          for(var li2=0;li2<ll2.length;li2++){if(y>235)break;doc.text(ll2[li2],pi2>0?mg+5:mg,y);y+=3.3;}
         }
-        y += 1.5;
+        y+=0.8;
       }
-      y += 2;
+      y+=3;
 
-      // ---- CONDICIONES GENERALES (cabecera) ----
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      doc.text('CONDICIONES GENERALES', mg, y);
-      y += 5;
+      if(window.IMG_PUB1&&y<225){try{doc.addImage(window.IMG_PUB1,'PNG',mg,y,aU,Math.min(225-y,22));}catch(e){}}
 
-      // ---- CLÁUSULAS 1-10 ----
-      for (var c = 0; c < 10; c++) {
-        var cl = CLAUSULAS[c];
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
-        doc.setTextColor.apply(doc, BLANCOSUAVE);
-        var sublineas = ('- ' + cl.n + '. ' + cl.c).split('\n');
-        for (var si = 0; si < sublineas.length; si++) {
-          var lineas = doc.splitTextToSize(sublineas[si], si > 0 ? anchoUtil - 6 : anchoUtil);
-          for (var li = 0; li < lineas.length; li++) {
-            if (y > H - 24) break;
-            doc.text(lineas[li], si > 0 ? mg + 6 : mg, y);
-            y += 3.5;
-          }
-        }
-        y += 1.5;
+      y=Math.max(y,228);
+      doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor.apply(doc,BL);
+      doc.text('Y en prueba de conformidad y a su más exacto cumplimiento ambas partes firman por duplicado el presente contrato en',mg,y);
+      y+=7;
+
+      /* Firmas */
+      var mitad=mg+aU/2-4;
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor.apply(doc,BL);
+      doc.text('USUARIO/A',mg,y);
+      doc.text('Por la Empresa Mantenedora',W-mg,y,{align:'right'});
+      y+=3;
+
+      if(_firmaDataURL){try{doc.addImage(_firmaDataURL,'PNG',mg,y,mitad-mg-4,20);}catch(e){}}
+      var xD=mitad+8,aD=mg+aU-xD;
+      if(window.IMG_FIRMA){try{doc.addImage(window.IMG_FIRMA,'PNG',xD,y,aD-24,18);}catch(e){}}
+      if(window.IMG_SELLO){try{doc.addImage(window.IMG_SELLO,'PNG',mg+aU-22,y,22,22);}catch(e){}}
+      y+=22;
+
+      doc.setDrawColor.apply(doc,G3);doc.setLineWidth(0.3);
+      doc.line(mg,y,mitad-4,y);doc.line(xD,y,mg+aU,y);
+      y+=5;
+      doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor.apply(doc,BL);
+      doc.text('Fdo.:',W-mg,y,{align:'right'});
+      y+=8;
+      doc.text('Haro a          de                          de',mg,y);
+
+      /* Guardar */
+      var nombre=g('cliente-nombre').replace(/\s+/g,'_')||'Cliente';
+      var filename='Contrato_'+nombre+'_'+anyo+'.pdf';
+      _pdfBlob=doc.output('blob');
+
+      if(silencioso){mostrarLoading(false);return;}
+
+      /* Descarga — funciona en iOS/iPad/Chrome/Safari */
+      try{
+        var url=URL.createObjectURL(_pdfBlob);
+        var a=document.createElement('a');a.href=url;a.download=filename;a.style.display='none';
+        document.body.appendChild(a);a.click();
+        setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+        mostrarLoading(false);toast('✓ PDF generado');
+      }catch(e2){
+        if(navigator.share){
+          var f=new File([_pdfBlob],filename,{type:'application/pdf'});
+          navigator.share({files:[f],title:'Contrato Mantenimiento HAROSAT'}).then(function(){mostrarLoading(false);}).catch(function(){mostrarLoading(false);toast('No se pudo compartir',true);});
+        }else{mostrarLoading(false);toast('Error al generar PDF',true);}
       }
-
-      // ---- IMAGEN PUBLICITARIA P1 ----
-      if (window.IMG_PUB1 && y < H - 35) {
-        var espacio = H - 14 - y;
-        if (espacio > 15) {
-          try { doc.addImage(window.IMG_PUB1, 'PNG', mg, y, anchoUtil, Math.min(espacio, 30)); } catch(e) {}
-        }
-      }
-
-      // =========================================================
-      // PÁGINA 2
-      // =========================================================
-      doc.addPage();
-      cabecera(2);
-      pie();
-      y = 34;
-
-      // ---- CLÁUSULAS 11-18 ----
-      for (var c2 = 10; c2 < 18; c2++) {
-        var cl2 = CLAUSULAS[c2];
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
-        doc.setTextColor.apply(doc, BLANCOSUAVE);
-        var sublineas2 = ('- ' + cl2.n + '. ' + cl2.c).split('\n');
-        for (var si2 = 0; si2 < sublineas2.length; si2++) {
-          var lineas2 = doc.splitTextToSize(sublineas2[si2], si2 > 0 ? anchoUtil - 6 : anchoUtil);
-          for (var li2 = 0; li2 < lineas2.length; li2++) {
-            if (y > 230) break;
-            doc.text(lineas2[li2], si2 > 0 ? mg + 6 : mg, y);
-            y += 3.5;
-          }
-        }
-        y += 1.5;
-      }
-
-      // ---- CIERRE DEL CONTRATO ----
-      y += 3;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6.5);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      var cierreTexto = 'Y en prueba de conformidad y a su más exacto cumplimiento ambas partes firman por duplicado el presente contrato en';
-      var lineasCierre = doc.splitTextToSize(cierreTexto, anchoUtil);
-      for (var lc = 0; lc < lineasCierre.length; lc++) {
-        doc.text(lineasCierre[lc], mg, y);
-        y += 3.5;
-      }
-      y += 3;
-
-      // ---- IMAGEN PUBLICITARIA P2 ----
-      if (window.IMG_PUB1 && y < 220) {
-        try { doc.addImage(window.IMG_PUB1, 'PNG', mg, y, anchoUtil, Math.min(220 - y, 25)); } catch(e) {}
-      }
-
-      // ---- BLOQUE FIRMAS ----
-      var yFirmas = 240;
-
-      var mitad = mg + anchoUtil / 2 - 4;
-
-      // Etiquetas igual que el documento original
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      doc.text('USUARIO/A', mg, yFirmas);
-      doc.text('Por la Empresa Mantenedora', W - mg, yFirmas, { align: 'right' });
-      yFirmas += 4;
-
-      // Firma cliente (izquierda)
-      if (_firmaDataURL) {
-        try {
-          doc.addImage(_firmaDataURL, 'PNG', mg, yFirmas, mitad - mg - 4, 22);
-        } catch(e) {}
-      }
-
-      // Firma + sello empresa (derecha)
-      var xD = mitad + 8;
-      var anchoD = mg + anchoUtil - xD;
-      if (window.IMG_FIRMA) {
-        try { doc.addImage(window.IMG_FIRMA, 'PNG', xD, yFirmas, anchoD - 26, 20); } catch(e) {}
-      }
-      if (window.IMG_SELLO) {
-        try { doc.addImage(window.IMG_SELLO, 'PNG', mg + anchoUtil - 22, yFirmas, 22, 22); } catch(e) {}
-      }
-      yFirmas += 24;
-
-      // Líneas de firma
-      doc.setDrawColor.apply(doc, GRIS3);
-      doc.setLineWidth(0.3);
-      doc.line(mg, yFirmas, mitad - 4, yFirmas);
-      doc.line(xD, yFirmas, mg + anchoUtil, yFirmas);
-      yFirmas += 4;
-
-      // "Fdo.:" derecha
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6.5);
-      doc.setTextColor.apply(doc, BLANCOSUAVE);
-      doc.text('Fdo.:', W - mg, yFirmas, { align: 'right' });
-      yFirmas += 8;
-
-      // "Haro a de de"
-      doc.text('Haro a          de                          de', mg, yFirmas);
-
-      // =========================================================
-      // GUARDAR / DEVOLVER
-      // =========================================================
-      var nombreCliente = g('cliente-nombre').replace(/\s+/g, '_') || 'Cliente';
-      var filename = 'Contrato_Mantenimiento_' + nombreCliente + '_' + anyo + '.pdf';
-
-      if (silencioso) {
-        _pdfBlob = doc.output('blob');
-        mostrarLoading(false);
-        return;
-      }
-
-      // Detectar iOS/Safari para usar share
-      var esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      if (esIOS && navigator.share) {
-        _pdfBlob = doc.output('blob');
-        mostrarLoading(false);
-        return _pdfBlob;
-      }
-
-      doc.save(filename);
-      mostrarLoading(false);
-      toast('✓ PDF generado');
-    } catch(err) {
-      mostrarLoading(false);
-      toast('Error al generar PDF: ' + err.message, true);
-      console.error(err);
-    }
-  }, 100);
+    }catch(err){mostrarLoading(false);toast('Error: '+err.message,true);console.error(err);}
+  },100);
 }
 
-/* ============================================================
-   ACCIONES ENVIAR
-============================================================ */
-function compartirWhatsApp() {
-  var nombre = g('cliente-nombre') || 'cliente';
-  var base = parseFloat(document.getElementById('base-imponible').value) || 0;
-  var total = (base * 1.21).toFixed(2);
-  var msg = encodeURIComponent(
-    'Hola, ' + nombre + '.\n\n' +
-    'Te envío el contrato de mantenimiento de tu instalación térmica.\n' +
-    'Importe total: ' + total + ' €\n\n' +
-    'HAROSAT Ecotechnical · www.harosat.es'
-  );
-  var tel = g('cliente-tel').replace(/\D/g, '');
-  var url = tel ? 'https://wa.me/34' + tel + '?text=' + msg : 'https://wa.me/?text=' + msg;
-  window.open(url, '_blank');
+function compartirWhatsApp(){
+  var total=((parseFloat(document.getElementById('base-imponible').value)||0)*1.21).toFixed(2);
+  var tel=g('cliente-tel').replace(/\D/g,'');
+  var msg=encodeURIComponent('Hola, '+g('cliente-nombre')+'.\n\nTe envío el contrato de mantenimiento de tu instalación térmica.\nImporte total: '+total+' €\n\nHAROSAT Ecotechnical · www.harosat.es');
+  window.open(tel?'https://wa.me/34'+tel+'?text='+msg:'https://wa.me/?text='+msg,'_blank');
 }
 
-function compartirGmail() {
-  var nombre = g('cliente-nombre') || 'cliente';
-  var email = g('cliente-email') || '';
-  var base = parseFloat(document.getElementById('base-imponible').value) || 0;
-  var total = (base * 1.21).toFixed(2);
-  var asunto = encodeURIComponent('Contrato de Mantenimiento · HAROSAT Ecotechnical');
-  var cuerpo = encodeURIComponent(
-    'Estimado/a ' + nombre + ',\n\n' +
-    'Adjuntamos su contrato de mantenimiento de instalación térmica.\n' +
-    'Importe total: ' + total + ' €\n\n' +
-    'Ante cualquier consulta, no dude en contactarnos.\n\n' +
-    'Un saludo,\nJesús Garzón Martín\nHAROSAT Ecotechnical\nwww.harosat.es'
-  );
-  window.open('mailto:' + email + '?subject=' + asunto + '&body=' + cuerpo, '_blank');
+function compartirGmail(){
+  var total=((parseFloat(document.getElementById('base-imponible').value)||0)*1.21).toFixed(2);
+  var asunto=encodeURIComponent('Contrato de Mantenimiento · HAROSAT Ecotechnical');
+  var cuerpo=encodeURIComponent('Estimado/a '+g('cliente-nombre')+',\n\nAdjuntamos su contrato de mantenimiento.\nImporte total: '+total+' €\n\nJesús Garzón Martín\nHAROSAT Ecotechnical\nwww.harosat.es');
+  window.open('mailto:'+g('cliente-email')+'?subject='+asunto+'&body='+cuerpo,'_blank');
 }
 
-function compartirNativo() {
-  mostrarLoading(true);
-  setTimeout(function() {
-    try {
-      var doc2 = generarPDFBlob();
-      if (_pdfBlob && navigator.share) {
-        var nombre = g('cliente-nombre').replace(/\s+/g, '_') || 'Cliente';
-        var anyo = document.getElementById('fecha-inicio').value.split('-')[0] || new Date().getFullYear();
-        var file = new File([_pdfBlob], 'Contrato_' + nombre + '_' + anyo + '.pdf', { type: 'application/pdf' });
-        navigator.share({ files: [file], title: 'Contrato Mantenimiento HAROSAT' })
-          .then(function() { mostrarLoading(false); })
-          .catch(function() { mostrarLoading(false); });
-      } else {
-        generarPDF(false);
-      }
-    } catch(e) {
-      generarPDF(false);
-    }
-  }, 50);
-}
-
-function generarPDFBlob() {
+function compartirNativo(){
   generarPDF(true);
+  setTimeout(function(){
+    if(_pdfBlob&&navigator.share){
+      var nombre=g('cliente-nombre').replace(/\s+/g,'_')||'Cliente';
+      var anyo=(document.getElementById('fecha-inicio').value||'').split('-')[0]||new Date().getFullYear();
+      var f=new File([_pdfBlob],'Contrato_'+nombre+'_'+anyo+'.pdf',{type:'application/pdf'});
+      navigator.share({files:[f],title:'Contrato Mantenimiento HAROSAT'}).catch(function(){toast('No se pudo compartir',true);});
+    }else{generarPDF(false);}
+  },400);
 }
 
-/* ============================================================
-   RESET
-============================================================ */
-function resetearTodo() {
-  if (!confirm('¿Borrar todos los datos y empezar un contrato nuevo?')) return;
-  // Campos
-  var ids = ['tipo-instalacion','marca','modelo','num-serie','potencia','ubicacion','anyo-instalacion',
-             'cliente-nombre','cliente-dni','cliente-dir','cliente-pob','cliente-cp','cliente-tel','cliente-email',
-             'tipo-contrato','forma-pago','cliente-iban','base-imponible','observaciones'];
-  for (var i = 0; i < ids.length; i++) {
-    var el = document.getElementById(ids[i]);
-    if (el) el.value = el.tagName === 'SELECT' ? el.options[0].value : '';
-  }
-  document.getElementById('iva-calc').textContent = '—';
-  document.getElementById('total-calc').textContent = '—';
-  limpiarCanvas();
-  _firmaConfirmada = false;
-  _firmaDataURL = '';
-  _pdfBlob = null;
-  _baseAnterior = '';
+function resetearTodo(){
+  if(!confirm('¿Borrar todos los datos y empezar un contrato nuevo?'))return;
+  var ids=['tipo-instalacion','marca','modelo','num-serie','potencia','ubicacion','anyo-instalacion','cliente-nombre','cliente-dni','cliente-dir','cliente-pob','cliente-cp','cliente-tel','cliente-email','forma-pago','cliente-iban','base-imponible','num-contrato','observaciones'];
+  for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.value=el.tagName==='SELECT'?el.options[0].value:'';}
+  document.getElementById('iva-calc').textContent='—';document.getElementById('total-calc').textContent='—';
+  limpiarCanvas();_firmaConfirmada=false;_firmaDataURL='';_pdfBlob=null;_baseAnterior='';
   actualizarStatusFirma();
-  // Fecha hoy
-  var hoy = new Date();
-  document.getElementById('fecha-inicio').value = hoy.toISOString().split('T')[0];
-  cambiarTab('datos', document.querySelectorAll('.tab-btn')[0]);
+  document.getElementById('fecha-inicio').value=new Date().toISOString().split('T')[0];
+  cambiarTab('datos',document.querySelectorAll('.tab-btn')[0]);
   toast('✓ Formulario limpiado');
 }
 
-/* ============================================================
-   UI HELPERS
-============================================================ */
-function mostrarLoading(show) {
-  document.getElementById('loading').classList.toggle('show', show);
-}
-
-function toast(msg, err) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = err ? 'err show' : 'show';
-  setTimeout(function() { t.className = ''; }, 2800);
-}
+function mostrarLoading(show){document.getElementById('loading').classList.toggle('show',show);}
+function toast(msg,err){var t=document.getElementById('toast');t.textContent=msg;t.className=err?'err show':'show';setTimeout(function(){t.className='';},2800);}
 </script>
 
 </body>
