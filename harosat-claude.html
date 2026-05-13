@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT APPS CLAUDE</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #060910;
+    --bg2:       #0d1117;
+    --bg3:       #111827;
+    --blue:      #2563a8;
+    --blue-b:    #3B8AC7;
+    --yellow:    #FDB913;
+    --green:     #5A9F3E;
+    --red:       #e05c5c;
+    --purple:    #7c5cbf;
+    --cyan:      #2aa7c4;
+    --border:    rgba(59,138,199,0.18);
+    --text:      #e8eaf0;
+    --muted:     #6b7280;
+    --font:      'Outfit', sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: var(–font);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(37,99,168,0.04) 1px, transparent 1px),
+linear-gradient(90deg, rgba(37,99,168,0.04) 1px, transparent 1px);
+background-size: 40px 40px;
+pointer-events: none;
+z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+position: relative;
+z-index: 10;
+padding: 28px 32px 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid var(–border);
+background: rgba(6,9,16,0.85);
+backdrop-filter: blur(12px);
+}
+
+.logo-block {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+
+.logo-diamond {
+width: 38px; height: 38px;
+background: linear-gradient(135deg, var(–blue) 0%, var(–blue-b) 100%);
+clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+display: flex; align-items: center; justify-content: center;
+font-size: 17px;
+flex-shrink: 0;
+}
+
+.logo-text {
+display: flex; flex-direction: column; line-height: 1.1;
+}
+.logo-text span:first-child {
+font-size: 18px; font-weight: 700; letter-spacing: 0.06em;
+color: var(–blue-b);
+}
+.logo-text span:last-child {
+font-size: 10px; font-weight: 400; color: var(–muted);
+font-family: var(–mono); letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+.header-right {
+display: flex; align-items: center; gap: 10px;
+}
+
+.btn-edit {
+background: rgba(37,99,168,0.15);
+border: 1px solid var(–border);
+color: var(–blue-b);
+font-family: var(–font);
+font-size: 13px;
+font-weight: 500;
+padding: 7px 16px;
+border-radius: 8px;
+cursor: pointer;
+transition: all .2s;
+display: flex; align-items: center; gap: 6px;
+}
+.btn-edit:hover {
+background: rgba(37,99,168,0.3);
+border-color: var(–blue-b);
+}
+
+/* ── SEARCH BAR ── */
+.search-bar {
+position: relative; z-index: 10;
+padding: 20px 32px 0;
+}
+.search-wrap {
+max-width: 480px;
+position: relative;
+}
+.search-wrap input {
+width: 100%;
+background: var(–bg2);
+border: 1px solid var(–border);
+border-radius: 10px;
+color: var(–text);
+font-family: var(–font);
+font-size: 14px;
+padding: 10px 16px 10px 40px;
+outline: none;
+transition: border-color .2s;
+}
+.search-wrap input:focus { border-color: var(–blue-b); }
+.search-wrap input::placeholder { color: var(–muted); }
+.search-icon {
+position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+color: var(–muted); font-size: 15px; pointer-events: none;
+}
+
+/* ── FILTERS ── */
+.filters {
+position: relative; z-index: 10;
+padding: 16px 32px 0;
+display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+font-family: var(–font); font-size: 12px; font-weight: 500;
+padding: 5px 14px; border-radius: 20px; cursor: pointer;
+border: 1px solid var(–border); background: transparent;
+color: var(–muted); transition: all .2s; letter-spacing: 0.03em;
+text-transform: uppercase;
+}
+.filter-btn:hover, .filter-btn.active {
+color: var(–text);
+border-color: currentColor;
+}
+.filter-btn.active { font-weight: 600; }
+.filter-btn[data-cat=“all”].active  { color: var(–blue-b); }
+.filter-btn[data-cat=“gestion”].active { color: var(–yellow); }
+.filter-btn[data-cat=“tecnico”].active { color: var(–green); }
+.filter-btn[data-cat=“comercial”].active { color: var(–cyan); }
+.filter-btn[data-cat=“documentos”].active { color: var(–purple); }
+.filter-btn[data-cat=“contabilidad”].active { color: var(–red); }
+
+/* ── GRID APPS ── */
+.apps-section {
+position: relative; z-index: 10;
+padding: 24px 32px 40px;
+}
+
+.section-label {
+font-family: var(–mono); font-size: 11px;
+color: var(–muted); letter-spacing: 0.12em; text-transform: uppercase;
+margin-bottom: 16px;
+display: flex; align-items: center; gap: 10px;
+}
+.section-label::after {
+content: ‘’; flex: 1; height: 1px; background: var(–border);
+}
+
+.apps-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 14px;
+}
+
+/* ── APP CARD ── */
+.app-card {
+background: var(–bg2);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 20px 18px 16px;
+cursor: pointer;
+transition: transform .2s, border-color .2s, box-shadow .2s;
+position: relative;
+overflow: hidden;
+animation: fadeIn .3s ease both;
+display: flex; flex-direction: column; gap: 10px;
+text-decoration: none; color: inherit;
+}
+.app-card::before {
+content: ‘’;
+position: absolute; inset: 0;
+background: linear-gradient(135deg, var(–accent-color, var(–blue)) 0%, transparent 60%);
+opacity: 0.05;
+transition: opacity .25s;
+}
+.app-card:hover {
+transform: translateY(-3px);
+box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+border-color: var(–accent-color, var(–blue-b));
+}
+.app-card:hover::before { opacity: 0.1; }
+
+.app-card.hidden { display: none; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-icon {
+font-size: 28px; line-height: 1;
+}
+
+.card-body { flex: 1; }
+
+.card-name {
+font-size: 14px; font-weight: 600; color: var(–text);
+margin-bottom: 4px; line-height: 1.2;
+}
+.card-desc {
+font-size: 12px; color: var(–muted); line-height: 1.45;
+}
+
+.card-footer {
+display: flex; align-items: center; justify-content: space-between;
+}
+
+.cat-badge {
+font-family: var(–mono); font-size: 10px; font-weight: 500;
+padding: 3px 8px; border-radius: 5px; letter-spacing: 0.05em;
+text-transform: uppercase;
+background: rgba(255,255,255,0.05);
+color: var(–accent-color, var(–blue-b));
+border: 1px solid rgba(255,255,255,0.06);
+}
+
+.open-arrow {
+color: var(–accent-color, var(–blue-b));
+font-size: 16px; opacity: 0.6;
+transition: opacity .2s, transform .2s;
+}
+.app-card:hover .open-arrow { opacity: 1; transform: translateX(3px); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+grid-column: 1/-1;
+text-align: center; padding: 60px 20px;
+color: var(–muted); font-size: 14px;
+}
+
+/* ── ADD APP CARD ── */
+.add-card {
+background: transparent;
+border: 1px dashed rgba(59,138,199,0.25);
+border-radius: 14px;
+padding: 20px 18px;
+cursor: pointer;
+transition: all .2s;
+display: flex; flex-direction: column; align-items: center;
+justify-content: center; gap: 8px; min-height: 130px;
+color: var(–muted);
+font-size: 13px; font-weight: 500;
+}
+.add-card:hover {
+border-color: var(–blue-b); color: var(–blue-b);
+background: rgba(37,99,168,0.05);
+}
+.add-card .plus { font-size: 24px; }
+
+/* ── MODAL ── */
+.modal-bg {
+display: none; position: fixed; inset: 0;
+background: rgba(6,9,16,0.85); backdrop-filter: blur(8px);
+z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-bg.open { display: flex; }
+
+.modal {
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 18px;
+padding: 28px 28px 24px;
+width: 100%; max-width: 440px;
+margin: 16px;
+animation: modalIn .2s ease;
+}
+@keyframes modalIn {
+from { opacity: 0; transform: scale(.96) translateY(10px); }
+to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal h2 {
+font-size: 17px; font-weight: 600; margin-bottom: 20px;
+color: var(–blue-b);
+}
+
+.modal-grid {
+display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+margin-bottom: 12px;
+}
+.modal-grid.full { grid-template-columns: 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+font-size: 11px; font-weight: 500; color: var(–muted);
+font-family: var(–mono); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.field input, .field select, .field textarea {
+background: var(–bg2); border: 1px solid var(–border);
+border-radius: 8px; color: var(–text); font-family: var(–font);
+font-size: 13px; padding: 8px 12px; outline: none;
+transition: border-color .2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+border-color: var(–blue-b);
+}
+.field textarea { resize: vertical; min-height: 60px; }
+.field select option { background: var(–bg3); }
+
+.emoji-picker {
+display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px;
+margin-top: 6px;
+}
+.emoji-opt {
+background: var(–bg2); border: 1px solid var(–border);
+border-radius: 6px; cursor: pointer; font-size: 18px;
+padding: 4px; text-align: center; transition: all .15s;
+}
+.emoji-opt:hover, .emoji-opt.sel { border-color: var(–blue-b); background: rgba(37,99,168,0.15); }
+
+.modal-actions {
+display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;
+}
+.btn-cancel {
+background: transparent; border: 1px solid var(–border);
+color: var(–muted); font-family: var(–font); font-size: 13px;
+font-weight: 500; padding: 8px 18px; border-radius: 8px;
+cursor: pointer; transition: all .2s;
+}
+.btn-cancel:hover { border-color: var(–muted); color: var(–text); }
+.btn-save {
+background: var(–blue); border: none;
+color: #fff; font-family: var(–font); font-size: 13px;
+font-weight: 600; padding: 8px 20px; border-radius: 8px;
+cursor: pointer; transition: background .2s;
+}
+.btn-save:hover { background: var(–blue-b); }
+
+/* ── EDIT OVERLAY on card ── */
+.card-edit-btn {
+position: absolute; top: 8px; right: 8px;
+background: rgba(6,9,16,0.7); border: 1px solid var(–border);
+border-radius: 6px; color: var(–muted); font-size: 13px;
+padding: 3px 7px; cursor: pointer; opacity: 0; transition: opacity .2s;
+z-index: 5;
+}
+.app-card:hover .card-edit-btn { opacity: 1; }
+.card-edit-btn:hover { color: var(–yellow); border-color: var(–yellow); }
+
+/* ── STATS BAR ── */
+.stats-bar {
+position: relative; z-index: 10;
+padding: 0 32px 0;
+display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 0;
+}
+.stat {
+display: flex; align-items: baseline; gap: 6px;
+}
+.stat-num {
+font-family: var(–mono); font-size: 22px; font-weight: 500;
+color: var(–blue-b);
+}
+.stat-lbl { font-size: 12px; color: var(–muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+header { padding: 16px 16px; }
+.search-bar, .filters, .apps-section { padding-left: 16px; padding-right: 16px; }
+.stats-bar { padding: 0 16px; }
+.apps-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.modal-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+
+<header>
+  <div class="logo-block">
+    <div class="logo-diamond">⚡</div>
+    <div class="logo-text">
+      <span>HAROSAT</span>
+      <span>APPS CLAUDE</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-edit" onclick="openModal()">
+      <span>＋</span> Nueva app
+    </button>
+  </div>
+</header>
+
+<!-- SEARCH -->
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar aplicación…" oninput="renderApps()">
+  </div>
+</div>
+
+<!-- FILTERS -->
+
+<div class="filters" id="filterBar"></div>
+
+<!-- STATS -->
+
+<div class="stats-bar" style="padding-top:18px; padding-bottom:4px;">
+  <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-lbl">apps activas</span></div>
+</div>
+
+<!-- APPS -->
+
+<div class="apps-section">
+  <div class="section-label" id="sectionLabel">Todas las aplicaciones</div>
+  <div class="apps-grid" id="appsGrid"></div>
+</div>
+
+<!-- MODAL NUEVA / EDITAR APP -->
+
+<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
+  <div class="modal">
+    <h2 id="modalTitle">➕ Nueva aplicación</h2>
+    <div class="modal-grid">
+      <div class="field" style="grid-column:1/-1">
+        <label>Nombre</label>
+        <input type="text" id="f_name" placeholder="ej. Avisos">
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>URL (relativa o absoluta)</label>
+        <input type="text" id="f_url" placeholder="ej. avisos.html">
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>Descripción</label>
+        <textarea id="f_desc" placeholder="Qué hace esta app…"></textarea>
+      </div>
+      <div class="field">
+        <label>Categoría</label>
+        <select id="f_cat">
+          <option value="gestion">Gestión</option>
+          <option value="tecnico">Técnico</option>
+          <option value="comercial">Comercial</option>
+          <option value="documentos">Documentos</option>
+          <option value="contabilidad">Contabilidad</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Icono</label>
+        <input type="text" id="f_icon" placeholder="🔧" maxlength="4">
+      </div>
+    </div>
+    <div class="field">
+      <label>Iconos rápidos</label>
+      <div class="emoji-picker" id="emojiPicker"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveApp()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONFIGURACIÓN DE APPS  ← edita aquí para añadir o quitar
+// ─────────────────────────────────────────────
+const BASE = 'https://tecnicoharosat-source.github.io/harosat-app/';
+
+const DEFAULT_APPS = [
+  {
+    id: 'avisos',
+    name: 'Avisos',
+    desc: 'Gestión de citas diarias. Numeración HS26/001. Notificaciones push.',
+    url: BASE + 'avisos.html',
+    icon: '📅',
+    cat: 'gestion',
+    color: '#FDB913'
+  },
+  {
+    id: 'clientes',
+    name: 'Clientes',
+    desc: 'Ficha de clientes, archivados y estadísticas trimestrales/anuales.',
+    url: BASE + 'clientes.html',
+    icon: '👥',
+    cat: 'gestion',
+    color: '#3B8AC7'
+  },
+  {
+    id: 'revisiones',
+    name: 'Revisiones',
+    desc: 'Seguimiento de mantenimientos. Numeración por cliente.',
+    url: BASE + 'revisiones.html',
+    icon: '🔧',
+    cat: 'tecnico',
+    color: '#5A9F3E'
+  },
+  {
+    id: 'presupuestos',
+    name: 'Presupuestos',
+    desc: 'Generación de presupuestos calderas/aire. PDF y WhatsApp/Gmail.',
+    url: BASE + 'presupuestos.html',
+    icon: '📋',
+    cat: 'comercial',
+    color: '#2aa7c4'
+  },
+  {
+    id: 'articulos',
+    name: 'Artículos',
+    desc: 'Catálogo de artículos con proveedores y marcas. Alta al vuelo.',
+    url: BASE + 'articulos.html',
+    icon: '📦',
+    cat: 'tecnico',
+    color: '#5A9F3E'
+  },
+  {
+    id: 'zabaleta',
+    name: 'Zabaleta',
+    desc: 'Compras a Exclusivas Zabaleta. Sync precio coste/venta con margen.',
+    url: BASE + 'zabaleta.html',
+    icon: '🏪',
+    cat: 'comercial',
+    color: '#FDB913'
+  },
+  {
+    id: 'comparativa',
+    name: 'Comparativa Precios',
+    desc: 'Comparativa de precios entre distribuidores. Cards por artículo.',
+    url: BASE + 'comparativa-precios.html',
+    icon: '💹',
+    cat: 'comercial',
+    color: '#2aa7c4'
+  },
+  {
+    id: 'contable',
+    name: 'Contabilidad',
+    desc: 'Registro de ingresos y gastos. Tablas conta_ingresos / conta_gastos.',
+    url: BASE + 'contable.html',
+    icon: '💰',
+    cat: 'contabilidad',
+    color: '#e05c5c'
+  },
+  {
+    id: 'pagos',
+    name: 'Pagos',
+    desc: 'Plan de pagos 60/30/10%. Transferencias Caja Rural de Navarra.',
+    url: BASE + 'pagos.html',
+    icon: '🏦',
+    cat: 'contabilidad',
+    color: '#e05c5c'
+  },
+  {
+    id: 'firmas',
+    name: 'Firmas',
+    desc: 'Sistema de firma digital. Enlace único por cliente. PDF con jsPDF.',
+    url: BASE + 'firmas.html',
+    icon: '✍️',
+    cat: 'documentos',
+    color: '#7c5cbf'
+  },
+  {
+    id: 'escaner',
+    name: 'Escáner Docs',
+    desc: 'Captura de documentos. Compresión, recorte y PDF con portada.',
+    url: BASE + 'escaner_docs.html',
+    icon: '📷',
+    cat: 'documentos',
+    color: '#7c5cbf'
+  }
+];
+
+// ─────────────────────────────────────────────
+const CAT_LABELS = {
+  all:          'Todas',
+  gestion:      'Gestión',
+  tecnico:      'Técnico',
+  comercial:    'Comercial',
+  documentos:   'Documentos',
+  contabilidad: 'Contabilidad'
+};
+
+const CAT_COLORS = {
+  gestion:      '#FDB913',
+  tecnico:      '#5A9F3E',
+  comercial:    '#2aa7c4',
+  documentos:   '#7c5cbf',
+  contabilidad: '#e05c5c'
+};
+
+const EMOJI_LIST = ['📅','👥','🔧','📋','📦','🏪','💹','💰','🏦','✍️','📷','🔩','📌','🛠️','📊','📁','🗂️','🔔','📝','⚙️','🔑','📡','🌡️','💧'];
+
+let apps = [];
+let activeFilter = 'all';
+let editingId = null;
+
+// ─── INIT ───
+function init() {
+  const saved = localStorage.getItem('harosat_apps');
+  apps = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_APPS));
+  buildFilters();
+  buildEmojiPicker();
+  renderApps();
+}
+
+function save() {
+  localStorage.setItem('harosat_apps', JSON.stringify(apps));
+}
+
+// ─── FILTERS ───
+function buildFilters() {
+  const bar = document.getElementById('filterBar');
+  const cats = ['all', ...Object.keys(CAT_LABELS).filter(k => k !== 'all')];
+  bar.innerHTML = cats.map(c =>
+    `<button class="filter-btn ${c === 'all' ? 'active' : ''}" data-cat="${c}" onclick="setFilter('${c}')">${CAT_LABELS[c]}</button>`
+  ).join('');
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  document.getElementById('sectionLabel').textContent =
+    cat === 'all' ? 'Todas las aplicaciones' : CAT_LABELS[cat];
+  renderApps();
+}
+
+// ─── RENDER ───
+function renderApps() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const grid = document.getElementById('appsGrid');
+  const filtered = apps.filter(a => {
+    const catOk = activeFilter === 'all' || a.cat === activeFilter;
+    const srchOk = !q || a.name.toLowerCase().includes(q) || (a.desc||'').toLowerCase().includes(q);
+    return catOk && srchOk;
+  });
+
+  document.getElementById('statTotal').textContent = apps.length;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state">Sin resultados para "<b>${q}</b>"</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((a, i) => `
+    <a class="app-card" href="${a.url}" target="_blank"
+       style="--accent-color:${a.color || CAT_COLORS[a.cat] || 'var(--blue-b)'}; animation-delay:${i * 40}ms"
+       data-id="${a.id}">
+      <button class="card-edit-btn" onclick="openEdit(event,'${a.id}')">✏️</button>
+      <div class="card-icon">${a.icon || '📌'}</div>
+      <div class="card-body">
+        <div class="card-name">${a.name}</div>
+        <div class="card-desc">${a.desc || ''}</div>
+      </div>
+      <div class="card-footer">
+        <span class="cat-badge">${CAT_LABELS[a.cat] || a.cat}</span>
+        <span class="open-arrow">→</span>
+      </div>
+    </a>
+  `).join('') + `
+    <div class="add-card" onclick="openModal()">
+      <span class="plus">＋</span>
+      <span>Nueva aplicación</span>
+    </div>`;
+}
+
+// ─── MODAL ───
+function openModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '➕ Nueva aplicación';
+  ['f_name','f_url','f_desc','f_icon'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f_cat').value = 'gestion';
+  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('sel'));
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function openEdit(e, id) {
+  e.preventDefault(); e.stopPropagation();
+  const a = apps.find(x => x.id === id);
+  if (!a) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = '✏️ Editar aplicación';
+  document.getElementById('f_name').value = a.name;
+  document.getElementById('f_url').value = a.url;
+  document.getElementById('f_desc').value = a.desc || '';
+  document.getElementById('f_cat').value = a.cat;
+  document.getElementById('f_icon').value = a.icon || '';
+  document.querySelectorAll('.emoji-opt').forEach(e => {
+    e.classList.toggle('sel', e.dataset.emoji === a.icon);
+  });
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+}
+function closeModalBg(e) {
+  if (e.target.id === 'modalBg') closeModal();
+}
+
+function saveApp() {
+  const name = document.getElementById('f_name').value.trim();
+  const url  = document.getElementById('f_url').value.trim();
+  if (!name || !url) { alert('Nombre y URL son obligatorios'); return; }
+
+  const obj = {
+    id:   editingId || 'app_' + Date.now(),
+    name,
+    url,
+    desc: document.getElementById('f_desc').value.trim(),
+    cat:  document.getElementById('f_cat').value,
+    icon: document.getElementById('f_icon').value.trim() || '📌',
+    color: CAT_COLORS[document.getElementById('f_cat').value] || 'var(--blue-b)'
+  };
+
+  if (editingId) {
+    const idx = apps.findIndex(x => x.id === editingId);
+    if (idx > -1) apps[idx] = obj;
+  } else {
+    apps.push(obj);
+  }
+  save();
+  renderApps();
+  closeModal();
+}
+
+function buildEmojiPicker() {
+  document.getElementById('emojiPicker').innerHTML = EMOJI_LIST.map(e =>
+    `<div class="emoji-opt" data-emoji="${e}" onclick="pickEmoji('${e}')">${e}</div>`
+  ).join('');
+}
+
+function pickEmoji(e) {
+  document.getElementById('f_icon').value = e;
+  document.querySelectorAll('.emoji-opt').forEach(el =>
+    el.classList.toggle('sel', el.dataset.emoji === e)
+  );
+}
+
+// ─── RESET (acceso debug) ───
+window.resetApps = function() {
+  if (confirm('¿Restaurar apps por defecto? Se perderán los cambios personalizados.')) {
+    apps = JSON.parse(JSON.stringify(DEFAULT_APPS));
+    save(); renderApps();
+  }
+};
+
+init();
+</script>
+
+</body>
+</html>
