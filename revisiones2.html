@@ -179,9 +179,9 @@ async function cargar(){
   document.getElementById('loading').style.display='block';
   document.getElementById('tabla').style.display='none';
   document.getElementById('empty').style.display='none';
-  const {data,error}=await sb.from('revisiones2').select('*').order('client_number',{ascending:true});
+  const {data,error}=await sb.from('revisiones2').select('*').order('client_number',{ascending:true}).order('created_at',{ascending:true});
   if(error){toast('Error al cargar','error');document.getElementById('loading').style.display='none';return;}
-  allData=data||[];
+  allData=(data||[]).sort(function(a,b){return parseInt(a.client_number||0)-parseInt(b.client_number||0);});
   render(allData);stats(allData);
 }
 
