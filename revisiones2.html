@@ -179,7 +179,7 @@ async function cargar(){
   document.getElementById('loading').style.display='block';
   document.getElementById('tabla').style.display='none';
   document.getElementById('empty').style.display='none';
-  const {data,error}=await sb.from('revisiones2').select('*').order('id',{ascending:false});
+  const {data,error}=await sb.from('revisiones2').select('*').order('client_number',{ascending:true});
   if(error){toast('Error al cargar','error');document.getElementById('loading').style.display='none';return;}
   allData=data||[];
   render(allData);stats(allData);
@@ -190,12 +190,13 @@ function dias(p){if(!p)return null;var h=new Date();h.setHours(0,0,0,0);var px=n
 function fmtF(s){if(!s)return'—';var d=new Date(s);return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function badgeDias(d){if(d===null)return'—';if(d<0)return'<span class="badge bv">VENCIDA</span>';if(d<=30)return'<span class="badge bu">'+d+'d</span>';return'<span class="badge bok">'+d+'d</span>';}
 
+function ctBadge(t){if(!t)return'—';if(t==='lv'||t==='L-V')return'<span class="badge" style="background:rgba(42,143,212,.15);color:#3daee9;border:1px solid rgba(42,143,212,.3)">L-V</span>';if(t==='lvf'||t==='L-V + Festivos')return'<span class="badge" style="background:rgba(253,185,19,.15);color:#FDB913;border:1px solid rgba(253,185,19,.3)">L-V+F</span>';return t;}
 function stats(data){
   var lv=0,lvf=0,pend=0,urg=0;
   data.forEach(function(r){
     if(r.contract_type==='L-V'||r.contract_type==='lv')lv++;else if(r.contract_type==='L-V + Festivos'||r.contract_type==='lvf')lvf++;
     var p=proxima(r.last_review_date);var d=dias(p);
-    if(d!==null&&d>=0)pend++;if(d!==null&&d<=30)urg++;
+    pend++;if(d!==null&&d<=30)urg++;
   });
   document.getElementById('s-lv').textContent=lv;
   document.getElementById('s-lvf').textContent=lvf;
@@ -214,7 +215,7 @@ function render(data){
     tr.innerHTML='<td class="tn">'+(r.client_number||'—')+'</td>'+
       '<td class="tna">'+(r.client_name||'—')+'</td>'+
       '<td class="tc">'+(r.city||'—')+'</td>'+
-      '<td class="tc">'+(r.contract_type||'—')+'</td>'+
+      '<td>'+ctBadge(r.contract_type)+'</td>'+
       '<td class="tc" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">'+(r.boiler_model||'—')+'</td>'+
       '<td class="td">'+fmtF(r.last_review_date)+'</td>'+
       '<td class="td">'+(p?fmtF(p.toISOString()):'—')+'</td>'+
