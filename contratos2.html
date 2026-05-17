@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CONTRATOS">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--bg:#0a1628;--bg3:#112240;--card:#0f2040;--card2:#162a50;--border:#1e3a5f;--blue:#1a6fbf;--blue2:#2a8fd4;--blue3:#3daee9;--yellow:#FDB913;--green:#3dba6e;--red:#e84545;--text:#eae6d8;--text2:#b8c8dc;--text3:#7a9ab8;}
@@ -39,7 +39,6 @@ tbody tr{border-bottom:1px solid rgba(30,58,95,.5);transition:background .1s;cur
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover{background:var(--card2);}
 tbody td{padding:12px 15px;font-size:13px;color:var(--text);white-space:nowrap;}
-.tn{font-family:monospace;font-size:12px;font-weight:600;color:var(--blue3);}
 .msg{padding:60px;text-align:center;color:var(--text3);font-size:14px;}
 .bf{background:rgba(61,186,110,.15);color:#4dd47e;border:1px solid rgba(61,186,110,.35);display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
 .bn{background:rgba(249,115,22,.15);color:#fb923c;border:1px solid rgba(249,115,22,.35);display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
@@ -189,13 +188,13 @@ tbody td{padding:12px 15px;font-size:13px;color:var(--text);white-space:nowrap;}
 <script>
 var SB_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
-var sb,allData=[],cActual=null,fMode='pad',pad,ctx,drawing=false;
+var sb=supabase.createClient(SB_URL,SB_KEY);
+var allData=[],cActual=null,fMode='pad',pad,ctx,drawing=false;
+var ICO='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';
 
-function arrancar(){
-if(typeof supabase===‘undefined’){setTimeout(arrancar,100);return;}
-sb=supabase.createClient(SB_URL,SB_KEY);
+// Init pad
 pad=document.getElementById(‘fpad’);
-pad.width=pad.offsetWidth||560;
+pad.width=560;
 ctx=pad.getContext(‘2d’);
 ctx.strokeStyle=’#1a1a2e’;ctx.lineWidth=2;ctx.lineCap=‘round’;
 pad.addEventListener(‘mousedown’,function(e){drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);});
@@ -204,10 +203,9 @@ pad.addEventListener(‘mouseup’,function(){drawing=false;});
 pad.addEventListener(‘touchstart’,function(e){e.preventDefault();drawing=true;var t=e.touches[0],r=pad.getBoundingClientRect();ctx.beginPath();ctx.moveTo(t.clientX-r.left,t.clientY-r.top);},{passive:false});
 pad.addEventListener(‘touchmove’,function(e){e.preventDefault();if(!drawing)return;var t=e.touches[0],r=pad.getBoundingClientRect();ctx.lineTo(t.clientX-r.left,t.clientY-r.top);ctx.stroke();},{passive:false});
 pad.addEventListener(‘touchend’,function(){drawing=false;});
+
 document.getElementById(‘ffecha’).value=new Date().toISOString().split(‘T’)[0];
-cargar();
-}
-window.onload=arrancar;
+document.getElementById(‘fn’).addEventListener(‘input’,function(){if(fMode===‘auto’)setFirma(‘auto’);});
 
 function clearPad(){ctx.clearRect(0,0,pad.width,pad.height);}
 function setFirma(m){
@@ -217,45 +215,33 @@ document.getElementById(‘fpad-w’).style.display=m===‘pad’?‘block’:�
 document.getElementById(‘fauto-w’).style.display=m===‘auto’?‘block’:‘none’;
 if(m===‘auto’){var n=document.getElementById(‘fn’).value||‘Nombre cliente’;document.getElementById(‘fauto-p’).innerHTML=’<span style="font-style:italic;font-size:28px;color:#1a1a2e">’+n+’</span>’;}
 }
-document.getElementById?document.getElementById(‘fn’).addEventListener(‘input’,function(){if(fMode===‘auto’)setFirma(‘auto’);}):null;
-
 function calcIva(){var b=parseFloat(document.getElementById(‘fbase’).value)||0;document.getElementById(‘ftotal’).value=b>0?(b*1.21).toFixed(2)+’ €’:’’;}
-
 function fmt(s){if(!s)return’—’;return new Date(s).toLocaleDateString(‘es-ES’,{day:‘2-digit’,month:‘2-digit’,year:‘numeric’});}
 
 async function cargar(){
 document.getElementById(‘msg’).textContent=‘Cargando…’;
+document.getElementById(‘msg’).style.display=‘block’;
 document.getElementById(‘tabla’).style.display=‘none’;
-try{
 var r=await sb.from(‘contratos’).select(’*’).order(‘numero’,{ascending:false});
 allData=r.data||[];
-renderLista();
-}catch(e){
-document.getElementById(‘msg’).textContent=‘Error al conectar con la base de datos’;
-console.error(e);
-}
-}
-
-function renderLista(){
-var tb=document.getElementById(‘tbody’);
-tb.innerHTML=’’;
 if(!allData.length){document.getElementById(‘msg’).textContent=‘No hay contratos’;return;}
 document.getElementById(‘msg’).style.display=‘none’;
 document.getElementById(‘tabla’).style.display=‘table’;
+var tb=document.getElementById(‘tbody’);tb.innerHTML=’’;
 for(var i=0;i<allData.length;i++){
-var r=allData[i];
-var base=parseFloat(r.base_imponible)||0;
+var r2=allData[i];
+var base=parseFloat(r2.base_imponible)||0;
 var tr=document.createElement(‘tr’);
-tr.onclick=(function(id){return function(){verContrato(id);};})(r.id);
-tr.innerHTML=’<td class="tn">’+(r.numero||’—’)+’</td>’+
-‘<td style="font-weight:600">’+(r.cliente_nombre||’—’)+’</td>’+
-‘<td style="color:var(--text2);font-size:12px">’+(r.equipo_modelo||’—’)+’</td>’+
+tr.onclick=(function(id){return function(){verContrato(id);};})(r2.id);
+tr.innerHTML=’<td style="font-family:monospace;font-size:12px;color:var(--blue3)">’+(r2.numero||’—’)+’</td>’+
+‘<td style="font-weight:600">’+(r2.cliente_nombre||’—’)+’</td>’+
+‘<td style="color:var(--text2);font-size:12px">’+(r2.equipo_modelo||’—’)+’</td>’+
 ‘<td style="font-family:monospace;font-size:12px">’+(base*1.21).toFixed(2)+’ €</td>’+
-‘<td style="font-size:12px;color:var(--text2)">’+fmt(r.fecha_vigencia)+’</td>’+
-‘<td>’+(r.firma_cliente?’<span class="bf">✓ Firmado</span>’:’<span class="bn">Sin firma</span>’)+’</td>’+
+‘<td style="font-size:12px;color:var(--text2)">’+fmt(r2.fecha_vigencia)+’</td>’+
+‘<td>’+(r2.firma_cliente?’<span class="bf">✓ Firmado</span>’:’<span class="bn">Sin firma</span>’)+’</td>’+
 ‘<td><div class="acts">’+
-‘<button class="ab" onclick="event.stopPropagation();verContrato(\''+r.id+'\')">👁</button>’+
-‘<button class="ab del" onclick="event.stopPropagation();eliminar(\''+r.id+'\')">🗑</button>’+
+‘<button class="ab" onclick="event.stopPropagation();verContrato(\''+r2.id+'\')">👁</button>’+
+‘<button class="ab del" onclick="event.stopPropagation();eliminar(\''+r2.id+'\')">🗑</button>’+
 ‘</div></td>’;
 tb.appendChild(tr);
 }
@@ -291,42 +277,19 @@ var fecha=document.getElementById(‘ffecha’).value;
 if(!nombre||!base||!fecha){toast(‘Completa los campos obligatorios’,‘error’);return;}
 var firma=getFirma();
 var p={fecha_vigencia:fecha,cliente_nombre:nombre,cliente_nif:document.getElementById(‘fnif’).value.trim()||null,cliente_direccion:document.getElementById(‘fdir’).value.trim()||null,cliente_telefono:document.getElementById(‘ftel’).value.trim()||null,equipo_tipo:document.getElementById(‘ftipo’).value.trim()||null,equipo_marca:document.getElementById(‘fmarca’).value.trim()||null,equipo_modelo:document.getElementById(‘fmodelo’).value.trim()||null,equipo_serie:document.getElementById(‘fserie’).value.trim()||null,base_imponible:base,firma_cliente:firma,firma_auto:fMode===‘auto’};
-try{
 var res=await sb.from(‘contratos’).insert(p).select().single();
-if(res.error)throw res.error;
+if(res.error){toast(’Error: ’+res.error.message,‘error’);return;}
 toast(‘Contrato guardado’,‘success’);
-cerrarForm();
-await cargar();
-verContrato(res.data.id);
-}catch(e){toast(’Error: ’+e.message,‘error’);}
+cerrarForm();await cargar();verContrato(res.data.id);
 }
 
 async function eliminar(id){
 if(!confirm(’¿Eliminar este contrato?’))return;
-try{await sb.from(‘contratos’).delete().eq(‘id’,id);toast(‘Eliminado’,‘success’);await cargar();}
-catch(e){toast(‘Error’,‘error’);}
+await sb.from(‘contratos’).delete().eq(‘id’,id);
+toast(‘Eliminado’,‘success’);await cargar();
 }
 
-var CLS=[
-‘PRIMERA – DURACIÓN: El presente contrato tendrá una duración de UN AÑO a contar desde la fecha de entrada en vigor indicada, renovándose automáticamente por períodos anuales, salvo denuncia de cualquiera de las partes con un mínimo de 30 días de antelación a la fecha de vencimiento.’,
-‘SEGUNDA – REVISIÓN PREVENTIVA: El contrato incluye la realización de UNA (1) revisión preventiva anual del equipo/instalación objeto del contrato, conforme al Real Decreto 1027/2007 RITE (Reglamento de Instalaciones Térmicas en Edificios).’,
-‘TERCERA – MANO DE OBRA Y DESPLAZAMIENTO: La mano de obra y el desplazamiento necesarios para la realización de la revisión preventiva anual contemplada en el presente contrato están incluidos en el precio del mismo.’,
-‘CUARTA – PIEZAS Y MATERIALES: Las piezas de repuesto y materiales necesarios para la reparación de averías no están incluidos en el precio del contrato, siendo estos a cargo del usuario/titular del equipo.’,
-‘QUINTA – EXCLUSIONES: Quedan excluidos del presente contrato los trabajos derivados de: a) Fuerza mayor o causas ajenas a la empresa. b) Daños en componentes o equipos conectados a la instalación principal. c) Falta de suministro de combustible o energía. d) Reparaciones solicitadas fuera del horario de atención establecido. e) Daños derivados de una utilización inadecuada del equipo.’,
-‘SEXTA – ACCESIBILIDAD: El usuario/titular se compromete a garantizar que los equipos objeto del presente contrato estén accesibles para la realización de las revisiones y trabajos de mantenimiento, sin obstáculos que impidan el normal desarrollo de los mismos.’,
-‘SÉPTIMA – MANIPULACIÓN POR PERSONAL AJENO: El presente contrato quedará automáticamente rescindido si los equipos o instalaciones objeto del mismo son manipulados o reparados por personal ajeno a HAROSAT ECOTECHNICAL, sin autorización previa y expresa de esta empresa.’,
-‘OCTAVA – RESCISIÓN POR EL USUARIO: En caso de rescisión del contrato por voluntad del usuario/titular antes de la finalización del período contratado, no procederá la devolución de cantidad alguna de las ya abonadas.’,
-‘NOVENA – RESPONSABILIDAD DE LA EMPRESA: HAROSAT ECOTECHNICAL asume la responsabilidad por los actos de sus empleados en el desempeño de sus funciones, en los términos establecidos por la legislación vigente.’,
-‘DÉCIMA – PRECIO Y FORMA DE PAGO: El importe anual del contrato es el indicado en el encabezado del presente documento. Este importe podrá ser revisado anualmente conforme al IPC. El pago se realizará mediante pago único al momento de la firma o mediante domiciliación bancaria en el IBAN facilitado por el cliente.’,
-‘UNDÉCIMA – PLAZO DE PAGO: El pago deberá efectuarse dentro del primer mes de vigencia del contrato. El incumplimiento de este plazo podrá dar lugar a la suspensión del servicio.’,
-‘DUODÉCIMA – ACREDITACIÓN DEL PAGO: El presente contrato no acredita el pago del servicio. Para ello, será necesario el correspondiente recibo o justificante de pago emitido por HAROSAT ECOTECHNICAL.’,
-‘DECIMOTERCERA – DOCUMENTACIÓN TÉCNICA: El titular se compromete a entregar a HAROSAT ECOTECHNICAL toda la documentación técnica relativa a los equipos e instalaciones objeto del contrato en el momento de hacerse cargo del servicio.’,
-‘DECIMOCUARTA – CUMPLIMIENTO RITE: El titular es responsable del cumplimiento de los requisitos establecidos en el Real Decreto 1027/2007 RITE, así como de cualquier otra normativa aplicable a sus instalaciones térmicas.’,
-‘DECIMOQUINTA – JURISDICCIÓN: Para la resolución de cualquier controversia derivada del presente contrato, ambas partes se someten expresamente a la jurisdicción de los Tribunales de Haro (La Rioja), con renuncia expresa a cualquier otro fuero que pudiera corresponderles.’,
-‘DECIMOSEXTA – TRATAMIENTO DE DATOS: El cliente presta su consentimiento expreso para el tratamiento de sus datos personales con la finalidad de gestionar la relación contractual y prestar los servicios contratados, de conformidad con la normativa vigente en materia de protección de datos.’,
-‘DECIMOSÉPTIMA – PROTECCIÓN DE DATOS (LOPD): En cumplimiento de la Ley Orgánica 15/1999 de Protección de Datos de Carácter Personal, se le informa de que los datos facilitados serán incorporados a un fichero de datos de carácter personal titularidad de HAROSAT ECOTECHNICAL. Puede ejercer sus derechos dirigiéndose a: Sta. Lucía 66 BJ, 26200 Haro – La Rioja.’,
-‘DECIMOCTAVA – HORARIO DE ATENCIÓN: HAROSAT ECOTECHNICAL presta servicio de atención al cliente de lunes a viernes de 8:00 a 15:00 horas, previa cita. Tel: 640 05 64 84 · harosatecnicos@gmail.com.’
-];
+var CLS=[‘PRIMERA – DURACIÓN: El presente contrato tendrá una duración de UN AÑO a contar desde la fecha de entrada en vigor indicada, renovándose automáticamente por períodos anuales, salvo denuncia de cualquiera de las partes con un mínimo de 30 días de antelación a la fecha de vencimiento.’,‘SEGUNDA – REVISIÓN PREVENTIVA: El contrato incluye la realización de UNA (1) revisión preventiva anual del equipo/instalación objeto del contrato, conforme al Real Decreto 1027/2007 RITE.’,‘TERCERA – MANO DE OBRA Y DESPLAZAMIENTO: La mano de obra y el desplazamiento necesarios para la realización de la revisión preventiva anual están incluidos en el precio del mismo.’,‘CUARTA – PIEZAS Y MATERIALES: Las piezas de repuesto y materiales para reparación de averías no están incluidos en el precio del contrato, siendo a cargo del usuario/titular.’,‘QUINTA – EXCLUSIONES: Quedan excluidos del contrato los trabajos derivados de: a) Fuerza mayor. b) Daños en componentes conectados a la instalación principal. c) Falta de suministro. d) Reparaciones fuera del horario establecido. e) Utilización inadecuada del equipo.’,‘SEXTA – ACCESIBILIDAD: El usuario/titular garantizará que los equipos estén accesibles para las revisiones y trabajos de mantenimiento.’,‘SÉPTIMA – MANIPULACIÓN POR PERSONAL AJENO: El contrato quedará rescindido si los equipos son manipulados por personal ajeno a HAROSAT ECOTECHNICAL sin autorización previa.’,‘OCTAVA – RESCISIÓN POR EL USUARIO: En caso de rescisión antes de la finalización del período contratado, no procederá la devolución de cantidad alguna ya abonada.’,‘NOVENA – RESPONSABILIDAD DE LA EMPRESA: HAROSAT ECOTECHNICAL asume la responsabilidad por los actos de sus empleados en el desempeño de sus funciones.’,‘DÉCIMA – PRECIO Y FORMA DE PAGO: El importe anual es el indicado en el encabezado. El pago se realizará mediante pago único al momento de la firma o domiciliación bancaria en el IBAN facilitado.’,‘UNDÉCIMA – PLAZO DE PAGO: El pago deberá efectuarse dentro del primer mes de vigencia del contrato.’,‘DUODÉCIMA – ACREDITACIÓN DEL PAGO: El contrato no acredita el pago. Será necesario el recibo o justificante emitido por HAROSAT ECOTECHNICAL.’,‘DECIMOTERCERA – DOCUMENTACIÓN TÉCNICA: El titular entregará a HAROSAT ECOTECHNICAL la documentación técnica relativa a los equipos al hacerse cargo del servicio.’,‘DECIMOCUARTA – CUMPLIMIENTO RITE: El titular es responsable del cumplimiento del R.D. 1027/2007 RITE y normativa aplicable a sus instalaciones térmicas.’,‘DECIMOQUINTA – JURISDICCIÓN: Las partes se someten a la jurisdicción de los Tribunales de Haro (La Rioja).’,‘DECIMOSEXTA – TRATAMIENTO DE DATOS: El cliente presta consentimiento para el tratamiento de sus datos personales para gestionar la relación contractual.’,‘DECIMOSÉPTIMA – PROTECCIÓN DE DATOS (LOPD): Los datos facilitados se incorporarán a un fichero de HAROSAT ECOTECHNICAL. Puede ejercer sus derechos dirigiéndose a: Sta. Lucía 66 BJ, 26200 Haro.’,‘DECIMOCTAVA – HORARIO DE ATENCIÓN: Lunes a viernes de 8:00 a 15:00 horas, previa cita. Tel: 640 05 64 84 · harosatecnicos@gmail.com.’];
 
 function htmlContrato(r){
 var base=parseFloat(r.base_imponible)||0,iva=base*0.21,total=base+iva;
@@ -334,38 +297,18 @@ var cls=CLS.map(function(c){return ‘<p>’+c+’</p>’;}).join(’’);
 var firma=r.firma_cliente?’<img src="'+r.firma_cliente+'" style="max-width:100%;max-height:80px;object-fit:contain">’:’<span style="color:#ccc;font-size:11px">Sin firma</span>’;
 var fdate=r.created_at?new Date(r.created_at).toLocaleString(‘es-ES’):’’;
 return ‘<div id="pdf-c">’+
-‘<div class="ph">’+
-‘<div style="display:flex;align-items:center;gap:10px">’+
-‘<img src="data:image/png;base64,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" style="width:50px;height:50px;border-radius:8px;object-fit:contain">’+
-‘<div><div class="pco">HAR<span>O</span>SAT ECOTECHNICAL</div><div class="pcs">CIF: 09302345H · Sta. Lucía 66 BJ, 26200 Haro – La Rioja<br>Tel: 640 05 64 84 · harosatecnicos@gmail.com</div></div>’+
-‘</div>’+
-‘<div class="pr"><div class="pr-t">Contrato de Mantenimiento<br>CALDERAS</div><div class="pr-n">Nº: ‘+r.numero+’</div><div class="pr-d">Vigencia: ‘+fmt(r.fecha_vigencia)+’</div></div>’+
-‘</div>’+
+‘<div class="ph"><div style="display:flex;align-items:center;gap:10px"><img src="data:image/png;base64,'+ICO+'" style="width:50px;height:50px;border-radius:8px;object-fit:contain"><div><div class="pco">HAR<span>O</span>SAT ECOTECHNICAL</div><div class="pcs">CIF: 09302345H · Sta. Lucía 66 BJ, 26200 Haro – La Rioja<br>Tel: 640 05 64 84 · harosatecnicos@gmail.com</div></div></div>’+
+‘<div class="pr"><div class="pr-t">Contrato de Mantenimiento<br>CALDERAS</div><div class="pr-n">Nº: ‘+r.numero+’</div><div class="pr-d">Vigencia: ‘+fmt(r.fecha_vigencia)+’</div></div></div>’+
 ‘<div class="ptit"><h2>Contrato de Conservación y Prevención de Averías</h2><p>R.D. 1027/2007 – Reglamento de Instalaciones Térmicas en Edificios (RITE)</p></div>’+
-‘<div class="ppar">’+
-‘<div class="pp"><div class="pp-t">Empresa Prestadora</div><p><strong>HAROSAT ECOTECHNICAL</strong><br>CIF: 09302345H<br>Sta. Lucía 66 BJ, 26200 Haro – La Rioja<br>Tel: 640 05 64 84</p></div>’+
-‘<div class="pp"><div class="pp-t">Titular / Cliente</div><p><strong>’+(r.cliente_nombre||’—’)+’</strong>’+(r.cliente_nif?’<br>NIF: ‘+r.cliente_nif:’’)+(r.cliente_direccion?’<br>’+r.cliente_direccion:’’)+(r.cliente_telefono?’<br>Tel: ‘+r.cliente_telefono:’’)+’</p></div>’+
-‘</div>’+
-‘<div class="peq"><div class="peq-t">Datos del Equipo / Instalación</div><div class="peg">’+
-‘<div><label>Tipo</label><span>’+(r.equipo_tipo||’—’)+’</span></div>’+
-‘<div><label>Marca</label><span>’+(r.equipo_marca||’—’)+’</span></div>’+
-‘<div><label>Modelo</label><span>’+(r.equipo_modelo||’—’)+’</span></div>’+
-‘<div><label>Nº Serie</label><span>’+(r.equipo_serie||’—’)+’</span></div>’+
-‘</div></div>’+
-‘<div class="pimp"><div class="pimp-t">Importe Anual</div>’+
-‘<div class="pimp-r"><span>Base imponible:</span><span>’+base.toFixed(2)+’ €</span></div>’+
-‘<div class="pimp-r"><span>IVA (21%):</span><span>’+iva.toFixed(2)+’ €</span></div>’+
-‘<div class="pimp-tot"><span>TOTAL:</span><span>’+total.toFixed(2)+’ €</span></div>’+
-‘<div style="font-size:10px;color:#888;margin-top:5px">IBAN: ES12 3456 7890 1234 5678 9012</div>’+
-‘</div>’+
+‘<div class="ppar"><div class="pp"><div class="pp-t">Empresa Prestadora</div><p><strong>HAROSAT ECOTECHNICAL</strong><br>CIF: 09302345H<br>Sta. Lucía 66 BJ, 26200 Haro<br>Tel: 640 05 64 84</p></div>’+
+‘<div class="pp"><div class="pp-t">Titular / Cliente</div><p><strong>’+(r.cliente_nombre||’—’)+’</strong>’+(r.cliente_nif?’<br>NIF: ‘+r.cliente_nif:’’)+(r.cliente_direccion?’<br>’+r.cliente_direccion:’’)+(r.cliente_telefono?’<br>Tel: ‘+r.cliente_telefono:’’)+’</p></div></div>’+
+‘<div class="peq"><div class="peq-t">Datos del Equipo / Instalación</div><div class="peg"><div><label>Tipo</label><span>’+(r.equipo_tipo||’—’)+’</span></div><div><label>Marca</label><span>’+(r.equipo_marca||’—’)+’</span></div><div><label>Modelo</label><span>’+(r.equipo_modelo||’—’)+’</span></div><div><label>Nº Serie</label><span>’+(r.equipo_serie||’—’)+’</span></div></div></div>’+
+‘<div class="pimp"><div class="pimp-t">Importe Anual</div><div class="pimp-r"><span>Base imponible:</span><span>’+base.toFixed(2)+’ €</span></div><div class="pimp-r"><span>IVA (21%):</span><span>’+iva.toFixed(2)+’ €</span></div><div class="pimp-tot"><span>TOTAL:</span><span>’+total.toFixed(2)+’ €</span></div><div style="font-size:10px;color:#888;margin-top:5px">IBAN: ES12 3456 7890 1234 5678 9012</div></div>’+
 ‘<div class="pcl"><h3>Condiciones del Contrato</h3>’+cls+’</div>’+
 ‘<div class="paviso">⚠️ La firma de este contrato implica la aceptación de las condiciones del mismo.</div>’+
-‘<div class="pfir">’+
-‘<div class="pfir-b"><div class="pfir-l">Firma de la Empresa</div><div class="pfir-a"><strong style="color:#1a6fbf;font-size:12px">HAROSAT ECOTECHNICAL<br><span style="font-size:10px;font-weight:400;color:#888">Sello y firma autorizada</span></strong></div><div class="pfir-n">HAROSAT ECOTECHNICAL – CIF 09302345H</div></div>’+
-‘<div class="pfir-b"><div class="pfir-l">Firma del Cliente</div><div class="pfir-a">’+firma+’</div><div class="pfir-n">’+(r.cliente_nombre||’’)+(fdate?’<br>’+fdate:’’)+’</div></div>’+
-‘</div>’+
-‘<div class="ppie"><span>HAROSAT ECOTECHNICAL · CIF 09302345H · Sta. Lucía 66 BJ, 26200 Haro (La Rioja) · Tel: 640 05 64 84</span><span>Contrato ‘+r.numero+’ · RD 1027/2007 RITE</span></div>’+
-‘</div>’;
+‘<div class="pfir"><div class="pfir-b"><div class="pfir-l">Firma de la Empresa</div><div class="pfir-a"><strong style="color:#1a6fbf;font-size:12px">HAROSAT ECOTECHNICAL<br><span style="font-size:10px;font-weight:400;color:#888">Sello y firma autorizada</span></strong></div><div class="pfir-n">HAROSAT ECOTECHNICAL – CIF 09302345H</div></div>’+
+‘<div class="pfir-b"><div class="pfir-l">Firma del Cliente</div><div class="pfir-a">’+firma+’</div><div class="pfir-n">’+(r.cliente_nombre||’’)+(fdate?’<br>’+fdate:’’)+’</div></div></div>’+
+‘<div class="ppie"><span>HAROSAT ECOTECHNICAL · CIF 09302345H · Sta. Lucía 66 BJ, 26200 Haro (La Rioja)</span><span>Contrato ‘+r.numero+’ · RD 1027/2007 RITE</span></div></div>’;
 }
 
 function verContrato(id){
@@ -380,17 +323,14 @@ document.getElementById(‘mo-c’).classList.add(‘active’);
 function dlPDF(){
 if(!cActual)return;
 var el=document.getElementById(‘pdf-c’);
-var w=window.jspdf;
-var doc=new w.jsPDF({orientation:‘portrait’,unit:‘mm’,format:‘a4’});
+var doc=new window.jspdf.jsPDF({orientation:‘portrait’,unit:‘mm’,format:‘a4’});
 doc.html(el,{callback:function(d){d.save(‘Contrato_’+cActual.numero+’.pdf’);},x:5,y:5,width:200,windowWidth:750});
 }
 
 function imprimir(){
 var el=document.getElementById(‘pdf-c’);
 var w=window.open(’’,’_blank’);
-w.document.write(’<html><head><title>Contrato ‘+cActual.numero+’</title>’);
-w.document.write(’<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">’);
-w.document.write(’<style>body{font-family:Outfit,sans-serif;margin:20px;font-size:11px;}’+document.querySelector(‘style’).innerHTML+’</style></head><body>’);
+w.document.write(’<html><head><title>Contrato</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"><style>body{font-family:Outfit,sans-serif;margin:20px;font-size:11px;}’+document.querySelector(‘style’).innerHTML+’</style></head><body>’);
 w.document.write(el.outerHTML);
 w.document.write(’</body></html>’);
 w.document.close();
@@ -399,7 +339,7 @@ setTimeout(function(){w.print();},800);
 
 function whatsapp(){
 if(!cActual)return;
-var t=‘Hola ‘+cActual.cliente_nombre+’, le enviamos su Contrato de Mantenimiento Nº ‘+cActual.numero+’ de HAROSAT ECOTECHNICAL. Total anual: ‘+(parseFloat(cActual.base_imponible)*1.21).toFixed(2)+’ €. Contacto: 640 05 64 84.’;
+var t=‘Hola ‘+cActual.cliente_nombre+’, le enviamos su Contrato de Mantenimiento Nº ‘+cActual.numero+’ de HAROSAT ECOTECHNICAL. Total anual: ‘+(parseFloat(cActual.base_imponible)*1.21).toFixed(2)+’ €. Tel: 640 05 64 84.’;
 window.open(‘https://wa.me/?text=’+encodeURIComponent(t),’_blank’);
 }
 
@@ -411,6 +351,11 @@ window.open(‘mailto:?subject=’+encodeURIComponent(s)+’&body=’+encodeURIC
 }
 
 function toast(msg,tipo){var t=document.getElementById(‘toast’);t.textContent=msg;t.className=‘toast show ‘+(tipo||’’);setTimeout(function(){t.className=‘toast’;},3000);}
+
+document.getElementById(‘mo-form’).addEventListener(‘click’,function(e){if(e.target===this)cerrarForm();});
+document.getElementById(‘mo-c’).addEventListener(‘click’,function(e){if(e.target===this)cerrarCont();});
+
+cargar();
 </script>
 
 </body>
