@@ -171,7 +171,7 @@ textarea.fi{resize:vertical;min-height:75px;}
 
 <script>
 const SB_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MjA4MzAsImV4cCI6MjA1OTA5NjgzMH0.CGaKnCpXuSBXMNzqpSMjHKLWBkAWCqNKjBmzJFfHPMY';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 let allData=[],editId=null;
 
@@ -179,7 +179,7 @@ async function cargar(){
   document.getElementById('loading').style.display='block';
   document.getElementById('tabla').style.display='none';
   document.getElementById('empty').style.display='none';
-  const {data,error}=await sb.from('revisiones2').select('*').order('created_at',{ascending:false});
+  const {data,error}=await sb.from('revisiones2').select('*').order('id',{ascending:false});
   if(error){toast('Error al cargar','error');document.getElementById('loading').style.display='none';return;}
   allData=data||[];
   render(allData);stats(allData);
