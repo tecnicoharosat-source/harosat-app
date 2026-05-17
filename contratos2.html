@@ -283,9 +283,15 @@ async function cargar(){
   document.getElementById('loading').style.display='block';
   document.getElementById('tabla').style.display='none';
   document.getElementById('empty').style.display='none';
-  var{data,error}=await sb.from('contratos').select('*').order('numero',{ascending:false});
-  if(error){toast('Error al cargar','error');document.getElementById('loading').style.display='none';return;}
-  allData=data||[];render(allData);
+  try{
+    var{data,error}=await sb.from('contratos').select('*').order('numero',{ascending:false});
+    if(error)throw error;
+    allData=data||[];
+  }catch(e){
+    allData=[];
+    console.error(e);
+  }
+  render(allData);
 }
 
 function fmtF(s){if(!s)return'—';var d=new Date(s);return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});}
