@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CONTRATOS">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--bg:#0a1628;--bg3:#112240;--card:#0f2040;--card2:#162a50;--border:#1e3a5f;--blue:#1a6fbf;--blue2:#2a8fd4;--blue3:#3daee9;--yellow:#FDB913;--green:#3dba6e;--red:#e84545;--text:#eae6d8;--text2:#b8c8dc;--text3:#7a9ab8;}
@@ -191,7 +191,8 @@ var SB_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
 var sb,allData=[],cActual=null,fMode='pad',pad,ctx,drawing=false;
 
-window.onload=function(){
+function arrancar(){
+if(typeof supabase===‘undefined’){setTimeout(arrancar,100);return;}
 sb=supabase.createClient(SB_URL,SB_KEY);
 pad=document.getElementById(‘fpad’);
 pad.width=pad.offsetWidth||560;
@@ -205,7 +206,8 @@ pad.addEventListener(‘touchmove’,function(e){e.preventDefault();if(!drawing)
 pad.addEventListener(‘touchend’,function(){drawing=false;});
 document.getElementById(‘ffecha’).value=new Date().toISOString().split(‘T’)[0];
 cargar();
-};
+}
+window.onload=arrancar;
 
 function clearPad(){ctx.clearRect(0,0,pad.width,pad.height);}
 function setFirma(m){
