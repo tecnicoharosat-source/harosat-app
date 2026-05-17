@@ -265,12 +265,13 @@ function updateAutoPreview(){
   var prev=document.getElementById('firma-auto-preview');
   prev.innerHTML='<span style="font-family:\'Outfit\',sans-serif;font-style:italic;font-weight:300;font-size:28px;color:#1a1a2e">'+nombre+'</span>';
 }
-document.addEventListener('DOMContentLoaded',function(){
+async function init(){
   initPad();
   var hoy=new Date().toISOString().split('T')[0];
   document.getElementById('f-fecha').value=hoy;
-  cargar();
-});
+  await cargar();
+}
+init();
 
 function calcIva(){
   var base=parseFloat(document.getElementById('f-base').value)||0;
