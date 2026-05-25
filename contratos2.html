@@ -4,372 +4,912 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAROSAT CONTRATOS</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CONTRATOS">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAcc0lEQVR42oV6WY9l13Xet9beZ7jnTjVXdfXIJtkkW5xEypEtybas2ILtBE7gAIETI3lJnARI/BIE+QnOQxAkBvKUBAESBwZsxHaIOJAtO5JtWhIkUTKbFAc1m2QP7Oqa6w5n3nuvlYd7q7qKTTunbhXOvefUuWvvNX1rrY9+6Zd/qdvrWWu9SXRw3iaxjeM4jizpeDo+3Nupj45c2zjbc+lQ44Q4UmYlq8YoGTCDmIgAcHDs6hDEs9EopbjDhoxKpC5WF6mzpMRMRBSC8Y31FddF3BafHlYRqWU1UFGQBkOBxPvgd2tqlQAoMbGxFEDEQCP0/R15/oVPWzx6KAAiAKqqAAhKs08Bmp/S6duJoQih4cQtn0N/OeoNkjS11jBAKgg+uEbqqcsPzWQ3aiYGAoBApAro7GEEEBFUASIQEQGkekasswdBYT/pqs5+RWdLUBCgx7fo8Ypm74iNOM9RvnKVVi92e92e5cTAAAy1xiRJZJhFRLwPosHVNN7j3Q9o94665uSZRLMlzDePefaNfCyZPvzKs/JaOnPlY6ucq0AxW8SpOxQKKJFxTdFbyTef6QwX+gYJCQMhAMbYJK2r4t6Ht/fvbxWH+21ZkEonsYNhf3l5uL7+eDa5H3bvkspMCYaECUoUghEHCk1iSqaEhIkgmOtKz0ppHxX95ExFVWWmg9NrODlMaEdLj+Xnn+pFJhYvbDyReonSxDv34Zuvbf3wnfLoCCEQg4kMqWobHlSFusMsPnduZSXOonpMpApy3qooo13s5efOVeevhNVN+o3/ge3DNLKi4IcGcEpSO39PNDPCkyuzvYfSiQqhAjp2BoLxzdHG9cnGEx14EhLDouq9mDQdbT+4+61Xy90HZEwvjRNrutT2UabaJtJ2pImljX1tPvghd/rdlRVphU11bqW4cL7avBKWz8dmmCHOIBLHBxKCGBUlflTQYw2ckvuMH4iqQAmhHV/5bJyPYl9J1AGxcc3o3DOj9cdjV6m1oioK74PpdA7ff3f7m1/Xtu50ktTSEk8HaBJtrTpWgYZI2iQ0ibZppEHb56L3vvhyvnaZhysRhl3YHhCJZw3KkVqLIDCqqqKPOjHmennEOxQARFRCEFV1zqf9wxd+BgoByDX58pWD9SdNnUOhClH13iNOprfe2fvTPyBfdTr2Qlw9xkcLWrKGABKwzPaOSGdBjmzHiN57ffzuO71OQDYIlZVGVQKxEoEMJQlEZ4ZAx8HljA/wo447+zkOo6pQJbbTo3xhY/L0F+K2dIPVvfPXUeXzG0TEe0Rxff/OwTf+SEi7CV/k6VArBYSIaBYiwQCREpRVWcUYa5knkr76Gr/yH97Zv3GbIwHkJIKAESWkCiXST9hhfVQDeibSqIqIqgoRuQbldK+/fnDtCzsXnndNQyKiKiISgrCRfHz06h/64BYTuUBT1hDA81h9HHgJyrMgfxLG2dY05ITe/Ujufn+XjIcEaIAKVAC1MZ1Ej/+fCamecl7MjE5mKiBGUxkiVxV7naVKwMEpVEVUgoRAzNNvfa2ZjhZS3aBcVBV0LDSgKiAPCmABKQgEw7CM2Q6M2mxxGF3/yVX1QhogAgkQgWoSKUOYlE/kP7sOe9aDH+49CAKIQgBlprYx3iuI2hqqArACpBKC6S/4W2+Vt292h51zlIsyzWM2iSKQSeB7WnXRdKntmJCSpJl2oyiLozZolK5Ju/zTn9tNL3SlbimOIX6eo0WT5JTtqOBjGACwZ2LPPObrsf3T3POJyTfknYCCKqnSbA0gMKMuixvfNIm9EFWGVGiuxqAUw63KeDlMMrSRgSEiMswcG44tWYMsJp+ce3H1zpMvqVSBbAs/k5FUBIGjmAJIQHrKkOjUy54BFsfrU8VDDSiUWIMzvgWgIRzfgRBCMlzk99+oDncubQy75DzMbPsVuqGj83KQaeWUlExQBhGDAFJAlACtfHQu3vv0c3eVutSWIAXPJbWG4TmKlOYyz3f2jB3RI2H0tIHJDAYRg5gkkGtBpCIawuwF1VCVvHFl7dzGhozYRswwRIbpHCaXZC+CFzLz7EPH20YznapX0+Pip597M+47rQq4Cm0J1yK0oSje/L0foBh1UgGRgvQTEBvpDMzpSVSYx9CHOEiIiQ2I4FWbRjuJBiEoiczyYqjKIu2u/PTfT29+VR/cFDYMMNANrYCIiFT5LN4iEJO2YjO0X7762qCbS86UMpCAVIRNxje+uvuV3zw0vkmfeRqczbZSj4GAKmYWRXTKhPTM+lTnbgAiViWGoKkp7QeZL2CGolXEHe7fPuLphc9frSrevwMbz5TNsyh0DDHnsgNMUodkJW5/9uJry9m4yilRIQhEVGAGZnSz+core5LSt75eXBh9FGdr4lUeWovS/Kl6Aqf1odSnfACqKqQgJWIIuRqAhEDE8F6bNjhPKhn7NV9kt7/fTrayqIXzMaTDbobuZ7lXQTQrG4DSJ48PRj97/sYgKvOSklQdwyrIC3crNzJfe6WuTT/VclyF/K1al70GEVGlGJbnlkJzAG4Vn3jMUqyKKoHmjt82UISqUueDsMImFgPTxNMxTY5otGek5JgihHXjEojOAMMJvifUEnetfH75g08v3IILU6UkVgeoIgSYBJHqN74xvXk/9elyXSfW75M31FRGvApMYkHm0Txw2jhnyplXGAqIgJkEpAjkmjCt2tYiW0FZ2qP7HZqKtkXTxqHtG99PuZdwn6UTWgqwpAwlhVf2Enej8HR/9/n+naEZ5wWspVjVKUQQAmxAcPiL7+nrN6mNBsEZoiR0BoiHSqzEZDiKo0dxjyX8VYeIKkEVzCxl3i72oDW//w5PdiyCz2I1koVqRfNzSbvQ7YJM5VoRH6kEpZh8YnQxac53dq+kD7qY1CX2iTozN1FIgBGYgKrGB/fpzXvqbNKgC2IiFZPWZrEOsQbudWNjWUKYAZFH4TQ9xBOzZDaLQjoHFQx1Zdm8/l072SZWMmRZez7vhzpD0zdhGUefo9tLqUrMjYeBpNRmVPZoGmshIRRTTAkRU2y0AcRABMEAHq1g6wC3drUFt5oJmVmjgI6TaxRxv2eDzopyAqAyD54Wf0lVPzuCIECCkkJ9XWOqSpRxOzRN3/qYAlQZkrBQPd7ZmYhpH4v2l2NfCxrAAYcCTzCGI4PIzPIioBBBGwCGC9geYWsEz+So49WSMSpEc4smJl4cMBO8fDxiKh5GIf34EgiABmElYSgRxa4cUrMSl11uZ22UmbpAsIRJtDKS8aj23z5aWkzCZjIZYpKiiliIEUiCQTCwEUJAy7P0COexP8WoRiDylAQYYvZKBDCBEVTCoG/SWJzMNYKTNsYxFjqdCfSkHphVwwo4MUxOYBZputwBoF4hynQM7hUgUq/RHdpcsbuJzXdrutuuW3u+z+2Qy571mZWEEEuNciTiZy0gAtpZrW7YIxYwQxW80kvYxsGlcazGdOIMIkSkx8XMPA+cYCH9hHrgYV2gAeyccmKTNHVFCWYSEVECBKqiHjhsaAEiwB4vcdqPbBG3ddX4w2AbXWhh1XZTG3XcQafEkMYLUTNM0EuQRKRsvGeQGGuSbLAy3EiSzmEpHMVRJ4ms8SLzmDgTjE4ZzJk8MK86Z1qAAgKaNQNUFcSd5XWb5NLWTV2G1oFmqZNIdeK4pl4PnJmKEJVILCrDVRZ8LG3lXVFXrarRssNkrTWRwGpgqgPB+aTbz4ZLne4gTjOBcV7mBaSKCB/jzJMyjE6f2GOQR0SwpEHAChURDRBPx9mZJGhdqqulyoP3sObk34iYST1oLL3WZHEUTHDOVRY5aSlMMQuxeC9RHBvbdewKahlTDtOYXLRwabBxsZdaIlH1CPMkO3fhWTVHdJKaTqDJ7Jo9hjzqBbfGwT/zGUn6lrWTxiP/Xn3n692YAK1s1nnis9I01JR2+1a9f5+ICNJ4Ee9ZvGV00phDXZftrO1iomHCkW0KsYnJsm4nZQneV7XWUbOjIsKmWryWLC17kSp3Zlb0GyKeQVdVUFDWOZZVIiIiAQjgMG87WgWmecGEbendTWkl7h46stZ2o8V9XfGUDaKmbmmarfWufiao6S8tRm987fCrv7WQ6Xborv7UL168sBRc6T58+8E3/7hae/Lx565bV4SqbEf7+x+8l1DUidnE6WG81j13IXH57p33HJDV+XR4bdgZtFWxeWn8xHNJnKXjA7d9t97ZYhcsGZNRQUabYGtJPdLQNEFVwKrUwAawgqyqqniFNiqdNBURrWqNLJpOyMcJC5MGgKK0Loum9SZinUwtSS086l9+6cXPXryUdvoY37r0Z6/tDDZ/7J/+858cpKgaQHH3u2/8+a//25yjW93nL//Ul5/78eudSMY3/uKD3/xPvhoupyZyRz/xwp0v/MIAiylsinhBG7P7/sFXfqeZ7uR/80ujpZ942bX+zo3DW3924+VfvOzEBhdE6WBftn5/MWNvcQy1vRobx84H8S6QhhBc3XQMEyQIKEqCaAhBRHxVxOSPfNZbO09RtLvrupXxSH28YBCm4xAqbdU2TjY/9/y1B//ov/32qxd/5IvX/tr1w6kQa//ll8+5fzL6779mmsOXN2984YuJD2omU+oGqT1stn7FRJRfiN5dfupZu9iPWDfGxdG3DjavPwdj4FsYOXe/3PjKeNFUsyikCgrgKEkr58W1RBpa74pyViAGBZk4hBCCC977qiDSqcRr6+froC4oGk5MbKf3Ua41YjjI99/ezvqDVZ9GV57KOt9Zu3ptZ18BGEOHU5c++XJ3c0Ve+/0XfsaHsIgmr8Y0ff3+0pXF6LHVrRvlzgf7L10JZmUoxYgNyOiRT+FzrU2oWptBmyZFnJC3mDXhmQJxHMfBOXinhNC2mh8F8MQslH4ns1Hwrfo2OKd14UJo4166slbWTbW3M1xdWVvtxX6qTZU3IMN/+h//c3bt+S//47/lPa1ceryQxE0CMbE1FDyg/dVnNrQdDKM6H3cz+93X9d/9m90Xn9n90k98MME5Xx0tX8yox82DbdtJegN6cKSv/PrbP/7za4uP9d/603vv3oxgLhHUzstzJQWTjVzbQIIGuGqy/qMvi/eeqCdBo9RVOQDfNGiKcSPR6jp3OnVdHb51w7zw0nB1kCax+JA3YEK4/65f28wb+IYxXKvKyhGBjKvHcZqFQG7xpSRFNQ3dgVRHRy/+yMY//FdXv/q/t/7r/0mvXI1SbtcfXwaqt//kw8vPLi0/v3hvQq/8QfG5L+YEvPZG8u1bj/WXuo3pzPpCGkBgQzbybaPBAVFTTCiKiQ0Rzy2PCGxCU6Mpxg0trF8OGsJkPP7hG4Onrpct4l6/Da5s4Cv/5C/+Azr/dDnF3v1RUdRx3XogtM34a7/T+5Ev2c2nhBZuHkX3brmlVQrSJtj6hS+v/o2/fvE3fm/57dd3N5dp5UKE0eFr35msX4ohyfWrtrlDsfWoJ2m22ukNgAAwK5SgAiYTKVvf1PBOfaveSV2GKg9VHoqpNJW6Vr0LdVnnY296ndV11zbV9v3i9rttVZaVs70FgpRl2D/I137sy+nCys5Ib/3JV9s8b+q6bsVvvWduvJK/+r/avY8qsWMxf/4Gju5DWzS5H99+oNPbf/dLtzMzPn/Rcr/Zf3//1W/6+mCKZnxpTXpW1VdopuRdpkXqxlEo7SzVBTBZKyBpazasMkMJDGJiJmZwxFEMhWoxHY+i/lWTxsG5Zvue5KPQVlWZ28ECjsqirFxeTnZHkgwP3vrKwf/9rc4v/EstK9IyW76wev3Zwx/8QUW0cP255a6++j6a38XP/ShdeQLxUIsj1+tvbw6i85uE+qiZ2s9/vjvoBUz2e/1Wicg71CHy9QIm6vJMpnM0GsBsIx9EmkqjCFEM53S0I8TiA1TT81cVCrCrq3ySDx4/H8T7SdF97PFLv/KvxdpqfETdAY3rPK+qo8ne1v3h48+lLqemcEcHWhakmEpXf/JXl+tfO3j3jwaT76biXrxuvv8+/vi/hB+/Sr/yyzTc0DJgOZGNFbjtsLYk/+xXEzfxuucX+jARuVq1QOXiBjEh9rB2hukCiKOkDSJtLRCOkvroSO/dlKhTPthKBsvDJ54t8tyauJkeBSfZ6kZbTki09J6s4aZBPtWky9YWZVlP8/z2+7ywlm4+nSyvuq2b4eI1jbrUHB1GSf25f7Hm//1L7o+Hi/rLX8Lf+/n4T163WnomaQuUY3QzSm0oR4jYN/teABsjZdgUTYU2R+GiQhMVV0lkZ6OAoMRR7NpG21qgFLdaTRfjEHVpNxIaLoj30lTa6dX7D6LuAvV6vpiyMapCANlIiIy1Jo7K6dSVefvRrebyE1jayB67Xty/nU62Rp0LlkHVdJwu9D79d/w3fv/qFbha2dV/+zMEYDTW2OGjexRFkEbHU/rWWzyeyuYifuwlZSDKUFVoK5p1KUFEIDvrmQQwbNxUlbpGCdK2JtSrqWRRRcMoX1n2bS1tJa514/3OxsUQmtA2Id/D/j3Xert83j72nCWrSVLn09DUfvdOe7jrbHfw5PPh7g+iB+92N2xhlsBAcX9p95Vx3nQjWxdOGEWphhFHONjD11/nn/tRlRp3t+h/fq97dDj5wjX+zFMaRRgOEBoJFSTMej5BVOxJGlYbtdNKgxdH6lyibWaEfKNs4iwrysLVFZpKnY82H6tGIwDxzge6e+dwa7/zqSjdrNTGUdZpp0daFcgP9GgLcdzYNB32Jnd/sBAjSxdrpxvFu08V355I9O33xdXyxKp2E4Vq0dAf3aDDSp7Zpx8+wPtHi4Pl5W7cHFXNV16LQLg/xdfeTKyN77UbVdRzIaq5a3U2yiFSss1kD00uzpKNM3IxQlDWKBa2Wo2tNlwfkgaKDmzYCkEu0AgL8dFRDDcyW69p610IAYoyJ4vw0Q3svZVYXe4nVX648/Z3sl620Y+e7LVJOugm+/tH1R+O8dqAhykMxy4MPxrt97Lw29+2zq51Fte7aXDTdHcqf/jDJSGNbErVwGTL3eEqx9yKCbZrCQgKRHF+uJexM/0UiuDHPS2NIQlBkmH+4BYjEJGfbEm+N775oY/d+SxejhcLr9liX8r95r0dda2I9iytJ7S9kGq+lzZ8eSHppJGsdseVH3SwPiBPxkfZYPkKQinNtHZVW6WdrG8tLa33QWhCJ4o6h/HSXtClQYSM4ogYAWDLZCIQwsnM26pqYB55zrdvM1QhUEkhC0lgQDgywS2UI6ikhjKjo16ARpbicyYZa25jXFsgJbCJAGuCGCa13G38rFgLUVQxetYMFjudjm2CqDVbfkmKJu2upisbPZBXXyAQO/GLI++Gl4ejPXWdpr+Q3tvqrV7Tar+TjItEalGCkgHRrOdObK2Ng5q0zXtxiCCGlAkRw6oG4YT1SlxqDCgotqXTBRYLFyemME1RN7Gx/cw2gSsG2w45cSw2tZQ2DJcMfAwUO2wu5wtrSbVtegM6vCMLT08n+83gitx9q9l8nI526uGqxAkVO4vxxcnw8s6DV1aTzYNzTycffNicuyBh8kRts9i1+nCqPe+CWmaTKK7E9az0nw80FV4gBCIwQUQkotJWTa9Vo0pNeZS1WTX4VN7RTvH2Yt4ZDZ8d9XqdrVez5NLu6jVq8jbf4oVni+K9YYvexsu3w0TLvNtfWdh/IxkufKQTJJswt72LyLO2GtrKhF7bQfWD31Xnjha7IR+NojTyJXMQNbbVOPLNrC+kszEUZkU9EGYT7I8NoY4bSc6GhnzJh73ro9aMaJLVk0vR0x80NNaqV9ir6XN36rL0YodPDg4/bPLleu+G7S7b/b/oHLydbXzh/uQ7nd33/PBqTcvV+lViF6SG1G5pg/yEWBmtqoY4LWQ7i/eXZPUIPuzcqpOeSJuoo9iwmr4na4lOdYLIguZ8Gn7YFyI6ptgQEFha9t4HRKGt68ObcXK0TlcPMHXT720Q4uSJImq1+Pa1A7N76bMi+ys6PTQH69HqzvJFkXJiSm8mlxe4jmgv6W6fe1KLsUY2G99p+ktceMNqETyTDXUTca/qcNoPC2t+sGg/eicwKYYNH3aY0MQ9Cs3pJov9BB7RceOIQIFDTe18sXGQ4JbXluvaIC3owcIaX5y6BvEWH/QHvFzyJNS5SYvIAOSSRN3ufjOKswUjaoLlTtqEewsfvuWXnx7HVso9WN+wiSwbhGATGd1v1l6a8GLwxTS/HR2MmqSvINc792GxfV1YoXPD1ocaODWgoVNtupkVtfBuPvENiHxwLQa3K6ynrlEdVGwqqm1VUHcpd5KcJ9MoKbFXiFj21fblYneyeO6w+/So2Z4Y01KzbJLGGAdPGqS47/vLwbSIvEt9TKPI3Z50DBUHAy4WTVOYITcfxUE7MfMxfSxAj6f9dIYvdNJ3P26ekgI0S3IAKHZhYsydF0zZ+MXD/npbdcfp6KjcIfP8OHvxgLpb9N55Thp4TxyYq/Wn3w/NSnUfmy++STrQnFKmRauLo65WSaxJmVOnNb1gDMWk0aap3AdsKe2BlGnBdrWwZObjMQLpI6PUeWvx5NoZHgKgJPP7OSi8janz9LR9J25GiSzc621+ZMabdTGojz7qDffM/oafnkvSm/FRP7Mm3unpTryiF8qw0r7drjS9hCRocsEinp63UgQKaQSG2kgAKevS5WINstRTHDcBogITlPlhY/qEzneWM6fHE8Tjtu7xOJMV86ka+SClIC+17dGntFp3B6QHtltuRom4B5kddU2+GBnJwvVwwJups+NNsEnZDa3RijMtrQaHvDI9ZQoi6luRELEqa8wy4DbL3DBFRvQA54ni1ksLns0IcYohcnpIYD++78fj6NlpolGkCsCg097bJH9ZvenYNFKr28sRJcSSWCI/6JQmczum05mic1CZ2qFv2w7nsTg0VRJcL3HdpLGx2GS333H9uO4mbbcTsjRkcUhZLQWt5e4DfHfrYhC2FCJDLYiIjyPjqRh/dsDxkG2gM/ufDybVgAygQKxJ4hZaHwJkRmixDGJPMxYD+Qihw82z/Mbj551Z6MIyEalKxD6JXK/TDjo+S0JsYGcmHRBauAZ1iTJHMcX2Id7cX3qnfLyx/SzyCgozdhQeIevpJ08pj9dwfHLWLVRJQEp6QqLBqSYxQaXhpTdGjxl9+wXeu3iNLzyVRQuzGViLKjS5VlNqchQF2gpNjaZGVaGstCixXSbvNZf2cZETk2h7Is5JO/oUiDhLu8RplgHO3HXsOXRM+TqhXuGY+0B4aKHEKj5Z+97Yjm++e3kr56/lUYx+D90uoggMSID3aB2cg/fQgLbFfhXdac5t60VvMksiGs7SI+kkpuspcEDHf+zHws4nz/xmIqr+lQNBKBFp0M7Ke9WnCv3gqeWDTiTjHHtHmFFcmMAEa8AEJzRqOttuZTecq3nIRo0GmWuXdD7dJzoVI485w3SK3wH7CGd3jpJO81zplKAPBzxnQsPJiwiqnaV7dbx/9+65zv7msB52pWeVFN6jcTxxyVHT222Xx7LkTJcMGRJVyEMy2qPTRvrLdtjidPrFKQ3p2VN6qDg6GZ58XHXzK6pq0n4bP/1hPfrowUGKaWIby0GQNhg0NHSmryZmQ+aYUXKyvTNDmYEx0r/SLo6j0JyO9wk362miK+jswk6vjx4yUk8+FSVGtuJk0YsrNAAKjubs9RkpfD6lOrsRn7ihZx/9McrZGV/5+BMVn5SgP8EH6IytnoCSwASYCIgVylB6dCb96H583IE/WYCZwv4f+goaaMfRNocAAAAASUVORK5CYII=">
-<link rel="manifest" href="data:application/json,{"name":"HAROSAT CONTRATOS","short_name":"CONTRATOS","start_url":"./contratos2.html","display":"standalone","background_color":"#0a1628","theme_color":"#0a1628"}">
-<link rel="icon" type="image/png" href="data:image/png;base64,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">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Contratos – HAROSAT</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--bg:#0a1628;--bg2:#0d1f3c;--bg3:#112240;--card:#0f2040;--card2:#162a50;--border:#1e3a5f;--blue:#1a6fbf;--blue2:#2a8fd4;--blue3:#3daee9;--yellow:#FDB913;--green:#3dba6e;--red:#e84545;--orange:#f97316;--text:#eae6d8;--text2:#b8c8dc;--text3:#7a9ab8;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;}
-.header{background:#071020;border-bottom:2px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.hl{display:flex;align-items:center;gap:12px;}
-.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;}
-.brand{font-size:17px;font-weight:800;letter-spacing:1px;}
-.brand span{color:var(--yellow);}
-.brand-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;}
-.sep{width:1px;height:34px;background:var(--border);margin:0 8px;}
-.app-title{font-size:19px;font-weight:700;color:var(--text2);}
-.hr{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text3);flex-wrap:wrap;}
-.main{max-width:1500px;margin:0 auto;padding:22px 24px;}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr);}}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;}
-.sc-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px;}
-.sc-val{font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;}
-.sc-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.ico-b{background:rgba(42,143,212,.15);border:1px solid rgba(42,143,212,.25);}
-.ico-o{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);}
-.ico-r{background:rgba(232,69,69,.15);border:1px solid rgba(232,69,69,.25);}
-.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
-.sw{position:relative;flex:1;min-width:220px;}
-.sw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
-.si{width:100%;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 14px 10px 38px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;}
-.si::placeholder{color:var(--text3);}
-.si:focus{outline:none;border-color:var(--blue2);}
-.btn{padding:10px 16px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .15s;}
-.btn:hover{background:var(--card2);color:var(--text);border-color:var(--blue2);}
-.btn-p{background:linear-gradient(135deg,#1a6fbf,#2a8fd4);border-color:#2a8fd4;color:#fff;font-weight:700;box-shadow:0 2px 14px rgba(42,143,212,.35);}
-.btn-p:hover{background:linear-gradient(135deg,#2a8fd4,#3daee9);color:#fff;box-shadow:0 4px 20px rgba(42,143,212,.5);}
-.tw{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:auto;}
-table{width:100%;border-collapse:collapse;min-width:700px;}
-thead tr{border-bottom:2px solid var(--border);background:var(--bg3);}
-thead th{padding:12px 15px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
-tbody tr{border-bottom:1px solid rgba(30,58,95,.5);transition:background .1s;}
-tbody tr:last-child{border-bottom:none;}
-tbody tr:hover{background:var(--card2);}
-tbody td{padding:12px 15px;font-size:13px;color:var(--text);white-space:nowrap;}
-.tn{color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
-.tna{font-weight:600;max-width:190px;overflow:hidden;text-overflow:ellipsis;}
-.tc{color:var(--text2);font-size:12px;}
-.td{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-.bv{background:rgba(232,69,69,.15);color:#f06060;border:1px solid rgba(232,69,69,.35);}
-.bu{background:rgba(249,115,22,.15);color:#fb923c;border:1px solid rgba(249,115,22,.35);}
-.bok{background:rgba(61,186,110,.15);color:#4dd47e;border:1px solid rgba(61,186,110,.35);}
-.bg{background:rgba(253,185,19,.12);color:var(--yellow);border:1px solid rgba(253,185,19,.3);font-size:10px;padding:2px 7px;}
-.acts{display:flex;gap:5px;}
-.ab{background:none;border:none;cursor:pointer;color:var(--text3);padding:5px;border-radius:7px;display:flex;align-items:center;transition:all .15s;}
-.ab:hover{color:var(--blue3);background:rgba(42,143,212,.15);}
-.ab.del:hover{color:var(--red);background:rgba(232,69,69,.15);}
-.empty{padding:60px;text-align:center;color:var(--text3);font-size:14px;}
-.loading{padding:50px;text-align:center;color:var(--text3);}
-.footer{text-align:center;color:var(--text3);font-size:12px;padding:28px 24px 20px;border-top:1px solid var(--border);margin-top:28px;}
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:20px;}
-.mo.active{display:flex;}
-.modal{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
-.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.mt{font-size:18px;font-weight:700;}
-.mc{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;padding:4px 8px;border-radius:8px;line-height:1;}
-.mc:hover{color:var(--text);background:var(--border);}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
-@media(max-width:480px){.fg{grid-template-columns:1fr;}}
-.ff{grid-column:1/-1;}
-.fg-item{display:flex;flex-direction:column;gap:6px;}
-.fl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;}
-.fl .r{color:var(--blue3);}
-.fi{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;width:100%;}
-.fi:focus{outline:none;border-color:var(--blue2);}
-.fi::placeholder{color:var(--text3);}
-textarea.fi{resize:vertical;min-height:75px;}
-.fck{display:flex;align-items:center;gap:9px;cursor:pointer;padding:8px 0;}
-.fck input{width:17px;height:17px;accent-color:var(--blue2);cursor:pointer;}
-.fck span{font-size:14px;color:var(--text2);font-weight:500;}
-.mf{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:13px 20px;font-size:13px;font-weight:500;color:var(--text);z-index:2000;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.4);}
-.toast.show{opacity:1;transform:translateY(0);}
-.toast.success{border-color:var(--green);color:#4dd47e;}
-.toast.error{border-color:var(--red);color:#f06060;}
+  :root {
+    --bg: #0a1628;
+    --bg2: #0f1f3d;
+    --bg3: #1a2d4f;
+    --txt: #eae6d8;
+    --txt2: #a0aab8;
+    --blue: #2a8fd4;
+    --blue2: #1d6fa8;
+    --green: #3dbd7a;
+    --red: #e05555;
+    --yellow: #f5c842;
+    --border: #1e3052;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--txt); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
 
-.ftab{padding:8px 16px;border-radius:8px;border:1px solid var(–border);background:var(–card);color:var(–text3);cursor:pointer;font-size:13px;font-family:‘Outfit’,sans-serif;}
-.ftab.active{background:var(–blue);border-color:var(–blue);color:#fff;}
-.mo-c{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;overflow-y:auto;padding:20px;}
-.mo-c.active{display:block;}
-.cw{background:#fff;border-radius:12px;width:100%;max-width:800px;margin:0 auto;overflow:hidden;}
-.cbar{background:var(–bg3);padding:14px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(–border);}
-.cbar-t{font-size:14px;font-weight:600;color:var(–text);flex:1;}
-.btn-g{background:linear-gradient(135deg,#2a9d5c,#3dba6e);border-color:#3dba6e;color:#fff;font-weight:700;}
-.btn-r{background:#d93025;border-color:#d93025;color:#fff;font-weight:700;}
-#pdf-c{padding:32px;font-family:‘Outfit’,sans-serif;color:#1a1a2e;background:#fff;font-size:11px;line-height:1.5;}
+/* HEADER */
+.header {
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+padding: 12px 20px;
+display: flex;
+align-items: center;
+gap: 14px;
+}
+.header-icon { width: 40px; height: 40px; flex-shrink: 0; }
+.header-title { font-size: 18px; font-weight: 700; color: var(–txt); }
+.header-sub { font-size: 12px; color: var(–txt2); }
+
+/* MAIN */
+.main { padding: 20px; max-width: 1000px; margin: 0 auto; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+.top-bar h2 { font-size: 16px; color: var(–txt2); font-weight: 500; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; }
+.btn-primary { background: var(–blue); color: #fff; }
+.btn-primary:hover { background: var(–blue2); }
+.btn-danger { background: var(–red); color: #fff; }
+.btn-danger:hover { background: #c04444; }
+.btn-success { background: var(–green); color: #fff; }
+.btn-success:hover { background: #2da066; }
+.btn-neutral { background: var(–bg3); color: var(–txt); border: 1px solid var(–border); }
+.btn-neutral:hover { background: var(–border); }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+
+/* TABLE */
+.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(–border); }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(–bg2); }
+thead th { padding: 11px 14px; text-align: left; font-size: 12px; color: var(–txt2); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+tbody tr { border-top: 1px solid var(–border); transition: background 0.15s; }
+tbody tr:hover { background: var(–bg2); }
+tbody td { padding: 11px 14px; font-size: 14px; white-space: nowrap; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-ok { background: rgba(61,189,122,0.15); color: var(–green); }
+.badge-no { background: rgba(160,170,184,0.12); color: var(–txt2); }
+.acciones { display: flex; gap: 6px; }
+
+/* LOADING / EMPTY */
+.estado { text-align: center; padding: 50px 20px; color: var(–txt2); font-size: 15px; }
+
+/* MODAL */
+.modal-overlay {
+display: none; position: fixed; inset: 0;
+background: rgba(0,0,0,0.7); z-index: 1000;
+align-items: flex-start; justify-content: center;
+padding: 20px; overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+background: var(–bg2); border: 1px solid var(–border);
+border-radius: 14px; width: 100%; max-width: 640px;
+padding: 28px; margin: auto;
+}
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 22px; }
+.form-section { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(–blue); font-weight: 700; margin: 18px 0 10px; border-bottom: 1px solid var(–border); padding-bottom: 6px; }
+.form-row { display: grid; gap: 12px; margin-bottom: 12px; }
+.form-row.col2 { grid-template-columns: 1fr 1fr; }
+.form-row.col3 { grid-template-columns: 1fr 1fr 1fr; }
+label { display: block; font-size: 12px; color: var(–txt2); margin-bottom: 4px; }
+input, select, textarea {
+width: 100%; padding: 9px 12px; border-radius: 8px;
+background: var(–bg3); border: 1px solid var(–border);
+color: var(–txt); font-size: 14px; outline: none;
+transition: border 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(–blue); }
+select option { background: var(–bg2); }
+
+/* IMPORTE */
+.importe-box { background: var(–bg3); border-radius: 10px; padding: 14px; margin-top: 4px; }
+.importe-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 3px 0; color: var(–txt2); }
+.importe-row.total { font-size: 17px; font-weight: 700; color: var(–txt); border-top: 1px solid var(–border); margin-top: 6px; padding-top: 8px; }
+
+/* FIRMA */
+.firma-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.firma-tab { padding: 6px 16px; border-radius: 6px; border: 1px solid var(–border); background: var(–bg3); color: var(–txt2); cursor: pointer; font-size: 13px; }
+.firma-tab.active { background: var(–blue); color: #fff; border-color: var(–blue); }
+#firma-canvas { border: 1px solid var(–border); border-radius: 8px; background: #fff; display: block; touch-action: none; width: 100%; height: 120px; }
+#firma-auto-preview { border: 1px solid var(–border); border-radius: 8px; background: #fff; display: none; width: 100%; height: 120px; align-items: center; justify-content: center; }
+.firma-auto-nombre { font-family: ‘Dancing Script’, cursive; font-size: 36px; color: #1a2d4f; }
+.firma-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; flex-wrap: wrap; }
+
+/* VISTA CONTRATO */
+#vista-overlay {
+display: none; position: fixed; inset: 0;
+background: rgba(0,0,0,0.85); z-index: 2000;
+overflow-y: auto;
+}
+#vista-overlay.open { display: block; }
+.vista-barra {
+position: sticky; top: 0; background: var(–bg2);
+border-bottom: 1px solid var(–border);
+padding: 10px 16px; display: flex; gap: 10px;
+align-items: center; z-index: 10; flex-wrap: wrap;
+}
+.vista-barra .btn { font-size: 13px; padding: 7px 14px; }
+.vista-barra .spacer { flex: 1; }
+
+/* DOCUMENTO CONTRATO */
+.doc-wrap { max-width: 800px; margin: 24px auto; padding: 0 16px 40px; }
+.doc {
+background: #fff; color: #1a1a2e;
+border-radius: 10px; padding: 48px 52px;
+font-family: Arial, sans-serif;
+line-height: 1.5;
+box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.doc-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #0a1628; padding-bottom: 16px; margin-bottom: 20px; }
+.doc-logo-area { display: flex; align-items: center; gap: 12px; }
+.doc-logo-img { width: 52px; height: 52px; }
+.doc-empresa-nombre { font-size: 15px; font-weight: 700; color: #0a1628; line-height: 1.2; }
+.doc-empresa-datos { font-size: 10px; color: #555; margin-top: 3px; }
+.doc-titulo-bloque { text-align: right; }
+.doc-titulo { font-size: 14px; font-weight: 700; color: #0a1628; text-transform: uppercase; letter-spacing: 0.5px; }
+.doc-num { font-size: 22px; font-weight: 700; color: #2a8fd4; }
+.doc-vigencia { font-size: 11px; color: #555; }
+
+.doc-partes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+.doc-parte { background: #f4f6fa; border-radius: 8px; padding: 14px; }
+.doc-parte-titulo { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #2a8fd4; margin-bottom: 8px; }
+.doc-parte-dato { font-size: 12px; color: #222; margin-bottom: 3px; }
+.doc-parte-dato strong { color: #0a1628; }
+
+.doc-equipo { background: #f4f6fa; border-radius: 8px; padding: 14px; margin: 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.doc-equipo-titulo { grid-column: 1/-1; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #2a8fd4; margin-bottom: 4px; }
+
+.doc-importe { background: #0a1628; color: #eae6d8; border-radius: 8px; padding: 14px; margin: 16px 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 24px; align-items: center; }
+.doc-importe-titulo { grid-column: 1/-1; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #2a8fd4; margin-bottom: 4px; }
+.doc-importe-lbl { font-size: 12px; color: #a0aab8; }
+.doc-importe-val { font-size: 12px; color: #eae6d8; text-align: right; }
+.doc-importe-total-lbl { font-size: 14px; font-weight: 700; color: #fff; border-top: 1px solid #1e3052; padding-top: 8px; margin-top: 4px; }
+.doc-importe-total-val { font-size: 18px; font-weight: 700; color: #2a8fd4; border-top: 1px solid #1e3052; padding-top: 8px; margin-top: 4px; text-align: right; }
+.doc-iban { grid-column: 1/-1; font-size: 11px; color: #a0aab8; margin-top: 4px; }
+
+.doc-clausulas-titulo { font-size: 13px; font-weight: 700; color: #0a1628; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #0a1628; padding-bottom: 6px; margin: 22px 0 14px; }
+.doc-clausula { margin-bottom: 9px; font-size: 11px; color: #222; line-height: 1.55; }
+.doc-clausula strong { color: #0a1628; }
+
+.doc-aviso { text-align: center; font-size: 11px; color: #555; font-style: italic; margin: 20px 0; padding: 10px; border: 1px dashed #ccc; border-radius: 6px; }
+
+.doc-firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.doc-firma-bloque { text-align: center; }
+.doc-firma-titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 8px; }
+.doc-firma-img { max-width: 100%; height: 80px; object-fit: contain; border-bottom: 1px solid #ccc; display: block; margin: 0 auto 6px; }
+.doc-firma-canvas-placeholder { width: 100%; height: 80px; border-bottom: 1px solid #ccc; margin-bottom: 6px; }
+.doc-firma-nombre { font-size: 11px; color: #333; }
+.doc-firma-fecha { font-size: 10px; color: #777; }
+
+.doc-pie { border-top: 2px solid #0a1628; margin-top: 30px; padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+.doc-pie-datos { font-size: 10px; color: #555; line-height: 1.6; }
+.doc-pie-num { font-size: 11px; font-weight: 700; color: #2a8fd4; }
+
+/* CONFIRM MODAL */
+.confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3000; align-items: center; justify-content: center; }
+.confirm-overlay.open { display: flex; }
+.confirm-box { background: var(–bg2); border: 1px solid var(–border); border-radius: 12px; padding: 28px; max-width: 360px; width: 100%; text-align: center; }
+.confirm-box p { margin-bottom: 20px; color: var(–txt2); font-size: 15px; }
+.confirm-box .btn-row { display: flex; gap: 10px; justify-content: center; }
+
+@media (max-width: 600px) {
+.doc { padding: 28px 20px; }
+.doc-partes { grid-template-columns: 1fr; }
+.doc-equipo { grid-template-columns: 1fr; }
+.doc-importe { grid-template-columns: 1fr; }
+.doc-firmas { grid-template-columns: 1fr; }
+.form-row.col2, .form-row.col3 { grid-template-columns: 1fr; }
+}
 </style>
 
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<!-- HEADER -->
+
 <div class="header">
-  <div class="hl">
-    <img class="logo" src="data:image/png;base64,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" alt="HAROSAT">
-    <div>
-      <div class="brand">HAR<span>O</span>SAT</div>
-      <div class="brand-sub">Ecotechnical</div>
-    </div>
-    <div class="sep"></div>
-    <div class="app-title">CONTRATOS</div>
-  </div>
-  <div class="hr">
-    <span>📍 Sta. Lucía 66 BJ, Haro</span>
-    <span>📞 640 05 64 84</span>
-    <span>CIF: 09302345H</span>
+  <svg class="header-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="40" height="40" rx="8" fill="#0f1f3d"/>
+    <rect x="10" y="6" width="20" height="28" rx="3" fill="#1e3052" stroke="#2a8fd4" stroke-width="1.2"/>
+    <rect x="15" y="3" width="10" height="6" rx="2" fill="#2a8fd4"/>
+    <line x1="14" y1="15" x2="26" y2="15" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="14" y1="20" x2="26" y2="20" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="14" y1="25" x2="22" y2="25" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="29" cy="30" r="5" fill="#3dbd7a"/>
+    <line x1="27" y1="30" x2="29" y2="32" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="29" y1="32" x2="31" y2="28" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <div>
+    <div class="header-title">Contratos</div>
+    <div class="header-sub">HAROSAT ECOTECHNICAL</div>
   </div>
 </div>
+
+<!-- MAIN -->
 
 <div class="main">
-
-  <div class="toolbar">
-    <div class="sw">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" class="si" id="search" placeholder="Buscar por nombre, población o modelo...">
-    </div>
-    <button class="btn" onclick="exportCSV()"></button>
-    <button class="btn btn-p" onclick="abrirForm()">+ Nuevo Contrato</button>
+  <div class="top-bar">
+    <h2 id="subtitulo">Cargando...</h2>
+    <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nuevo Contrato</button>
   </div>
-
-  <div class="tw">
-    <div id="loading" class="loading">Cargando...</div>
-    <table id="tabla" style="display:none">
-      <thead><tr>
-        <th>Nº</th><th>Cliente</th><th>Modelo</th><th>Importe</th><th>Fecha Vigencia</th><th>Firma</th><th>Acciones</th>
-      </tr></thead>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nº</th>
+          <th>Cliente</th>
+          <th>Modelo</th>
+          <th>Importe</th>
+          <th>Vigencia</th>
+          <th>Firma</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
       <tbody id="tbody"></tbody>
     </table>
-    <div id="empty" class="empty" style="display:none">No hay contratos</div>
   </div>
+  <div id="estado" class="estado">Cargando contratos...</div>
 </div>
 
-<div class="footer">HAROSAT ECOTECHNICAL · CIF 09302345H · Sta. Lucía 66 BJ, 26200 Haro - La Rioja · Tel. 640 05 64 84</div>
+<!-- MODAL NUEVO CONTRATO -->
 
-<div class="mo" id="mo-form">
+<div class="modal-overlay" id="modal-overlay">
   <div class="modal">
-    <div class="mh">
-      <div class="mt">Nuevo Contrato</div>
-      <button class="mc" onclick="cerrarForm()">✕</button>
-    </div>
-    <div style="font-size:11px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px;">Datos del Cliente</div>
-    <div class="fg">
-      <div class="fg-item"><label class="fl">Nombre <span class="r">*</span></label><input type="text" class="fi" id="fn" placeholder="Nombre completo"></div>
-      <div class="fg-item"><label class="fl">NIF</label><input type="text" class="fi" id="fnif" placeholder="00000000A"></div>
-      <div class="fg-item ff"><label class="fl">Dirección</label><input type="text" class="fi" id="fdir" placeholder="Calle, número, localidad"></div>
-      <div class="fg-item"><label class="fl">Teléfono</label><input type="text" class="fi" id="ftel" placeholder="666 123 456"></div>
-      <div class="fg-item"><label class="fl">Fecha Vigencia <span class="r">*</span></label><input type="date" class="fi" id="ffecha"></div>
-    </div>
-    <div style="font-size:11px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;margin:18px 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px;">Datos del Equipo</div>
-    <div class="fg">
-      <div class="fg-item"><label class="fl">Tipo</label><input type="text" class="fi" id="ftipo" placeholder="Caldera de gas"></div>
-      <div class="fg-item"><label class="fl">Marca</label><input type="text" class="fi" id="fmarca" placeholder="Junkers"></div>
-      <div class="fg-item"><label class="fl">Modelo</label><input type="text" class="fi" id="fmodelo" placeholder="Cerapur Excellence"></div>
-      <div class="fg-item"><label class="fl">Nº Serie</label><input type="text" class="fi" id="fserie" placeholder="12345678"></div>
-    </div>
-    <div style="font-size:11px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;margin:18px 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px;">Importe</div>
-    <div class="fg">
-      <div class="fg-item"><label class="fl">Base Imponible € <span class="r">*</span></label><input type="number" class="fi" id="fbase" placeholder="121.00" step="0.01" oninput="calcIva()"></div>
-      <div class="fg-item"><label class="fl">Total IVA 21%</label><input type="text" class="fi" id="ftotal" readonly style="background:var(--bg3);color:var(--text3)"></div>
-    </div>
-    <div style="font-size:11px;font-weight:700;color:var(--blue3);text-transform:uppercase;letter-spacing:1px;margin:18px 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px;">Firma del Cliente</div>
-    <div style="display:flex;gap:10px;margin-bottom:12px;">
-      <button class="ftab active" id="tab-pad" onclick="setFirma('pad')">Firma Manual</button>
-      <button class="ftab" id="tab-auto" onclick="setFirma('auto')">Firma Automática</button>
-    </div>
-    <div id="fpad-w"><canvas id="fpad" height="140" style="border:2px solid var(--border);border-radius:10px;background:#fff;display:block;width:100%;touch-action:none;"></canvas><div style="margin-top:8px"><button class="btn" onclick="clearPad()">🗑 Borrar</button></div></div>
-    <div id="fauto-w" style="display:none"><p style="font-size:13px;color:var(--text2);margin-bottom:8px">Se genera con el nombre en cursiva.</p><div id="fauto-p" style="border:2px solid var(--border);border-radius:10px;background:#fff;height:80px;display:flex;align-items:center;justify-content:center"><span style="font-style:italic;font-size:28px;color:#ccc">Nombre cliente</span></div></div>
-    <div class="mf">
-      <button class="btn" onclick="cerrarForm()">Cancelar</button>
-      <button class="btn btn-p" onclick="guardar()">💾 Guardar y Ver Contrato</button>
-    </div>
+    <div class="modal-title">Nuevo Contrato de Mantenimiento</div>
+
+```
+<div class="form-section">Datos del Cliente</div>
+<div class="form-row">
+  <div><label>Nombre completo *</label><input id="f-nombre" type="text" placeholder="Nombre y apellidos"></div>
+</div>
+<div class="form-row col3">
+  <div><label>NIF / DNI</label><input id="f-nif" type="text" placeholder="00000000A"></div>
+  <div style="grid-column:span 2"><label>Dirección</label><input id="f-dir" type="text" placeholder="Calle, número, localidad"></div>
+</div>
+<div class="form-row col2">
+  <div><label>Teléfono</label><input id="f-tel" type="tel" placeholder="600 000 000"></div>
+  <div><label>Fecha de vigencia *</label><input id="f-vigencia" type="date"></div>
+</div>
+
+<div class="form-section">Equipo / Instalación</div>
+<div class="form-row col2">
+  <div>
+    <label>Tipo de equipo</label>
+    <select id="f-tipo">
+      <option value="Caldera de gas">Caldera de gas</option>
+      <option value="Caldera de gasoil">Caldera de gasoil</option>
+      <option value="Caldera de biomasa">Caldera de biomasa</option>
+      <option value="Calefacción eléctrica">Calefacción eléctrica</option>
+      <option value="Bomba de calor">Bomba de calor</option>
+      <option value="Aire acondicionado">Aire acondicionado</option>
+      <option value="Otro">Otro</option>
+    </select>
+  </div>
+  <div><label>Marca</label><input id="f-marca" type="text" placeholder="Marca del equipo"></div>
+</div>
+<div class="form-row col2">
+  <div><label>Modelo</label><input id="f-modelo" type="text" placeholder="Modelo del equipo"></div>
+  <div><label>Nº de Serie</label><input id="f-serie" type="text" placeholder="Número de serie"></div>
+</div>
+
+<div class="form-section">Importe</div>
+<div class="form-row">
+  <div>
+    <label>Base imponible (€) *</label>
+    <input id="f-base" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcImporte()">
+  </div>
+</div>
+<div class="importe-box">
+  <div class="importe-row"><span>Base imponible</span><span id="imp-base">0,00 €</span></div>
+  <div class="importe-row"><span>IVA (21%)</span><span id="imp-iva">0,00 €</span></div>
+  <div class="importe-row total"><span>TOTAL</span><span id="imp-total">0,00 €</span></div>
+</div>
+
+<div class="form-section">Firma del Cliente</div>
+<div class="firma-tabs">
+  <button class="firma-tab active" id="tab-manual" onclick="setFirmaTab('manual')">✍️ Manual</button>
+  <button class="firma-tab" id="tab-auto" onclick="setFirmaTab('auto')">✒️ Automática</button>
+</div>
+<div id="firma-manual-area">
+  <canvas id="firma-canvas" width="580" height="120"></canvas>
+  <div class="firma-actions">
+    <button class="btn btn-neutral btn-sm" onclick="limpiarCanvas()">Limpiar</button>
+  </div>
+</div>
+<div id="firma-auto-area" style="display:none">
+  <div id="firma-auto-preview" style="display:flex; border:1px solid var(--border); border-radius:8px; background:#fff; width:100%; height:120px; align-items:center; justify-content:center;">
+    <span class="firma-auto-nombre" id="firma-auto-nombre-text">Firma</span>
+  </div>
+  <p style="font-size:12px;color:var(--txt2);margin-top:6px;">Se generará automáticamente con el nombre del cliente.</p>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-neutral" onclick="cerrarModal()">Cancelar</button>
+  <button class="btn btn-primary" onclick="guardarContrato()">💾 Guardar y Ver Contrato</button>
+</div>
+```
+
   </div>
 </div>
 
-<div class="mo-c" id="mo-c">
-  <div class="cw">
-    <div class="cbar">
-      <span class="cbar-t" id="ctitle">Contrato</span>
-      <button class="btn btn-g" onclick="whatsapp()">📱 WhatsApp</button>
-      <button class="btn btn-r" onclick="gmail()">✉️ Gmail</button>
-      <button class="btn btn-p" onclick="dlPDF()">⬇ PDF</button>
-      <button class="btn" onclick="imprimir()">🖨 Imprimir</button>
-      <button class="btn" onclick="cerrarCont()">✕</button>
-    </div>
-    <div id="pdf-c"></div>
+<!-- VISTA CONTRATO -->
+
+<div id="vista-overlay">
+  <div class="vista-barra">
+    <button class="btn btn-neutral" onclick="cerrarVista()">← Volver</button>
+    <div class="spacer"></div>
+    <button class="btn btn-neutral" onclick="compartirWhatsApp()">📱 WhatsApp</button>
+    <button class="btn btn-neutral" onclick="compartirGmail()">📧 Gmail</button>
+    <button class="btn btn-primary" onclick="descargarPDF()">⬇️ PDF</button>
+    <button class="btn btn-neutral" onclick="imprimirContrato()">🖨️ Imprimir</button>
+    <button class="btn btn-danger btn-sm" onclick="confirmarEliminar()">🗑️</button>
+  </div>
+  <div class="doc-wrap">
+    <div class="doc" id="doc-contenido"></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- CONFIRM ELIMINAR -->
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <p>¿Eliminar este contrato? Esta acción no se puede deshacer.</p>
+    <div class="btn-row">
+      <button class="btn btn-neutral" onclick="cerrarConfirm()">Cancelar</button>
+      <button class="btn btn-danger" onclick="eliminarContrato()">Eliminar</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const SB_URL='https://sobiyfyzalynxcpfoldc.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek';
-const sb=supabase.createClient(SB_URL,SB_KEY);
-let allData=[],cActual=null,fMode='pad',pad,ctx,drawing=false;
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const { createClient } = supabase;
+const sb = createClient(
+  'https://sobiyfyzalynxcpfoldc.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTA0MjksImV4cCI6MjA4ODU4NjQyOX0.FJOYHGjk-UI-SfEpZ2ytOvUJuTb4kGL9aBqj2ChXgek'
+);
 
-// Init firma pad after DOM ready
-var padEl=document.getElementById('fpad');
-if(padEl){
-  pad=padEl;
-  pad.width=Math.min(560,pad.offsetWidth||560);
-  ctx=pad.getContext('2d');
-  ctx.strokeStyle='#1a1a2e';ctx.lineWidth=2;ctx.lineCap='round';
-  pad.addEventListener('mousedown',function(e){drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);});
-  pad.addEventListener('mousemove',function(e){if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();});
-  pad.addEventListener('mouseup',function(){drawing=false;});
-  pad.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;var t=e.touches[0],r=pad.getBoundingClientRect();ctx.beginPath();ctx.moveTo(t.clientX-r.left,t.clientY-r.top);},{passive:false});
-  pad.addEventListener('touchmove',function(e){e.preventDefault();if(!drawing)return;var t=e.touches[0],r=pad.getBoundingClientRect();ctx.lineTo(t.clientX-r.left,t.clientY-r.top);ctx.stroke();},{passive:false});
-  pad.addEventListener('touchend',function(){drawing=false;});
-}
-document.getElementById('ffecha').value=new Date().toISOString().split('T')[0];
-document.getElementById('fn').addEventListener('input',function(){if(fMode==='auto')setFirma('auto');});
+// ── ESTADO GLOBAL ─────────────────────────────────────────────────────────────
+let contratos = [];
+let contratoActual = null;
+let firmaTab = 'manual';
 
-function clearPad(){if(ctx)ctx.clearRect(0,0,pad.width,pad.height);}
-function setFirma(m){
-  fMode=m;
-  document.getElementById('tab-pad').classList.toggle('active',m==='pad');
-  document.getElementById('tab-auto').classList.toggle('active',m==='auto');
-  document.getElementById('fpad-w').style.display=m==='pad'?'block':'none';
-  document.getElementById('fauto-w').style.display=m==='auto'?'block':'none';
-  if(m==='auto'){var n=document.getElementById('fn').value||'Nombre cliente';document.getElementById('fauto-p').innerHTML='<span style="font-style:italic;font-size:28px;color:#1a1a2e">'+n+'</span>';}
-}
-function calcIva(){var b=parseFloat(document.getElementById('fbase').value)||0;document.getElementById('ftotal').value=b>0?(b*1.21).toFixed(2)+' €':'';}
-function getFirma(){
-  if(fMode==='pad'&&pad){var blank=document.createElement('canvas');blank.width=pad.width;blank.height=pad.height;if(pad.toDataURL()===blank.toDataURL())return null;return pad.toDataURL('image/png');}
-  var n=document.getElementById('fn').value.trim()||'Firma';
-  var c=document.createElement('canvas');c.width=400;c.height=100;
-  var cx=c.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,400,100);
-  cx.font='italic 300 38px Outfit,sans-serif';cx.fillStyle='#1a1a2e';cx.textAlign='center';cx.textBaseline='middle';
-  cx.fillText(n,200,50);return c.toDataURL('image/png');
-}
+// ── CLÁUSULAS ─────────────────────────────────────────────────────────────────
+const CLAUSULAS = [
+  ['PRIMERA – DURACIÓN', 'El presente contrato tendrá una duración de UN AÑO a contar desde la fecha de entrada en vigor indicada, renovándose automáticamente por períodos anuales, salvo denuncia de cualquiera de las partes con un mínimo de 30 días de antelación a la fecha de vencimiento.'],
+  ['SEGUNDA – REVISIÓN PREVENTIVA', 'El contrato incluye la realización de UNA (1) revisión preventiva anual del equipo/instalación objeto del contrato, conforme al Real Decreto 1027/2007 RITE (Reglamento de Instalaciones Térmicas en Edificios).'],
+  ['TERCERA – MANO DE OBRA Y DESPLAZAMIENTO', 'La mano de obra y el desplazamiento necesarios para la realización de la revisión preventiva anual contemplada en el presente contrato están incluidos en el precio del mismo.'],
+  ['CUARTA – PIEZAS Y MATERIALES', 'Las piezas de repuesto y materiales necesarios para la reparación de averías no están incluidos en el precio del contrato, siendo estos a cargo del usuario/titular del equipo.'],
+  ['QUINTA – EXCLUSIONES', 'Quedan excluidos del presente contrato los trabajos derivados de: a) Fuerza mayor o causas ajenas a la empresa. b) Daños en componentes o equipos conectados a la instalación principal. c) Falta de suministro de combustible o energía. d) Reparaciones solicitadas fuera del horario de atención establecido. e) Daños derivados de una utilización inadecuada del equipo.'],
+  ['SEXTA – ACCESIBILIDAD', 'El usuario/titular se compromete a garantizar que los equipos objeto del presente contrato estén accesibles para la realización de las revisiones y trabajos de mantenimiento, sin obstáculos que impidan el normal desarrollo de los mismos.'],
+  ['SÉPTIMA – MANIPULACIÓN POR PERSONAL AJENO', 'El presente contrato quedará automáticamente rescindido si los equipos o instalaciones objeto del mismo son manipulados o reparados por personal ajeno a HAROSAT ECOTECHNICAL, sin autorización previa y expresa de esta empresa.'],
+  ['OCTAVA – RESCISIÓN POR EL USUARIO', 'En caso de rescisión del contrato por voluntad del usuario/titular antes de la finalización del período contratado, no procederá la devolución de cantidad alguna de las ya abonadas.'],
+  ['NOVENA – RESPONSABILIDAD DE LA EMPRESA', 'HAROSAT ECOTECHNICAL asume la responsabilidad por los actos de sus empleados en el desempeño de sus funciones, en los términos establecidos por la legislación vigente.'],
+  ['DÉCIMA – PRECIO Y FORMA DE PAGO', 'El importe anual del contrato es el indicado en el encabezado del presente documento. Este importe podrá ser revisado anualmente conforme al IPC. El pago se realizará mediante pago único al momento de la firma o mediante domiciliación bancaria en el IBAN facilitado por el cliente.'],
+  ['UNDÉCIMA – PLAZO DE PAGO', 'El pago deberá efectuarse dentro del primer mes de vigencia del contrato. El incumplimiento de este plazo podrá dar lugar a la suspensión del servicio.'],
+  ['DUODÉCIMA – ACREDITACIÓN DEL PAGO', 'El presente contrato no acredita el pago del servicio. Para ello, será necesario el correspondiente recibo o justificante de pago emitido por HAROSAT ECOTECHNICAL.'],
+  ['DECIMOTERCERA – DOCUMENTACIÓN TÉCNICA', 'El titular se compromete a entregar a HAROSAT ECOTECHNICAL toda la documentación técnica relativa a los equipos e instalaciones objeto del contrato en el momento de hacerse cargo del servicio.'],
+  ['DECIMOCUARTA – CUMPLIMIENTO RITE', 'El titular es responsable del cumplimiento de los requisitos establecidos en el Real Decreto 1027/2007 RITE, así como de cualquier otra normativa aplicable a sus instalaciones térmicas.'],
+  ['DECIMOQUINTA – JURISDICCIÓN', 'Para la resolución de cualquier controversia derivada del presente contrato, ambas partes se someten expresamente a la jurisdicción de los Tribunales de Haro (La Rioja), con renuncia expresa a cualquier otro fuero que pudiera corresponderles.'],
+  ['DECIMOSEXTA – TRATAMIENTO DE DATOS', 'El cliente presta su consentimiento expreso para el tratamiento de sus datos personales con la finalidad de gestionar la relación contractual y prestar los servicios contratados, de conformidad con la normativa vigente en materia de protección de datos.'],
+  ['DECIMOSÉPTIMA – PROTECCIÓN DE DATOS (LOPD)', 'En cumplimiento de la Ley Orgánica 15/1999 de Protección de Datos de Carácter Personal, se le informa de que los datos facilitados serán incorporados a un fichero de datos de carácter personal titularidad de HAROSAT ECOTECHNICAL, con el fin de gestionar la relación contractual. Puede ejercer sus derechos de acceso, rectificación, cancelación y oposición dirigiéndose a: Sta. Lucía 66 BJ, 26200 Haro – La Rioja.'],
+  ['DECIMOCTAVA – HORARIO DE ATENCIÓN', 'HAROSAT ECOTECHNICAL presta servicio de atención al cliente de lunes a viernes de 8:00 a 15:00 horas, previa cita. Para solicitar cita o en caso de urgencia, puede contactar con nosotros en el teléfono 640 05 64 84 o en harosatecnicos@gmail.com.']
+];
 
-async function cargar(){
-  document.getElementById('loading').style.display='block';
-  document.getElementById('tabla').style.display='none';
-  document.getElementById('empty').style.display='none';
-  const {data,error}=await sb.from('contratos').select('*').order('numero',{ascending:false});
-  if(error){toast('Error al cargar','error');document.getElementById('loading').style.display='none';return;}
-  allData=data||[];
-  render(allData);
+// ── FORMATEO ──────────────────────────────────────────────────────────────────
+function fmt(n) {
+  return parseFloat(n || 0).toFixed(2).replace('.', ',') + ' €';
+}
+function fmtFecha(d) {
+  if (!d) return '—';
+  var p = d.split('-');
+  return p[2] + '/' + p[1] + '/' + p[0];
 }
 
-function fmtF(s){if(!s)return'—';var d=new Date(s);return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});}
+// ── CARGA LISTA ───────────────────────────────────────────────────────────────
+async function cargar() {
+  document.getElementById('estado').style.display = 'block';
+  document.getElementById('estado').textContent = 'Cargando contratos...';
 
-function render(data){
-  document.getElementById('loading').style.display='none';
-  var tb=document.getElementById('tbody');tb.innerHTML='';
-  if(!data.length){document.getElementById('tabla').style.display='none';document.getElementById('empty').style.display='block';return;}
-  document.getElementById('tabla').style.display='table';document.getElementById('empty').style.display='none';
-  for(var i=0;i<data.length;i++){
-    var r=data[i];var tr=document.createElement('tr');
-    tr.innerHTML='<td class="tn">'+(r.numero||'—')+'</td>'+
-      '<td class="tna">'+(r.cliente_nombre||'—')+'</td>'+
-      '<td class="tc">'+(r.city||'—')+'</td>'+
-      '<td>'+(r.contract_type||'—')+'</td>'+
-      '<td class="tc" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">'+(r.boiler_model||'—')+'</td>'+
-      '<td class="td">'+fmtF(r.last_review_date)+'</td>'+
-      '<td class="td">'+(p?fmtF(p.toISOString()):'—')+'</td>'+
-      '<td>'—'</td>'+
-      '<td>'+(r.warranty?'<span class="badge bg">✓ GAR</span>':'—')+'</td>'+
-      '<td><div class="acts">'+
-        '<button class="ab" onclick="editar(\''+r.id+'\')" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+
-        '<button class="ab del" onclick="eliminar(\''+r.id+'\')" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>'+
-      '</div></td>';
-    tb.appendChild(tr);
+  var res = await sb.from('contratos').select('*').order('numero', { ascending: false });
+  if (res.error) {
+    document.getElementById('estado').textContent = 'Error al cargar: ' + res.error.message;
+    return;
+  }
+  contratos = res.data || [];
+  document.getElementById('subtitulo').textContent = contratos.length + ' contrato' + (contratos.length !== 1 ? 's' : '');
+
+  var tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  if (contratos.length === 0) {
+    document.getElementById('estado').textContent = 'No hay contratos. Crea el primero con + Nuevo Contrato.';
+    return;
+  }
+  document.getElementById('estado').style.display = 'none';
+
+  for (var i = 0; i < contratos.length; i++) {
+    var c = contratos[i];
+    var base = parseFloat(c.base_imponible || 0);
+    var total = base * 1.21;
+    var tieneFirma = c.firma_cliente && c.firma_cliente.length > 10;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="font-weight:700;color:#2a8fd4">' + String(c.numero).padStart(3, '0') + '</td>' +
+      '<td>' + (c.cliente_nombre || '—') + '</td>' +
+      '<td style="color:#a0aab8">' + (c.equipo_modelo || '—') + '</td>' +
+      '<td style="font-weight:600">' + fmt(total) + '</td>' +
+      '<td>' + fmtFecha(c.fecha_vigencia) + '</td>' +
+      '<td>' + (tieneFirma ? '<span class="badge badge-ok">✓ Firmado</span>' : '<span class="badge badge-no">Sin firma</span>') + '</td>' +
+      '<td class="acciones">' +
+        '<button class="btn btn-primary btn-sm" onclick="verContrato(' + i + ')">Ver</button>' +
+        '<button class="btn btn-danger btn-sm" onclick="confirmarEliminarId(\'' + c.id + '\')">🗑️</button>' +
+      '</td>';
+    tbody.appendChild(tr);
   }
 }
 
-document.getElementById('search').addEventListener('input',function(){
-  var q=this.value.toLowerCase();
-  if(!q){render(allData);return;}
-  render(allData.filter(function(r){return(r.cliente_nombre||'').toLowerCase().includes(q)||(r.equipo_modelo||'').toLowerCase().includes(q);}));
-});
-
-function _openModal_unused(){
-  editId=null;
-  document.getElementById('mtitle').textContent='Nueva Revisión';
-  document.getElementById('btn-save').textContent='💾 Guardar';
-  ['f-num','f-nombre','f-dir','f-ciudad','f-tel','f-modelo','f-notas'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('f-contrato').value='L-V';
-  document.getElementById('f-fecha').value='';
-  document.getElementById('f-garantia').checked=false;
-  document.getElementById('mo-form').classList.add('active');
+// ── MODAL NUEVO ───────────────────────────────────────────────────────────────
+function abrirModalNuevo() {
+  document.getElementById('f-nombre').value = '';
+  document.getElementById('f-nif').value = '';
+  document.getElementById('f-dir').value = '';
+  document.getElementById('f-tel').value = '';
+  document.getElementById('f-vigencia').value = '';
+  document.getElementById('f-tipo').value = 'Caldera de gas';
+  document.getElementById('f-marca').value = '';
+  document.getElementById('f-modelo').value = '';
+  document.getElementById('f-serie').value = '';
+  document.getElementById('f-base').value = '';
+  calcImporte();
+  setFirmaTab('manual');
+  limpiarCanvas();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
 }
 
-
-function editar(id){
-  var r=allData.find(function(x){return x.id===id;});if(!r)return;
-  editId=id;
-  document.getElementById('mtitle').textContent='Editar Revisión';
-  document.getElementById('btn-save').textContent='💾 Actualizar';
-  document.getElementById('f-num').value=r.numero||'';
-  document.getElementById('f-nombre').value=r.cliente_nombre||'';
-  document.getElementById('f-dir').value=r.address||'';
-  document.getElementById('f-ciudad').value=r.city||'';
-  document.getElementById('f-tel').value=r.phone||'';
-  document.getElementById('f-modelo').value=r.boiler_model||'';
-  document.getElementById('f-contrato').value=r.contract_type||'L-V';
-  document.getElementById('f-fecha').value=r.last_review_date||'';
-  document.getElementById('f-garantia').checked=r.warranty||false;
-  document.getElementById('f-notas').value=r.notes||'';
-  document.getElementById('mo-form').classList.add('active');
+// ── IMPORTE ───────────────────────────────────────────────────────────────────
+function calcImporte() {
+  var base = parseFloat(document.getElementById('f-base').value) || 0;
+  var iva = base * 0.21;
+  var total = base + iva;
+  document.getElementById('imp-base').textContent = fmt(base);
+  document.getElementById('imp-iva').textContent = fmt(iva);
+  document.getElementById('imp-total').textContent = fmt(total);
 }
 
-async function guardar(){
-  var nombre=document.getElementById('fn').value.trim();
-  var base=parseFloat(document.getElementById('fbase').value);
-  var fecha=document.getElementById('ffecha').value;
-  if(!nombre||!base||!fecha){toast('Completa los campos obligatorios','error');return;}
-  var firma=getFirma();
-  var p={fecha_vigencia:fecha,cliente_nombre:nombre,cliente_nif:document.getElementById('fnif').value.trim()||null,cliente_direccion:document.getElementById('fdir').value.trim()||null,cliente_telefono:document.getElementById('ftel').value.trim()||null,equipo_tipo:document.getElementById('ftipo').value.trim()||null,equipo_marca:document.getElementById('fmarca').value.trim()||null,equipo_modelo:document.getElementById('fmodelo').value.trim()||null,equipo_serie:document.getElementById('fserie').value.trim()||null,base_imponible:base,firma_cliente:firma,firma_auto:fMode==='auto'};
-  var res=await sb.from('contratos').insert(p).select().single();
-  if(res.error){toast('Error: '+res.error.message,'error');return;}
-  toast('Contrato guardado','success');
-  cerrarForm();await cargar();verContrato(res.data.id);
-}
-
-async function eliminar(id){
-  if(!confirm('¿Eliminar esta revisión?'))return;
-  var{error}=await sb.from('contratos').delete().eq('id',id);
-  if(error){toast('Error al eliminar','error');return;}
-  toast('Eliminada','success');await cargar();
-}
-
-function exportCSV(){
-  if(!allData.length){toast('No hay datos','error');return;}
-  var cols=['client_number','client_name','address','city','phone','boiler_model','contract_type','last_review_date','warranty','notes'];
-  var heads=['Nº','Nombre','Dirección','Población','Teléfono','Modelo','Contrato','Última Rev.','Garantía','Notas'];
-  var rows=[heads.join(';')];
-  for(var i=0;i<allData.length;i++){
-    var r=allData[i];
-    rows.push(cols.map(function(c){var v=r[c];if(v===null||v===undefined)return'';if(typeof v==='boolean')return v?'Sí':'No';return'"'+String(v).replace(/"/g,'""')+'"';}).join(';'));
+// ── FIRMA ─────────────────────────────────────────────────────────────────────
+function setFirmaTab(tab) {
+  firmaTab = tab;
+  document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
+  document.getElementById('tab-auto').classList.toggle('active', tab === 'auto');
+  document.getElementById('firma-manual-area').style.display = tab === 'manual' ? 'block' : 'none';
+  document.getElementById('firma-auto-area').style.display = tab === 'auto' ? 'block' : 'none';
+  if (tab === 'auto') {
+    var nombre = document.getElementById('f-nombre').value || 'Firma';
+    document.getElementById('firma-auto-nombre-text').textContent = nombre;
   }
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download='contratos_harosat.csv';a.click();
 }
 
-function toast(msg,tipo){
-  var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(tipo||'');
-  setTimeout(function(){t.className='toast';},3000);
+// Canvas firma manual
+var canvas, ctx, drawing = false;
+function initCanvas() {
+  canvas = document.getElementById('firma-canvas');
+  ctx = canvas.getContext('2d');
+  ctx.strokeStyle = '#1a2d4f';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  canvas.addEventListener('mousedown', function(e) { drawing = true; ctx.beginPath(); ctx.moveTo(pos(e).x, pos(e).y); });
+  canvas.addEventListener('mousemove', function(e) { if (!drawing) return; ctx.lineTo(pos(e).x, pos(e).y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', function() { drawing = false; });
+  canvas.addEventListener('mouseleave', function() { drawing = false; });
+  canvas.addEventListener('touchstart', function(e) { e.preventDefault(); drawing = true; ctx.beginPath(); var t = pos(e.touches[0]); ctx.moveTo(t.x, t.y); }, { passive: false });
+  canvas.addEventListener('touchmove', function(e) { e.preventDefault(); if (!drawing) return; var t = pos(e.touches[0]); ctx.lineTo(t.x, t.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', function() { drawing = false; });
+}
+function pos(e) {
+  var r = canvas.getBoundingClientRect();
+  var scaleX = canvas.width / r.width;
+  var scaleY = canvas.height / r.height;
+  return { x: (e.clientX - r.left) * scaleX, y: (e.clientY - r.top) * scaleY };
+}
+function limpiarCanvas() {
+  if (!canvas) { initCanvas(); return; }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function abrirForm(){
-  document.getElementById('mo-form').classList.add('active');
+// Generar firma automática en canvas temporal
+function generarFirmaAuto(nombre) {
+  var c = document.createElement('canvas');
+  c.width = 400; c.height = 120;
+  var x = c.getContext('2d');
+  x.fillStyle = '#fff';
+  x.fillRect(0, 0, 400, 120);
+  x.font = '48px Dancing Script, cursive';
+  x.fillStyle = '#1a2d4f';
+  x.textAlign = 'center';
+  x.textBaseline = 'middle';
+  x.fillText(nombre || 'Firma', 200, 60);
+  return c.toDataURL('image/png');
 }
-function cerrarForm(){document.getElementById('mo-form').classList.remove('active');}
-function cerrarCont(){document.getElementById('mo-c').classList.remove('active');}
 
-document.getElementById('mo-form').addEventListener('click',function(e){if(e.target===this)cerrarForm();});
-document.getElementById('mo-c').addEventListener('click',function(e){if(e.target===this)cerrarCont();});
+function obtenerFirmaDataURL() {
+  if (firmaTab === 'manual') {
+    if (!canvas) return null;
+    // Verificar si el canvas tiene algo dibujado
+    var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    var hasContent = false;
+    for (var i = 3; i < d.length; i += 4) { if (d[i] > 0) { hasContent = true; break; } }
+    if (!hasContent) return null;
+    return canvas.toDataURL('image/png');
+  } else {
+    var nombre = document.getElementById('f-nombre').value || 'Firma';
+    return generarFirmaAuto(nombre);
+  }
+}
+
+// ── GUARDAR CONTRATO ──────────────────────────────────────────────────────────
+async function guardarContrato() {
+  var nombre = document.getElementById('f-nombre').value.trim();
+  var vigencia = document.getElementById('f-vigencia').value;
+  var base = parseFloat(document.getElementById('f-base').value) || 0;
+
+  if (!nombre) { alert('El nombre del cliente es obligatorio.'); return; }
+  if (!vigencia) { alert('La fecha de vigencia es obligatoria.'); return; }
+  if (base <= 0) { alert('Introduce un importe válido.'); return; }
+
+  var firma = obtenerFirmaDataURL();
+  var esAuto = firmaTab === 'auto';
+
+  var payload = {
+    fecha_vigencia: vigencia,
+    cliente_nombre: nombre,
+    cliente_nif: document.getElementById('f-nif').value.trim(),
+    cliente_direccion: document.getElementById('f-dir').value.trim(),
+    cliente_telefono: document.getElementById('f-tel').value.trim(),
+    equipo_tipo: document.getElementById('f-tipo').value,
+    equipo_marca: document.getElementById('f-marca').value.trim(),
+    equipo_modelo: document.getElementById('f-modelo').value.trim(),
+    equipo_serie: document.getElementById('f-serie').value.trim(),
+    base_imponible: base,
+    firma_cliente: firma,
+    firma_auto: esAuto
+  };
+
+  var res = await sb.from('contratos').insert(payload).select().single();
+  if (res.error) { alert('Error al guardar: ' + res.error.message); return; }
+
+  cerrarModal();
+  await cargar();
+
+  // Buscar el contrato recién creado y mostrarlo
+  var idx = contratos.findIndex(function(c) { return c.id === res.data.id; });
+  if (idx >= 0) verContrato(idx);
+}
+
+// ── VER CONTRATO ──────────────────────────────────────────────────────────────
+function verContrato(idx) {
+  contratoActual = contratos[idx];
+  document.getElementById('doc-contenido').innerHTML = generarHTML(contratoActual);
+  document.getElementById('vista-overlay').classList.add('open');
+  document.getElementById('vista-overlay').scrollTop = 0;
+}
+function cerrarVista() {
+  document.getElementById('vista-overlay').classList.remove('open');
+}
+
+// ── GENERAR HTML DOCUMENTO ────────────────────────────────────────────────────
+function generarHTML(c) {
+  var base = parseFloat(c.base_imponible || 0);
+  var iva = base * 0.21;
+  var total = base + iva;
+  var numStr = 'CT-' + String(c.numero).padStart(4, '0') + '/26';
+  var hoy = new Date().toLocaleDateString('es-ES');
+
+  var firmaClienteHTML = '';
+  if (c.firma_cliente && c.firma_cliente.length > 10) {
+    firmaClienteHTML = '<img class="doc-firma-img" src="' + c.firma_cliente + '" alt="Firma cliente">';
+  } else {
+    firmaClienteHTML = '<div class="doc-firma-canvas-placeholder"></div>';
+  }
+
+  // LOGO SVG inline
+  var logoSVG = '<svg width="52" height="52" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<rect width="40" height="40" rx="8" fill="#0a1628"/>' +
+    '<rect x="10" y="6" width="20" height="28" rx="3" fill="#1e3052" stroke="#2a8fd4" stroke-width="1.2"/>' +
+    '<rect x="15" y="3" width="10" height="6" rx="2" fill="#2a8fd4"/>' +
+    '<line x1="14" y1="15" x2="26" y2="15" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>' +
+    '<line x1="14" y1="20" x2="26" y2="20" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>' +
+    '<line x1="14" y1="25" x2="22" y2="25" stroke="#eae6d8" stroke-width="1.5" stroke-linecap="round"/>' +
+    '</svg>';
+
+  // Cláusulas
+  var clausulasHTML = '';
+  for (var i = 0; i < CLAUSULAS.length; i++) {
+    clausulasHTML += '<div class="doc-clausula"><strong>' + CLAUSULAS[i][0] + ':</strong> ' + CLAUSULAS[i][1] + '</div>';
+  }
+
+  return '<div class="doc-header">' +
+    '<div class="doc-logo-area">' + logoSVG +
+      '<div>' +
+        '<div class="doc-empresa-nombre">HAROSAT ECOTECHNICAL</div>' +
+        '<div class="doc-empresa-datos">CIF: 09302345H · Sta. Lucía 66 BJ, 26200 Haro (La Rioja)<br>Tel: 640 05 64 84 · harosatecnicos@gmail.com</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="doc-titulo-bloque">' +
+      '<div class="doc-titulo">Contrato de Mantenimiento</div>' +
+      '<div class="doc-num">' + numStr + '</div>' +
+      '<div class="doc-vigencia">Vigencia: ' + fmtFecha(c.fecha_vigencia) + '</div>' +
+    '</div>' +
+  '</div>' +
+
+  '<div class="doc-partes">' +
+    '<div class="doc-parte">' +
+      '<div class="doc-parte-titulo">Empresa Prestadora</div>' +
+      '<div class="doc-parte-dato"><strong>HAROSAT ECOTECHNICAL</strong></div>' +
+      '<div class="doc-parte-dato">CIF: 09302345H</div>' +
+      '<div class="doc-parte-dato">Sta. Lucía 66 BJ, 26200 Haro – La Rioja</div>' +
+      '<div class="doc-parte-dato">Tel: 640 05 64 84</div>' +
+      '<div class="doc-parte-dato">harosatecnicos@gmail.com</div>' +
+    '</div>' +
+    '<div class="doc-parte">' +
+      '<div class="doc-parte-titulo">Titular / Cliente</div>' +
+      '<div class="doc-parte-dato"><strong>' + (c.cliente_nombre || '—') + '</strong></div>' +
+      '<div class="doc-parte-dato">NIF: ' + (c.cliente_nif || '—') + '</div>' +
+      '<div class="doc-parte-dato">' + (c.cliente_direccion || '—') + '</div>' +
+      '<div class="doc-parte-dato">Tel: ' + (c.cliente_telefono || '—') + '</div>' +
+    '</div>' +
+  '</div>' +
+
+  '<div class="doc-equipo">' +
+    '<div class="doc-equipo-titulo">Equipo / Instalación</div>' +
+    '<div class="doc-parte-dato"><strong>Tipo:</strong> ' + (c.equipo_tipo || '—') + '</div>' +
+    '<div class="doc-parte-dato"><strong>Marca:</strong> ' + (c.equipo_marca || '—') + '</div>' +
+    '<div class="doc-parte-dato"><strong>Modelo:</strong> ' + (c.equipo_modelo || '—') + '</div>' +
+    '<div class="doc-parte-dato"><strong>Nº Serie:</strong> ' + (c.equipo_serie || '—') + '</div>' +
+  '</div>' +
+
+  '<div class="doc-importe">' +
+    '<div class="doc-importe-titulo">Condiciones Económicas</div>' +
+    '<div class="doc-importe-lbl">Base imponible</div><div class="doc-importe-val">' + fmt(base) + '</div>' +
+    '<div class="doc-importe-lbl">IVA (21%)</div><div class="doc-importe-val">' + fmt(iva) + '</div>' +
+    '<div class="doc-importe-total-lbl">TOTAL ANUAL</div><div class="doc-importe-total-val">' + fmt(total) + '</div>' +
+    '<div class="doc-iban">Domiciliación: ES12 3456 7890 1234 5678 9012 · Caja Rural de Navarra</div>' +
+  '</div>' +
+
+  '<div class="doc-clausulas-titulo">Condiciones Generales del Contrato</div>' +
+  clausulasHTML +
+
+  '<div class="doc-aviso">La firma del presente contrato implica la aceptación expresa de todas las cláusulas y condiciones recogidas en el mismo.</div>' +
+
+  '<div class="doc-firmas">' +
+    '<div class="doc-firma-bloque">' +
+      '<div class="doc-firma-titulo">Por HAROSAT ECOTECHNICAL</div>' +
+      '<div class="doc-firma-canvas-placeholder"></div>' +
+      '<div class="doc-firma-nombre">Jesús · Técnico Responsable</div>' +
+      '<div class="doc-firma-fecha">Haro (La Rioja)</div>' +
+    '</div>' +
+    '<div class="doc-firma-bloque">' +
+      '<div class="doc-firma-titulo">El Cliente / Titular</div>' +
+      firmaClienteHTML +
+      '<div class="doc-firma-nombre">' + (c.cliente_nombre || '') + '</div>' +
+      '<div class="doc-firma-fecha">Fecha vigencia: ' + fmtFecha(c.fecha_vigencia) + '</div>' +
+    '</div>' +
+  '</div>' +
+
+  '<div class="doc-pie">' +
+    '<div class="doc-pie-datos">HAROSAT ECOTECHNICAL · CIF 09302345H · Sta. Lucía 66 BJ, 26200 Haro – La Rioja<br>Tel: 640 05 64 84 · harosatecnicos@gmail.com · www.harosat.es</div>' +
+    '<div class="doc-pie-num">' + numStr + '</div>' +
+  '</div>';
+}
+
+// ── COMPARTIR ─────────────────────────────────────────────────────────────────
+function textoContrato() {
+  if (!contratoActual) return '';
+  var base = parseFloat(contratoActual.base_imponible || 0);
+  var total = base * 1.21;
+  var numStr = 'CT-' + String(contratoActual.numero).padStart(4, '0') + '/26';
+  return 'Contrato de Mantenimiento ' + numStr + '\nCliente: ' + (contratoActual.cliente_nombre || '') + '\nEquipo: ' + (contratoActual.equipo_marca || '') + ' ' + (contratoActual.equipo_modelo || '') + '\nImporte anual: ' + fmt(total) + '\nVigencia: ' + fmtFecha(contratoActual.fecha_vigencia) + '\n\nHAROSAT ECOTECHNICAL · 640 05 64 84 · harosatecnicos@gmail.com';
+}
+function compartirWhatsApp() {
+  var txt = encodeURIComponent(textoContrato());
+  window.open('https://wa.me/?text=' + txt, '_blank');
+}
+function compartirGmail() {
+  if (!contratoActual) return;
+  var numStr = 'CT-' + String(contratoActual.numero).padStart(4, '0') + '/26';
+  var subj = encodeURIComponent('Contrato de Mantenimiento ' + numStr + ' – HAROSAT ECOTECHNICAL');
+  var body = encodeURIComponent(textoContrato());
+  window.open('mailto:?subject=' + subj + '&body=' + body, '_blank');
+}
+
+// ── PDF ───────────────────────────────────────────────────────────────────────
+async function descargarPDF() {
+  if (!contratoActual) return;
+  var c = contratoActual;
+  var base = parseFloat(c.base_imponible || 0);
+  var iva = base * 0.21;
+  var total = base + iva;
+  var numStr = 'CT-' + String(c.numero).padStart(4, '0') + '/26';
+
+  var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  var W = 210; var lm = 18; var rm = 18; var cw = W - lm - rm;
+  var y = 18;
+
+  // Cabecera
+  doc.setFillColor(10, 22, 40);
+  doc.rect(0, 0, 210, 32, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(234, 230, 216);
+  doc.text('HAROSAT ECOTECHNICAL', lm, 14);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(160, 170, 184);
+  doc.text('CIF: 09302345H  ·  Sta. Lucía 66 BJ, 26200 Haro (La Rioja)  ·  Tel: 640 05 64 84  ·  harosatecnicos@gmail.com', lm, 20);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(42, 143, 212);
+  doc.text('CONTRATO DE MANTENIMIENTO', W - rm, 12, { align: 'right' });
+  doc.setFontSize(14);
+  doc.text(numStr, W - rm, 20, { align: 'right' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(160, 170, 184);
+  doc.text('Vigencia: ' + fmtFecha(c.fecha_vigencia), W - rm, 27, { align: 'right' });
+  y = 40;
+
+  // Partes
+  doc.setFillColor(244, 246, 250);
+  doc.roundedRect(lm, y, cw / 2 - 3, 36, 3, 3, 'F');
+  doc.roundedRect(lm + cw / 2 + 3, y, cw / 2 - 3, 36, 3, 3, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(42, 143, 212);
+  doc.text('EMPRESA PRESTADORA', lm + 4, y + 7);
+  doc.text('TITULAR / CLIENTE', lm + cw / 2 + 7, y + 7);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(10, 22, 40);
+  doc.text('HAROSAT ECOTECHNICAL', lm + 4, y + 13);
+  doc.text(c.cliente_nombre || '—', lm + cw / 2 + 7, y + 13);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(80, 80, 80);
+  doc.text('CIF: 09302345H', lm + 4, y + 19);
+  doc.text('NIF: ' + (c.cliente_nif || '—'), lm + cw / 2 + 7, y + 19);
+  doc.text('Sta. Lucía 66 BJ, 26200 Haro – La Rioja', lm + 4, y + 25);
+  var dirLines = doc.splitTextToSize(c.cliente_direccion || '—', cw / 2 - 10);
+  doc.text(dirLines[0] || '', lm + cw / 2 + 7, y + 25);
+  doc.text('Tel: 640 05 64 84', lm + 4, y + 31);
+  doc.text('Tel: ' + (c.cliente_telefono || '—'), lm + cw / 2 + 7, y + 31);
+  y += 42;
+
+  // Equipo
+  doc.setFillColor(244, 246, 250);
+  doc.roundedRect(lm, y, cw, 18, 3, 3, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(42, 143, 212);
+  doc.text('EQUIPO / INSTALACIÓN', lm + 4, y + 6);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(10, 22, 40);
+  var eq1 = 'Tipo: ' + (c.equipo_tipo || '—') + '   Marca: ' + (c.equipo_marca || '—') + '   Modelo: ' + (c.equipo_modelo || '—') + '   Nº Serie: ' + (c.equipo_serie || '—');
+  doc.text(eq1, lm + 4, y + 13);
+  y += 24;
+
+  // Importe
+  doc.setFillColor(10, 22, 40);
+  doc.roundedRect(lm, y, cw, 22, 3, 3, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(42, 143, 212);
+  doc.text('CONDICIONES ECONÓMICAS', lm + 4, y + 6);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(160, 170, 184);
+  doc.text('Base imponible: ' + fmt(base) + '   IVA (21%): ' + fmt(iva), lm + 4, y + 12);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(42, 143, 212);
+  doc.text('TOTAL ANUAL: ' + fmt(total), lm + 4, y + 19);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(160, 170, 184);
+  doc.text('Domiciliación: ES12 3456 7890 1234 5678 9012  ·  Caja Rural de Navarra', lm + cw - 4, y + 19, { align: 'right' });
+  y += 28;
+
+  // Cláusulas
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(10, 22, 40);
+  doc.text('CONDICIONES GENERALES DEL CONTRATO', lm, y);
+  doc.setDrawColor(10, 22, 40); doc.setLineWidth(0.5);
+  doc.line(lm, y + 2, lm + cw, y + 2);
+  y += 7;
+
+  for (var i = 0; i < CLAUSULAS.length; i++) {
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(10, 22, 40);
+    doc.text(CLAUSULAS[i][0] + ':', lm, y);
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(50, 50, 50);
+    var lines = doc.splitTextToSize(CLAUSULAS[i][1], cw);
+    if (y + (lines.length * 3.5) + 8 > 280) {
+      doc.addPage();
+      y = 18;
+    }
+    y += 4;
+    doc.text(lines, lm, y);
+    y += lines.length * 3.5 + 3;
+  }
+
+  // Aviso
+  if (y + 10 > 280) { doc.addPage(); y = 18; }
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(7); doc.setTextColor(100, 100, 100);
+  doc.text('La firma del presente contrato implica la aceptación expresa de todas las cláusulas y condiciones recogidas en el mismo.', lm + cw / 2, y + 4, { align: 'center' });
+  y += 12;
+
+  // Firmas
+  if (y + 35 > 275) { doc.addPage(); y = 18; }
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(80, 80, 80);
+  doc.text('POR HAROSAT ECOTECHNICAL', lm + cw / 4, y, { align: 'center' });
+  doc.text('EL CLIENTE / TITULAR', lm + (3 * cw / 4), y, { align: 'center' });
+  y += 4;
+  doc.setDrawColor(180, 180, 180); doc.setLineWidth(0.3);
+  doc.line(lm, y + 20, lm + cw / 2 - 4, y + 20);
+  doc.line(lm + cw / 2 + 4, y + 20, lm + cw, y + 20);
+
+  // Firma cliente img
+  if (c.firma_cliente && c.firma_cliente.length > 10) {
+    try {
+      doc.addImage(c.firma_cliente, 'PNG', lm + cw / 2 + 4, y + 2, cw / 2 - 4, 18);
+    } catch(e) {}
+  }
+
+  y += 24;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(80, 80, 80);
+  doc.text('Jesús · Técnico Responsable', lm + cw / 4, y, { align: 'center' });
+  doc.text((c.cliente_nombre || '') + '  ·  ' + fmtFecha(c.fecha_vigencia), lm + (3 * cw / 4), y, { align: 'center' });
+
+  // Pie
+  var totalPags = doc.getNumberOfPages();
+  for (var p = 1; p <= totalPags; p++) {
+    doc.setPage(p);
+    doc.setFillColor(10, 22, 40);
+    doc.rect(0, 287, 210, 10, 'F');
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(160, 170, 184);
+    doc.text('HAROSAT ECOTECHNICAL · CIF 09302345H · Sta. Lucía 66 BJ, 26200 Haro (La Rioja) · Tel: 640 05 64 84 · www.harosat.es', 105, 292, { align: 'center' });
+    doc.setTextColor(42, 143, 212);
+    doc.text(numStr + '  ·  Pág. ' + p + '/' + totalPags, 105, 296, { align: 'center' });
+  }
+
+  doc.save('Contrato_' + numStr.replace(/\//g, '-') + '.pdf');
+}
+
+// ── IMPRIMIR ──────────────────────────────────────────────────────────────────
+function imprimirContrato() {
+  var contenido = document.getElementById('doc-contenido').innerHTML;
+  var estilos = '';
+  var styleTags = document.querySelectorAll('style');
+  for (var i = 0; i < styleTags.length; i++) { estilos += styleTags[i].innerHTML; }
+  var w = window.open('', '_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + estilos + ' body{background:#fff} .doc{box-shadow:none;border-radius:0;padding:32px 40px}</style></head><body><div class="doc">' + contenido + '</div></body></html>');
+
+w.document.close();
+w.focus();
+w.print();
+}
+
+// ── ELIMINAR ──────────────────────────────────────────────────────────────────
+var idAEliminar = null;
+
+function confirmarEliminar() {
+if (!contratoActual) return;
+idAEliminar = contratoActual.id;
+document.getElementById(‘confirm-overlay’).classList.add(‘open’);
+}
+function confirmarEliminarId(id) {
+idAEliminar = id;
+document.getElementById(‘confirm-overlay’).classList.add(‘open’);
+}
+function cerrarConfirm() {
+idAEliminar = null;
+document.getElementById(‘confirm-overlay’).classList.remove(‘open’);
+}
+async function eliminarContrato() {
+if (!idAEliminar) return;
+var res = await sb.from(‘contratos’).delete().eq(‘id’, idAEliminar);
+if (res.error) { alert(’Error al eliminar: ’ + res.error.message); return; }
+cerrarConfirm();
+cerrarVista();
+contratoActual = null;
+idAEliminar = null;
+await cargar();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+initCanvas();
 cargar();
 </script>
 
