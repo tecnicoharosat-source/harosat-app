@@ -325,17 +325,16 @@ function editar(id){
 }
 
 async function guardar(){
-  var nombre=document.getElementById('f-nombre').value.trim();
-  var modelo=document.getElementById('f-modelo').value.trim();
-  var fecha=document.getElementById('f-fecha').value;
-  if(!nombre||!modelo||!fecha){toast('Completa los campos obligatorios','error');return;}
-  var p={client_number:document.getElementById('f-num').value.trim()||null,client_name:nombre,address:document.getElementById('f-dir').value.trim()||null,city:document.getElementById('f-ciudad').value.trim()||null,phone:document.getElementById('f-tel').value.trim()||null,boiler_model:modelo,contract_type:document.getElementById('f-contrato').value,last_review_date:fecha,warranty:document.getElementById('f-garantia').checked,notes:document.getElementById('f-notas').value.trim()||null};
-  var err;
-  if(editId){var res=await sb.from('contratos').update(p).eq('id',editId);err=res.error;}
-  else{var res=await sb.from('contratos').insert(p);err=res.error;}
-  if(err){toast('Error: '+err.message,'error');return;}
-  toast(editId?'Revisión actualizada':'Revisión creada','success');
-  closeModal();await cargar();
+  var nombre=document.getElementById('fn').value.trim();
+  var base=parseFloat(document.getElementById('fbase').value);
+  var fecha=document.getElementById('ffecha').value;
+  if(!nombre||!base||!fecha){toast('Completa los campos obligatorios','error');return;}
+  var firma=getFirma();
+  var p={fecha_vigencia:fecha,cliente_nombre:nombre,cliente_nif:document.getElementById('fnif').value.trim()||null,cliente_direccion:document.getElementById('fdir').value.trim()||null,cliente_telefono:document.getElementById('ftel').value.trim()||null,equipo_tipo:document.getElementById('ftipo').value.trim()||null,equipo_marca:document.getElementById('fmarca').value.trim()||null,equipo_modelo:document.getElementById('fmodelo').value.trim()||null,equipo_serie:document.getElementById('fserie').value.trim()||null,base_imponible:base,firma_cliente:firma,firma_auto:fMode==='auto'};
+  var res=await sb.from('contratos').insert(p).select().single();
+  if(res.error){toast('Error: '+res.error.message,'error');return;}
+  toast('Contrato guardado','success');
+  cerrarForm();await cargar();verContrato(res.data.id);
 }
 
 async function eliminar(id){
