@@ -269,16 +269,15 @@ function render(data){
   if(!data.length){document.getElementById('tabla').style.display='none';document.getElementById('empty').style.display='block';return;}
   document.getElementById('tabla').style.display='table';document.getElementById('empty').style.display='none';
   for(var i=0;i<data.length;i++){
-    var r=data[i];var p=proxima(r.last_review_date);var d=dias(p);
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td class="tn">'+(r.client_number||'—')+'</td>'+
-      '<td class="tna">'+(r.client_name||'—')+'</td>'+
+    var r=data[i];var tr=document.createElement('tr');
+    tr.innerHTML='<td class="tn">'+(r.numero||'—')+'</td>'+
+      '<td class="tna">'+(r.cliente_nombre||'—')+'</td>'+
       '<td class="tc">'+(r.city||'—')+'</td>'+
-      '<td>'+ctBadge(r.contract_type)+'</td>'+
+      '<td>'+(r.contract_type||'—')+'</td>'+
       '<td class="tc" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">'+(r.boiler_model||'—')+'</td>'+
       '<td class="td">'+fmtF(r.last_review_date)+'</td>'+
       '<td class="td">'+(p?fmtF(p.toISOString()):'—')+'</td>'+
-      '<td>'+badgeDias(d)+'</td>'+
+      '<td>'—'</td>'+
       '<td>'+(r.warranty?'<span class="badge bg">✓ GAR</span>':'—')+'</td>'+
       '<td><div class="acts">'+
         '<button class="ab" onclick="editar(\''+r.id+'\')" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+
@@ -294,7 +293,7 @@ document.getElementById('search').addEventListener('input',function(){
   render(allData.filter(function(r){return(r.cliente_nombre||'').toLowerCase().includes(q)||(r.equipo_modelo||'').toLowerCase().includes(q);}));
 });
 
-function openModal(){
+function _openModal_unused(){
   editId=null;
   document.getElementById('mtitle').textContent='Nueva Revisión';
   document.getElementById('btn-save').textContent='💾 Guardar';
@@ -302,17 +301,17 @@ function openModal(){
   document.getElementById('f-contrato').value='L-V';
   document.getElementById('f-fecha').value='';
   document.getElementById('f-garantia').checked=false;
-  document.getElementById('mo').classList.add('active');
+  document.getElementById('mo-form').classList.add('active');
 }
-function closeModal(){document.getElementById('mo').classList.remove('active');editId=null;}
+
 
 function editar(id){
   var r=allData.find(function(x){return x.id===id;});if(!r)return;
   editId=id;
   document.getElementById('mtitle').textContent='Editar Revisión';
   document.getElementById('btn-save').textContent='💾 Actualizar';
-  document.getElementById('f-num').value=r.client_number||'';
-  document.getElementById('f-nombre').value=r.client_name||'';
+  document.getElementById('f-num').value=r.numero||'';
+  document.getElementById('f-nombre').value=r.cliente_nombre||'';
   document.getElementById('f-dir').value=r.address||'';
   document.getElementById('f-ciudad').value=r.city||'';
   document.getElementById('f-tel').value=r.phone||'';
@@ -321,7 +320,7 @@ function editar(id){
   document.getElementById('f-fecha').value=r.last_review_date||'';
   document.getElementById('f-garantia').checked=r.warranty||false;
   document.getElementById('f-notas').value=r.notes||'';
-  document.getElementById('mo').classList.add('active');
+  document.getElementById('mo-form').classList.add('active');
 }
 
 async function guardar(){
