@@ -364,6 +364,12 @@ function toast(msg,tipo){
   setTimeout(function(){t.className='toast';},3000);
 }
 
+function abrirForm(){
+  document.getElementById('mo-form').classList.add('active');
+}
+function cerrarForm(){document.getElementById('mo-form').classList.remove('active');}
+function cerrarCont(){document.getElementById('mo-c').classList.remove('active');}
+
 document.getElementById('mo-form').addEventListener('click',function(e){if(e.target===this)cerrarForm();});
 document.getElementById('mo-c').addEventListener('click',function(e){if(e.target===this)cerrarCont();});
 cargar();
