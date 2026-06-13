@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAROSAT Ecotechnical</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg: #050b14; --card: #0d1525; --border: #1e2d45;
+    --text: #e2e8f0; --muted: #64748b;
+    --blue: #1f6feb; --blue2: #388bfd; --green: #3fb950;
+    --red: #f85149; --orange: #d29922; --gold: #e3b341;
+    --purple: #a371f7; --secondary: #111d32;
+    --font-outfit: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  body {
+    font-family: var(--font-outfit);
+    background: var(--bg); color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  .app { max-width:1400px; margin:0 auto; padding:0 16px 40px; }
+  .topbar {
+    position:sticky; top:0; z-index:50; background: var(--bg);
+    border-bottom:1px solid var(--border); padding:10px 0; margin-bottom:24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .topbar-brand { font-size:20px; font-weight:800; }
+  .topbar-brand span { color: var(--gold); }
+  .topbar-nav { display:flex; gap:4px; }
+  .topbar-nav button {
+    padding:6px 14px; border-radius:6px; border:none; cursor:pointer;
+    font-family: var(--font-outfit); font-size:13px; font-weight:500;
+    background:transparent; color:var(--muted);
+  }
+  .topbar-nav button:hover { background:var(--secondary); color:var(--text); }
+  .topbar-nav button.active { background:var(--blue); color:#fff; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
+  .kpi-card {
+    background:var(--card); border:1px solid var(--border); border-radius:8px;
+    padding:12px 16px; position:relative; overflow:hidden;
+  }
+  .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--kpi-color,var(--blue)); }
+  .kpi-label { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:4px; }
+  .kpi-value { font-size:22px; font-weight:700; color:var(--kpi-color,var(--blue)); }
+  .kpi-value.mono { font-family:var(--font-mono); font-size:16px; }
+  .filters-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
+  .filter-pill {
+    padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500;
+    border:1px solid var(--border); cursor:pointer; transition:all .15s;
+    background:var(--secondary); color:var(--muted);
+  }
+  .filter-pill:hover { color:var(--text); border-color:var(--muted); }
+  .filter-pill.active { background:var(--blue); border-color:var(--blue2); color:#fff; }
+  .search-input {
+    padding:7px 10px 7px 32px; border-radius:6px; border:1px solid var(--border);
+    background:var(--secondary); color:var(--text); font-size:12px; outline:none;
+    min-width:180px; max-width:260px; flex:1; font-family:var(--font-outfit);
+  }
+  .search-input:focus { border-color:var(--blue); }
+  .actions-right { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
+  .btn {
+    display:inline-flex; align-items:center; gap:5px; padding:6px 12px;
+    border-radius:6px; font-size:12px; font-weight:500; cursor:pointer;
+    border:1px solid var(--border); background:transparent; color:var(--muted);
+    font-family:var(--font-outfit); transition:all .15s;
+  }
+  .btn:hover { color:var(--text); border-color:var(--muted); }
+  .btn-primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+  .btn-primary:hover { background:var(--blue2); }
+  .btn-icon { padding:5px 8px; }
+  .btn-sm { padding:4px 8px; font-size:11px; }
+  .table-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead th {
+    text-align:left; padding:10px 14px; font-size:10px; text-transform:uppercase;
+    letter-spacing:1.2px; color:var(--muted); font-weight:600;
+    border-bottom:1px solid var(--border);
+  }
+  thead th:last-child { text-align:center; }
+  tbody td { padding:10px 14px; border-bottom:1px solid rgba(30,45,69,0.5); }
+  tbody tr { cursor:pointer; transition:background .15s; }
+  tbody tr:hover { background:rgba(56,139,253,0.04); }
+  .num-cell { font-family:var(--font-mono); color:var(--blue2); font-weight:600; }
+  .total-cell { text-align:right; font-family:var(--font-mono); font-weight:500; }
+  .badge {
+    display:inline-flex; align-items:center; padding:2px 8px; border-radius:4px;
+    font-size:11px; font-weight:500;
+  }
+  .modal-overlay {
+    position:fixed; inset:0; z-index:100; display:flex; align-items:flex-start;
+    justify-content:center; padding-top:40px; padding-bottom:40px; overflow-y:auto;
+    background:rgba(0,0,0,0.65);
+  }
+  .modal {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    width:100%; max-width:700px; margin:0 16px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    position:sticky; top:0; background:var(--card); border-bottom:1px solid var(--border);
+    padding:14px 20px; display:flex; justify-content:space-between; align-items:center;
+    border-radius:12px 12px 0 0; z-index:10;
+  }
+  .modal-header h2 { font-size:16px; font-weight:600; }
+  .modal-header button { background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px; }
+  .modal-header button:hover { color:var(--text); }
+  .modal-body { padding:20px; max-height:70vh; overflow-y:auto; }
+  .modal-footer {
+    position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--border);
+    padding:14px 20px; display:flex; gap:10px; justify-content:flex-end;
+    border-radius:0 0 12px 12px;
+  }
+  .form-group { margin-bottom:14px; }
+  .form-label { font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:8px 12px; border-radius:6px; border:1px solid var(--border);
+    background:var(--secondary); color:var(--text); font-size:13px; outline:none;
+    font-family:var(--font-outfit);
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--blue); }
+  .form-textarea { resize:vertical; min-height:60px; }
+  .section-title { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); margin-bottom:10px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:600px) { .grid-2 { grid-template-columns:1fr; } }
+  .line-row {
+    display:grid; grid-template-columns:1fr 55px 80px 90px 28px; gap:6px;
+    align-items:center; background:rgba(17,29,50,0.5); border-radius:8px; padding:6px;
+    margin-bottom:6px;
+  }
+  @media (max-width:600px) {
+    .line-row { grid-template-columns:1fr 1fr; }
+  }
+  .line-row input { padding:6px 8px; height:32px; }
+  .side-overlay { position:fixed; inset:0; z-index:100; display:flex; justify-content:flex-end; }
+  .side-bg { position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+  .side-panel {
+    position:relative; width:100%; max-width:440px; background:var(--secondary);
+    border-left:1px solid var(--border); height:100%; overflow-y:auto;
+  }
+  .side-header {
+    position:sticky; top:0; background:var(--secondary); border-bottom:1px solid var(--border);
+    padding:14px 20px; display:flex; justify-content:space-between; align-items:center; z-index:10;
+  }
+  .side-header h3 { font-size:14px; font-weight:600; }
+  .side-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
+  .tab-bar {
+    display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;
+    font-size:12px; font-weight:500;
+  }
+  .tab-btn {
+    flex:1; padding:8px; text-align:center; cursor:pointer; background:var(--secondary);
+    color:var(--muted); border:none; font-family:var(--font-outfit); font-size:12px;
+    display:flex; align-items:center; justify-content:center; gap:4px;
+  }
+  .tab-btn.active { background:var(--blue); color:#fff; }
+  .info-block { background:rgba(17,29,50,0.4); border:1px solid var(--border); border-radius:8px; padding:14px; }
+  .info-block h4 { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); margin-bottom:10px; }
+  .row-between { display:flex; justify-content:space-between; align-items:center; }
+  .totals-box { background:rgba(17,29,50,0.5); border:1px solid var(--border); border-radius:8px; padding:14px; }
+  .totals-box .row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+  .totals-box .row.total { border-top:1px solid var(--border); padding-top:8px; margin-top:4px; font-size:15px; font-weight:700; }
+  .totals-box .row.total .amount { color:var(--blue2); font-family:var(--font-mono); }
+  .toast-container { position:fixed; bottom:16px; right:16px; z-index:200; display:flex; flex-direction:column; gap:8px; }
+  .toast { padding:10px 16px; border-radius:8px; font-size:13px; border:1px solid; animation:slideIn .3s ease; }
+  @keyframes slideIn { from{transform:translateX(120%);opacity:0} to{transform:translateX(0);opacity:1} }
+  .loading { text-align:center; padding:40px; color:var(--muted); }
+  .beneficio-row { display:flex; justify-content:space-between; font-size:12px; border-top:1px solid var(--border); padding-top:6px; }
+  .hidden { display:none !important; }
+  table thead th:nth-child(3), table tbody td:nth-child(3),
+  table thead th:nth-child(4), table tbody td:nth-child(4),
+  table thead th:nth-child(5), table tbody td:nth-child(5),
+  table thead th:nth-child(7), table tbody td:nth-child(7) { display:none; }
+  @media (min-width: 640px) {
+    table thead th:nth-child(4), table tbody td:nth-child(4) { display:table-cell; }
+  }
+  @media (min-width: 768px) {
+    table thead th:nth-child(5), table tbody td:nth-child(5),
+    table thead th:nth-child(7), table tbody td:nth-child(7) { display:table-cell; }
+  }
+  @media (min-width: 1024px) {
+    table thead th:nth-child(3), table tbody td:nth-child(3) { display:table-cell; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app" class="app">
+  <div class="topbar">
+    <div class="topbar-brand">HARO<span>SAT</span></div>
+    <div class="topbar-nav">
+      <button onclick="setView('presupuestos')" id="navPresupuestos" class="active">Presupuestos</button>
+      <button onclick="setView('trabajos')" id="navTrabajos">Trabajos</button>
+      <button onclick="setView('pagos')" id="navPagos">Pagos</button>
+    </div>
+  </div>
+
+  <div id="viewPresupuestos">
+    <div class="kpi-grid" id="kpiPresupuestos"></div>
+    <div class="filters-row">
+      <button class="filter-pill active" onclick="filterEstado('todos')" id="fTodos">Todos</button>
+      <button class="filter-pill" onclick="filterEstado('Pendiente')" id="fPendiente">Pendiente</button>
+      <button class="filter-pill" onclick="filterEstado('Aceptado')" id="fAceptado">Aceptado</button>
+      <button class="filter-pill" onclick="filterEstado('Rechazado')" id="fRechazado">Rechazado</button>
+      <input class="search-input" id="searchPres" placeholder="Buscar cliente o numero..." oninput="renderPresupuestos()">
+      <div class="actions-right">
+        <button class="btn" onclick="exportCSV()">CSV</button>
+        <button class="btn" onclick="importCSV()">Importar</button>
+        <button class="btn" onclick="nuevoTemplate('bomba')">Bomba Calor</button>
+        <button class="btn" onclick="nuevoTemplate('aire')">Aire Acond.</button>
+        <button class="btn btn-primary" onclick="nuevoPresupuesto()">+ Nuevo</button>
+      </div>
+    </div>
+    <p id="countPres" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></p>
+    <div class="table-wrap"><table id="tablePresupuestos"><thead><tr>
+      <th>Numero</th><th>Cliente</th><th>Descripcion</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Firma</th><th>Accion</th>
+    </tr></thead><tbody id="tbodyPres"></tbody></table></div>
+  </div>
+
+  <div id="viewTrabajos" class="hidden">
+    <div class="kpi-grid" id="kpiTrabajos"></div>
+    <div class="filters-row">
+      <input class="search-input" id="searchTrab" placeholder="Buscar..." oninput="renderTrabajos()">
+      <select class="form-select" style="width:auto;max-width:140px;" onchange="filterTrabEstado(this.value)" id="fTrabEstado">
+        <option value="todos">Todos</option><option value="Pendiente">Pendiente</option>
+        <option value="en_curso">En Curso</option><option value="terminado">Terminado</option>
+      </select>
+      <select class="form-select" style="width:auto;max-width:160px;" onchange="filterTrabContable(this.value)" id="fTrabContable">
+        <option value="todos">Contable: Todos</option>
+        <option value="pendiente">Pendiente envio</option><option value="enviado">Enviado</option>
+      </select>
+      <button class="btn" onclick="exportCSVTrab()">CSV</button>
+    </div>
+    <div class="table-wrap"><table><thead><tr>
+      <th>Presupuesto</th><th>Cliente</th><th>Descripcion</th><th>Tecnico</th><th>F.Inicio</th><th>F.Fin</th><th>Total</th><th>Estado</th><th>Contable</th><th>Acc.</th>
+    </tr></thead><tbody id="tbodyTrab"></tbody></table></div>
+  </div>
+
+  <div id="viewPagos" class="hidden">
+    <h2 style="font-size:18px;margin-bottom:4px;">Documento de Pagos</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Busca un presupuesto para generar el calendario de pagos.</p>
+    <div class="info-block" style="margin-bottom:16px;">
+      <input class="form-input" id="searchPago" placeholder="Escribe numero, cliente o importe..." oninput="renderPagos()">
+      <select class="form-select" style="margin-top:8px;" id="selectPago" onchange="selectPago(this.value)"></select>
+    </div>
+    <div id="pagoPreview"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+// --- CREDENCIALES SUPABASE ---
+const SUPABASE_URL = 'https://sobiyfyzalynxcpfoldc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvYml5Znl6YWx5bnhjcGZvbGRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM0ODA5OTAsImV4cCI6MjAwOTA1Njk5MH0.V97grMbDsGAl-ZGNAnA9bwfgj_-hxiCuH96iYTXk8mY';
+
+// --- ESTADO GLOBAL ---
+let supabase = null;
+let presupuestos = [], trabajos = [], clientes = [], articulos = [];
+let currentView = 'presupuestos';
+let filterEstadoVal = 'todos';
+let filterTrabEstadoVal = 'todos', filterTrabContableVal = 'todos';
+let modalOpen = false, editingPres = null, templateMode = null;
+let detailOpen = false, selectedPres = null;
+let sideTab = 'detalle';
+
+const fn = n => Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtE = n => fn(n)+' \u20ac';
+const fd = d => { if(!d) return '-'; const p=d.split('T')[0].split('-'); return p[2]+'/'+p[1]+'/'+p[0]; };
+const today = () => new Date().toISOString().split('T')[0];
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const parseLineas = s => { if(!s) return []; if(Array.isArray(s)) return s; try{return JSON.parse(s)}catch(e){return[]} };
+function lineaTotal(l) { return (Number(l.qty)||0)*(Number(l.price)||0); }
+
+const EMPRESA = {
+  nombre:'HAROSAT ECOTECHNICAL', nombreCorto:'HAROSAT Ecotechnical',
+  cif:'09302345H', direccion:'Sta. Lucia, 66, BJ - 26200 Haro - La Rioja',
+  telefono1:'640 05 64 84', telefono2:'616 68 49 79',
+  email:'harosatecnicos@gmail.com', tecnico:'Jesus (T1)', tecnicoNombre:'Jesus',
+};
+const DEFAULTOBS = "Garantia de instalacion: un ano. Garantia del equipo segun fabricante. Albanileria y electricidad no incluidas.";
+const DEFAULTNOTAS = "Todos los materiales pertenecen a la empresa instaladora hasta que se realice el pago total. Forma de pago: 60% al realizar el pedido - 30% a mitad de obra - 10% al finalizar.";
+
+const BOMBA_CALOR = [
+  {desc:'INSTALACION Y SUMINISTRO DE BOMBA DE CALOR',qty:1,price:0},
+  {desc:'',qty:1,price:0},
+  {desc:'ROLLO 20M FRIGORISTA 3/8-1/4',qty:1,price:0},
+  {desc:'JUEGO SOPORTE PARED 50X45',qty:1,price:0},
+  {desc:'CANALETA AIRE 7X5,5',qty:15,price:0},
+  {desc:'MANGUERA ELECTRICA 2X1',qty:20,price:0},
+  {desc:'MANGUERA ELECTRICA 3X1,5',qty:20,price:0},
+  {desc:'1M TUBO FLEXIBLE SILICONA 6X9 CRISTAL',qty:20,price:0},
+  {desc:'PEQUENO UTILLAJE, GRAPAS, BRIDAS, ETC',qty:1,price:0},
+  {desc:'VACIO DE INSTALACION, PRUEBAS DE ESTANQUEIDAD, PUESTA EN MARCHA',qty:1,price:0},
+];
+const AIRE_ACOND = [
+  {desc:'Samsung 1x1 AR60F09 WindFree Comfort S2',qty:1,price:1426},
+  {desc:'1M DE TUBO DE FRIGORISTA 3/8-1/4',qty:10,price:15.45},
+  {desc:'JUEGO SOP. SOLDADOS 500X450 SR. TREKS',qty:1,price:21},
+  {desc:'BOMBA CONDENSADOS CON DEPOSITO M1 VALUE',qty:1,price:138},
+  {desc:'1M TUBO FLEXIBLE SILICONA DE 6X9 CRISTAL',qty:10,price:3.56},
+  {desc:'1M CANALETA DE 70x60 CAJA DE 12',qty:10,price:8.98},
+  {desc:'PEQUENO UTILLAJE, GRAPAS, BRIDAS, ETC',qty:1,price:125},
+];
+
+function nextNum() {
+  const yy = String(new Date().getFullYear()).slice(-2);
+  let max=25;
+  presupuestos.forEach(p=>{
+    if(!p.numero) return;
+    const parts=p.numero.split('/');
+    if(parts.length===3 && parts[1]===yy){ const n=parseInt(parts[2]); if(n>max) max=n; }
+  });
+  return 'HS/'+yy+'/'+String(max+1).padStart(2,'0');
+}
+function buildDescripcion(lines) { return lines.map(l=>l.desc||'').filter(Boolean).join(' / ').slice(0,300); }
+function getQuarter(d) { if(!d) return '1T'; const m=new Date(d).getMonth(); if(m<=2)return'1T'; if(m<=5)return'2T'; if(m<=8)return'3T'; return'4T'; }
+
+// --- TOAST ---
+function toast(msg,type) {
+  type = type || 'info';
+  const colors={ok:{border:'#3fb950',bg:'rgba(63,185,80,0.1)'},err:{border:'#f85149',bg:'rgba(248,81,73,0.1)'},info:{border:'#388bfd',bg:'rgba(56,139,253,0.1)'}};
+  const c=colors[type]||colors.info;
+  const el=document.createElement('div');
+  el.className='toast';
+  el.style.cssText='border-color:'+c.border+';background:'+c.bg+';color:var(--text);';
+  el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(function(){ el.remove(); },3200);
+}
+
+// --- INIT ---
+async function init() {
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    await cargarDatos();
+    renderPresupuestos();
+    toast('Conectado','ok');
+  } catch(e) {
+    toast('Error de conexion: '+e.message,'err');
+    console.error(e);
+  }
+}
+
+async function safeSelect(tableName, orderCol) {
+  try {
+    const res = await supabase.from(tableName).select('*').order(orderCol,{ascending:false}).limit(500);
+    if(res.error) { console.warn('Tabla '+tableName+' no disponible:',res.error.message); return []; }
+    return res.data || [];
+  } catch(e) { console.warn('Error cargando '+tableName+':',e.message); return []; }
+}
+
+async function cargarDatos() {
+  presupuestos = await safeSelect('presupuestos', 'created_at');
+  trabajos = await safeSelect('trabajos', 'created_at');
+  clientes = await safeSelect('clientes', 'created_at');
+  articulos = await safeSelect('articulos', 'created_at');
+}
+
+// --- VISTAS ---
+function setView(v) {
+  currentView=v;
+  document.getElementById('viewPresupuestos').classList.toggle('hidden',v!=='presupuestos');
+  document.getElementById('viewTrabajos').classList.toggle('hidden',v!=='trabajos');
+  document.getElementById('viewPagos').classList.toggle('hidden',v!=='pagos');
+  document.getElementById('navPresupuestos').classList.toggle('active',v==='presupuestos');
+  document.getElementById('navTrabajos').classList.toggle('active',v==='trabajos');
+  document.getElementById('navPagos').classList.toggle('active',v==='pagos');
+  if(v==='presupuestos') renderPresupuestos();
+  if(v==='trabajos') renderTrabajos();
+  if(v==='pagos') renderPagos();
+}
+
+// --- PRESUPUESTOS ---
+function filterEstado(v) {
+  filterEstadoVal=v;
+  document.querySelectorAll('#viewPresupuestos .filter-pill').forEach(b=>b.classList.remove('active'));
+  const id = v==='todos' ? 'fTodos' : v==='Pendiente' ? 'fPendiente' : v==='Aceptado' ? 'fAceptado' : 'fRechazado';
+  const elx=document.getElementById(id);
+  if(elx) elx.classList.add('active');
+  renderPresupuestos();
+}
+
+function getFiltered() {
+  return presupuestos.filter(p=>{
+    if(filterEstadoVal!=='todos' && p.estado!==filterEstadoVal) return false;
+    const s=(document.getElementById('searchPres')?.value||'').toLowerCase();
+    if(s) return (p.numero||'').toLowerCase().includes(s)||(p.cliente||'').toLowerCase().includes(s)||(p.descripcion||'').toLowerCase().includes(s);
+    return true;
+  }).sort((a,b)=>(b.numero||'').localeCompare(a.numero||''));
+}
+
+function renderPresupuestos() {
+  const filtered = getFiltered();
+  const kpis = {
+    total: presupuestos.length,
+    pendientes: presupuestos.filter(p=>p.estado==='Pendiente').length,
+    enviados: presupuestos.filter(p=>p.estado_firma==='enviado').length,
+    firmados: presupuestos.filter(p=>p.estado_firma==='firmado').length,
+    aceptados: presupuestos.filter(p=>p.estado==='Aceptado').length,
+    importe: presupuestos.filter(p=>p.estado==='Aceptado').reduce((s,p)=>s+(p.total||0),0),
+  };
+  const kpiData = [
+    {label:'TOTAL',value:kpis.total,color:'#388bfd'},
+    {label:'PENDIENTES',value:kpis.pendientes,color:'#d29922'},
+    {label:'ENVIADOS',value:kpis.enviados,color:'#388bfd'},
+    {label:'FIRMADOS',value:kpis.firmados,color:'#e3b341'},
+    {label:'ACEPTADOS',value:kpis.aceptados,color:'#3fb950'},
+    {label:'IMPORTE ACEPTADO',value:fmtE(kpis.importe),color:'#3fb950',mono:true},
+  ];
+  document.getElementById('kpiPresupuestos').innerHTML = kpiData.map(k=>
+    `<div class="kpi-card" style="--kpi-color:${k.color}"><div class="kpi-label">${k.label}</div><div class="kpi-value${k.mono?' mono':''}">${k.value}</div></div>`
+  ).join('');
+
+  document.getElementById('countPres').textContent = filtered.length+' presupuesto'+(filtered.length!==1?'s':'');
+
+  document.getElementById('tbodyPres').innerHTML = filtered.length===0
+    ? '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">Sin resultados</td></tr>'
+    : filtered.map(p=>`<tr onclick="abrirDetalle('${p.id}')">
+      <td class="num-cell">${p.numero||'-'}</td>
+      <td style="font-weight:500;text-transform:uppercase;">${esc(p.cliente||'-')}</td>
+      <td style="color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${esc(p.descripcion||'-')}</td>
+      <td style="color:var(--muted);font-size:12px;">${fd(p.fecha_emision)}</td>
+      <td class="total-cell">${fmtE(p.total)}</td>
+      <td style="text-align:center;">${badgeEstado(p.estado)}</td>
+      <td style="text-align:center;">${badgeFirma(p.estado_firma||'pendiente')}</td>
+      <td style="text-align:center;" onclick="event.stopPropagation()">
+        <button class="btn btn-icon" style="padding:4px 6px;" onclick="editarPresupuesto('${p.id}')" title="Editar">Editar</button>
+        <button class="btn btn-icon" style="padding:4px 6px;color:var(--red);" onclick="confirmarEliminar('${p.id}')" title="Eliminar">Borrar</button>
+      </td>
+    </tr>`).join('');
+}
+
+function badgeEstado(s) {
+  const m={
+    'Pendiente':{bg:'rgba(210,153,34,0.15)',c:'#d29922',l:'Pendiente'},
+    'Aceptado':{bg:'rgba(63,185,80,0.15)',c:'#3fb950',l:'Aceptado'},
+    'Rechazado':{bg:'rgba(248,81,73,0.15)',c:'#f85149',l:'Rechazado'}
+  };
+  const x=m[s]||m['Pendiente'];
+  return `<span class="badge" style="background:${x.bg};color:${x.c}">${x.l}</span>`;
+}
+function badgeFirma(s) {
+  const m={
+    pendiente:{bg:'rgba(139,148,158,0.12)',c:'#8b949e',l:'Pendiente'},
+    enviado:{bg:'rgba(31,111,235,0.15)',c:'#388bfd',l:'Enviado'},
+    firmado:{bg:'rgba(227,179,65,0.15)',c:'#e3b341',l:'Firmado'},
+    aceptado:{bg:'rgba(63,185,80,0.15)',c:'#3fb950',l:'Aceptado'},
+    rechazado:{bg:'rgba(248,81,73,0.15)',c:'#f85149',l:'Rechazado'}
+  };
+  const x=m[s]||m.pendiente;
+  return `<span class="badge" style="background:${x.bg};color:${x.c}">${x.l}</span>`;
+}
+
+// --- CRUD PRESUPUESTOS ---
+async function nuevoPresupuesto() {
+  editingPres = null; templateMode = null;
+  abrirModal({numero:nextNum(),fecha_emision:today(),estado:'Pendiente',iva_pct:21,cliente:'',direccion:'',telefono:'',observaciones:DEFAULTOBS,notas:DEFAULTNOTAS},[{desc:'',qty:1,price:0}]);
+}
+
+async function nuevoTemplate(type) {
+  editingPres = null; templateMode = type;
+  const lines = type==='aire' ? AIRE_ACOND : BOMBA_CALOR;
+  abrirModal({numero:nextNum(),fecha_emision:today(),estado:'Pendiente',iva_pct:21,cliente:'',direccion:'',telefono:'',observaciones:DEFAULTOBS,notas:DEFAULTNOTAS},lines.map(l=>Object.assign({},l)));
+}
+
+async function editarPresupuesto(id) {
+  const p = presupuestos.find(x=>x.id===id); if(!p) return;
+  editingPres = p; templateMode = null;
+  const lines = parseLineas(p.lineas);
+  if(lines.length===0) lines.push({desc:'',qty:1,price:0});
+  abrirModal(p, lines);
+}
+
+async function confirmarEliminar(id) {
+  if(!confirm('Seguro que deseas eliminar este presupuesto? Esta accion no se puede deshacer.')) return;
+  const res = await supabase.from('presupuestos').delete().eq('id',id);
+  if(res.error){ toast(res.error.message,'err'); return; }
+  await cargarDatos(); renderPresupuestos(); toast('Eliminado','ok');
+}
+
+// --- MODAL ---
+let modalLines = [];
+let modalForm = {};
+
+function abrirModal(p, lines) {
+  modalForm = Object.assign({}, p);
+  modalLines = lines;
+  modalOpen = true;
+  renderModal();
+}
+
+function renderModal() {
+  const el = document.getElementById('modalContainer');
+  if(!modalOpen){ el.innerHTML=''; return; }
+  const base = modalLines.reduce((s,l)=>s+lineaTotal(l),0);
+  const ivaPct = Number(modalForm.iva_pct)||0;
+  const iva = base*(ivaPct/100);
+  const total = base+iva;
+
+  el.innerHTML = `<div class="modal-overlay" onclick="cerrarModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2>${editingPres?'Editar Presupuesto':'Nuevo Presupuesto'}</h2>
+        <button onclick="cerrarModal()">X</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarPresupuesto()">Guardar Presupuesto</button>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="section-title">Presupuesto</div>
+    <div class="grid-2">
+      <div class="form-group"><span class="form-label">Numero</span>
+        <input class="form-input" value="${modalForm.numero||''}" readonly style="font-family:var(--font-mono);color:var(--blue2);">
+      </div>
+      <div class="form-group"><span class="form-label">Fecha emision</span>
+        <input class="form-input" type="date" value="${modalForm.fecha_emision||''}" onchange="modalForm.fecha_emision=this.value">
+      </div>
+      <div class="form-group"><span class="form-label">Estado</span>
+        <select class="form-select" onchange="modalForm.estado=this.value">
+          <option value="Pendiente" ${modalForm.estado==='Pendiente'?'selected':''}>Pendiente</option>
+          <option value="Aceptado" ${modalForm.estado==='Aceptado'?'selected':''}>Aceptado</option>
+          <option value="Rechazado" ${modalForm.estado==='Rechazado'?'selected':''}>Rechazado</option>
+        </select>
+      </div>
+      <div class="form-group"><span class="form-label">Fecha aceptacion</span>
+        <input class="form-input" type="date" value="${modalForm.fecha_aceptacion||''}" onchange="modalForm.fecha_aceptacion=this.value">
+      </div>
+      <div class="form-group"><span class="form-label">IVA</span>
+        <select class="form-select" onchange="modalForm.iva_pct=Number(this.value);renderModal();">
+          <option value="21" ${modalForm.iva_pct===21?'selected':''}>21% General</option>
+          <option value="10" ${modalForm.iva_pct===10?'selected':''}>10% Reducido</option>
+          <option value="0" ${modalForm.iva_pct===0?'selected':''}>Sin IVA</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px;">Cliente</div>
+    <div class="grid-2">
+      <div class="form-group" style="grid-column:1/-1;"><span class="form-label">Nombre completo *</span>
+        <input class="form-input" value="${esc(modalForm.cliente||'')}" onchange="modalForm.cliente=this.value;autoCliente(this.value)" placeholder="Nombre del cliente" list="clist">
+        <datalist id="clist">${clientes.map(c=>`<option value="${esc(c.nombre)}">`).join('')}</datalist>
+      </div>
+      <div class="form-group"><span class="form-label">Direccion</span>
+        <input class="form-input" value="${esc(modalForm.direccion||'')}" onchange="modalForm.direccion=this.value">
+      </div>
+      <div class="form-group"><span class="form-label">Telefono</span>
+        <input class="form-input" value="${esc(modalForm.telefono||'')}" onchange="modalForm.telefono=this.value">
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px;">Descripcion del trabajo</div>
+    <div id="lineEditor">${renderLines()}</div>
+    <button class="btn" style="width:100%;margin-top:4px;border-style:dashed;justify-content:center;" onclick="addLine()">+ Anadir linea</button>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+      <div class="totals-box" style="max-width:260px;">
+        <div class="row"><span style="color:var(--muted)">Base imponible</span><span style="font-family:var(--font-mono)">${fn(base)} \u20ac</span></div>
+        <div class="row"><span style="color:var(--muted)">IVA (${ivaPct}%)</span><span style="font-family:var(--font-mono)">${fn(iva)} \u20ac</span></div>
+        <div class="row total"><span>TOTAL</span><span class="amount">${fn(total)} \u20ac</span></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px;">Condiciones</div>
+    <div class="form-group"><span class="form-label">Observaciones</span>
+      <textarea class="form-textarea" rows="2" onchange="modalForm.observaciones=this.value">${esc(modalForm.observaciones||'')}</textarea>
+    </div>
+    <div class="form-group"><span class="form-label">Notas adicionales</span>
+      <textarea class="form-textarea" rows="2" onchange="modalForm.notas=this.value">${esc(modalForm.notas||'')}</textarea>
+    </div>
+  `;
+}
+
+function renderLines() {
+  return modalLines.map((l,i)=>`<div class="line-row">
+    <input class="form-input" value="${esc(l.desc||'')}" onchange="updateLine(${i},'desc',this.value)" placeholder="Descripcion">
+    <input class="form-input" type="number" min="1" step="1" value="${l.qty||''}" onchange="updateLine(${i},'qty',parseFloat(this.value)||1)" style="font-family:var(--font-mono)">
+    <input class="form-input" type="number" min="0" step="0.01" value="${l.price||''}" onchange="updateLine(${i},'price',parseFloat(this.value)||0)" placeholder="0.00" style="font-family:var(--font-mono)">
+    <input class="form-input" type="number" readonly value="${lineaTotal(l).toFixed(2)}" style="font-family:var(--font-mono);color:var(--blue2)">
+    <button class="btn btn-icon" style="color:var(--red);" onclick="removeLine(${i})" ${modalLines.length<=1?'disabled':''}>X</button>
+  </div>`).join('');
+}
+
+function updateLine(i,field,val) {
+  modalLines = modalLines.map((l,idx)=>{
+    if(idx!==i) return l;
+    const u = Object.assign({}, l);
+    u[field]=val;
+    return u;
+  });
+  renderModal();
+}
+
+function addLine() { modalLines = modalLines.concat([{desc:'',qty:1,price:0}]); renderModal(); }
+
+function removeLine(i) { if(modalLines.length<=1) return; modalLines = modalLines.filter((_,idx)=>idx!==i); renderModal(); }
+
+function autoCliente(name) {
+  const c = clientes.find(x=>x.nombre===name);
+  if(c) {
+    if(!modalForm.direccion) modalForm.direccion = c.direccion||'';
+    if(!modalForm.telefono) modalForm.telefono = c.telefono||'';
+    renderModal();
+  }
+}
+
+function cerrarModal() { modalOpen=false; editingPres=null; templateMode=null; renderModal(); }
+
+async function guardarPresupuesto() {
+  if(!modalForm.cliente || !modalForm.cliente.trim()){ toast('El cliente es obligatorio','err'); return; }
+  const baseImponible = modalLines.reduce((s,l)=>s+lineaTotal(l),0);
+  const ivaPct = Number(modalForm.iva_pct)||0;
+  const data = Object.assign({}, modalForm, {
+    base_imponible: baseImponible,
+    iva_importe: baseImponible*(ivaPct/100),
+    total: baseImponible*(1+(ivaPct/100)),
+    lineas: JSON.stringify(modalLines),
+    descripcion: buildDescripcion(modalLines)
+  });
+  let error;
+  if(editingPres) {
+    const res = await supabase.from('presupuestos').update(data).eq('id',editingPres.id);
+    error = res.error;
+    if(!error && data.estado==='Aceptado'){
+      try {
+        const exist = trabajos.find(t=>t.presupuesto_id===editingPres.id);
+        if(!exist) await supabase.from('trabajos').insert({presupuesto_id:editingPres.id,presupuesto_num:data.numero,cliente:data.cliente,descripcion:data.descripcion,base_imponible:data.base_imponible,iva_pct:data.iva_pct,iva_importe:data.iva_importe,total:data.total,estado:'Pendiente',tecnico:'Jesus (T1)',enviado_contable:false});
+      } catch(ee) { console.warn('No se pudo crear trabajo:',ee.message); }
+    }
+  } else {
+    const res = await supabase.from('presupuestos').insert(data).select();
+    error = res.error;
+    if(!error && data.estado==='Aceptado' && res.data && res.data[0]) {
+      try { await supabase.from('trabajos').insert({presupuesto_id:res.data[0].id,presupuesto_num:data.numero,cliente:data.cliente,descripcion:data.descripcion,base_imponible:data.base_imponible,iva_pct:data.iva_pct,iva_importe:data.iva_importe,total:data.total,estado:'Pendiente',tecnico:'Jesus (T1)',enviado_contable:false}); } catch(ee) { console.warn('No se pudo crear trabajo:',ee.message); }
+    }
+  }
+  if(error){ toast(error.message,'err'); return; }
+  cerrarModal();
+  await cargarDatos(); renderPresupuestos();
+  toast(editingPres?'Actualizado':'Creado','ok');
+}
+
+// --- DETALLE ---
+function abrirDetalle(id) { selectedPres = presupuestos.find(p=>p.id===id); if(!selectedPres) return; detailOpen=true; sideTab='detalle'; renderDetalle(); }
+function cerrarDetalle() { detailOpen=false; selectedPres=null; renderDetalle(); }
+
+function renderDetalle() {
+  const el=document.getElementById('detalleContainer');
+  if(!detailOpen||!selectedPres){ el.innerHTML=''; return; }
+  const p=selectedPres;
+  const lines=parseLineas(p.lineas);
+  const firmaUrl='https://tecnicoharosat-source.github.io/harosat-app/cliente-firma.html?id='+p.id;
+
+  el.innerHTML = `<div class="side-overlay" onclick="cerrarDetalle()"><div class="side-bg"></div><div class="side-panel" onclick="event.stopPropagation()">
+    <div class="side-header"><h3>Presupuesto ${p.numero}</h3><button onclick="cerrarDetalle()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;">X</button></div>
+    <div class="side-body">
+      <div class="tab-bar">
+        <button class="tab-btn${sideTab==='detalle'?' active':''}" onclick="sideTab='detalle';renderDetalle()">Detalle</button>
+        <button class="tab-btn${sideTab==='documentos'?' active':''}" onclick="sideTab='documentos';renderDetalle()">Documentos</button>
+        <button class="tab-btn${sideTab==='firma'?' active':''}" onclick="sideTab='firma';renderDetalle()">Firma</button>
+      </div>
+      ${sideTab==='detalle'?renderDetalleTab(p,lines):''}
+      ${sideTab==='documentos'?renderDocumentosTab(p):''}
+      ${sideTab==='firma'?renderFirmaTab(p,firmaUrl):''}
+    </div>
+  </div></div>`;
+}
+
+function renderDetalleTab(p,lines) {
+  let linesHtml = '';
+  for(let i=0;i<lines.length;i++){
+    const l=lines[i];
+    linesHtml += `<div class="row-between" style="font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);"><span style="flex:1;margin-right:8px;">${esc(l.desc||'-')}</span><span style="color:var(--muted);font-family:var(--font-mono);">${Number(l.qty)>1?l.qty+' x ':''}${fmtE(l.price)}</span><span style="font-family:var(--font-mono);margin-left:8px;">${fmtE(lineaTotal(l))}</span></div>`;
+  }
+  return `<div>
+    <div class="info-block"><h4>Cliente</h4><p style="font-weight:500;">${esc(p.cliente)}</p>${p.direccion?`<p style="font-size:12px;color:var(--muted)">${esc(p.direccion)}</p>`:''}${p.telefono?`<p style="font-size:12px;color:var(--muted)">${esc(p.telefono)}</p>`:''}</div>
+    <div class="info-block"><h4>Estado</h4><div style="display:flex;gap:6px;flex-wrap:wrap;">${badgeEstado(p.estado)}${badgeFirma(p.estado_firma||'pendiente')}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:12px;"><div><span style="color:var(--muted);font-size:10px;">Emision</span><br>${fd(p.fecha_emision)}</div><div><span style="color:var(--muted);font-size:10px;">Aceptacion</span><br>${fd(p.fecha_aceptacion)}</div></div></div>
+    <div class="info-block"><h4>Trabajo</h4>${linesHtml}</div>
+    <div class="totals-box"><div class="row"><span style="color:var(--muted)">Base imponible</span><span style="font-family:var(--font-mono)">${fmtE(p.base_imponible)}</span></div><div class="row"><span style="color:var(--muted)">IVA (${p.iva_pct||0}%)</span><span style="font-family:var(--font-mono)">${fmtE(p.iva_importe)}</span></div><div class="row total"><span>TOTAL</span><span class="amount">${fmtE(p.total)}</span></div></div>
+    ${p.observaciones?`<div class="info-block"><h4>Observaciones</h4><p style="font-size:12px;color:var(--muted);white-space:pre-line;">${esc(p.observaciones)}</p></div>`:''}
+    ${p.notas?`<div class="info-block"><h4>Notas</h4><p style="font-size:12px;color:var(--muted);white-space:pre-line;">${esc(p.notas)}</p></div>`:''}
+    <div style="display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:1px solid var(--border);">
+      <button class="btn" style="width:100%;" onclick="editarDesdeDetalle()">Editar presupuesto</button>
+      ${p.estado!=='Aceptado'?`<button class="btn" style="width:100%;background:var(--green);border-color:var(--green);color:#fff;" onclick="aceptarPresupuesto('${p.id}')">Aceptar - Crear Trabajo</button>`:''}
+      ${p.estado!=='Rechazado'?`<button class="btn" style="width:100%;border-color:rgba(248,81,73,0.3);color:var(--red);" onclick="rechazarPresupuesto('${p.id}')">Rechazar presupuesto</button>`:''}
+    </div></div>`;
+}
+
+function renderDocumentosTab(p) {
+  return `<div><div class="info-block"><h4>Presupuesto ${p.numero}</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px;">${esc(p.cliente)} - ${fmtE(p.total)} - ${fd(p.fecha_emision)}</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:4px;" onclick="abrirPDF('${p.id}')">Imprimir / Guardar PDF</button>
+    <button class="btn" style="width:100%;margin-bottom:4px;border-color:rgba(37,211,102,0.3);color:#25D366;" onclick="shareWA('${p.id}')">Enviar por WhatsApp</button>
+    <button class="btn" style="width:100%;" onclick="shareMail('${p.id}')">Enviar por Email</button>
+  </div></div>`;
+}
+
+function renderFirmaTab(p,firmaUrl) {
+  const msgWA = encodeURIComponent('Hola '+(p.cliente||'')+', revise y firme el presupuesto '+(p.numero||'')+' en este enlace: '+firmaUrl);
+  const subjMail = encodeURIComponent('Firma presupuesto '+(p.numero||''));
+  const bodyMail = encodeURIComponent('Hola '+(p.cliente||'')+', para firmar el presupuesto acceda a: '+firmaUrl+'. HAROSAT Ecotechnical');
+  return `<div>
+    <div class="info-block"><h4>Estado de firma</h4>${badgeFirma(p.estado_firma||'pendiente')}${p.firma_nombre?`<span style="font-size:12px;color:var(--muted)"> por ${esc(p.firma_nombre)}</span>`:''}${p.firma_fecha?`<p style="font-size:11px;color:var(--muted);">${new Date(p.firma_fecha).toLocaleString('es-ES')}</p>`:''}${p.firma_imagen?`<div style="margin-top:8px;"><p style="font-size:10px;color:var(--muted);margin-bottom:4px;">Imagen de firma</p><img src="${p.firma_imagen}" style="max-height:80px;border-radius:4px;border:1px solid var(--border);background:#fff;padding:4px;"></div>`:''}</div>
+    <div class="info-block"><h4>Link de firma</h4><div style="background:var(--secondary);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:11px;font-family:var(--font-mono);color:var(--muted);word-break:break-all;">${firmaUrl}</div>
+      <button class="btn" style="width:100%;margin-top:8px;" onclick="copiarLinkFirma('${firmaUrl}')">Copiar link</button></div>
+    <div><h4 style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:6px;">Enviar al cliente</h4>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:4px;" onclick="window.open('https://wa.me/?text=${msgWA}','_blank')">Enviar por WhatsApp</button>
+      <button class="btn" style="width:100%;" onclick="window.open('https://mail.google.com/mail/?view=cm&fs=1&su=${subjMail}&body=${bodyMail}','_blank')">Enviar por Email</button>
+    </div></div>`;
+}
+
+function copiarLinkFirma(url) {
+  navigator.clipboard.writeText(url).then(function(){ toast('Link copiado','ok'); });
+}
+
+function editarDesdeDetalle() { const p = selectedPres; cerrarDetalle(); setTimeout(function(){ editarPresupuesto(p.id); },100); }
+
+async function aceptarPresupuesto(id) {
+  await supabase.from('presupuestos').update({estado:'Aceptado',fecha_aceptacion:today()}).eq('id',id);
+  const p=presupuestos.find(x=>x.id===id);
+  if(p && !trabajos.find(t=>t.presupuesto_id===id)) {
+    try { await supabase.from('trabajos').insert({presupuesto_id:id,presupuesto_num:p.numero,cliente:p.cliente,descripcion:p.descripcion,base_imponible:p.base_imponible,iva_pct:p.iva_pct,iva_importe:p.iva_importe,total:p.total,estado:'Pendiente',tecnico:'Jesus (T1)',enviado_contable:false}); } catch(ee) { console.warn('No se pudo crear trabajo:',ee.message); }
+  }
+  await cargarDatos(); renderPresupuestos(); cerrarDetalle(); toast('Aceptado','ok');
+}
+
+async function rechazarPresupuesto(id) {
+  await supabase.from('presupuestos').update({estado:'Rechazado'}).eq('id',id);
+  await cargarDatos(); renderPresupuestos(); cerrarDetalle(); toast('Rechazado','ok');
+}
+
+// --- TRABAJOS ---
+function filterTrabEstado(v) { filterTrabEstadoVal=v; renderTrabajos(); }
+function filterTrabContable(v) { filterTrabContableVal=v; renderTrabajos(); }
+
+function getFilteredTrab() {
+  return trabajos.filter(t=>{
+    if(filterTrabEstadoVal!=='todos'&&t.estado!==filterTrabEstadoVal) return false;
+    if(filterTrabContableVal==='enviado'&&!t.enviado_contable) return false;
+    if(filterTrabContableVal==='pendiente'&&t.enviado_contable) return false;
+    const s=(document.getElementById('searchTrab')?.value||'').toLowerCase();
+    if(s) return (t.presupuesto_num||'').toLowerCase().includes(s)||(t.cliente||'').toLowerCase().includes(s)||(t.descripcion||'').toLowerCase().includes(s);
+    return true;
+  });
+}
+
+function badgeTrab(s) {
+  const m={
+    'Pendiente':{bg:'rgba(210,153,34,0.15)',c:'#d29922',l:'Pendiente'},
+    en_curso:{bg:'rgba(31,111,235,0.15)',c:'#388bfd',l:'En Curso'},
+    terminado:{bg:'rgba(63,185,80,0.15)',c:'#3fb950',l:'Terminado'}
+  };
+  const x=m[s]||m['Pendiente'];
+  return `<span class="badge" style="background:${x.bg};color:${x.c}">${x.l}</span>`;
+}
+
+function renderTrabajos() {
+  const filtered=getFilteredTrab();
+  const kpiData = [
+    {label:'Total',value:trabajos.length,color:'#388bfd'},
+    {label:'Pendientes',value:trabajos.filter(t=>t.estado==='Pendiente').length,color:'#d29922'},
+    {label:'En Curso',value:trabajos.filter(t=>t.estado==='en_curso').length,color:'#388bfd'},
+    {label:'Terminados',value:trabajos.filter(t=>t.estado==='terminado').length,color:'#3fb950'},
+    {label:'Enviados contable',value:trabajos.filter(t=>t.enviado_contable).length,color:'#a371f7'},
+  ];
+  document.getElementById('kpiTrabajos').innerHTML = kpiData.map(k=>
+    `<div class="kpi-card" style="--kpi-color:${k.color}"><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div></div>`
+  ).join('');
+
+  document.getElementById('tbodyTrab').innerHTML = filtered.length===0
+    ? '<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--muted)">Sin resultados</td></tr>'
+    : filtered.map(t=>{
+        const accionContable = t.estado==='terminado'
+          ? (t.enviado_contable
+              ? '<span class="badge" style="background:rgba(63,185,80,0.15);color:#3fb950;">Enviado</span>'
+              : `<button class="btn btn-sm" style="background:var(--green);border-color:var(--green);color:#fff;" onclick="event.stopPropagation();enviarContableTrab('${t.id}')">Enviar</button>`)
+          : '-';
+        return `<tr onclick="abrirTrabajoDetalle('${t.id}')">
+          <td class="num-cell">${t.presupuesto_num||'-'}</td>
+          <td style="font-weight:500;">${esc(t.cliente)}</td>
+          <td style="color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.descripcion||'-')}</td>
+          <td style="color:var(--muted);">${esc(t.tecnico||'-')}</td>
+          <td style="color:var(--muted);font-size:12px;">${fd(t.fecha_inicio)}</td>
+          <td style="color:var(--muted);font-size:12px;">${fd(t.fecha_fin)}</td>
+          <td class="total-cell">${fmtE(t.total)}</td>
+          <td style="text-align:center;">${badgeTrab(t.estado)}</td>
+          <td style="text-align:center;">${accionContable}</td>
+          <td style="text-align:center;" onclick="event.stopPropagation()"><button class="btn btn-icon" style="padding:4px 6px;" onclick="editarTrabajo('${t.id}')">Editar</button></td>
+        </tr>`;
+      }).join('');
+}
+
+function abrirTrabajoDetalle(id) {
+  const t=trabajos.find(x=>x.id===id); if(!t) return;
+  alert('Trabajo: '+(t.presupuesto_num||'-')+'\\nCliente: '+t.cliente+'\\nEstado: '+t.estado+'\\nTecnico: '+(t.tecnico||'-')+'\\nF.Inicio: '+fd(t.fecha_inicio)+'\\nF.Fin: '+fd(t.fecha_fin)+'\\nBase: '+fn(t.base_imponible)+' EUR\\nIVA: '+t.iva_pct+'% - '+fn(t.iva_importe)+' EUR\\nTotal: '+fn(t.total)+' EUR\\nContable: '+(t.enviado_contable?'Enviado':'Pendiente')+(t.notas?'\\n\\nNotas: '+t.notas:''));
+}
+
+async function editarTrabajo(id) {
+  const t=trabajos.find(x=>x.id===id); if(!t) return;
+  const estados=['Pendiente','en_curso','terminado'];
+  const estado=prompt('Estado (Pendiente/en_curso/terminado):',t.estado||'Pendiente');
+  if(!estado||!estados.includes(estado)) return;
+  const tecnico=prompt('Tecnico:',t.tecnico||'Jesus (T1)');
+  const fi=prompt('Fecha inicio (YYYY-MM-DD):',t.fecha_inicio||'');
+  const ff=prompt('Fecha fin (YYYY-MM-DD):',t.fecha_fin||'');
+  const notas=prompt('Notas:',t.notas||'');
+  const res = await supabase.from('trabajos').update({estado:estado,tecnico:tecnico,fecha_inicio:fi||null,fecha_fin:ff||null,notas:notas||null}).eq('id',id);
+  if(res.error){ toast(res.error.message,'err'); return; }
+  await cargarDatos(); renderTrabajos(); toast('Actualizado','ok');
+}
+
+async function enviarContableTrab(id) {
+  const t=trabajos.find(x=>x.id===id); if(!t) return;
+  if(!confirm('Enviar a contable?\\nCliente: '+t.cliente+'\\nBase: '+fn(t.base_imponible)+' EUR\\nIVA: '+fn(t.iva_importe)+' EUR\\nTotal: '+fn(t.total)+' EUR')) return;
+  const trimestre=getQuarter(t.fecha_fin);
+  try {
+    await supabase.from('conta_ingresos').insert({
+      fecha:t.fecha_fin||today(),
+      concepto:(t.presupuesto_num+' - '+t.cliente+' - '+(t.descripcion||'')).slice(0,300),
+      tipo:'Factura', base:t.base_imponible||0, piva:t.iva_pct||21, cuotaiva:t.iva_importe||0, pret:0, retencion:0,
+      total:t.total||0, notas:'Trimestre: '+trimestre, trabajo_id:t.id
+    });
+  } catch(ee) { console.warn('No se pudo insertar en conta_ingresos:',ee.message); }
+  await supabase.from('trabajos').update({enviado_contable:true}).eq('id',id);
+  await cargarDatos(); renderTrabajos(); toast('Enviado a contable','ok');
+}
+
+// --- PAGOS ---
+function renderPagos() {
+  const s=(document.getElementById('searchPago')?.value||'').toLowerCase();
+  const filtered = s
+    ? presupuestos.filter(p=>(p.numero||'').toLowerCase().includes(s)||(p.cliente||'').toLowerCase().includes(s)||String(p.total||'').includes(s))
+    : presupuestos;
+  document.getElementById('selectPago').innerHTML = filtered.map(p=>`<option value="${p.id}">${p.numero} - ${esc(p.cliente)} - ${fn(p.total)} EUR [${p.estado}]</option>`).join('');
+  if(filtered.length>0) selectPago(filtered[0].id);
+  else document.getElementById('pagoPreview').innerHTML='';
+}
+
+function selectPago(id) {
+  const p=presupuestos.find(x=>x.id===id); if(!p) return;
+  const total=Number(p.total)||0;
+  const p1=total*0.60, p2=total*0.30, p3=total*0.10;
+  const filas = [[1,'Primer pago - Inicio',p1,'60%'],[2,'Segundo pago - Avance',p2,'30%'],[3,'Tercer pago - Entrega',p3,'10%']];
+  let filasHtml = '';
+  for(let i=0;i<filas.length;i++){
+    const f=filas[i];
+    filasHtml += `<tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px;"><span style="width:28px;height:28px;border-radius:50%;background:#1f6feb;color:#fff;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">${f[0]}</span></td><td style="padding:12px;"><span style="font-weight:700;color:#0f172a;">${f[1]}</span> <span style="display:inline-block;background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">${f[3]}</span></td><td style="padding:12px;text-align:right;font-weight:700;font-family:var(--font-mono);">${fn(f[2])} EUR</td></tr>`;
+  }
+  const msgWA = encodeURIComponent('Hola '+(p.cliente||'')+', calendario de pagos del presupuesto '+(p.numero||'')+' ('+fn(total)+' EUR): 60% - '+fn(p1)+' EUR (Inicio) | 30% - '+fn(p2)+' EUR (Mitad obra) | 10% - '+fn(p3)+' EUR (Entrega). IBAN: ES25 3008 0234 4533 5004 5310 Caja Rural de Navarra. HAROSAT Ecotechnical');
+
+  document.getElementById('pagoPreview').innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+      <button class="btn btn-primary" onclick="imprimirPago('${p.id}')">Imprimir / PDF</button>
+      <button class="btn" style="border-color:rgba(37,211,102,0.3);color:#25D366;" onclick="window.open('https://wa.me/?text=${msgWA}','_blank')">WhatsApp</button>
+    </div>
+    <div id="pagoDoc" style="border-radius:12px;overflow:hidden;border:1px solid var(--border);">
+      <div style="background:linear-gradient(135deg,#1e3a6e,#1e3a5f);padding:20px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:22px;font-weight:800;color:#fff;">HARO<span style="color:#f4a01c;">SAT</span></div>
+        <div style="text-align:right;color:#e2e8f0;font-size:12px;">Jesus Garzon Martin<br>C/ Santa Lucia 66 BJ - Haro<br>640 05 64 84</div>
+      </div>
+      <div style="background:#f4a01c;padding:12px 20px;display:flex;justify-content:space-between;">
+        <span style="font-weight:800;color:#1e3a5f;">Calendario de Pagos</span>
+        <span style="font-family:var(--font-mono);font-size:13px;color:#1e3a5f;font-weight:600;">Ref. ${p.numero} - ${fd(p.fecha_emision)}</span>
+      </div>
+      <div style="background:#fff;color:#111827;padding:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+            <div style="font-size:10px;text-transform:uppercase;color:#64748b;letter-spacing:1px;margin-bottom:8px;">Datos del Cliente</div>
+            <div class="row-between" style="font-size:13px;padding:2px 0;"><span style="color:#64748b;">Nombre</span><span style="font-weight:600;">${esc(p.cliente)}</span></div>
+            ${p.telefono?`<div class="row-between" style="font-size:13px;padding:2px 0;"><span style="color:#64748b;">Telefono</span><span>${esc(p.telefono)}</span></div>`:''}
+          </div>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+            <div style="font-size:10px;text-transform:uppercase;color:#64748b;letter-spacing:1px;margin-bottom:8px;">Presupuesto</div>
+            <div class="row-between" style="font-size:13px;padding:2px 0;"><span style="color:#64748b;">Numero</span><span style="font-family:var(--font-mono);font-weight:600;">${p.numero}</span></div>
+            <div class="row-between" style="font-size:13px;padding:2px 0;"><span style="color:#64748b;">Fecha</span><span>${fd(p.fecha_emision)}</span></div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#1e3a6e,#1e3a5f);border-radius:10px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <span style="color:#93c5fd;font-size:13px;">Importe total (IVA incluido)</span>
+          <span style="font-size:26px;font-weight:800;color:#f4a01c;font-family:var(--font-mono);">${fn(total)} EUR</span>
+        </div>
+        <div style="font-size:12px;font-weight:800;color:#1e3a5f;text-transform:uppercase;margin-bottom:10px;">Fraccionamiento de Pagos</div>
+        <table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#1e3a5f;"><th style="padding:8px 12px;text-align:left;color:#93c5fd;font-size:10px;text-transform:uppercase;width:32px;">#</th><th style="padding:8px 12px;text-align:left;color:#93c5fd;font-size:10px;">Concepto</th><th style="padding:8px 12px;text-align:right;color:#93c5fd;font-size:10px;">Importe</th></tr></thead><tbody>${filasHtml}</tbody></table>
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px;margin-top:16px;font-size:12px;color:#78350f;">
+          <strong style="color:#92400e;">Nota:</strong> Las transferencias se realizaran exclusivamente por orden expresa de nuestras oficinas.
+        </div>
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:14px;margin-top:12px;">
+          <div style="font-size:10px;font-weight:800;color:#0c4a6e;text-transform:uppercase;margin-bottom:8px;">Datos Bancarios</div>
+          <div style="display:flex;gap:16px;font-size:13px;padding:2px 0;"><span style="color:#0369a1;min-width:70px;">Titular</span><span style="font-weight:700;color:#0c4a6e;">Jesus Garzon Martin</span></div>
+          <div style="display:flex;gap:16px;font-size:13px;padding:2px 0;"><span style="color:#0369a1;min-width:70px;">IBAN</span><span style="font-weight:700;color:#0c4a6e;font-family:var(--font-mono);font-size:12px;">ES25 3008 0234 4533 5004 5310</span></div>
+          <div style="display:flex;gap:16px;font-size:13px;padding:2px 0;"><span style="color:#0369a1;min-width:70px;">Entidad</span><span style="font-weight:700;color:#0c4a6e;">Caja Rural de Navarra</span></div>
+          <div style="display:flex;gap:16px;font-size:13px;padding:2px 0;"><span style="color:#0369a1;min-width:70px;">Concepto</span><span style="font-weight:700;color:#0c4a6e;">Presupuesto ${p.numero}</span></div>
+        </div>
+      </div>
+      <div style="background:#1e293b;padding:12px 20px;display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;">
+        <span>HAROSAT Ecotechnical - C/ Santa Lucia 66 BJ - Haro, La Rioja</span>
+        <span>640 05 64 84 - harosatecnicos@gmail.com</span>
+      </div>
+    </div>`;
+}
+
+function imprimirPago(id) {
+  const p=presupuestos.find(x=>x.id===id); if(!p) return;
+  const w=window.open('','_blank');
+  if(!w) { alert('Permite ventanas emergentes'); return; }
+  const html=document.getElementById('pagoDoc').outerHTML;
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Calendario Pagos '+p.numero+'</title><style>body{font-family:Outfit,sans-serif;background:#fff;padding:20px;}@media print{@page{margin:0;size:A4;}}</style></head><body>'+html+'<scr'+'ipt>window.print();</scr'+'ipt></body></html>');
+  w.document.close();
+}
+
+// --- EXPORT / IMPORT CSV ---
+function exportCSV() {
+  const filtered=getFiltered();
+  const rows=[['Numero','Fecha Emision','Fecha Aceptacion','Estado','Cliente','Direccion','Telefono','IVA %','Base Imponible','Cuota IVA','Total','Descripcion']];
+  filtered.forEach(p=>rows.push([p.numero,p.fecha_emision,p.fecha_aceptacion||'',p.estado,p.cliente,p.direccion||'',p.telefono||'',p.iva_pct,p.base_imponible,p.iva_importe,p.total,p.descripcion||'']));
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(';')).join('\n');
+  downloadFile(csv,'HAROSAT_Presupuestos_'+new Date().getFullYear()+'.csv','text/csv;charset=utf-8;');
+}
+
+function exportCSVTrab() {
+  const rows=[['Presupuesto','Cliente','Descripcion','Tecnico','F.Inicio','F.Fin','Base','IVA %','Cuota IVA','Total','Estado','Enviado Contable','Notas']];
+  trabajos.forEach(t=>rows.push([t.presupuesto_num||'',t.cliente||'',t.descripcion||'',t.tecnico||'',t.fecha_inicio||'',t.fecha_fin||'',t.base_imponible||0,t.iva_pct||21,t.iva_importe||0,t.total||0,t.estado||'',t.enviado_contable?'Si':'No',t.notas||'']));
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\n');
+  downloadFile(csv,'HAROSAT_Trabajos_'+new Date().getFullYear()+'.csv','text/csv;charset=utf-8;');
+}
+
+function importCSV() {
+  const input=document.createElement('input'); input.type='file'; input.accept='.csv';
+  input.onchange=async function(e){
+    const file=e.target.files[0]; if(!file) return;
+    const text=await file.text();
+    const lines=text.split('\n').filter(l=>l.trim());
+    if(lines.length<2) { toast('CSV vacio','err'); return; }
+    const parseLine=function(line){
+      const r=[]; let c='',q=false;
+      for(let i=0;i<line.length;i++){
+        const ch=line[i];
+        if(ch==='"'){ if(q&&line[i+1]==='"'){c+='"';i++;} else q=!q; }
+        else if((ch===','||ch===';')&&!q){ r.push(c.trim()); c=''; }
+        else c+=ch;
+      }
+      r.push(c.trim());
+      return r;
+    };
+    const headers=parseLine(lines[0]).map(h=>h.toLowerCase());
+    let count=0;
+    for(let i=1;i<lines.length;i++){
+      const cols=parseLine(lines[i]);
+      const find=function(key){ const idx=headers.findIndex(h=>h.includes(key)); return idx>=0?cols[idx]:''; };
+      const estadoRaw=find('estado')||'Pendiente';
+      const estado=estadoRaw.charAt(0).toUpperCase()+estadoRaw.slice(1).toLowerCase();
+      await supabase.from('presupuestos').insert({
+        numero:find('numero')||nextNum(),
+        fecha_emision:find('fecha')||today(),
+        estado:(['Pendiente','Aceptado','Rechazado'].includes(estado)?estado:'Pendiente'),
+        cliente:find('cliente')||'',
+        direccion:find('direccion')||'',
+        telefono:find('telefono')||'',
+        iva_pct:parseFloat(find('iva'))||21,
+        base_imponible:parseFloat(find('base'))||0,
+        iva_importe:parseFloat(find('cuota'))||0,
+        total:parseFloat(find('total'))||0,
+        descripcion:find('descripcion')||'',
+      });
+      count++;
+    }
+    await cargarDatos(); renderPresupuestos(); toast(count+' importados','ok');
+  };
+  input.click();
+}
+
+function downloadFile(content,filename,mime) {
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename; a.click();
+}
+
+// --- PDF PRESUPUESTO ---
+function abrirPDF(id) {
+  const p=presupuestos.find(x=>x.id===id); if(!p) return;
+  const lines=parseLineas(p.lineas);
+  const ivaLabel=(Number(p.iva_pct)||0)===21?'21%':(Number(p.iva_pct)||0)===10?'10%':'0%';
+  const w=window.open('','_blank');
+  if(!w) { alert('Permite ventanas emergentes'); return; }
+  let lineasHtml='';
+  for(let i=0;i<lines.length;i++){
+    if(lines[i].desc) lineasHtml += `<tr><td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">${esc(lines[i].desc)}</td></tr>`;
+  }
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Presupuesto ${p.numero}</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>body{font-family:Outfit,sans-serif;color:#111827;background:#fff;padding:20px;}@media print{@page{margin:0;size:A4;} .noprint{display:none;}}</style></head><body>
+<div class="noprint" style="text-align:center;padding:8px;background:#f9fafb;border-bottom:1px solid #e5e7eb;margin-bottom:16px;"><button onclick="window.print()" style="padding:6px 14px;font-family:Outfit,sans-serif;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">Imprimir / PDF</button></div>
+<div style="max-width:210mm;margin:0 auto;">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:8px;border-bottom:3px solid #1e3a5f;margin-bottom:12px;">
+<div><div style="font-size:24px;font-weight:800;color:#1e3a5f;">HAROSAT</div><div style="font-size:11px;color:#f4a01c;letter-spacing:2px;">ECOTECHNICAL</div></div>
+<div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:#1e3a5f;">PRESUPUESTO</div><div style="font-family:monospace;font-size:14px;color:#1e3a5f;">${p.numero}</div><div style="font-size:10px;color:#6b7280;">${fd(p.fecha_emision)}</div></div></div>
+<div style="background:#f3f4f6;border-radius:6px;padding:10px 14px;margin-bottom:14px;">
+<div style="font-size:10px;text-transform:uppercase;color:#6b7280;">Cliente</div>
+<div style="font-size:13px;font-weight:600;">${esc(p.cliente)}</div>${p.direccion?`<div style="font-size:11px;color:#4b5563;">${esc(p.direccion)}</div>`:''}${p.telefono?`<div style="font-size:11px;color:#4b5563;">${esc(p.telefono)}</div>`:''}</div>
+<table style="width:100%;border-collapse:collapse;margin-bottom:14px;"><thead><tr style="background:#1e3a5f;"><th style="padding:7px 12px;text-align:left;color:#fff;font-size:10px;">DESCRIPCION</th></tr></thead><tbody>${lineasHtml}</tbody></table>
+<div style="display:flex;justify-content:flex-end;"><div style="width:240px;border:1px solid #e5e7eb;border-radius:6px;"><div style="display:flex;justify-content:space-between;padding:8px 12px;font-weight:700;background:#1e3a5f;color:#fff;"><span>TOTAL</span><span style="font-family:monospace;color:#f4a01c;">${fn(p.base_imponible)} EUR</span></div><div style="padding:4px 12px;font-size:9px;color:#6b7280;text-align:right;">* IVA ${ivaLabel} no incluido</div></div></div>
+<div style="margin-top:36px;border-top:1px solid #e5e7eb;padding-top:8px;text-align:center;font-size:10px;color:#6b7280;">
+${EMPRESA.direccion} - ${EMPRESA.telefono1} - ${EMPRESA.email} - CIF: ${EMPRESA.cif}</div>
+</div></body></html>`;
+  w.document.write(html);
+  w.document.close();
+}
+
+function shareWA(id) {
+  const p=presupuestos.find(x=>x.id===id); if(!p) return;
+  const msg='PRESUPUESTO '+p.numero+' - HAROSAT ECOTECHNICAL - Cliente: '+p.cliente+' - Total: '+fn(p.total)+' EUR';
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+function shareMail(id) {
+  const p=presupuestos.find(x=>x.id===id); if(!p) return;
+  const subj='Presupuesto '+p.numero;
+  const body='Estimado/a '+p.cliente+', presupuesto '+p.numero+': '+fn(p.total)+' EUR. HAROSAT Ecotechnical - 640 05 64 84';
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
+}
+
+document.getElementById('modalContainer')||(document.body.insertAdjacentHTML('beforeend','<div id="modalContainer"></div>'));
+document.getElementById('detalleContainer')||(document.body.insertAdjacentHTML('beforeend','<div id="detalleContainer"></div>'));
+init();
+
+</script>
+
+</body>
+</html>
